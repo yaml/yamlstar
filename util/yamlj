@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+#
+# yamlj - Run YAMLStar CLI via Java (fast development, no GraalVM wait)
+#
+
+set -euo pipefail
+
+(
+  version=0.1.0
+  root=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd -P)
+
+  # Build the uberjar if needed
+  jar=cli-$version-SNAPSHOT-standalone.jar
+  jar_path="$root/cli/target/$jar"
+
+  if [ ! -f "$jar_path" ]; then
+    echo "Building CLI uberjar..." >&2
+    make --no-print-directory -C "$root/cli" jar
+  fi
+
+  # Try to get JAVA_HOME from makes installation, then environment
+  if [ -d "$root/.cache/.local/jdk-25" ]; then
+    JAVA_HOME="$root/.cache/.local/jdk-25"
+  elif [ -d "$root/.cache/.local/graalvm-jdk-25" ]; then
+    JAVA_HOME="$root/.cache/.local/graalvm-jdk-25"
+  elif [ -n "${JAVA_HOME:-}" ]; then
+    JAVA_HOME="${JAVA_HOME}"
+  else
+    echo "Error: JAVA_HOME not set and no JDK found in .cache" >&2
+    exit 1
+  fi
+
+  export JAVA_HOME
+  export PATH=$JAVA_HOME/bin:$PATH
+
+  # Run via Java (use full path to be safe)
+  "$JAVA_HOME/bin/java" -jar "$jar_path" "$@"
+)

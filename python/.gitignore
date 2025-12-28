@@ -1,0 +1,8 @@
+/.venv/
+/.eggs/
+__pycache__/
+/libyamlstar.so
+/dist/
+/lib/yamlstar.egg-info/
+/build/
+*.pyc

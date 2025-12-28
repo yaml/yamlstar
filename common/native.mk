@@ -1,0 +1,21 @@
+REFLECTION-JSON := $(ROOT)/common/reflection.json
+
+GRAALVM-O ?= 1
+
+NATIVE-OPTS := \
+  -O$(GRAALVM-O) \
+  --verbose \
+  --native-image-info \
+  --no-fallback \
+  --initialize-at-build-time \
+  --emit=build-report \
+  -march=compatibility \
+  -H:+UnlockExperimentalVMOptions \
+  -H:IncludeResources='.*\.clj' \
+  -H:IncludeResources='.*\.cljc' \
+  -H:IncludeResources='.*\.class' \
+  -H:ReflectionConfigurationFiles=$(REFLECTION-JSON) \
+  -H:+ReportExceptionStackTraces \
+  -J-Dclojure.spec.skip-macros=true \
+  -J-Dclojure.compiler.direct-linking=true \
+  -J-Xmx3g \
