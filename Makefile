@@ -16,16 +16,23 @@ MAKES-DISTCLEAN += \
   .clj-kondo/ \
   .lsp/ \
 
+BINDINGS := \
+  go \
+  python \
+  rust \
+
+TESTS := $(BINDINGS:%=test-%)
+
 
 build test jar install::
 	$(MAKE) -C core $@
 	$(MAKE) -C cli $@
 	$(MAKE) -C libyamlstar $@
 
-test:: python-test
+test:: $(TESTS)
 
-python-test:
-	$(MAKE) -C python test
+$(TESTS):
+	$(MAKE) -C $(@:test-%=%) test
 
 core:
 	$(MAKE) -C core install

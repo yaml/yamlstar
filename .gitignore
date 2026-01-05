@@ -10,6 +10,7 @@ META-INF/
 /*.json
 /*.yaml
 /*.ys
+/out
 
 target/
 classes/
