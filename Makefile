@@ -25,9 +25,9 @@ TESTS := $(BINDINGS:%=test-%)
 
 
 build test jar install::
-	$(MAKE) -C core $@
-	$(MAKE) -C cli $@
-	$(MAKE) -C libyamlstar $@
+	$(MAKE) -C core $@ v=$v
+	$(MAKE) -C cli $@ v=$v
+	$(MAKE) -C libyamlstar $@ v=$v
 
 test:: $(TESTS)
 

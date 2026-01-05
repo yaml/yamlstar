@@ -25,7 +25,7 @@ CORE-JAR := $(MAVEN-REPOSITORY)/yamlstar/core/$(YAMLSTAR_VERSION)/core-$(YAMLSTA
 
 build: $(CLI-BIN)
 
-test: $(LEIN)
+test: $(CORE-JAR) $(LEIN)
 	lein test
 
 jar: $(CLI-JAR)
