@@ -92,8 +92,8 @@
           ;; Scalars
           "scalar"
           (let [node (make-scalar-node (assoc event
-                                              :anchor current-anchor
-                                              :tag current-tag))
+                                              :anchor (or current-anchor (:anchor event))
+                                              :tag (or current-tag (:tag event))))
                 new-stack (conj node-stack node)]
             (recur rest-events new-stack anchor-stack nil nil documents in-document))
 
@@ -107,8 +107,8 @@
           "mapping_start"
           ;; Push a mapping marker with properties
           (let [marker {:kind :mapping-start
-                        :anchor current-anchor
-                        :tag current-tag
+                        :anchor (or current-anchor (:anchor event))
+                        :tag (or current-tag (:tag event))
                         :flow (or (:flow event) false)}
                 new-stack (conj node-stack marker)]
             (recur rest-events new-stack anchor-stack nil nil documents in-document))
@@ -141,8 +141,8 @@
           "sequence_start"
           ;; Push a sequence marker
           (let [marker {:kind :sequence-start
-                        :anchor current-anchor
-                        :tag current-tag
+                        :anchor (or current-anchor (:anchor event))
+                        :tag (or current-tag (:tag event))
                         :flow (or (:flow event) false)}
                 new-stack (conj node-stack marker)]
             (recur rest-events new-stack anchor-stack nil nil documents in-document))
