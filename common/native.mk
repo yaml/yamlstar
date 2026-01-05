@@ -8,6 +8,7 @@ NATIVE-OPTS := \
   --native-image-info \
   --no-fallback \
   --initialize-at-build-time \
+  --initialize-at-run-time=clojure.lang.Compiler \
   --emit=build-report \
   -march=compatibility \
   -H:+UnlockExperimentalVMOptions \
