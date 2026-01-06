@@ -18,6 +18,7 @@ MAKES-DISTCLEAN += \
 
 BINDINGS := \
   go \
+  nodejs \
   perl \
   python \
   rust \

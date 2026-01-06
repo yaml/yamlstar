@@ -1,0 +1,29 @@
+{
+  "name": "@yaml/yamlstar",
+  "version": "0.1.0-SNAPSHOT",
+  "description": "Pure YAML 1.2 loader - Node.js bindings",
+  "main": "lib/yamlstar/index.js",
+  "author": "Ingy döt Net",
+  "license": "MIT",
+  "dependencies": {
+    "@makeomatic/ffi-napi": "^4.2.0",
+    "ref-napi": "^3.0.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yaml/yamlstar.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yaml/yamlstar/issues"
+  },
+  "homepage": "https://github.com/yaml/yamlstar#readme"
+}
