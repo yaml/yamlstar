@@ -18,21 +18,30 @@ MAKES-DISTCLEAN += \
 
 BINDINGS := \
   go \
+  perl \
   python \
   rust \
 
-TESTS := $(BINDINGS:%=test-%)
+BINDING-TESTS := $(BINDINGS:%=test-%)
+ALL-TESTS := \
+  test-core \
+  test-cli \
+  test-libyamlstar \
+  $(BINDING-TESTS)
 
 
-build test jar install::
+build jar install::
 	$(MAKE) -C core $@ v=$v
 	$(MAKE) -C cli $@ v=$v
 	$(MAKE) -C libyamlstar $@ v=$v
 
-test:: $(TESTS)
+test:: $(ALL-TESTS)
 
-$(TESTS):
-	$(MAKE) -C $(@:test-%=%) test
+$(ALL-TESTS):
+	@echo '--------------------------------------------------'
+	@echo '   $@'
+	@echo '--------------------------------------------------'
+	$(MAKE) -C $(@:test-%=%) test v=$v
 
 core:
 	$(MAKE) -C core install

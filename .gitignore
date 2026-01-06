@@ -17,6 +17,7 @@ classes/
 checkouts/
 pom.xml
 pom.xml.asc
+*.bak
 *.jar
 *.class
 /.lein-*
