@@ -17,6 +17,7 @@ MAKES-DISTCLEAN += \
   .lsp/ \
 
 BINDING-DIRS := \
+  csharp \
   go \
   nodejs \
   perl \
