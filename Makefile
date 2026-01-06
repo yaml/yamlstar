@@ -16,14 +16,24 @@ MAKES-DISTCLEAN += \
   .clj-kondo/ \
   .lsp/ \
 
-BINDINGS := \
+BINDING-DIRS := \
   go \
   nodejs \
   perl \
   python \
   rust \
 
-BINDING-TESTS := $(BINDINGS:%=test-%)
+ALL-DIRS := \
+  cli \
+  core \
+  libyamlstar \
+  $(BINDING-DIRS) \
+
+ALL-CLEAN := $(ALL-DIRS:%=clean-%)
+ALL-REALCLEAN := $(ALL-DIRS:%=realclean-%)
+ALL-DISTCLEAN := $(ALL-DIRS:%=distclean-%)
+
+BINDING-TESTS := $(BINDING-DIRS:%=test-%)
 ALL-TESTS := \
   test-core \
   test-cli \
@@ -53,10 +63,17 @@ cli:
 libyamlstar:
 	$(MAKE) -C libyamlstar build
 
-clean::
-	$(MAKE) --no-pr -C cli clean
-	$(MAKE) --no-pr -C core clean
-	$(MAKE) --no-pr -C libyamlstar clean
-	$(MAKE) --no-pr -C python clean
+clean:: $(ALL-CLEAN)
+realclean:: $(ALL-REALCLEAN)
+distclean:: $(ALL-DISTCLEAN)
+
+$(ALL-CLEAN):
+	$(MAKE) --no-pr -C $(@:clean-%=%) clean
+
+$(ALL-REALCLEAN):
+	$(MAKE) --no-pr -C $(@:realclean-%=%) realclean
+
+$(ALL-DISTCLEAN):
+	$(MAKE) --no-pr -C $(@:distclean-%=%) distclean
 
 .PHONY: cli core libyamlstar test

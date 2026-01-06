@@ -1,10 +1,6 @@
-M := ../.cache/makes
-$(shell [ -d $M ] || git clone -q https://github.com/makeplus/makes $M)
-include $M/init.mk
+include ../common/init.mk
 include $M/node.mk
-include $M/clean.mk
-
-LIBYAMLSTAR_SO := ../libyamlstar/lib/libyamlstar.so
+include $(COMMON)/common.mk
 
 NODE-MODULES := node_modules
 
@@ -15,13 +11,10 @@ MAKES-REALCLEAN := \
   $(NODE-MODULES) \
 
 
-test: $(NODE-MODULES) $(LIBYAMLSTAR_SO)
+test: $(NODE-MODULES) $(LIBYAMLSTAR-SO)
 	node test/test.js
 
-build: $(LIBYAMLSTAR_SO)
+build: $(LIBYAMLSTAR-SO)
 
 node_modules: package.json $(NODE)
 	npm install
-
-$(LIBYAMLSTAR_SO):
-	$(MAKE) -C ../libyamlstar build
