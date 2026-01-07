@@ -14,16 +14,16 @@ YAMLStar aims to be the best YAML loader available, with these key features:
 
 ## Project Status
 
-🚧 **Early Development** - Phase 1 in progress
+✅ **Phase 1 Complete** - Ready for production use with 7 language bindings!
 
 ### Roadmap
 
-- **Phase 1: Minimal Viable Loader** (Current)
+- **Phase 1: Minimal Viable Loader** ✅ Complete
   - Pure YAML 1.2 loading
   - Event-based parser integration
   - Clojure data structure output
   - GraalVM native-image shared library
-  - Language bindings (Python, Ruby, Node.js, Go, etc.)
+  - Language bindings (C#, Fortran, Go, Node.js, Perl, Python, Rust)
 
 - **Phase 2: Glojure Migration**
   - Port to Glojure (Clojure on Go)
@@ -59,31 +59,27 @@ Output (maps, vectors, scalars)
 - Node-to-data resolver implemented
 - Complete test suite (23 tests covering all major features)
 - Zero external dependencies (except Clojure + data.json)
+- GraalVM native-image shared library (`libyamlstar.so`)
+- **7 language bindings**: C#, Fortran, Go, Node.js, Perl, Python, Rust
 
-**Ready for testing!** Install Leiningen and run `lein test` in the `core/` directory.
+**Ready for testing!** Run `make test` in the `core/` directory, or try any of the language bindings.
 
 ## Quick Start
 
-### Install Clojure Tools
-
-```bash
-# Install Leiningen
-curl https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > /usr/local/bin/lein
-chmod +x /usr/local/bin/lein
-```
-
 ### Run Tests
+
+The build system automatically installs all dependencies (Leiningen, GraalVM, etc.) on first run:
 
 ```bash
 cd core
-lein test
+make test
 ```
 
 ### Use in REPL
 
 ```bash
 cd core
-lein repl
+make repl
 ```
 
 ```clojure
@@ -112,6 +108,47 @@ person:
 ```
 
 See [DEVELOPMENT.md](DEVELOPMENT.md) for detailed development guide.
+
+## Language Bindings
+
+YAMLStar provides bindings for multiple programming languages via a shared GraalVM native-image library (`libyamlstar.so`). All bindings provide identical behavior and API.
+
+**No installation required!** The build system automatically installs language tools, compilers, and dependencies on first run.
+
+| Language | Directory | Test Command |
+|----------|-----------|--------------|
+| **C#** | [csharp/](csharp/) | `make test` (auto-installs dotnet) |
+| **Fortran** | [fortran/](fortran/) | `make test` (auto-installs gfortran, FPM) |
+| **Go** | [go/](go/) | `make test` (auto-installs go) |
+| **Node.js** | [nodejs/](nodejs/) | `make test` (auto-installs node, npm) |
+| **Perl** | [perl/](perl/) | `make test` (auto-installs perl, cpanm) |
+| **Python** | [python/](python/) | `make test` (auto-installs python, pip) |
+| **Rust** | [rust/](rust/) | `make test` (auto-installs cargo) |
+
+### Quick Example (Node.js)
+
+```javascript
+const YAMLStar = require('yamlstar');
+const ys = new YAMLStar();
+
+const data = ys.load('key: value');
+console.log(data);  // { key: 'value' }
+
+ys.close();
+```
+
+### Quick Example (Python)
+
+```python
+from yamlstar import YAMLStar
+
+ys = YAMLStar()
+data = ys.load('key: value')
+print(data)  # {'key': 'value'}
+ys.close()
+```
+
+Each binding directory contains its own `ReadMe.md` with detailed installation and usage instructions.
 
 ## Comparison to YAMLScript
 
