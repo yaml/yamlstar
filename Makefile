@@ -18,6 +18,7 @@ MAKES-DISTCLEAN += \
 
 BINDING-DIRS := \
   csharp \
+  fortran \
   go \
   nodejs \
   perl \

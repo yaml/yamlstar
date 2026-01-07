@@ -1,0 +1,17 @@
+name = "yamlstar"
+version = "0.1.0"
+license = "MIT"
+author = "Ingy döt Net"
+maintainer = "ingy@ingy.net"
+description = "Fortran bindings for YAMLStar YAML 1.2 loader"
+
+[library]
+source-dir = "src"
+
+[build]
+link = ["yamlstar"]
+
+[[test]]
+name = "test_yamlstar"
+source-dir = "test"
+main = "test_yamlstar.f90"
