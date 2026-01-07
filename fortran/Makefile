@@ -5,8 +5,9 @@ include $(COMMON)/common.mk
 MAKES-CLEAN := \
   build \
 
-test: $(FPM) $(GCC) $(LIBYAMLSTAR-SO)
+
+test: $(FPM) $(LIBYAMLSTAR-SO)
 	fpm test --flag "-L$(LIBYS)/lib"
 
-build: $(FPM) $(GCC) $(LIBYAMLSTAR-SO)
+build: $(FPM) $(LIBYAMLSTAR-SO)
 	fpm build --flag "-L$(LIBYS)/lib"
