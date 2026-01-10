@@ -146,7 +146,7 @@ sub version {
 # Look for the local libyamlstar first, then look in system paths:
 sub find_libyamlstar {
     my $vers = $libyamlstar_version;
-    my $so = $^O eq 'darwin' ? 'dylib' : 'so';
+    my $so = $^O eq 'darwin' ? 'dylib' : $^O eq 'MSWin32' ? 'dll' : 'so';
     my $name = "libyamlstar.$so.$vers";
     my @paths;
 
@@ -162,18 +162,23 @@ sub find_libyamlstar {
     $dev_path = abs_path($dev_path) if -d $dev_path;
     push @paths, $dev_path if $dev_path && -d $dev_path;
 
-    # Add LD_LIBRARY_PATH:
-    if (my $path = $ENV{LD_LIBRARY_PATH}) {
-        push @paths, split /:/, $path;
+    # Add LD_LIBRARY_PATH (Unix) or PATH (Windows):
+    if ($^O eq 'MSWin32') {
+        if (my $path = $ENV{PATH}) {
+            push @paths, split /;/, $path;
+        }
+    } else {
+        if (my $path = $ENV{LD_LIBRARY_PATH}) {
+            push @paths, split /:/, $path;
+        }
+        # Add Unix system paths:
+        push @paths, qw(
+            /usr/local/lib
+            /usr/local/lib64
+            /usr/lib
+            /usr/lib64
+        ), "$ENV{HOME}/.local/lib";
     }
-
-    # Add system paths:
-    push @paths, qw(
-        /usr/local/lib
-        /usr/local/lib64
-        /usr/lib
-        /usr/lib64
-    ), "$ENV{HOME}/.local/lib";
 
     for my $path (@paths) {
         if (-e "$path/$name") {

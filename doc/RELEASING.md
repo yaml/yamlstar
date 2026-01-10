@@ -1,13 +1,16 @@
 # YAMLStar Release Process
 
-This document describes how to release YAMLStar shared libraries and language bindings.
+This document describes how to release YAMLStar shared libraries and language
+bindings.
 
 ## Overview
 
 YAMLStar uses a two-phase release process:
 
-1. **Shared Library Release** (GitHub Actions) - Builds and publishes platform binaries to GitHub Releases
-2. **Language Binding Release** (Local) - Publishes to package registries after shared libraries are released
+1. **Shared Library Release** (GitHub Actions) - Builds and publishes platform
+   binaries to GitHub Releases
+2. **Language Binding Release** (Local) - Publishes to package registries after
+   shared libraries are released
 
 ## Platform Support
 
@@ -145,7 +148,8 @@ python -c "import yamlstar; print(yamlstar.__version__)"
 
 ## Current Status: Python Only
 
-Currently, only Python bindings are published automatically. Other languages are disabled:
+Currently, only Python bindings are published automatically
+Other languages are disabled:
 
 - ⏸ Node.js (npm)
 - ⏸ Rust (crates.io)
@@ -200,7 +204,8 @@ Solution: Run `./util/version-bump` to update all version strings.
 ERROR: Missing linux-x64 asset
 ```
 
-Solution: Wait for the GitHub Actions workflow to complete, or check if it failed.
+Solution: Wait for the GitHub Actions workflow to complete, or check if it
+failed.
 
 ### PyPI Upload Fails
 

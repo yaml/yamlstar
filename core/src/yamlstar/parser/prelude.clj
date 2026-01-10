@@ -2,10 +2,8 @@
   (:require [clojure.string :as str]))
 
 ;; Environment access
-(def ENV (System/getenv))
-
 (defn env [key]
-  (get ENV key))
+  (System/getenv key))
 
 ;; Type checking predicates
 (defn is-null? [x] (nil? x))

@@ -89,7 +89,8 @@ class YAMLStar {
 
 // Helper function to find the libyamlstar shared library path
 function findLibyamlstarPath() {
-  let soExtension = os.platform() === 'linux' ? 'so' : 'dylib';
+  let platform = os.platform();
+  let soExtension = platform === 'win32' ? 'dll' : (platform === 'linux' ? 'so' : 'dylib');
   let libyamlstarName = `libyamlstar.${soExtension}.${yamlstarVersion}`;
 
   let searchPaths = [];

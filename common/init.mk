@@ -5,5 +5,5 @@ include $M/git.mk
 include $M/clean.mk
 
 ROOT := $(GIT-REPO-DIR)
-COMMON := $(ROOT)/common
-LIBYS := $(ROOT)/libyamlstar
+COMMON := ../common
+LIBYS := ../libyamlstar

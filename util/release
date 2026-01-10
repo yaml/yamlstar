@@ -1,0 +1,387 @@
+#!/usr/bin/env bash
+
+# shellcheck disable=2235
+
+set -euo pipefail
+
+VERSION=$(grep '^version:' Meta | cut -d' ' -f2)
+
+case "$(uname -s)" in
+  Linux*)
+    OS_NAME=linux
+    SED='sed -i' ;;
+  Darwin*)
+    OS_NAME=macos
+    SED="sed -i ''" ;;
+  MINGW*|MSYS*|CYGWIN*)
+    OS_NAME=windows
+    SED='sed -i' ;;
+esac
+
+main() (
+  "do-$1"
+)
+
+# Bump version and update changelog
+# Usage: make version-bump o=0.1.0 n=0.2.0
+do-version-bump() (
+  ([[ ${OLD_VERSION:-} ]] && [[ ${NEW_VERSION:-} ]]) ||
+    die 'ERROR: Usage: make version-bump o=OLD_VERSION n=NEW_VERSION'
+
+  echo "Bumping version from $OLD_VERSION to $NEW_VERSION..."
+  export ROOT=$PWD
+  export YS_RELEASE_VERSION_OLD=$OLD_VERSION
+  export YS_RELEASE_VERSION_NEW=$NEW_VERSION
+  ./util/version-bump
+
+  echo
+  echo 'Generating changelog entry from git history...'
+
+  git log --oneline "$OLD_VERSION"..HEAD 2>/dev/null |
+    tac |
+    sed 's/^[a-f0-9]* /  - /' > release-changes.txt ||
+    (echo "  - Update to version $NEW_VERSION" > release-changes.txt)
+
+  (
+    echo "- version: $NEW_VERSION"
+    echo "  date:    $(date)"
+    echo '  changes:'
+    cat release-changes.txt
+  ) > release-entry.txt
+  echo ""
+  echo 'Opening editor to review changelog entry...'
+
+  ${EDITOR:-vi} release-changes.txt
+  echo
+  read -r -p 'Save this entry to Changes file? [Y/n] ' answer
+  if [[ ${answer:-Y} =~ ^[Yy] ]]; then
+    sed 's/^[a-f0-9]* /  - /' release-changes.txt \
+      > release-changes-formatted.txt
+    (
+      echo "- version: $NEW_VERSION"
+      echo "  date:    $(date)"
+      echo '  changes:'
+      cat release-changes-formatted.txt
+    ) > release-entry.txt
+    cat release-entry.txt Changes > Changes.new
+    mv Changes.new Changes
+    rm -f release-changes.txt release-changes-formatted.txt release-entry.txt
+    echo 'Changelog updated!'
+  else
+    echo 'Changelog NOT updated. Entry saved in release-changes.txt'
+  fi
+)
+
+# Check that VERSION input matches Meta file
+do-check-version() (
+  META_VERSION=$(grep '^version:' Meta | cut -d' ' -f2)
+  [[ $META_VERSION == "$VERSION" ]] ||
+    die "ERROR: VERSION=$VERSION does not match Meta file version: $META_VERSION"
+  echo "Version check passed: $VERSION"
+)
+
+# Check if git tag already exists
+do-check-tag() (
+  if git rev-parse "$VERSION" >/dev/null 2>&1; then
+    die "ERROR: Tag $VERSION already exists"
+  fi
+  echo "Tag $VERSION does not exist - proceeding with release"
+)
+
+# Build shared library for current platform
+do-release-lib() (
+  # Build the library
+  make -C libyamlstar build
+
+  # Detect architecture
+  case "$(uname -m)" in
+    x86_64|amd64) ARCH=x64 ;;
+    aarch64|arm64) ARCH=arm64 ;;
+    *) die "ERROR: Unsupported architecture $(uname -m)" ;;
+  esac
+
+  # Set platform-specific values
+  if [[ $OS_NAME == linux ]]; then
+    PLATFORM=linux-$ARCH
+    EXT=so
+    ARCHIVE_CMD='tar -cJf'
+    ARCHIVE_EXT=tar.xz
+  elif [[ $OS_NAME == macos ]]; then
+    PLATFORM=macos-$ARCH
+    EXT=dylib
+    ARCHIVE_CMD='tar -cJf'
+    ARCHIVE_EXT=tar.xz
+  elif [[ $OS_NAME == windows ]]; then
+    PLATFORM=windows-$ARCH
+    EXT=dll
+    ARCHIVE_CMD='zip -r'
+    ARCHIVE_EXT=zip
+  fi
+
+  # Create release directory structure
+  RELEASE_DIR=libyamlstar-$VERSION-$PLATFORM
+  RELEASE_PATH=dist/$RELEASE_DIR
+
+  echo "Creating release package: $RELEASE_DIR"
+  rm -rf "$RELEASE_PATH"
+  mkdir -p "$RELEASE_PATH"
+
+  # Copy and rename library files (strip -SNAPSHOT suffix)
+  for f in libyamlstar/lib/libyamlstar.$EXT*; do
+    newname=$(basename "$f" | sed "s/-SNAPSHOT//g")
+    cp -P "$f" "$RELEASE_PATH/$newname"
+  done
+
+  # Fix symlinks to point to non-SNAPSHOT names
+  cd "$RELEASE_PATH"
+  rm -f libyamlstar.$EXT libyamlstar.$EXT.0
+  ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$EXT
+  ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$EXT.0
+
+  # Add alternate version symlink (libyamlstar.0.1.0.so -> libyamlstar.so.0.1.0)
+  ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$VERSION.$EXT
+  cd - > /dev/null
+
+  # Copy header files
+  cp libyamlstar/lib/*.h "$RELEASE_PATH/"
+
+  # Create installation Makefile
+  cat > "$RELEASE_PATH/Makefile" <<'...'
+SHELL := bash
+
+ROOT := $(shell cd '$(abspath $(dir $(lastword $(MAKEFILE_LIST))))' && pwd -P)
+
+YAMLSTAR_VERSION := VERSION_PLACEHOLDER
+
+LIBYAMLSTAR := $(firstword $(wildcard libyamlstar.*))
+
+PREFIX ?= /usr/local
+
+install:
+ifneq (,$(LIBYAMLSTAR))
+	mkdir -p $(PREFIX)/lib
+	cp -pP libyamlstar.EXT_PLACEHOLDER* $(PREFIX)/lib/
+	mkdir -p $(PREFIX)/include/libyamlstar-$(YAMLSTAR_VERSION)
+	cp -pP *.h $(PREFIX)/include/libyamlstar-$(YAMLSTAR_VERSION)/
+	@echo 'Installed $(PREFIX)/lib/$(LIBYAMLSTAR) - version $(YAMLSTAR_VERSION)'
+else
+	$(error Weird! Nothing to install in this directory.)
+endif
+...
+
+  # Replace placeholders in Makefile
+  $SED "s/VERSION_PLACEHOLDER/$VERSION/g" "$RELEASE_PATH/Makefile"
+  $SED "s/EXT_PLACEHOLDER/$EXT/g" "$RELEASE_PATH/Makefile"
+
+  # Create ReadMe.md
+  cat > "$RELEASE_PATH/ReadMe.md" <<'...'
+# YAMLStar Shared Library
+
+YAMLStar VERSION_PLACEHOLDER for PLATFORM_PLACEHOLDER
+
+## Contents
+
+- `libyamlstar.EXT_PLACEHOLDER.VERSION_PLACEHOLDER` - Versioned shared library
+- `libyamlstar.EXT_PLACEHOLDER` - Symlink to versioned library
+- `libyamlstar.EXT_PLACEHOLDER.0` - Symlink for API version compatibility
+- `libyamlstar.h` - Main library header
+- `graal_isolate.h` - GraalVM isolate header
+- `Makefile` - Installation script
+
+## Installation
+
+### System-wide (requires sudo)
+
+```bash
+make install
+```
+
+Default installation prefix is `/usr/local`. To install elsewhere:
+
+```bash
+make install PREFIX=/opt/yamlstar
+```
+
+### Manual Installation
+
+Copy the library and headers to your preferred location:
+
+```bash
+# Libraries
+cp -P libyamlstar.EXT_PLACEHOLDER* /path/to/lib/
+
+# Headers
+mkdir -p /path/to/include/libyamlstar-VERSION_PLACEHOLDER
+cp *.h /path/to/include/libyamlstar-VERSION_PLACEHOLDER/
+```
+
+## Usage
+
+Include the header in your C/C++ code:
+
+```c
+#include <libyamlstar-VERSION_PLACEHOLDER/libyamlstar.h>
+```
+
+Link against the library:
+
+```bash
+gcc -o myapp myapp.c -lyamlstar
+```
+
+## More Information
+
+- GitHub: https://github.com/yaml/yamlstar
+- Documentation: https://yamlstar.org
+...
+
+  # Replace placeholders in ReadMe
+  $SED "s/VERSION_PLACEHOLDER/$VERSION/g" "$RELEASE_PATH/ReadMe.md"
+  $SED "s/PLATFORM_PLACEHOLDER/$PLATFORM/g" "$RELEASE_PATH/ReadMe.md"
+  $SED "s/EXT_PLACEHOLDER/$EXT/g" "$RELEASE_PATH/ReadMe.md"
+
+  # Create archive
+  mkdir -p dist
+  cd dist
+  if [[ $ARCHIVE_EXT == zip ]]; then
+    $ARCHIVE_CMD "$RELEASE_DIR.$ARCHIVE_EXT" "$RELEASE_DIR"
+  else
+    $ARCHIVE_CMD "$RELEASE_DIR.$ARCHIVE_EXT" "$RELEASE_DIR"
+  fi
+  cd ..
+
+  echo "Built release artifact: dist/$RELEASE_DIR.$ARCHIVE_EXT"
+  echo 'Contents:'
+  if [[ $ARCHIVE_EXT == zip ]]; then
+    unzip -l "dist/$RELEASE_DIR.$ARCHIVE_EXT" | tail -n +4
+  else
+    tar -tf "dist/$RELEASE_DIR.$ARCHIVE_EXT"
+  fi
+)
+
+# Create and push git tag
+do-release-tag() (
+  if git rev-parse "$VERSION" >/dev/null 2>&1; then
+    die "ERROR: Tag $VERSION already exists"
+  fi
+  git tag "$VERSION"
+  git push origin "$VERSION"
+  echo "Created and pushed tag $VERSION"
+)
+
+# Create GitHub release with artifacts
+do-release-github() (
+  if ! gh release view "$VERSION" >/dev/null 2>&1; then
+    echo 'Extracting release notes from Changes file...'
+    ys -e "load('Changes').find(\\(%[:version] == '$VERSION'))
+           .changes.map(\\(str '- ' %))
+           .join(str/lf):say" > release-notes.txt || \
+      echo "Release $VERSION" > release-notes.txt
+    gh release create "$VERSION" \
+      --title "YAMLStar $VERSION" \
+      --notes-file release-notes.txt \
+      "dist/libyamlstar-$VERSION-*.tar.xz" \
+      "dist/libyamlstar-$VERSION-*.zip"
+    rm -f release-notes.txt
+    echo "Created GitHub release $VERSION"
+  else
+    echo "Release $VERSION already exists"
+  fi
+)
+
+# Check that GitHub release exists with all shared library assets
+do-check-release() (
+  git fetch --tags
+  echo "Checking for GitHub release $VERSION..."
+  gh release view "$VERSION" >/dev/null 2>&1 ||
+    die "ERROR: Release $VERSION not found"
+  echo 'Checking for required assets...'
+  gh release view "$VERSION" --json assets --jq '.assets[].name' |
+    grep -q "libyamlstar-$VERSION-linux-x64.tar.xz" ||
+      die 'ERROR: Missing linux-x64 asset'
+  gh release view "$VERSION" --json assets --jq '.assets[].name' |
+    grep -q "libyamlstar-$VERSION-macos-arm64.tar.xz" ||
+      die 'ERROR: Missing macos-arm64 asset'
+  gh release view "$VERSION" --json assets --jq '.assets[].name' |
+    grep -q "libyamlstar-$VERSION-windows-x64.zip" ||
+      die 'ERROR: Missing windows-x64 asset'
+  echo "All required assets found for $VERSION"
+)
+
+# Release Python binding to PyPI
+do-release-python() (
+  echo 'Publishing Python package to PyPI...'
+  make -C python build
+  if [[ -f ~/.yamlstar-secrets.yaml ]]; then
+    PYPI_TOKEN=$(ys -e '.pypi.token:say' ~/.yamlstar-secrets.yaml)
+    cd python &&
+      TWINE_PASSWORD=$PYPI_TOKEN \
+        twine upload --repository yamlstar dist/*.tar.gz
+  else
+    die 'ERROR: ~/.yamlstar-secrets.yaml not found'
+  fi
+)
+
+# Node.js - publish to npm
+do-release-nodejs() (
+  echo 'Publishing Node.js package to npm...'
+  if [[ -f ~/.yamlstar-secrets.yaml ]]; then
+    NPM_TOKEN=$(ys -e '.npm.token:say' ~/.yamlstar-secrets.yaml)
+    cd nodejs
+    echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+    npm publish --access public
+    rm -f .npmrc
+  else
+    die 'ERROR: ~/.yamlstar-secrets.yaml not found'
+  fi
+)
+
+# Rust - publish to crates.io
+do-release-rust() (
+  echo 'Publishing Rust crate to crates.io...'
+  if [[ -f ~/.yamlstar-secrets.yaml ]]; then
+    CARGO_TOKEN=$(ys -e '.crates.token:say' ~/.yamlstar-secrets.yaml)
+    cd rust
+    cargo publish --token "$CARGO_TOKEN"
+  else
+    die 'ERROR: ~/.yamlstar-secrets.yaml not found'
+  fi
+)
+
+# C# - publish to NuGet
+do-release-csharp() (
+  echo 'Publishing C# package to NuGet...'
+  if [[ -f ~/.yamlstar-secrets.yaml ]]; then
+    NUGET_KEY=$(ys -e '.nuget.token:say' ~/.yamlstar-secrets.yaml)
+    cd csharp
+    dotnet pack -c Release
+    dotnet nuget push "bin/Release/YAMLStar.$VERSION.nupkg" \
+      --api-key "$NUGET_KEY" \
+      --source https://api.nuget.org/v3/index.json
+  else
+    die 'ERROR: ~/.yamlstar-secrets.yaml not found'
+  fi
+)
+
+# Perl - publish to CPAN via zild
+do-release-perl() (
+  echo 'Publishing Perl module to CPAN...'
+  make -C perl release
+)
+
+# Go - delegate to release-go script
+do-release-go() (
+  ./util/release-go
+)
+
+# Fortran - delegate to release-fortran script
+do-release-fortran() (
+  ./util/release-fortran
+)
+
+die() {
+  printf '%s\n' "$@" >&2
+  exit 1
+}
+
+main "$@"

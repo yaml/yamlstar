@@ -4,7 +4,8 @@
 
 ### Project Structure
 - Created `/core` directory with Leiningen project
-- Set up namespace structure: `yamlstar.core`, `yamlstar.parser`, `yamlstar.composer`, `yamlstar.resolver`
+- Set up namespace structure: `yamlstar.core`, `yamlstar.parser`,
+  `yamlstar.composer`, `yamlstar.resolver`
 - Created test directory structure
 - Added `.gitignore` and `README.md`
 
@@ -117,18 +118,23 @@ Phase 1 has been successfully completed with:
 ## 💡 Design Decisions
 
 ### Why 4 Stages Instead of 7?
-YAMLScript has 7 compiler stages because it's both a YAML loader AND a programming language. YAMLStar only needs YAML loading, so we removed:
+YAMLScript has 7 compiler stages because it's both a YAML loader AND a
+programming language.
+YAMLStar only needs YAML loading, so we removed:
 - Builder (expression parsing)
 - Transformer (AST transformations)
 - Printer (code generation)
 - Runtime (SCI evaluation)
 
-This makes YAMLStar ~80% lighter in dependencies. The 4 stages are: Parser, Composer, Resolver, and Constructor.
+This makes YAMLStar ~80% lighter in dependencies.
+The 4 stages are: Parser,
+Composer, Resolver, and Constructor.
 
 ### Why Pure Clojure Parser?
 - **No Dependencies**: SnakeYAML is a large Java library
 - **Spec Compliant**: 100% YAML 1.2 compliance via reference parser
-- **Portable**: Pure Clojure works with Clojure, ClojureScript, Babashka, Glojure
+- **Portable**: Pure Clojure works with Clojure, ClojureScript, Babashka,
+  Glojure
 - **Maintainable**: Grammar generated from YAML spec
 
 ### Why Glojure (Eventually)?

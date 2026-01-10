@@ -58,7 +58,10 @@ const LIBYAMLSTAR_EXTENSION: &str = "so";
 /// The extension of the YAMLStar library. On MacOS, it's a `.dylib` file.
 #[cfg(target_os = "macos")]
 const LIBYAMLSTAR_EXTENSION: &str = "dylib";
-#[cfg(not(any(target_os = "linux", target_os = "macos")))]
+/// The extension of the YAMLStar library. On Windows, it's a `.dll` file.
+#[cfg(target_os = "windows")]
+const LIBYAMLSTAR_EXTENSION: &str = "dll";
+#[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
 compile_error!("Unsupported platform for yamlstar.");
 
 /// Prototype of the `graal_create_isolate` function.
@@ -242,9 +245,11 @@ impl YAMLStar {
             search_paths.push(format!("{manifest_dir}/../libyamlstar/lib"));
         }
 
-        // Check LD_LIBRARY_PATH
-        if let Ok(library_path) = std::env::var("LD_LIBRARY_PATH") {
-            for path in library_path.split(':') {
+        // Check LD_LIBRARY_PATH (Unix) or PATH (Windows)
+        let path_var = if cfg!(windows) { "PATH" } else { "LD_LIBRARY_PATH" };
+        let path_sep = if cfg!(windows) { ';' } else { ':' };
+        if let Ok(library_path) = std::env::var(path_var) {
+            for path in library_path.split(path_sep) {
                 search_paths.push(path.to_string());
             }
         }

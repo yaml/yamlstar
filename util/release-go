@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+lang=go
+tag_prefix=v  # Go requires v prefix
+
+update() (
+  cp "$root/License" "$repo_dir/LICENSE"
+
+  cd "$from_dir"
+  cp \
+    ReadMe.md \
+    go.mod \
+    go.sum \
+    yamlstar.go \
+    yamlstar_test.go \
+    "$repo_dir/"
+
+  cp -r examples "$repo_dir/"
+
+  # Update module path from yamlstar/go to yamlstar-go
+  perl -pi -e 's{yamlstar/go}{yamlstar-go}' "$repo_dir/go.mod"
+)
+
+source "$(dirname "$0")/release-repo.bash"

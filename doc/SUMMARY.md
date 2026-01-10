@@ -2,7 +2,9 @@
 
 ## What We've Built
 
-A **pure YAML 1.2 loader** with a clean 4-stage pipeline, zero dependencies (except Clojure), and 100% spec compliance via your pure Clojure YAML reference parser.
+A **pure YAML 1.2 loader** with a clean 4-stage pipeline, zero dependencies
+(except Clojure), and 100% spec compliance via your pure Clojure YAML reference
+parser.
 
 ### Complete Implementation
 
@@ -129,7 +131,8 @@ YAML String (input)
 ✅ **Simple Pipeline** - 4 stages vs YAMLScript's 7 stages (~80% lighter)
 ✅ **Well-Tested** - 23 tests covering major features
 ✅ **Well-Documented** - Complete dev guide and examples
-✅ **Language Bindings** - 7 bindings for C#, Fortran, Go, Node.js, Perl, Python, Rust
+✅ **Language Bindings** - 7 bindings for C#, Fortran, Go, Node.js, Perl,
+   Python, Rust
 
 ### Project Structure
 

@@ -1,8 +1,8 @@
 include ../common/init.mk
 include $M/graalvm.mk
 include $M/lein.mk
-include $(ROOT)/common/common.mk
-include $(ROOT)/common/native.mk
+include ../common/common.mk
+include ../common/native.mk
 
 MAKES-CLEAN := \
   target \
@@ -63,3 +63,8 @@ $(LIB-SO): $(LIB-JAR) $(REFLECTION-JSON) $(GRAALVM)
 	ln -sf $(notdir $(LIB-SO-VERSIONED)) $(LIB-SO).$(API-VERSION)
 	@echo "Shared library created at: $(LIB-SO)"
 	@echo "Headers: $(LIB-HEADERS)"
+
+# Declare that these files are created as side effects of building $(LIB-SO)
+$(LIB-SO-VERSIONED): $(LIB-SO)
+$(LIB-NAME).h: $(LIB-SO)
+$(LIB-DIR)/graal_isolate.h: $(LIB-SO)

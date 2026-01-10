@@ -28,6 +28,8 @@ def find_libyamlstar_path():
     so = 'so'
   elif sys.platform == 'darwin':
     so = 'dylib'
+  elif sys.platform == 'win32':
+    so = 'dll'
   else:
     raise Exception(
       "Unsupported platform '%s' for yamlstar." % sys.platform)
@@ -51,7 +53,7 @@ def find_libyamlstar_path():
 
   libyamlstar_path = None
   for path in ld_library_paths:
-    full_path = path + '/' + libyamlstar_name
+    full_path = os.path.join(path, libyamlstar_name)
     if os.path.isfile(full_path):
       libyamlstar_path = full_path
       break

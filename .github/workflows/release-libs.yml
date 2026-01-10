@@ -5,7 +5,7 @@ on:
     branches: [main, release]
     inputs:
       version:
-        description: 'Version to release (e.g., 0.1.0)'
+        description: Version to release (e.g., 0.1.0)
         required: true
         type: string
 
@@ -14,9 +14,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Check if tag already exists
+      run: make check-tag
 
     - name: Verify version matches Meta file
-      run: make check-version VERSION=${{ inputs.version }}
+      run: make check-version
 
   build-linux:
     needs: check-version
@@ -31,7 +36,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: libyamlstar-linux-x64
-        path: dist/libyamlstar-${{ inputs.version }}-linux-x64.tar.gz
+        path: dist/libyamlstar-${{ inputs.version }}-linux-x64.tar.xz
 
   build-macos:
     needs: check-version
@@ -46,13 +51,16 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: libyamlstar-macos-arm64
-        path: dist/libyamlstar-${{ inputs.version }}-macos-arm64.tar.gz
+        path: dist/libyamlstar-${{ inputs.version }}-macos-arm64.tar.xz
 
   build-windows:
     needs: check-version
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
+
+    - name: Install zip
+      run: choco install zip -y
 
     - name: Build Windows x64 shared library
       run: make release-lib VERSION=${{ inputs.version }}
@@ -80,7 +88,9 @@ jobs:
     - name: Prepare dist directory
       run: |
         mkdir -p dist
-        find dist-artifacts -type f \( -name "*.tar.gz" -o -name "*.zip" \) -exec mv {} dist/ \;
+        find dist-artifacts -type f \
+          \( -name "*.tar.xz" -o -name "*.zip" \) \
+          -exec mv {} dist/ \;
         ls -la dist/
 
     - name: Create and push tag

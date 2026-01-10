@@ -1,6 +1,7 @@
 include ../common/init.mk
 include $M/dotnet.mk
 include $(COMMON)/common.mk
+include $(COMMON)/binding.mk
 
 PROJECT-FILE := YAMLStar.csproj
 TEST-PROJECT-FILE := test/YAMLStar.Tests.csproj

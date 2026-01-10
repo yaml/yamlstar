@@ -1,0 +1,54 @@
+# Used by util/version-bump to update versions in repo
+
+!ys-0
+
+v-old =: ENV.YS_RELEASE_VERSION_OLD ||
+  die("'YS_RELEASE_VERSION_OLD' env var not defined")
+v-new =: ENV.YS_RELEASE_VERSION_NEW ||
+  die("'YS_RELEASE_VERSION_NEW' env var not defined")
+
+vp =: '0\.[12]\.[0-9]+'
+vo =: v-old.str/replace(/\./ '\\.')
+
+
+=>::
+#------------------------------------------------------------------------------
+# These files can change all occurences of old version to new version.
+#------------------------------------------------------------------------------
+- vers:: v-new
+  all: true
+  bump:
+  - regx:: "()${vp}()"
+    file:
+    - Meta
+    - fortran/fpm.toml
+    - csharp/YAMLStar.csproj
+    - go/yamlstar.go
+    - nodejs/lib/yamlstar/index.js
+    - perl/lib/YAMLStar.pm
+    - rust/src/lib.rs
+    - rust/ReadMe.md
+    - rust/tests/load.rs
+    - python/lib/yamlstar/__init__.py
+    - util/yamlj
+    - cli/src/yamlstar/cli.clj
+    - core/src/yamlstar/core.clj
+
+#------------------------------------------------------------------------------
+# These changes are very specific to not accidentally bump something wrongly.
+#------------------------------------------------------------------------------
+- vers:: v-new
+  bump:
+  - regx:: "(yamlstar/core.*)${vp}(.*)"
+    file:
+    - libyamlstar/project.clj
+    - cli/project.clj
+
+  - regx:: "(version.*)${vp}(.*)"
+    file:
+    - nodejs/package.json
+    - python/setup.py
+    - rust/Cargo.toml
+    - core/project.clj
+    - cli/project.clj
+    - libyamlstar/project.clj

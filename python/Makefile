@@ -1,6 +1,7 @@
 include ../common/init.mk
 include $M/python.mk
 include $(COMMON)/common.mk
+include $(COMMON)/binding.mk
 
 MAKES-CLEAN := \
   build \
@@ -16,8 +17,13 @@ PYTHON-VENV-SETUP := pip install pytest
 
 test: test-pytest
 
+ifeq ($(OS-NAME),windows)
+test-pytest: $(LIBYAMLSTAR-SO) $(PYTHON-VENV)
+	PATH="$(LIBYS)/lib:$$PATH" $(VENV) && pytest test/
+else
 test-pytest: $(LIBYAMLSTAR-SO) $(PYTHON-VENV)
 	$(VENV) && pytest test/
+endif
 
 build: $(LIBYAMLSTAR-SO)
 
