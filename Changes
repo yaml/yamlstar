@@ -1,0 +1,9 @@
+- version: 0.1.0
+  date:    Sat Jan 10 02:25:23 PM EST 2026
+  changes:
+  - core: Pure Clojure YAML 1.2 parser implementation
+  - core: Support for scalars, mappings, sequences, anchors/aliases
+  - cli: Command-line interface tool
+  - libyamlstar: GraalVM native-image shared library
+  - bindings: Support for Python, Node.js, Rust, Go, C#, Perl, Fortran
+  - make: Auto-installing build system via 'makes'

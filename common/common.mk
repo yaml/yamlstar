@@ -1,5 +1,4 @@
 include $M/shell.mk
-include $(COMMON)/version.mk
 
 LIBYAMLSTAR-VERSION := $(VERSION)-SNAPSHOT
 LIBYAMLSTAR-SO := $(LIBYS)/lib/libyamlstar.so

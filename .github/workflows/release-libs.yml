@@ -1,0 +1,97 @@
+name: Release Shared Libraries
+
+on:
+  workflow_dispatch:
+    branches: [main, release]
+    inputs:
+      version:
+        description: 'Version to release (e.g., 0.1.0)'
+        required: true
+        type: string
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Verify version matches Meta file
+      run: make check-version VERSION=${{ inputs.version }}
+
+  build-linux:
+    needs: check-version
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build Linux x64 shared library
+      run: make release-lib VERSION=${{ inputs.version }}
+
+    - name: Upload Linux artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: libyamlstar-linux-x64
+        path: dist/libyamlstar-${{ inputs.version }}-linux-x64.tar.gz
+
+  build-macos:
+    needs: check-version
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build macOS ARM64 shared library
+      run: make release-lib VERSION=${{ inputs.version }}
+
+    - name: Upload macOS artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: libyamlstar-macos-arm64
+        path: dist/libyamlstar-${{ inputs.version }}-macos-arm64.tar.gz
+
+  build-windows:
+    needs: check-version
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build Windows x64 shared library
+      run: make release-lib VERSION=${{ inputs.version }}
+      shell: bash
+
+    - name: Upload Windows artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: libyamlstar-windows-x64
+        path: dist/libyamlstar-${{ inputs.version }}-windows-x64.zip
+
+  create-release:
+    needs: [build-linux, build-macos, build-windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: dist-artifacts
+
+    - name: Prepare dist directory
+      run: |
+        mkdir -p dist
+        find dist-artifacts -type f \( -name "*.tar.gz" -o -name "*.zip" \) -exec mv {} dist/ \;
+        ls -la dist/
+
+    - name: Create and push tag
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        make release-tag VERSION=${{ inputs.version }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create GitHub Release
+      run: make release-github VERSION=${{ inputs.version }}
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
