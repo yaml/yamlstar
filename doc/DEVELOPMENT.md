@@ -92,10 +92,16 @@ doc2
 (composer/compose events)
 ;; => {:kind :mapping :value [[{:kind :scalar ...} {:kind :scalar ...}]]}
 
-;; Test resolver (returns data)
+;; Test resolver (returns resolved nodes)
 (require '[yamlstar.resolver :as resolver])
 (def node (composer/compose events))
-(resolver/resolve node)
+(def resolved (resolver/resolve node))
+resolved
+;; => {:kind :mapping :tag "!!map" ...}
+
+;; Test constructor (returns data)
+(require '[yamlstar.constructor :as constructor])
+(constructor/construct resolved)
 ;; => {"key" "value"}
 ```
 
@@ -228,6 +234,8 @@ YAML String
 [Composer] yamlstar.composer
     ↓ nodes: {:kind :mapping :value [...]}
 [Resolver] yamlstar.resolver
+    ↓ resolved nodes: {:kind :mapping :tag "!!map" ...}
+[Constructor] yamlstar.constructor
     ↓
 Clojure Data: {"key" "value"}
 ```
@@ -237,10 +245,11 @@ Clojure Data: {"key" "value"}
 ```
 core/
 ├── src/yamlstar/
-│   ├── core.clj           - Public API (load, load-all)
+│   ├── core.clj            - Public API (load, load-all)
 │   ├── parser.clj          - Parser wrapper
 │   ├── composer.clj        - Event → Node composer
-│   ├── resolver.clj        - Node → Data resolver
+│   ├── resolver.clj        - Node → Resolved node resolver
+│   ├── constructor.clj     - Resolved node → Data constructor
 │   └── parser/             - Pure Clojure YAML parser
 │       ├── core.clj        - Parser entry point
 │       ├── parser.clj      - PEG parsing engine

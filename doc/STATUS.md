@@ -39,6 +39,12 @@
 - Explicit tag support (`!!str`, `!!int`, `!!float`, `!!bool`, `!!null`)
 - Anchor/alias resolution with circular reference handling
 
+### Constructor Layer
+- Implemented resolver-to-data constructor
+- Tag-based constructor lookup
+- Handles special float values (`.inf`, `-.inf`, `.nan`)
+- Converts resolved nodes to native Clojure data structures
+
 ### API
 - `yamlstar.core/load` - Load single YAML document
 - `yamlstar.core/load-all` - Load multi-document YAML
@@ -53,61 +59,35 @@ Parser (yamlstar.parser)
 Composer (yamlstar.composer)
     ↓ nodes
 Resolver (yamlstar.resolver)
+    ↓ resolved nodes
+Constructor (yamlstar.constructor)
     ↓
 Clojure Data (maps, vectors, scalars)
 ```
 
 ---
 
-## 🚧 Next Steps (Phase 1B - Testing & Validation)
+## ✅ Phase 1 Complete!
 
-### Immediate Priorities
-
-1. **Install Clojure Tools**
-   - Leiningen or Clojure CLI
-   - Test the complete pipeline with real YAML
-
-2. **Test Suite**
-   - Enable tests in `core_test.clj`
-   - Test simple scalars, mappings, sequences
-   - Test anchors and aliases
-   - Test multi-document streams
-   - Test YAML 1.2 type resolution
-   - Run against YAML test suite
-
-3. **Bug Fixes**
-   - Fix anchor/tag propagation in composer (currently not handling anchor/tag events)
-   - Handle edge cases in resolver
-   - Test with complex YAML documents
-
-4. **Missing Features**
-   - Add proper handling for anchor/tag property events
-   - Add document directive handling (`%YAML 1.2`, `%TAG`)
-   - Improve error messages
+Phase 1 has been successfully completed with:
+- ✅ Pure YAML 1.2 loading working
+- ✅ Complete 4-stage pipeline tested
+- ✅ 23 tests passing
+- ✅ GraalVM native-image shared library built
+- ✅ 7 language bindings working (C#, Fortran, Go, Node.js, Perl, Python, Rust)
 
 ---
 
-## 📋 Future Phases
+## 📋 Next Steps (Phase 2 - Glojure Migration)
 
-### Phase 1C - FFI Interface
-- Create `libys` or `libyamlstar` shared library
-- GraalVM native-image compilation
-- JSON wrapper for cross-language FFI
-- Single entry point: `load_yaml_to_json(yaml_str) → json_str`
-
-### Phase 2 - Language Bindings
-- Port 15+ language bindings from YAMLScript
-- Thin wrappers around shared library
-- Python, Ruby, Node.js, Go, Rust, etc.
-
-### Phase 3 - Glojure Migration
+### Phase 2 - Glojure Migration
 - Test core with Glojure interpreter
 - Use Glojure AOT compilation to Go
 - Create Go shared library
 - Eliminate GraalVM dependency
 - Better cross-platform support
 
-### Phase 4 - Plugin System
+### Phase 3 - Plugin System
 - Plugin architecture design
 - Custom tag handlers
 - Schema validation plugins
@@ -117,25 +97,18 @@ Clojure Data (maps, vectors, scalars)
 
 ## 📊 Project Stats
 
-- **Total Files**: 11 source files + tests
+- **Total Files**: 12 source files + tests
 - **Core Dependencies**: 2 (Clojure 1.12.0, data.json 2.5.0)
 - **Lines of Code**: ~500 (excluding grammar.clj which is 4,247 lines)
 - **YAML Spec Compliance**: 100% (via reference parser)
-- **Supported Platforms**: JVM (for now), Go (Phase 3)
+- **Supported Platforms**: Linux, macOS, Windows (via GraalVM native-image)
+- **Language Bindings**: 7 (C#, Fortran, Go, Node.js, Perl, Python, Rust)
 
 ---
 
 ## 🐛 Known Issues
 
-1. **Composer**: Anchor/tag events not yet handled
-   - The parser emits separate events for anchors and tags
-   - Composer needs to capture these and attach to next node
-
-2. **Testing**: No Clojure tools installed yet
-   - Cannot validate the implementation works
-   - Need lein or clj to run tests
-
-3. **Error Handling**: Basic error messages
+1. **Error Handling**: Basic error messages
    - Need better parse error reporting
    - Need line/column information in errors
 
@@ -143,15 +116,14 @@ Clojure Data (maps, vectors, scalars)
 
 ## 💡 Design Decisions
 
-### Why 3 Stages Instead of 7?
+### Why 4 Stages Instead of 7?
 YAMLScript has 7 compiler stages because it's both a YAML loader AND a programming language. YAMLStar only needs YAML loading, so we removed:
 - Builder (expression parsing)
 - Transformer (AST transformations)
-- Constructor (code construction)
 - Printer (code generation)
 - Runtime (SCI evaluation)
 
-This makes YAMLStar ~80% lighter in dependencies.
+This makes YAMLStar ~80% lighter in dependencies. The 4 stages are: Parser, Composer, Resolver, and Constructor.
 
 ### Why Pure Clojure Parser?
 - **No Dependencies**: SnakeYAML is a large Java library
@@ -169,15 +141,15 @@ This makes YAMLStar ~80% lighter in dependencies.
 
 ## 🎯 Success Criteria for Phase 1
 
-- [ ] Successfully parse and load simple YAML documents
-- [ ] Handle all YAML 1.2 core schema types
-- [ ] Support anchors and aliases
-- [ ] Support multi-document streams
-- [ ] Pass basic YAML test suite cases
-- [ ] Create shared library with FFI
-- [ ] Create at least one language binding (Python or Go)
+- [x] Successfully parse and load simple YAML documents
+- [x] Handle all YAML 1.2 core schema types
+- [x] Support anchors and aliases
+- [x] Support multi-document streams
+- [x] Pass basic YAML test suite cases (23 tests)
+- [x] Create shared library with FFI (`libyamlstar`)
+- [x] Create at least one language binding (7 bindings created!)
 
 ---
 
-**Last Updated**: 2025-12-28
-**Current Phase**: 1B (Testing & Validation)
+**Last Updated**: 2026-01-10
+**Current Phase**: Phase 1 Complete, Phase 2 Next
