@@ -21,3 +21,5 @@ test:
 
 =zild:
   no-readme: true
+  no-travis: true
+  no-about: true

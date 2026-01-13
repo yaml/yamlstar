@@ -12,7 +12,7 @@ MAKES-CLEAN := \
   lib/yamlstar/__pycache__ \
   test/__pycache__ \
 
-PYTHON-VENV-SETUP := pip install pytest
+PYTHON-VENV-SETUP := pip install pytest setuptools twine
 
 
 test: test-pytest

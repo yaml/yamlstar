@@ -2,14 +2,15 @@ include ../common/init.mk
 include $M/perl.mk
 include $M/zild.mk
 include $(COMMON)/common.mk
-include $(COMMON)/binding.mk
 
 CPAN-DEPS := \
+  CPAN::Uploader \
   Cpanel::JSON::XS \
   FFI::CheckLib \
   FFI::Platypus \
   Moo \
   Test2::V0 \
+  Zilla::Dist \
 
 PERL-LOCAL-LIB := local
 
@@ -33,4 +34,5 @@ build: $(LIBYAMLSTAR-SO)
 $(PERL-LOCAL-LIB): $(PERL)
 	cpanm -L $@ -n $(CPAN-DEPS)
 
-release-deps:: $(PERL)
+release-cpan: $(PERL)
+	$(ROOT)/util/release release-perl

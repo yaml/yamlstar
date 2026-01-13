@@ -317,8 +317,9 @@ do-release-python() (
   make dist
   if [[ -f ~/.yamlstar-secrets.yaml ]]; then
     PYPI_TOKEN=$(ys -e '.pypi.token:say' ~/.yamlstar-secrets.yaml)
+    TWINE_USERNAME=__token__ \
     TWINE_PASSWORD=$PYPI_TOKEN \
-      twine upload --repository yamlstar dist/*.tar.gz
+      twine upload dist/*.tar.gz
   else
     die 'ERROR: ~/.yamlstar-secrets.yaml not found'
   fi
@@ -328,10 +329,16 @@ do-release-python() (
 do-release-nodejs() (
   echo 'Publishing Node.js package to npm...'
   if [[ -f ~/.yamlstar-secrets.yaml ]]; then
+    # Temporarily update version in package.json (strip -SNAPSHOT)
+    $SED "s/\"version\": \".*\"/\"version\": \"$VERSION\"/" package.json
+
     NPM_TOKEN=$(ys -e '.npm.token:say' ~/.yamlstar-secrets.yaml)
     echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
     npm publish --access public
     rm -f .npmrc
+
+    # Restore -SNAPSHOT version
+    $SED "s/\"version\": \".*\"/\"version\": \"$VERSION-SNAPSHOT\"/" package.json
   else
     die 'ERROR: ~/.yamlstar-secrets.yaml not found'
   fi
@@ -364,8 +371,11 @@ do-release-csharp() (
 
 # Perl - publish to CPAN via zild
 do-release-perl() (
-  echo 'Publishing Perl module to CPAN...'
-  make release
+  echo 'Publishing Perl package to CPAN...'
+  PAUSE_USER=$(ys -e '.pause.user:say' ~/.yamlstar-secrets.yaml)
+  PAUSE_PASS=$(ys -e '.pause.pass:say' ~/.yamlstar-secrets.yaml)
+  zild dist
+  cpan-uploader -u "$PAUSE_USER" -p "$PAUSE_PASS" *.tar.gz
 )
 
 # Go - delegate to release-go script

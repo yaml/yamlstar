@@ -1,8 +1,17 @@
 #!/usr/bin/env python3
 
 from setuptools import setup
+import re
+from pathlib import Path
 
-version = '0.1.0-SNAPSHOT'
+# Read version from ../Meta file
+meta_file = Path(__file__).parent.parent / 'Meta'
+if meta_file.exists():
+    meta_content = meta_file.read_text()
+    match = re.search(r'^version:\s*(.+)$', meta_content, re.MULTILINE)
+    version = match.group(1) if match else '0.1.0'
+else:
+    version = '0.1.0'
 
 setup(
     name = 'yamlstar',

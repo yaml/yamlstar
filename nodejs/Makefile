@@ -6,6 +6,7 @@ include $(COMMON)/binding.mk
 NODE-MODULES := node_modules
 
 MAKES-CLEAN := \
+  .npmrc \
   package-lock.json \
 
 MAKES-REALCLEAN := \

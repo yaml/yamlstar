@@ -109,7 +109,10 @@ RELEASE-BINDINGS := $(BINDING-LANGS:%=release-%)
 
 release-bindings: check-release $(RELEASE-BINDINGS)
 
-$(RELEASE-BINDINGS): $(GH)
+$(filter-out release-perl, $(RELEASE-BINDINGS)): $(GH)
 	$(MAKE) -C $(@:release-%=%) release
+
+release-perl:
+	$(MAKE) -C perl release-cpan
 
 .PHONY: cli core libyamlstar test
