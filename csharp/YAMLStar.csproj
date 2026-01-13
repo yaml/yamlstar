@@ -39,15 +39,18 @@
 
   <ItemGroup>
     <None Include="../libyamlstar/lib/libyamlstar.dylib"
-          Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+          Condition="$([MSBuild]::IsOSPlatform('OSX')) AND Exists('../libyamlstar/lib/libyamlstar.dylib')"
+          Pack="false">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="../libyamlstar/lib/libyamlstar.so"
-          Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+          Condition="$([MSBuild]::IsOSPlatform('Linux')) AND Exists('../libyamlstar/lib/libyamlstar.so')"
+          Pack="false">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="../libyamlstar/lib/libyamlstar.dll"
-          Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+          Condition="$([MSBuild]::IsOSPlatform('Windows')) AND Exists('../libyamlstar/lib/libyamlstar.dll')"
+          Pack="false">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

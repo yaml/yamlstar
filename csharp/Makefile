@@ -18,3 +18,5 @@ test: $(DOTNET) $(LIBYAMLSTAR-SO)
 
 build: $(DOTNET) $(LIBYAMLSTAR-SO)
 	dotnet build $(PROJECT-FILE)
+
+release-deps:: $(DOTNET)

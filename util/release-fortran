@@ -2,6 +2,7 @@
 
 lang=fortran
 tag_prefix=  # No v prefix for Fortran
+root=$(cd "$(dirname "$0")/.." && pwd)
 
 update() (
   cp "$root/License" "$repo_dir/LICENSE"

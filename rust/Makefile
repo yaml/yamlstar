@@ -21,3 +21,5 @@ build check clippy fmt: $(CARGO)
 
 example: $(CARGO) $(LIBYAMLSTAR-SO)
 	cargo run --example load_yaml
+
+release-deps:: $(CARGO)

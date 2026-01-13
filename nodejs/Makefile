@@ -24,3 +24,5 @@ build: $(LIBYAMLSTAR-SO)
 
 node_modules: package.json $(NODE)
 	npm install
+
+release-deps:: $(NODE)

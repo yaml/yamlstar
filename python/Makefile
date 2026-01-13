@@ -32,3 +32,5 @@ dist: $(PYTHON-VENV)
 
 install: $(PYTHON-VENV)
 	$(VENV) && pip install -e .
+
+release-deps:: $(PYTHON-VENV)

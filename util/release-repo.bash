@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-root=$PWD
 version=$VERSION
 
 main() (

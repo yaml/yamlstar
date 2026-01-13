@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-VERSION=$(grep '^version:' Meta | cut -d' ' -f2)
+export VERSION=$(grep '^version:' "$(dirname "$0")/../Meta" | cut -d' ' -f2)
 
 case "$(uname -s)" in
   Linux*)
@@ -292,6 +292,9 @@ do-release-github() (
 # Check that GitHub release exists with all shared library assets
 do-check-release() (
   git fetch --tags
+  if [[ -f ~/.yamlstar-secrets.yaml ]]; then
+    export GH_TOKEN=$(ys -e '.github.token:say' ~/.yamlstar-secrets.yaml)
+  fi
   echo "Checking for GitHub release $VERSION..."
   gh release view "$VERSION" >/dev/null 2>&1 ||
     die "ERROR: Release $VERSION not found"
@@ -311,12 +314,11 @@ do-check-release() (
 # Release Python binding to PyPI
 do-release-python() (
   echo 'Publishing Python package to PyPI...'
-  make -C python build
+  make dist
   if [[ -f ~/.yamlstar-secrets.yaml ]]; then
     PYPI_TOKEN=$(ys -e '.pypi.token:say' ~/.yamlstar-secrets.yaml)
-    cd python &&
-      TWINE_PASSWORD=$PYPI_TOKEN \
-        twine upload --repository yamlstar dist/*.tar.gz
+    TWINE_PASSWORD=$PYPI_TOKEN \
+      twine upload --repository yamlstar dist/*.tar.gz
   else
     die 'ERROR: ~/.yamlstar-secrets.yaml not found'
   fi
@@ -327,7 +329,6 @@ do-release-nodejs() (
   echo 'Publishing Node.js package to npm...'
   if [[ -f ~/.yamlstar-secrets.yaml ]]; then
     NPM_TOKEN=$(ys -e '.npm.token:say' ~/.yamlstar-secrets.yaml)
-    cd nodejs
     echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
     npm publish --access public
     rm -f .npmrc
@@ -341,7 +342,6 @@ do-release-rust() (
   echo 'Publishing Rust crate to crates.io...'
   if [[ -f ~/.yamlstar-secrets.yaml ]]; then
     CARGO_TOKEN=$(ys -e '.crates.token:say' ~/.yamlstar-secrets.yaml)
-    cd rust
     cargo publish --token "$CARGO_TOKEN"
   else
     die 'ERROR: ~/.yamlstar-secrets.yaml not found'
@@ -353,7 +353,6 @@ do-release-csharp() (
   echo 'Publishing C# package to NuGet...'
   if [[ -f ~/.yamlstar-secrets.yaml ]]; then
     NUGET_KEY=$(ys -e '.nuget.token:say' ~/.yamlstar-secrets.yaml)
-    cd csharp
     dotnet pack -c Release
     dotnet nuget push "bin/Release/YAMLStar.$VERSION.nupkg" \
       --api-key "$NUGET_KEY" \
@@ -366,17 +365,17 @@ do-release-csharp() (
 # Perl - publish to CPAN via zild
 do-release-perl() (
   echo 'Publishing Perl module to CPAN...'
-  make -C perl release
+  make release
 )
 
 # Go - delegate to release-go script
 do-release-go() (
-  ./util/release-go
+  ../util/release-go
 )
 
 # Fortran - delegate to release-fortran script
 do-release-fortran() (
-  ./util/release-fortran
+  ../util/release-fortran
 )
 
 die() {

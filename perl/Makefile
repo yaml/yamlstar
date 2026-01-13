@@ -32,3 +32,5 @@ build: $(LIBYAMLSTAR-SO)
 
 $(PERL-LOCAL-LIB): $(PERL)
 	cpanm -L $@ -n $(CPAN-DEPS)
+
+release-deps:: $(PERL)
