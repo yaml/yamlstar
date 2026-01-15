@@ -138,8 +138,12 @@ do-release-lib() (
   ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$EXT
   ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$EXT.0
 
+  # XXX - Remove SNAPSHOT in code for 0.1.1 release
   # Add alternate version symlink (libyamlstar.0.1.0.so -> libyamlstar.so.0.1.0)
   ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$VERSION.$EXT
+
+  # Add SNAPSHOT symlink for development bindings
+  ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$EXT.$VERSION-SNAPSHOT
   cd - > /dev/null
 
   # Copy header files
