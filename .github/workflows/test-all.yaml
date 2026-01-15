@@ -1,0 +1,82 @@
+name: Test All Bindings
+
+on:
+  workflow_dispatch:
+    inputs:
+      core:
+        description: 'Test core library'
+        type: boolean
+        default: true
+      clojure:
+        description: 'Test Clojure binding'
+        type: boolean
+        default: true
+      csharp:
+        description: 'Test C# binding'
+        type: boolean
+        default: true
+      fortran:
+        description: 'Test Fortran binding'
+        type: boolean
+        default: true
+      go:
+        description: 'Test Go binding'
+        type: boolean
+        default: true
+      nodejs:
+        description: 'Test Node.js binding'
+        type: boolean
+        default: true
+      perl:
+        description: 'Test Perl binding'
+        type: boolean
+        default: true
+      python:
+        description: 'Test Python binding'
+        type: boolean
+        default: true
+      rust:
+        description: 'Test Rust binding'
+        type: boolean
+        default: true
+
+jobs:
+  test-all:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Test core library
+      if: inputs.core
+      run: make test-core
+    - name: Test Clojure binding
+      if: inputs.clojure
+      run: make test-clojure
+    - name: Test C# binding
+      if: inputs.csharp
+      run: make test-csharp
+    - name: Test Fortran binding
+      if: inputs.fortran
+      run: make test-fortran
+    - name: Test Go binding
+      if: inputs.go
+      run: make test-go
+    - name: Test Node.js binding
+      if: inputs.nodejs
+      run: make test-nodejs
+    - name: Test Perl binding
+      if: inputs.perl
+      run: make test-perl
+    - name: Test Python binding
+      if: inputs.python
+      run: make test-python
+    - name: Test Rust binding
+      if: inputs.rust
+      run: make test-rust
