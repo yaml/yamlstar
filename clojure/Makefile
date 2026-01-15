@@ -5,6 +5,7 @@ include $(COMMON)/binding.mk
 MAKES-CLEAN =: \
   target/ \
   pom.xml \
+  .lein-failures \
 
 
 test install deploy:: $(LEIN)
