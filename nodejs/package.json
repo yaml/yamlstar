@@ -1,5 +1,5 @@
 {
-  "name": "@yaml/yamlstar",
+  "name": "yamlstar",
   "version": "0.1.0-SNAPSHOT",
   "description": "Pure YAML 1.2 loader - Node.js bindings",
   "main": "lib/yamlstar/index.js",
