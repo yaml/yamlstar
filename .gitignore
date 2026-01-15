@@ -1,5 +1,6 @@
 /.cache/
 /note/
+/ToDo
 CLAUDE.md
 .cpcache/
 .lein-failures
