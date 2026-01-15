@@ -1,4 +1,4 @@
-M := .cache/makes
+M := $(abspath ../../.cache/makes)
 $(shell [ -d $M ] || git clone -q https://github.com/makeplus/makes $M)
 include $M/init.mk
 include $M/python.mk
@@ -10,6 +10,7 @@ MAKES-CLEAN := \
   __pycache__/ \
 
 LIBYS := ../../libyamlstar/lib
+
 
 test: $(PYTHON-VENV) $(LIBYAMLSTAR)
 	python yaml-to-json.py ../sample.yaml

@@ -76,7 +76,10 @@ libyamlstar:
 	$(MAKE) -C libyamlstar build
 
 clean:: $(ALL-CLEAN)
+	$(MAKE) -C example $@
+
 realclean:: $(ALL-REALCLEAN)
+
 distclean:: $(ALL-DISTCLEAN)
 
 $(ALL-CLEAN):

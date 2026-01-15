@@ -1,4 +1,4 @@
-M := .cache/makes
+M := $(abspath ../../.cache/makes)
 $(shell [ -d $M ] || git clone -q https://github.com/makeplus/makes $M)
 include $M/init.mk
 include $M/lein.mk
