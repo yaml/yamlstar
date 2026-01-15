@@ -1,0 +1,19 @@
+name: YAMLStar Example
+version: 0.1.0
+description: Testing a YAMLStar loader library
+
+features:
+- YAML 1.2 spec compliance
+- Highly configurable
+- Ships a library to 10+ programming languages
+- Cross-language consistency
+
+config:
+  enabled: true
+  port: 8080
+  timeout: 30
+
+tags:
+- yaml
+- clojure
+- parser

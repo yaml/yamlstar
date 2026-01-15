@@ -5,7 +5,7 @@ This example demonstrates using the YAMLStar Python binding.
 
 ## What it does
 
-The `yaml-to-json.py` script loads `sample.yaml` and outputs it as formatted
+The `yaml-to-json.py` script loads `../sample.yaml` and outputs it as formatted
 JSON, demonstrating:
 
 - Using the YAMLStar Python binding
@@ -23,7 +23,7 @@ make test
 This will:
 
 1. Auto-install Python virtualenv
-2. Set up LD_LIBRARY_PATH for libyamlstar
+2. Set up `LD_LIBRARY_PATH` for libyamlstar
 3. Run the script with `python yaml-to-json.py`
 
 
@@ -35,12 +35,12 @@ From within `make shell`:
 python yaml-to-json.py my-file.yaml
 ```
 
-If no file is specified, it defaults to `sample.yaml`.
+If no file is specified, it defaults to `../sample.yaml`.
 
 ## Expected Output
 
 ```
-YAMLStar Example - Loading sample.yaml and outputting JSON
+YAMLStar Example - Loading ../sample.yaml and outputting JSON
 
 Input YAML:
 name: YAMLStar Example
@@ -66,7 +66,7 @@ Get a shell with Python and the library path set up:
 make shell
 ```
 
-This drops you into a bash shell with Python installed and LD_LIBRARY_PATH
+This drops you into a bash shell with Python installed and `LD_LIBRARY_PATH`
 configured to find libyamlstar.
 The tools are installed locally to `.cache/makes/` so they don't require
 system-wide installation.

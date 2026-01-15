@@ -12,7 +12,7 @@ MAKES-CLEAN := \
 
 
 test: $(CLOJURE) deps.edn
-	clj -M yaml-to-json.clj sample.yaml
+	clj -M yaml-to-json.clj ../sample.yaml
 	@echo
 	@echo 'Success!'
 	@echo 'YAMLStar loaded from Clojars and working correctly.'

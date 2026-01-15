@@ -12,7 +12,7 @@ MAKES-CLEAN := \
 LIBYS := ../../libyamlstar/lib
 
 test: $(PYTHON-VENV) $(LIBYAMLSTAR)
-	python yaml-to-json.py sample.yaml
+	python yaml-to-json.py ../sample.yaml
 	@echo
 	@echo 'Success!'
 	@echo 'YAMLStar loaded and working correctly.'

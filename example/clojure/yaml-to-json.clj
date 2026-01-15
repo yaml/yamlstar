@@ -5,7 +5,7 @@
 
 (defn -main
   [& args]
-  (let [yaml-file (or (first args) "sample.yaml")]
+  (let [yaml-file (or (first args) "../sample.yaml")]
     (println (str "YAMLStar Example - Loading " yaml-file " and outputting JSON\n"))
 
     ;; Read the YAML file

@@ -10,7 +10,7 @@ sys.path.insert(0, '../../python/lib')
 import yamlstar
 
 def main(args):
-    yaml_file = args[0] if args else "sample.yaml"
+    yaml_file = args[0] if args else "../sample.yaml"
     print(f"YAMLStar Example - Loading {yaml_file} and outputting JSON\n")
 
     with open(yaml_file) as f:

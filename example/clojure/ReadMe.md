@@ -6,8 +6,8 @@ standalone Clojure script.
 
 ## What it does
 
-The `yaml-to-json.clj` script loads `sample.yaml` and outputs it as formatted
-JSON, demonstrating:
+The `yaml-to-json.clj` script loads `../sample.yaml` and outputs it as
+formatted JSON, demonstrating:
 
 - Installing YAMLStar from Clojars
 - Loading YAML files
@@ -36,7 +36,7 @@ From within `make shell`:
 clj -M yaml-to-json.clj my-file.yaml
 ```
 
-If no file is specified, it defaults to `sample.yaml`.
+If no file is specified, it defaults to `../sample.yaml`.
 
 ## Expected Output
 
