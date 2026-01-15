@@ -378,6 +378,20 @@ do-release-perl() (
   cpan-uploader -u "$PAUSE_USER" -p "$PAUSE_PASS" *.tar.gz
 )
 
+# Clojure - publish to Clojars
+do-release-clojure() (
+  echo 'Publishing Clojure JAR to Clojars...'
+  if [[ -f ~/.yamlstar-secrets.yaml ]]; then
+    CLOJARS_USER=$(ys -e '.clojars.user:say' ~/.yamlstar-secrets.yaml)
+    CLOJARS_TOKEN=$(ys -e '.clojars.token:say' ~/.yamlstar-secrets.yaml)
+    CLOJARS_USERNAME="$CLOJARS_USER" \
+    CLOJARS_PASSWORD="$CLOJARS_TOKEN" \
+      make deploy
+  else
+    die 'ERROR: ~/.yamlstar-secrets.yaml not found'
+  fi
+)
+
 # Go - delegate to release-go script
 do-release-go() (
   ../util/release-go

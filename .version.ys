@@ -49,6 +49,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - nodejs/package.json
     - python/setup.py
     - rust/Cargo.toml
+    - clojure/project.clj
     - core/project.clj
     - cli/project.clj
     - libyamlstar/project.clj

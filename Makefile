@@ -22,6 +22,7 @@ MAKES-DISTCLEAN += \
   .lsp/ \
 
 BINDING-LANGS := \
+  clojure \
   csharp \
   fortran \
   go \
