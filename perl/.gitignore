@@ -1,1 +1,9 @@
 /local/
+/cpan/LICENSE
+/cpan/MANIFEST
+/cpan/MYMETA.json
+/cpan/MYMETA.yml
+/cpan/Makefile
+/cpan/YAMLStar-*.tar.gz
+/cpan/lib/
+/cpan/t/

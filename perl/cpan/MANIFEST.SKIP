@@ -1,0 +1,24 @@
+# Version control
+^\.git/
+^\.gitignore$
+
+# Build artifacts
+^Makefile$
+^MYMETA\.
+^blib/
+^pm_to_blib
+\.o$
+\.bs$
+
+# Distribution
+^YAMLStar-
+
+# Editor/IDE
+~$
+\.bak$
+\.sw[po]$
+^\.vscode/
+^\.idea/
+
+# Development
+^local/

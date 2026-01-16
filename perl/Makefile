@@ -1,6 +1,5 @@
 include ../common/init.mk
 include $M/perl.mk
-include $M/zild.mk
 include $(COMMON)/common.mk
 
 CPAN-DEPS := \
@@ -10,9 +9,18 @@ CPAN-DEPS := \
   FFI::Platypus \
   Moo \
   Test2::V0 \
-  Zilla::Dist \
 
 PERL-LOCAL-LIB := local
+
+MAKES-CLEAN := \
+  cpan/LICENSE \
+  cpan/MANIFEST \
+  cpan/MYMETA.json \
+  cpan/MYMETA.yml \
+  cpan/Makefile \
+  cpan/YAMLStar-*.tar.gz \
+  cpan/lib/ \
+  cpan/t/ \
 
 MAKES-REALCLEAN := \
   $(PERL-LOCAL-LIB) \
@@ -36,3 +44,18 @@ $(PERL-LOCAL-LIB): $(PERL)
 
 release-cpan: $(PERL)
 	$(ROOT)/util/release release-perl
+
+cpan-build:
+	mkdir -p cpan/lib cpan/t
+	cp lib/YAMLStar.pm cpan/lib/
+	cp test/yamlstar.t cpan/t/
+	cp License cpan/LICENSE
+
+cpan-test: cpan-build $(PERL)
+	cd cpan && perl Makefile.PL && make && make test
+
+cpan-dist: cpan-build $(PERL)
+	cd cpan && perl Makefile.PL && make manifest && make dist
+
+cpan-clean:
+	rm -rf cpan/lib cpan/t cpan/LICENSE cpan/Makefile cpan/MYMETA.* cpan/MANIFEST cpan/blib cpan/pm_to_blib cpan/*.tar.gz
