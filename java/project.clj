@@ -1,4 +1,4 @@
-(defproject org.yamlstar/yamlstar "0.1.0"
+(defproject com.yaml/yamlstar "0.1.0"
   :description "YAMLStar - Pure YAML 1.2 loader for Java"
   :url "https://github.com/yaml/yamlstar"
 
@@ -11,6 +11,14 @@
    :url "https://github.com/yaml/yamlstar"
    :tag "java"
    :dir ".."}
+
+  :pom-addition
+  [:developers
+   [:developer
+    [:id "ingydotnet"]
+    [:name "Ingy döt Net"]
+    [:email "ingy@ingy.net"]
+    [:url "https://github.com/ingydotnet"]]]
 
   :dependencies
   [[org.clojure/clojure "1.12.0"]]
@@ -25,7 +33,6 @@
     {:url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
      :username :env/ossrh_username
      :password :env/ossrh_password
-     :sign-releases true
-     :signing {:gpg-key :env/gpg_key_id}}]]
+     :sign-releases false}]]
 
   :repl-options {:init-ns org.yamlstar.yamlstar})

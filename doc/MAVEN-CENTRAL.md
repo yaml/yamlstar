@@ -11,7 +11,7 @@ All new registrations must use the Central Publisher Portal.
 
 - GPG key for signing artifacts
 - Central Publisher Portal account
-- Domain ownership of yamlstar.org (for `org.yamlstar` groupId)
+- Domain ownership of yaml.com (for `com.yaml` groupId)
 
 ## Step 1: Create Central Portal Account
 
@@ -24,14 +24,14 @@ All new registrations must use the Central Publisher Portal.
 1. Log into the Central Portal at https://central.sonatype.com
 2. Click your username (top right) → "View Namespaces"
 3. Click "Add Namespace"
-4. Enter `org.yamlstar` as the namespace
+4. Enter `com.yaml` as the namespace
 5. The Portal will provide a verification key
-6. Add a DNS TXT record to yamlstar.org with the provided verification key:
+6. Add a DNS TXT record to yaml.com with the provided verification key:
    ```
    TXT  @  "central-namespace-verification=XXXXX"
    ```
 7. Wait for DNS to propagate (usually a few minutes, check with `dig TXT
-   yamlstar.org`)
+   yaml.com`)
 8. Click "Verify" in the Portal
 
 The verification is usually instant once DNS propagates.
@@ -83,46 +83,51 @@ this file and exports them as environment variables.
 Add your Maven Central credentials to `~/.yamlstar-secrets.yaml`:
 
 ```yaml
-ossrh:
-  user: "YOUR_PORTAL_TOKEN_USERNAME"
-  token: "YOUR_PORTAL_TOKEN_PASSWORD"
+central:
+  token: "YOUR_BASE64_ENCODED_TOKEN"
 gpg:
   key-id: "YOUR_GPG_KEY_ID"
 ```
 
-The release script (`util/release`) automatically:
-1. Reads credentials from `~/.yamlstar-secrets.yaml`
-2. Exports them as `OSSRH_USERNAME` and `OSSRH_PASSWORD`
-3. Runs `lein deploy` which reads from these environment variables
+The `central.token` is the base64-encoded "Username : Password" value shown
+when you generate a user token at https://central.sonatype.com/usertoken.
+Copy the value from the "Username : Password (base64)" field.
 
-**Note**: You do NOT need to create `~/.lein/credentials.clj.gpg`.
-The environment variable approach is used for consistency with other YAMLStar
-language bindings.
+The release script (`util/release`) automatically:
+1. Reads the base64 token from `~/.yamlstar-secrets.yaml`
+2. Exports it as `CENTRAL_TOKEN` for the upload API
+3. Exports `GPG_KEY_ID` for artifact signing
+4. Runs `make deploy` which builds and uploads the bundle
 
 ## Publishing
 
-### Deploy to Staging
+### Build and Upload
 
 ```bash
 make release-java
 ```
 
-This uploads the artifacts to the staging repository using the OSSRH
-compatibility API.
+This command:
+1. Builds the main JAR (`lein jar`)
+2. Generates the POM file (`lein pom`)
+3. Creates sources JAR (from `core/src` and `java/src`)
+4. Creates javadoc JAR (placeholder for Clojure)
+5. Signs all artifacts with GPG (`.asc` files)
+6. Generates MD5 and SHA1 checksums
+7. Creates a bundle ZIP with Maven repository layout
+8. Uploads the bundle to Central Portal via the Publisher API
 
-### Complete Release in Central Portal
+The upload uses `publishingType=AUTOMATIC`, so if validation passes, artifacts
+are automatically published to Maven Central.
+
+### Monitor Deployment
 
 1. Log into https://central.sonatype.com
 2. Click "Deployments" in the left sidebar
-3. Find your deployment (org.yamlstar)
-4. The Portal automatically runs validation checks
-5. If validation passes, click "Publish" to release to Maven Central
-6. If validation fails, review the error messages, fix issues, and re-deploy
-7. After publishing, artifacts sync to Maven Central within ~30 minutes
-
-**Note**: Unlike the old Nexus UI with separate "Close" and "Release" steps,
-the Central Portal combines validation and publishing into a streamlined
-workflow.
+3. Find your deployment (com.yaml)
+4. Check the status: PENDING → VALIDATING → VALIDATED → PUBLISHING → PUBLISHED
+5. If validation fails, review the error messages, fix issues, and re-deploy
+6. After publishing, artifacts sync to Maven Central within ~30 minutes
 
 ## Troubleshooting
 
@@ -144,8 +149,14 @@ Your credentials may be incorrect or expired:
 
 1. Regenerate user token in Central Portal at
    https://central.sonatype.com/usertoken
-2. Update `~/.lein/credentials.clj`
-3. Re-encrypt the file
+2. Copy the "Username : Password (base64)" value
+3. Update `central.token` in `~/.yamlstar-secrets.yaml`
+
+### Upload Fails with curl Error
+
+If curl fails, check that:
+- The base64 token doesn't have extra whitespace or newlines
+- Your network can reach https://central.sonatype.com
 
 ### Validation Fails in Portal
 
@@ -154,6 +165,7 @@ Common issues:
 - Missing signatures (.asc files)
 - Missing javadoc JAR
 - Missing sources JAR
+- Invalid checksums
 
 Check the deployment details in the Central Portal for specific error messages.
 
@@ -162,7 +174,7 @@ Check the deployment details in the Central Portal for specific error messages.
 - [Central Portal Registration](https://central.sonatype.org/register/central-portal/)
 - [Namespace Verification](https://central.sonatype.org/register/namespace/)
 - [Generate Portal Token](https://central.sonatype.org/publish/generate-portal-token/)
-- [Publishing Guide](https://central.sonatype.org/publish/publish-portal-guide/)
+- [Publisher API Documentation](https://central.sonatype.org/publish/publish-portal-api/)
+- [Bundle Upload Requirements](https://central.sonatype.org/publish/publish-portal-upload/)
 - [OSSRH EOL Announcement](https://central.sonatype.org/pages/ossrh-eol/)
-- [Leiningen Deploy Documentation](https://github.com/technomancy/leiningen/blob/master/doc/DEPLOY.md)
 - [GPG Key Management](https://central.sonatype.org/publish/requirements/gpg/)
