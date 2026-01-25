@@ -40,7 +40,6 @@ ALL-DIRS := \
 
 ALL-CLEAN := $(ALL-DIRS:%=clean-%)
 ALL-REALCLEAN := $(ALL-DIRS:%=realclean-%)
-ALL-DISTCLEAN := $(ALL-DIRS:%=distclean-%)
 ALL-SHELL := $(BINDING-LANGS:%=shell-%)
 
 BINDING-TESTS := $(BINDING-LANGS:%=test-%)
@@ -82,16 +81,11 @@ clean:: $(ALL-CLEAN)
 
 realclean:: $(ALL-REALCLEAN)
 
-distclean:: $(ALL-DISTCLEAN)
-
 $(ALL-CLEAN):
 	$(MAKE) --no-pr -C $(@:clean-%=%) clean
 
 $(ALL-REALCLEAN):
 	$(MAKE) --no-pr -C $(@:realclean-%=%) realclean
-
-$(ALL-DISTCLEAN):
-	$(MAKE) --no-pr -C $(@:distclean-%=%) distclean
 
 $(ALL-SHELL):
 	$(MAKE) -C $(@:shell-%=%) shell
