@@ -14,7 +14,7 @@ YAMLStar aims to be the best YAML loader available, with these key features:
 
 ## Project Status
 
-✅ **Phase 1 Complete** - Ready for production use with 8 language bindings!
+✅ **Phase 1 Complete** - Ready for production use with 9 language bindings!
 
 ### Roadmap
 
@@ -23,7 +23,7 @@ YAMLStar aims to be the best YAML loader available, with these key features:
   - Event-based parser integration
   - Clojure data structure output
   - GraalVM native-image shared library
-  - Language bindings (Clojure, C#, Fortran, Go, Node.js, Perl, Python, Rust)
+  - Language bindings (Clojure, C#, Fortran, Go, Java, Node.js, Perl, Python, Rust)
 
 - **Phase 2: Glojure Migration**
   - Port to Glojure (Clojure on Go)
@@ -60,7 +60,7 @@ Output (maps, vectors, scalars)
 - Complete test suite (23 tests covering all major features)
 - Zero external dependencies (except Clojure + data.json)
 - GraalVM native-image shared library (`libyamlstar.so`)
-- **8 language bindings**: Clojure, C#, Fortran, Go, Node.js, Perl, Python, Rust
+- **9 language bindings**: Clojure, C#, Fortran, Go, Java, Node.js, Perl, Python, Rust
 
 **Ready for testing!** Run `make test` in the `core/` directory, or try any of the language bindings.
 
@@ -121,6 +121,7 @@ YAMLStar provides bindings for multiple programming languages via a shared Graal
 | **C#** | [csharp/](csharp/) | `make test` (auto-installs dotnet) |
 | **Fortran** | [fortran/](fortran/) | `make test` (auto-installs gfortran, FPM) |
 | **Go** | [go/](go/) | `make test` (auto-installs go) |
+| **Java** | [java/](java/) | `make test` (auto-installs lein, Maven) |
 | **Node.js** | [nodejs/](nodejs/) | `make test` (auto-installs node, npm) |
 | **Perl** | [perl/](perl/) | `make test` (auto-installs perl, cpanm) |
 | **Python** | [python/](python/) | `make test` (auto-installs python, pip) |

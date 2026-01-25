@@ -131,8 +131,8 @@ YAML String (input)
 ✅ **Simple Pipeline** - 4 stages vs YAMLScript's 7 stages (~80% lighter)
 ✅ **Well-Tested** - 23 tests covering major features
 ✅ **Well-Documented** - Complete dev guide and examples
-✅ **Language Bindings** - 7 bindings for C#, Fortran, Go, Node.js, Perl,
-   Python, Rust
+✅ **Language Bindings** - 9 bindings for Clojure, C#, Fortran, Go, Java,
+   Node.js, Perl, Python, Rust
 
 ### Project Structure
 
@@ -183,7 +183,7 @@ yamlstar/
 - **Test Coverage**: 23 tests
 - **Dependencies**: 2 (Clojure + data.json)
 - **Grammar Rules**: 211 (YAML 1.2 spec)
-- **Language Bindings**: 7 (C#, Fortran, Go, Node.js, Perl, Python, Rust)
+- **Language Bindings**: 9 (Clojure, C#, Fortran, Go, Java, Node.js, Perl, Python, Rust)
 
 ## Next Steps (Phase 1B - Testing)
 
@@ -285,7 +285,7 @@ YAMLStar builds on:
 🟢 **Core Implementation** - DONE
 🟢 **Testing & Validation** - DONE (23 tests passing)
 🟢 **FFI Interface** - DONE (libyamlstar)
-🟢 **Language Bindings** - DONE (7 bindings)
+🟢 **Language Bindings** - DONE (9 bindings)
 ⚪ **Glojure Migration** - TODO (Phase 2)
 ⚪ **Plugin System** - TODO (Phase 3)
 

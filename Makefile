@@ -26,6 +26,7 @@ BINDING-LANGS := \
   csharp \
   fortran \
   go \
+  java \
   nodejs \
   perl \
   python \
@@ -40,6 +41,7 @@ ALL-DIRS := \
 ALL-CLEAN := $(ALL-DIRS:%=clean-%)
 ALL-REALCLEAN := $(ALL-DIRS:%=realclean-%)
 ALL-DISTCLEAN := $(ALL-DIRS:%=distclean-%)
+ALL-SHELL := $(BINDING-LANGS:%=shell-%)
 
 BINDING-TESTS := $(BINDING-LANGS:%=test-%)
 ALL-TESTS := \
@@ -90,6 +92,9 @@ $(ALL-REALCLEAN):
 
 $(ALL-DISTCLEAN):
 	$(MAKE) --no-pr -C $(@:distclean-%=%) distclean
+
+$(ALL-SHELL):
+	$(MAKE) -C $(@:shell-%=%) shell
 
 #------------------------------------------------------------------------------
 # Release targets

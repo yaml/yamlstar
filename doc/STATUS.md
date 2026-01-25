@@ -75,7 +75,7 @@ Phase 1 has been successfully completed with:
 - ✅ Complete 4-stage pipeline tested
 - ✅ 23 tests passing
 - ✅ GraalVM native-image shared library built
-- ✅ 7 language bindings working (C#, Fortran, Go, Node.js, Perl, Python, Rust)
+- ✅ 9 language bindings working (Clojure, C#, Fortran, Go, Java, Node.js, Perl, Python, Rust)
 
 ---
 
@@ -103,7 +103,7 @@ Phase 1 has been successfully completed with:
 - **Lines of Code**: ~500 (excluding grammar.clj which is 4,247 lines)
 - **YAML Spec Compliance**: 100% (via reference parser)
 - **Supported Platforms**: Linux, macOS, Windows (via GraalVM native-image)
-- **Language Bindings**: 7 (C#, Fortran, Go, Node.js, Perl, Python, Rust)
+- **Language Bindings**: 9 (Clojure, C#, Fortran, Go, Java, Node.js, Perl, Python, Rust)
 
 ---
 
@@ -153,7 +153,7 @@ Composer, Resolver, and Constructor.
 - [x] Support multi-document streams
 - [x] Pass basic YAML test suite cases (23 tests)
 - [x] Create shared library with FFI (`libyamlstar`)
-- [x] Create at least one language binding (7 bindings created!)
+- [x] Create at least one language binding (9 bindings created!)
 
 ---
 

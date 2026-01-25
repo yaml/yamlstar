@@ -116,12 +116,24 @@ Create `~/.yamlstar-secrets.yaml`:
 ```yaml
 pypi:
   token: pypi-AgEIcHl...your-token-here
+
+ossrh:
+  user: your-maven-central-username
+  token: your-maven-central-token
+
+gpg:
+  key-id: YOUR_GPG_KEY_ID
 ```
 
 To get a PyPI API token:
 1. Go to https://pypi.org/manage/account/token/
 2. Create a token scoped to the `yamlstar` project (or all projects initially)
 3. Copy the token to your secrets file
+
+To get Maven Central credentials:
+1. See [doc/MAVEN-CENTRAL.md](MAVEN-CENTRAL.md) for complete setup instructions
+2. Generate a user token at https://central.sonatype.com/usertoken
+3. Add your GPG key ID (see `gpg --list-secret-keys --keyid-format=long`)
 
 ### Publish Python Binding
 
@@ -169,7 +181,10 @@ make check-release VERSION=0.2.0
 # Publish Python only
 make release-python VERSION=0.2.0
 
-# Publish all enabled bindings (currently just Python)
+# Publish Java only (requires Maven Central credentials)
+make release-java
+
+# Publish all enabled bindings
 make release-bindings VERSION=0.2.0
 ```
 

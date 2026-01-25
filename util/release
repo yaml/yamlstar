@@ -386,6 +386,20 @@ do-release-clojure() (
   fi
 )
 
+# Java - publish to Maven Central (Sonatype OSSRH)
+do-release-java() (
+  echo 'Publishing Java JAR to Maven Central...'
+  if [[ -f ~/.yamlstar-secrets.yaml ]]; then
+    OSSRH_USERNAME=$(ys -e '.ossrh.user:say' ~/.yamlstar-secrets.yaml)
+    OSSRH_PASSWORD=$(ys -e '.ossrh.token:say' ~/.yamlstar-secrets.yaml)
+    GPG_KEY_ID=$(ys -e '.gpg.key-id:say' ~/.yamlstar-secrets.yaml)
+    export OSSRH_USERNAME OSSRH_PASSWORD GPG_KEY_ID
+    make deploy
+  else
+    die 'ERROR: ~/.yamlstar-secrets.yaml not found'
+  fi
+)
+
 # Go - delegate to release-go script
 do-release-go() (
   ../util/release-go
