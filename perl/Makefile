@@ -50,7 +50,9 @@ endif
 build: $(LIBYAMLSTAR-SO)
 
 $(PERL-LOCAL): $(PERL)
-	cpanm -L $@ -n $(CPAN-DEPS)
+	MAKES_CACHE_NAME='yamlstar-perl-$(PERL-VERSION)-local-cpan' \
+	makes-cache '$@' \
+	  cpanm -L '$@' -n $(CPAN-DEPS)
 
 release-cpan: cpan-test cpan-dist
 	$(ROOT)/util/release release-perl
