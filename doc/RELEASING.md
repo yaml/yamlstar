@@ -146,21 +146,6 @@ pip install yamlstar==0.2.0
 python -c "import yamlstar; print(yamlstar.__version__)"
 ```
 
-## Current Status: Python Only
-
-Currently, only Python bindings are published automatically
-Other languages are disabled:
-
-- ⏸ Node.js (npm)
-- ⏸ Rust (crates.io)
-- ⏸ Clojure (Clojars)
-- ⏸ C# (NuGet)
-- ⏸ Perl (CPAN)
-- ⏸ Go (separate repo)
-- ⏸ Fortran (GitHub releases only)
-
-These will be enabled incrementally as the release process matures.
-
 ## Makefile Targets
 
 For advanced usage or debugging:
