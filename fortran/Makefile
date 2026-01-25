@@ -10,10 +10,6 @@ DEPS := \
   $(FPM) \
   $(LIBYAMLSTAR-SO) \
 
-ifeq ($(OS-NAME),windows)
-  override export PATH := "$(LIBYS)/lib:$$PATH"
-endif
-
 
 test: $(DEPS)
 	fpm test --flag "-L$(LIBYS)/lib"

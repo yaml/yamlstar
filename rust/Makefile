@@ -8,13 +8,8 @@ MAKES-CLEAN := \
   target \
 
 
-ifeq ($(OS-NAME),windows)
-test: $(CARGO) $(LIBYAMLSTAR-SO)
-	PATH="$(LIBYS)/lib:$$PATH" cargo $@
-else
 test: $(CARGO) $(LIBYAMLSTAR-SO)
 	cargo $@
-endif
 
 build check clippy fmt: $(CARGO)
 	cargo $@

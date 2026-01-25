@@ -13,13 +13,8 @@ MAKES-REALCLEAN := \
   $(NODE-MODULES) \
 
 
-ifeq ($(OS-NAME),windows)
-test: $(NODE-MODULES) $(LIBYAMLSTAR-SO)
-	PATH="$(LIBYS)/lib:$$PATH" node test/test.js
-else
 test: $(NODE-MODULES) $(LIBYAMLSTAR-SO)
 	node test/test.js
-endif
 
 build: $(LIBYAMLSTAR-SO)
 
