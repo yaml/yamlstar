@@ -10,39 +10,49 @@ CPAN-DEPS := \
   Moo \
   Test2::V0 \
 
-PERL-LOCAL-LIB := local
+PERL-LOCAL := $(ROOT)/perl/local
+PERL-LOCAL-LIB := $(PERL-LOCAL)/lib/perl5
+PERL-LOCAL-BIN := $(PERL-LOCAL)/bin
 
 MAKES-CLEAN := \
   cpan/LICENSE \
   cpan/MANIFEST \
+  cpan/MANIFEST.bak \
   cpan/MYMETA.json \
   cpan/MYMETA.yml \
   cpan/Makefile \
+  cpan/YAMLStar-*.tar \
   cpan/YAMLStar-*.tar.gz \
   cpan/lib/ \
   cpan/t/ \
+  cpan/blib/ \
+  cpan/pm_to_blib \
 
 MAKES-REALCLEAN := \
-  $(PERL-LOCAL-LIB) \
+  $(PERL-LOCAL) \
 
-export PERL5LIB := $(PERL-LOCAL-LIB)/lib/perl5
+override export PATH := $(PERL-LOCAL-BIN):$(PATH)
+export PERL5LIB := $(PERL-LOCAL-LIB)
 export PERL5OPT :=
 
+TEST-DEPS := \
+  $(PERL-LOCAL) \
+  $(LIBYAMLSTAR-SO) \
 
 ifeq ($(OS-NAME),windows)
 test:
 	@echo "Skipping Perl tests on Windows (Strawberry Perl cpanm issues)"
 else
-test: $(PERL-LOCAL-LIB) $(LIBYAMLSTAR-SO)
+test: $(TEST-DEPS)
 	prove -l$(if $v,v) test/
 endif
 
 build: $(LIBYAMLSTAR-SO)
 
-$(PERL-LOCAL-LIB): $(PERL)
+$(PERL-LOCAL): $(PERL)
 	cpanm -L $@ -n $(CPAN-DEPS)
 
-release-cpan: $(PERL)
+release-cpan: cpan-test cpan-dist
 	$(ROOT)/util/release release-perl
 
 cpan-build:
@@ -51,10 +61,10 @@ cpan-build:
 	cp test/yamlstar.t cpan/t/
 	cp License cpan/LICENSE
 
-cpan-test: cpan-build $(PERL)
+cpan-test: cpan-build $(TEST-DEPS)
 	cd cpan && perl Makefile.PL && make && make test
 
-cpan-dist: cpan-build $(PERL)
+cpan-dist: cpan-build $(PERL) $(PERL-LOCAL)
 	cd cpan && perl Makefile.PL && make manifest && make dist
 
 cpan-clean:

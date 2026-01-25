@@ -6,21 +6,17 @@ include $(COMMON)/binding.mk
 MAKES-CLEAN := \
   build \
 
-# override LIBYAMLSTAR-SO :=
-
+DEPS := \
+  $(FPM) \
+  $(LIBYAMLSTAR-SO) \
 
 ifeq ($(OS-NAME),windows)
-test: $(FPM) $(LIBYAMLSTAR-SO)
-	PATH="$(LIBYS)/lib:$$PATH" fpm test --flag "-L$(LIBYS)/lib"
-else
-test: $(FPM) $(LIBYAMLSTAR-SO)
+  override export PATH := "$(LIBYS)/lib:$$PATH"
+endif
+
+
+test: $(DEPS)
 	fpm test --flag "-L$(LIBYS)/lib"
-endif
 
-ifeq ($(OS-NAME),windows)
-build: $(FPM) $(LIBYAMLSTAR-SO)
-	PATH="$(LIBYS)/lib:$$PATH" fpm build --flag "-L$(LIBYS)/lib"
-else
-build: $(FPM) $(LIBYAMLSTAR-SO)
+build: $(DEPS)
 	fpm build --flag "-L$(LIBYS)/lib"
-endif

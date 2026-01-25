@@ -126,24 +126,16 @@ do-release-lib() (
   rm -rf "$RELEASE_PATH"
   mkdir -p "$RELEASE_PATH"
 
-  # Copy and rename library files (strip -SNAPSHOT suffix)
+  # Copy library files
   for f in libyamlstar/lib/libyamlstar.$EXT*; do
-    newname=$(basename "$f" | sed "s/-SNAPSHOT//g")
-    cp -P "$f" "$RELEASE_PATH/$newname"
+    cp -P "$f" "$RELEASE_PATH/"
   done
 
-  # Fix symlinks to point to non-SNAPSHOT names
+  # Fix symlinks to point to correct names
   cd "$RELEASE_PATH"
   rm -f libyamlstar.$EXT libyamlstar.$EXT.0
   ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$EXT
   ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$EXT.0
-
-  # XXX - Remove SNAPSHOT in code for 0.1.1 release
-  # Add alternate version symlink (libyamlstar.0.1.0.so -> libyamlstar.so.0.1.0)
-  ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$VERSION.$EXT
-
-  # Add SNAPSHOT symlink for development bindings
-  ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$EXT.$VERSION-SNAPSHOT
   cd - > /dev/null
 
   # Copy header files
@@ -373,24 +365,22 @@ do-release-csharp() (
   fi
 )
 
-# Perl - publish to CPAN via zild
+# Perl - publish to CPAN
 do-release-perl() (
   echo 'Publishing Perl package to CPAN...'
   PAUSE_USER=$(ys -e '.pause.user:say' ~/.yamlstar-secrets.yaml)
   PAUSE_PASS=$(ys -e '.pause.pass:say' ~/.yamlstar-secrets.yaml)
-  zild dist
-  cpan-uploader -u "$PAUSE_USER" -p "$PAUSE_PASS" *.tar.gz
+  cpan-upload -u "$PAUSE_USER" -p "$PAUSE_PASS" cpan/*.tar.gz
 )
 
 # Clojure - publish to Clojars
 do-release-clojure() (
   echo 'Publishing Clojure JAR to Clojars...'
   if [[ -f ~/.yamlstar-secrets.yaml ]]; then
-    CLOJARS_USER=$(ys -e '.clojars.user:say' ~/.yamlstar-secrets.yaml)
-    CLOJARS_TOKEN=$(ys -e '.clojars.token:say' ~/.yamlstar-secrets.yaml)
-    CLOJARS_USERNAME="$CLOJARS_USER" \
-    CLOJARS_PASSWORD="$CLOJARS_TOKEN" \
-      make deploy
+    CLOJARS_USERNAME=$(ys -e '.clojars.user:say' ~/.yamlstar-secrets.yaml)
+    CLOJARS_PASSWORD=$(ys -e '.clojars.token:say' ~/.yamlstar-secrets.yaml)
+    export CLOJARS_USERNAME CLOJARS_PASSWORD
+    make deploy
   else
     die 'ERROR: ~/.yamlstar-secrets.yaml not found'
   fi

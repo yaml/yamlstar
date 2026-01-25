@@ -4,6 +4,9 @@
 /cpan/MYMETA.json
 /cpan/MYMETA.yml
 /cpan/Makefile
+/cpan/YAMLStar-*.tar
 /cpan/YAMLStar-*.tar.gz
 /cpan/lib/
 /cpan/t/
+/cpan/blib/
+/cpan/pm_to_blib

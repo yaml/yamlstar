@@ -1,7 +1,7 @@
 include $M/shell.mk
 
 VERSION := $(shell grep '^version:' $(ROOT)/Meta | cut -d' ' -f2)
-LIBYAMLSTAR-VERSION := $(VERSION)-SNAPSHOT
+LIBYAMLSTAR-VERSION := $(VERSION)
 LIBYAMLSTAR-SO := $(LIBYS)/lib/libyamlstar.$(SO)
 LIBYAMLSTAR-SO-VERSION := $(LIBYS)/lib/libyamlstar.$(SO).$(LIBYAMLSTAR-VERSION)
 LIBYAMLSTAR-HEADER := $(LIBYS)/lib/libyamlstar.h

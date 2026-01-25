@@ -50,7 +50,7 @@ use crate::error::LibYSError;
 const LIBYAMLSTAR_BASENAME: &str = "libyamlstar";
 
 /// The version of the yamlstar library this binding works with.
-pub const LIBYAMLSTAR_VERSION: &str = "0.1.0-SNAPSHOT";
+pub const LIBYAMLSTAR_VERSION: &str = "0.1.0";
 
 /// The extension of the YAMLStar library. On Linux, it's a `.so` file.
 #[cfg(target_os = "linux")]
