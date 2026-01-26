@@ -61,6 +61,9 @@ test-all: $(ALL-TESTS)
 
 test-bindings: $(BINDING-TESTS)
 
+test-examples:
+	$(MAKE) --no-pr -C example test
+
 $(ALL-TESTS):
 	@echo '--------------------------------------------------'
 	@echo '   $@'
