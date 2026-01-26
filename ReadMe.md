@@ -19,7 +19,7 @@ YAMLStar aims to be the best YAML loader available, with these key features:
 ### Roadmap
 
 - **Phase 1: Minimal Viable Loader** ✅ Complete
-  - Pure YAML 1.2 loading
+  - YAML 1.2 loading
   - Event-based parser integration
   - Clojure data structure output
   - GraalVM native-image shared library
@@ -167,7 +167,7 @@ YAMLStar is derived from YAMLScript but with a different focus:
 
 | Feature | YAMLScript | YAMLStar |
 |---------|-----------|----------|
-| **Purpose** | YAML + scripting language | Pure YAML loader |
+| **Purpose** | YAML + scripting language | YAML loader |
 | **Runtime** | Includes SCI interpreter | No runtime evaluation |
 | **Pipeline** | 7 stages (parser → runtime) | 3 stages (parser → data) |
 | **Dependencies** | Heavy (Babashka, SCI, etc.) | Minimal (Clojure only) |

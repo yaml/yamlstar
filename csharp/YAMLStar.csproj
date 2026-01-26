@@ -16,7 +16,7 @@
     <PackageId>YAMLStar</PackageId>
     <PackageVersion>0.1.0</PackageVersion>
     <Title>YAMLStar</Title>
-    <Summary>Pure YAML 1.2 loader for C#/.NET</Summary>
+    <Summary>YAML 1.2 loader for C#/.NET</Summary>
     <PackageDescription>YAMLStar is a pure YAML 1.2 loader. This package provides a C# binding for YAMLStar, allowing you to load YAML documents from .NET applications.</PackageDescription>
     <PackageTags>yaml yaml12 loader binding</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

@@ -1,6 +1,6 @@
 # YAMLStar for Java
 
-Pure YAML 1.2 loader for Java, powered by Clojure.
+YAML 1.2 loader for Java, powered by Clojure.
 
 ## Installation
 

@@ -5,7 +5,7 @@ C# bindings for YAMLStar - a pure YAML 1.2 loader implemented in Clojure.
 ## Features
 
 - **YAML 1.2 Spec Compliance**: 100% compliant with YAML 1.2 core schema
-- **Pure Implementation**: No dependencies on YamlDotNet or other external parsers
+- **Implementation**: No dependencies on YamlDotNet or other external parsers
 - **Fast Native Performance**: Uses GraalVM native-image shared library
 - **Simple API**: Load YAML documents with a single method call
 - **Multi-Document Support**: Load multiple YAML documents from a single string

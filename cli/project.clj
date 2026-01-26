@@ -1,5 +1,5 @@
 (defproject yamlstar/cli "0.1.0-SNAPSHOT"
-  :description "YAMLStar CLI - Pure YAML loader command-line tool"
+  :description "YAMLStar CLI - YAML loader command-line tool"
   :url "https://github.com/yaml/yamlstar"
   :license {:name "MIT License"
             :url "https://opensource.org/licenses/MIT"}

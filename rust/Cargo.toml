@@ -2,7 +2,7 @@
 name = "yamlstar"
 version = "0.1.0"
 edition = "2021"
-description = "Pure YAML 1.2 loader - Rust binding for libyamlstar"
+description = "YAML 1.2 loader - Rust binding for libyamlstar"
 license = "MIT"
 readme = "ReadMe.md"
 repository = "https://github.com/yaml/yamlstar"

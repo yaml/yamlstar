@@ -3,7 +3,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     NAME             => 'YAMLStar',
     VERSION_FROM     => 'lib/YAMLStar.pm',
-    ABSTRACT         => 'Pure YAML 1.2 loader via FFI',
+    ABSTRACT         => 'YAML 1.2 loader via FFI',
     AUTHOR           => 'Ingy döt Net <ingy@cpan.org>',
     LICENSE          => 'perl_5',
     MIN_PERL_VERSION => '5.16.0',

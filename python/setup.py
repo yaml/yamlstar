@@ -16,7 +16,7 @@ else:
 setup(
     name = 'yamlstar',
     version = version,
-    description = 'Python bindings for YAMLStar - Pure YAML 1.2 loader',
+    description = 'Python bindings for YAMLStar - YAML 1.2 loader',
     long_description = open('ReadMe.md').read() if __name__ == '__main__' else '',
     long_description_content_type = 'text/markdown',
     author = 'Ingy döt Net',

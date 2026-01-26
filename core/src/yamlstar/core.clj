@@ -1,5 +1,5 @@
 (ns yamlstar.core
-  "YAMLStar core API - Pure YAML 1.2 loader
+  "YAMLStar core API - YAML 1.2 loader
 
   This is the main entry point for YAMLStar. It provides simple functions
   for loading YAML documents into Clojure data structures.

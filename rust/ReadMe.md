@@ -1,6 +1,6 @@
 # YAMLStar Rust Binding
 
-Pure YAML 1.2 loader for Rust using the `libyamlstar` shared library.
+YAML 1.2 loader for Rust using the `libyamlstar` shared library.
 
 ## Overview
 

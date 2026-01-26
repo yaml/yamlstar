@@ -52,7 +52,7 @@
    ["-h" "--help" "Print help"]])
 
 (def usage-text
-  "yaml - YAMLStar CLI - Pure YAML Loader
+  "yaml - YAMLStar CLI - YAML Loader
 
 Usage: yaml [options] [file]
 

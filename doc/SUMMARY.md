@@ -126,7 +126,7 @@ YAML String (input)
 
 ✅ **Zero Dependencies** - Only Clojure 1.12.0 + data.json (for FFI)
 ✅ **100% YAML 1.2 Compliant** - Via reference parser
-✅ **Pure Clojure** - No Java libraries (no SnakeYAML!)
+✅ **Pure Clojure** - No Java libraries
 ✅ **Portable** - Works with Clojure, Babashka, and (future) Glojure
 ✅ **Simple Pipeline** - 4 stages vs YAMLScript's 7 stages (~80% lighter)
 ✅ **Well-Tested** - 23 tests covering major features

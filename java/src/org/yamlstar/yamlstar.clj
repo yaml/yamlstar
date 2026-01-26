@@ -1,5 +1,5 @@
 (ns org.yamlstar.yamlstar
-  "YAMLStar Java binding - Pure YAML 1.2 loader for Java"
+  "YAMLStar Java binding - YAML 1.2 loader for Java"
   (:refer-clojure :exclude [load])
   (:require [yamlstar.core :as yaml])
   (:import [java.util ArrayList HashMap])
