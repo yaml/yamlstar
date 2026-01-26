@@ -93,7 +93,7 @@ To use YAMLStar in your own project, add to your `pom.xml`:
 ## Java API
 
 ```java
-import org.yamlstar.YAMLStar;
+import com.yaml.YAMLStar;
 
 // Load a single YAML document
 Object data = YAMLStar.load(yamlString);

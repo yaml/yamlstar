@@ -33,6 +33,8 @@ vo =: v-old.str/replace(/\./ '\\.')
     - util/yamlj
     - cli/src/yamlstar/cli.clj
     - core/src/yamlstar/core.clj
+    - java/src/com/yaml/yamlstar.clj
+    - java/ReadMe.md
 
 #------------------------------------------------------------------------------
 # These changes are very specific to not accidentally bump something wrongly.
@@ -53,3 +55,4 @@ vo =: v-old.str/replace(/\./ '\\.')
     - core/project.clj
     - cli/project.clj
     - libyamlstar/project.clj
+    - java/project.clj

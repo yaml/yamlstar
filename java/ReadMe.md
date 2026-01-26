@@ -10,7 +10,7 @@ Add to your `pom.xml`:
 
 ```xml
 <dependency>
-  <groupId>org.yamlstar</groupId>
+  <groupId>com.yaml</groupId>
   <artifactId>yamlstar</artifactId>
   <version>0.1.0</version>
 </dependency>
@@ -22,14 +22,14 @@ Add to your `build.gradle`:
 
 ```gradle
 dependencies {
-    implementation 'org.yamlstar:yamlstar:0.1.0'
+    implementation 'com.yaml:yamlstar:0.1.0'
 }
 ```
 
 ## Usage
 
 ```java
-import org.yamlstar.YAMLStar;
+import com.yaml.YAMLStar;
 import java.util.Map;
 import java.util.List;
 

@@ -1,6 +1,6 @@
-(ns org.yamlstar.yamlstar-test
+(ns com.yaml.yamlstar-test
   (:require [clojure.test :refer [deftest is testing]])
-  (:import [org.yamlstar YAMLStar]
+  (:import [com.yaml YAMLStar]
            [java.util HashMap ArrayList]))
 
 (deftest test-load-scalar-string

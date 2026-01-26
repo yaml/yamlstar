@@ -26,7 +26,7 @@
   :source-paths ["src" "../core/src"]
   :test-paths ["test"]
 
-  :aot [org.yamlstar.yamlstar]
+  :aot [com.yaml.yamlstar]
 
   :deploy-repositories
   [["releases"
@@ -35,4 +35,4 @@
      :password :env/ossrh_password
      :sign-releases false}]]
 
-  :repl-options {:init-ns org.yamlstar.yamlstar})
+  :repl-options {:init-ns com.yaml.yamlstar})

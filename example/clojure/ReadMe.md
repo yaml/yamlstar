@@ -24,7 +24,7 @@ make test
 This will:
 
 1. Auto-install Clojure CLI tools and Leiningen
-2. Download YAMLStar from Clojars (org.yamlstar/yamlstar)
+2. Download YAMLStar from Clojars (com.yaml/yamlstar)
 3. Run the script with `clj -M yaml-to-json.clj`
 
 
@@ -87,7 +87,7 @@ Exit the shell with `exit` or Ctrl-D.
 
 The example uses:
 
-- `org.yamlstar/yamlstar` - YAML parsing
+- `com.yaml/yamlstar` - YAML parsing
 - `org.clojure/data.json` - JSON output
 
 Dependencies are specified in `project.clj` and were converted to `deps.edn`

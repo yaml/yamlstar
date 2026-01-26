@@ -1,10 +1,10 @@
-(ns org.yamlstar.yamlstar
+(ns com.yaml.yamlstar
   "YAMLStar Java binding - YAML 1.2 loader for Java"
   (:refer-clojure :exclude [load])
   (:require [yamlstar.core :as yaml])
   (:import [java.util ArrayList HashMap])
   (:gen-class
-   :name org.yamlstar.YAMLStar
+   :name com.yaml.YAMLStar
    :methods [^:static [load [String] Object]
              ^:static [loadAll [String] java.util.List]
              ^:static [version [] String]]))

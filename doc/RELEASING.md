@@ -21,20 +21,6 @@ Currently building and releasing for:
 
 Linux ARM64 support exists but is disabled due to slow GitHub Actions runners.
 
-## Prerequisites
-
-### For Version Bumping
-- `ys` (YAMLScript CLI) - automatically installed via `yamlscript.mk`
-
-### For Shared Library Release
-- GitHub repository with Actions enabled
-- Write permissions to create releases and tags
-
-### For Language Binding Release
-- Secrets file: `~/.yamlstar-secrets.yaml`
-- Python: `twine` installed (`pip install twine`)
-- PyPI account with API token
-
 ## Step 1: Bump Version and Update Changelog
 
 Update the version number across all files and create a changelog entry:
