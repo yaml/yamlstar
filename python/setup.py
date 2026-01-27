@@ -6,12 +6,13 @@ from pathlib import Path
 
 # Read version from ../Meta file
 meta_file = Path(__file__).parent.parent / 'Meta'
-if meta_file.exists():
-    meta_content = meta_file.read_text()
-    match = re.search(r'^version:\s*(.+)$', meta_content, re.MULTILINE)
-    version = match.group(1) if match else '0.1.0'
-else:
-    version = '0.1.0'
+meta_content = meta_file.read_text()
+match = re.search(r'^version:\s*(.+)$', meta_content, re.MULTILINE)
+version = match.group(1) if match else None
+
+# Validate version format
+if not version or not re.match(r'^\d+\.\d+\.\d+', version):
+    raise ValueError(f"Invalid or missing version in Meta file: {version}")
 
 setup(
     name = 'yamlstar',

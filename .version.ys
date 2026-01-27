@@ -35,6 +35,12 @@ vo =: v-old.str/replace(/\./ '\\.')
     - core/src/yamlstar/core.clj
     - java/src/com/yaml/yamlstar.clj
     - java/ReadMe.md
+    - java/Makefile
+    - clojure/ReadMe.md
+    - example/clojure/ReadMe.md
+    - example/java/ReadMe.md
+    - example/go/ReadMe.md
+    - example/python/ReadMe.md
 
 #------------------------------------------------------------------------------
 # These changes are very specific to not accidentally bump something wrongly.
@@ -46,13 +52,50 @@ vo =: v-old.str/replace(/\./ '\\.')
     - libyamlstar/project.clj
     - cli/project.clj
 
+  - regx:: "(defproject yamlstar/core \")${vp}(-SNAPSHOT\")"
+    file:
+    - core/project.clj
+
+  - regx:: "(defproject yamlstar/cli \")${vp}(-SNAPSHOT\")"
+    file:
+    - cli/project.clj
+
+  - regx:: "(defproject yamlstar/libyamlstar \")${vp}(-SNAPSHOT\")"
+    file:
+    - libyamlstar/project.clj
+
+  - regx:: "(defproject com\\.yaml/yamlstar \")${vp}(\")"
+    file:
+    - clojure/project.clj
+    - java/project.clj
+
   - regx:: "(version.*)${vp}(.*)"
     file:
     - nodejs/package.json
-    - python/setup.py
     - rust/Cargo.toml
-    - clojure/project.clj
-    - core/project.clj
-    - cli/project.clj
-    - libyamlstar/project.clj
-    - java/project.clj
+
+  # Java test version assertion
+  - regx:: "(= \")${vp}(\" version)"
+    file:
+    - java/test/com/yaml/yamlstar_test.clj
+
+  # Example clojure project.clj (project version and yamlstar dep)
+  - regx:: "(defproject yamlstar-example \")${vp}(\")"
+    file:
+    - example/clojure/project.clj
+  - regx:: "(yamlstar \")${vp}(\")"
+    file:
+    - example/clojure/project.clj
+
+  # Example clojure deps.edn
+  - regx:: "(yamlstar \\{:mvn/version \")${vp}(\")"
+    file:
+    - example/clojure/deps.edn
+
+  # Example go Makefile - include path and go get
+  - regx:: "(libyamlstar-)${vp}()"
+    file:
+    - example/go/Makefile
+  - regx:: "(yamlstar-go@v)${vp}()"
+    file:
+    - example/go/Makefile

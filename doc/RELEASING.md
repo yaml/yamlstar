@@ -27,7 +27,7 @@ Update the version number across all files and create a changelog entry:
 
 ```bash
 # Run version bump (handles versions AND changelog)
-make version-bump o=0.1.0 n=0.2.0
+make version-bump o=0.1.0 n=0.1.1
 ```
 
 This command will:
@@ -45,7 +45,7 @@ git diff
 
 # Commit and push
 git add -A
-git commit -m "Bump version to 0.2.0"
+git commit -m "Bump version to 0.1.1"
 git push
 ```
 
@@ -53,7 +53,7 @@ git push
 
 The `Changes` file uses YAML format:
 ```yaml
-- version: 0.2.0
+- version: 0.1.1
   date:    Mon Jan  9 10:00:00 AM PST 2026
   changes:
   - core: Add new feature X
@@ -73,7 +73,7 @@ This step builds shared libraries for all platforms and creates a GitHub Release
 2. Click **Actions** tab
 3. Select **Release Shared Libraries** workflow
 4. Click **Run workflow** button
-5. Enter the version (e.g., `0.2.0`)
+5. Enter the version (e.g., `0.1.1`)
 6. Click **Run workflow**
 
 The workflow will:
@@ -81,15 +81,15 @@ The workflow will:
 - Build `libyamlstar.so` on Linux x64
 - Build `libyamlstar.dylib` on macOS ARM64
 - Build `libyamlstar.dll` on Windows x64
-- Create git tag `v0.2.0`
+- Create git tag `v0.1.1`
 - Create GitHub Release with all platform binaries attached
 
 ### Artifacts Created
 
 The release includes:
-- `libyamlstar-0.2.0-linux-x64.tar.gz`
-- `libyamlstar-0.2.0-macos-arm64.tar.gz`
-- `libyamlstar-0.2.0-windows-x64.zip`
+- `libyamlstar-0.1.1-linux-x64.tar.gz`
+- `libyamlstar-0.1.1-macos-arm64.tar.gz`
+- `libyamlstar-0.1.1-windows-x64.zip`
 
 ## Step 3: Release Language Bindings
 
@@ -125,11 +125,11 @@ To get Maven Central credentials:
 
 ```bash
 # This checks for shared library assets, then publishes to PyPI
-make release-bindings VERSION=0.2.0
+make release-bindings VERSION=0.1.1
 ```
 
 The `release-bindings` target:
-1. Verifies GitHub Release `v0.2.0` exists
+1. Verifies GitHub Release `v0.1.1` exists
 2. Checks for all required shared library assets
 3. Builds Python package
 4. Uploads to PyPI using `twine`
@@ -138,7 +138,7 @@ The `release-bindings` target:
 
 ```bash
 # Check PyPI
-pip install yamlstar==0.2.0
+pip install yamlstar==0.1.1
 
 # Verify it works
 python -c "import yamlstar; print(yamlstar.__version__)"
@@ -150,28 +150,28 @@ For advanced usage or debugging:
 
 ```bash
 # Check version matches Meta file
-make check-version VERSION=0.2.0
+make check-version VERSION=0.1.1
 
 # Build shared library for current platform only
-make release-lib VERSION=0.2.0
+make release-lib VERSION=0.1.1
 
 # Create and push git tag (normally done by workflow)
-make release-tag VERSION=0.2.0
+make release-tag VERSION=0.1.1
 
 # Create GitHub release (normally done by workflow)
-make release-github VERSION=0.2.0
+make release-github VERSION=0.1.1
 
 # Check that GitHub release exists with all assets
-make check-release VERSION=0.2.0
+make check-release VERSION=0.1.1
 
 # Publish Python only
-make release-python VERSION=0.2.0
+make release-python VERSION=0.1.1
 
 # Publish Java only (requires Maven Central credentials)
 make release-java
 
 # Publish all enabled bindings
-make release-bindings VERSION=0.2.0
+make release-bindings VERSION=0.1.1
 ```
 
 ## Troubleshooting
@@ -179,7 +179,7 @@ make release-bindings VERSION=0.2.0
 ### Version Mismatch Error
 
 ```
-ERROR: VERSION=0.2.0 does not match Meta file version: 0.1.0
+ERROR: VERSION=0.1.1 does not match Meta file version: 0.1.0
 ```
 
 Solution: Run `./util/version-bump` to update all version strings.
@@ -204,7 +204,7 @@ Solution: Create the secrets file with your PyPI token (see Step 3 above).
 ### Tag Already Exists
 
 ```
-ERROR: Tag v0.2.0 already exists
+ERROR: Tag v0.1.1 already exists
 ```
 
 Solution: Either delete the tag and release, or bump to a new version.

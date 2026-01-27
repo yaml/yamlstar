@@ -23,7 +23,7 @@ main() (
 )
 
 # Bump version and update changelog
-# Usage: make version-bump o=0.1.0 n=0.2.0
+# Usage: make version-bump o=0.1.0 n=0.1.1
 do-version-bump() (
   ([[ ${OLD_VERSION:-} ]] && [[ ${NEW_VERSION:-} ]]) ||
     die 'ERROR: Usage: make version-bump o=OLD_VERSION n=NEW_VERSION'

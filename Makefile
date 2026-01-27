@@ -13,6 +13,7 @@ VERSION := $(shell grep '^version:' Meta | cut -d' ' -f2)
 
 MAKES-CLEAN := \
   META-INF/ \
+  release-* \
 
 MAKES-REALCLEAN := \
   $(MAVEN-REPOSITORY) \
