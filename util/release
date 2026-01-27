@@ -792,34 +792,56 @@ do-push() {
 
 # Step 7: Trigger GitHub Actions build
 do-build-github() {
-  # Check if gh is available
-  if ! command -v gh &>/dev/null; then
-    echo "⚠ GitHub CLI (gh) not found"
-    echo "Install it to trigger builds automatically"
-    return 1
-  fi
-
-  # Get workflow name/ID
-  local workflow_file=".github/workflows/release.yml"
+  local workflow_file=".github/workflows/release-libs.yaml"
+  local workflow_url="https://github.com/yaml/yamlstar/actions/workflows/release-libs.yaml"
 
   if [[ ! -f $workflow_file ]]; then
     echo "⚠ No release workflow found at $workflow_file"
-    echo "You may need to trigger the build manually"
     return 1
+  fi
+
+  # Check if gh is available
+  if ! command -v gh &>/dev/null; then
+    echo "⚠ GitHub CLI (gh) not found"
+    echo
+    echo "Please manually trigger the workflow:"
+    echo "  1. Go to: $workflow_url"
+    echo "  2. Click 'Run workflow'"
+    echo "  3. Enter version: $NEW_VERSION"
+    echo "  4. Click 'Run workflow' button"
+    echo "  5. Wait for the workflow to complete successfully"
+    echo
+    read -r -p "Press Enter when the GitHub workflow has completed..."
+    return 0
   fi
 
   echo "Triggering GitHub Actions workflow..."
 
-  if gh workflow run release.yml -f version="$NEW_VERSION"; then
+  if gh workflow run release-libs.yaml -f version="$NEW_VERSION" 2>/dev/null; then
     echo "✓ GitHub Actions workflow triggered"
     echo
     echo "Monitor progress:"
     echo "  gh run watch"
-    echo "  or visit: https://github.com/$(gh repo view --json nameWithOwner -q .nameWithOwner)/actions"
+    echo "  or visit: $workflow_url"
+    echo
+    echo "Waiting for workflow to complete..."
+    if gh run watch --exit-status 2>/dev/null; then
+      echo "✓ Workflow completed successfully"
+    else
+      echo "⚠ Could not watch workflow (may need to check manually)"
+    fi
   else
-    echo "✗ Failed to trigger workflow"
-    echo "You may need to trigger it manually on GitHub"
-    return 1
+    # Likely a permissions error - fall back to manual trigger
+    echo "⚠ Could not trigger workflow via CLI (insufficient permissions)"
+    echo
+    echo "Please manually trigger the workflow:"
+    echo "  1. Go to: $workflow_url"
+    echo "  2. Click 'Run workflow'"
+    echo "  3. Enter version: $NEW_VERSION"
+    echo "  4. Click 'Run workflow' button"
+    echo "  5. Wait for the workflow to complete successfully"
+    echo
+    read -r -p "Press Enter when the GitHub workflow has completed..."
   fi
 }
 
