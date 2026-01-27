@@ -1,0 +1,4 @@
+*.o
+*.ppu
+/link*.res
+yaml-to-json

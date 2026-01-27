@@ -25,6 +25,7 @@ MAKES-DISTCLEAN += \
 BINDING-LANGS := \
   clojure \
   csharp \
+  delphi \
   fortran \
   go \
   java \

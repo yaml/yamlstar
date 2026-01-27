@@ -23,6 +23,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - Meta
     - fortran/fpm.toml
     - csharp/YAMLStar.csproj
+    - delphi/src/yamlstar.pas
     - go/yamlstar.go
     - nodejs/lib/yamlstar/index.js
     - perl/lib/YAMLStar.pm
@@ -38,6 +39,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - java/Makefile
     - clojure/ReadMe.md
     - example/clojure/ReadMe.md
+    - example/delphi/ReadMe.md
     - example/java/ReadMe.md
     - example/go/ReadMe.md
     - example/python/ReadMe.md

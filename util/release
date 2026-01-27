@@ -429,6 +429,11 @@ do-release-fortran() (
   ../util/release-fortran
 )
 
+# Delphi - delegate to release-delphi script
+do-release-delphi() (
+  ../util/release-delphi
+)
+
 #------------------------------------------------------------------------------
 # Interactive release workflow functions
 #------------------------------------------------------------------------------

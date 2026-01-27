@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+lang=delphi
+tag_prefix=  # No v prefix
+root=$(cd "$(dirname "$0")/.." && pwd)
+
+update() (
+  cp "$root/License" "$repo_dir/LICENSE"
+
+  cd "$from_dir"
+  cp \
+    ReadMe.md \
+    "$repo_dir/"
+
+  cp -r src test "$repo_dir/"
+)
+
+source "$(dirname "$0")/release-repo.bash"
