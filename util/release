@@ -62,6 +62,7 @@ do-version-bump() (
       echo "  date:    $(date)"
       echo '  changes:'
       cat release-changes-formatted.txt
+      echo ""
     ) > release-entry.txt
     cat release-entry.txt Changes > Changes.new
     mv Changes.new Changes
@@ -410,6 +411,400 @@ do-release-go() (
 do-release-fortran() (
   ../util/release-fortran
 )
+
+#------------------------------------------------------------------------------
+# Interactive release workflow functions
+#------------------------------------------------------------------------------
+
+# List all release steps
+do-release-list() {
+  cat <<'EOF'
+Interactive Release Workflow Steps
+===================================
+
+Run the full interactive workflow:
+  make release o=OLD_VERSION n=NEW_VERSION
+
+Or run each step individually:
+
+  1. make release-sanity-check o=X n=Y
+     - Verify old version matches Meta file
+     - Verify working tree is clean
+     - Validate new version format
+
+  2. make release-version-bump o=X n=Y
+     - Update version in all files (Meta, project.clj, etc.)
+
+  3. make release-changelog o=X n=Y
+     - Generate changelog from git history (X..HEAD)
+     - Open in $EDITOR for review
+     - Validate YAML syntax
+     - Prepend to Changes file
+
+  4. make release-commit n=Y
+     - Show diff of changes
+     - Prompt for commit message (editable)
+     - Commit all changes
+
+  5. make release-tag n=Y
+     - Create git tag for new version
+     - Handle existing tag deletion if needed
+
+  6. make release-push n=Y
+     - Push commits and tags to origin
+
+  7. make release-build-github n=Y
+     - Trigger GitHub Actions release workflow
+
+  8. make release-bindings
+     - Release all language bindings to their registries
+     - (Requires prior GitHub release with shared library assets)
+
+Example manual workflow:
+  make release-sanity-check o=0.1.0 n=0.1.1
+  make release-version-bump o=0.1.0 n=0.1.1
+  make release-changelog o=0.1.0 n=0.1.1
+  make release-commit n=0.1.1
+  make release-tag n=0.1.1
+  make release-push n=0.1.1
+  make release-build-github n=0.1.1
+  make release-bindings
+
+Note: All steps are idempotent and can be re-run safely.
+EOF
+}
+
+# Helper: Ask user for confirmation
+# Usage: confirm "Question?" "Y" (default Y) or confirm "Question?" "n" (default n)
+confirm() {
+  local prompt=$1
+  local default=${2:-Y}
+  local answer
+
+  if [[ $default =~ ^[Yy] ]]; then
+    read -r -p "$prompt [Y/n]: " answer
+    [[ ${answer:-Y} =~ ^[Yy] ]]
+  else
+    read -r -p "$prompt [y/N]: " answer
+    [[ ${answer:-N} =~ ^[Yy] ]]
+  fi
+}
+
+# Helper: Readline prompt with default value
+readline_prompt() {
+  local prompt=$1
+  local default=$2
+  local answer
+
+  read -e -i "$default" -p "$prompt" answer
+  echo "$answer"
+}
+
+# Helper: Validate YAML syntax
+validate_yaml() {
+  local file=$1
+
+  # Try ys first, fall back to python
+  if command -v ys &>/dev/null; then
+    ys -e "load('$file'):say" >/dev/null 2>&1
+  elif command -v python3 &>/dev/null; then
+    python3 -c "import yaml; yaml.safe_load(open('$file'))" 2>/dev/null
+  elif command -v python &>/dev/null; then
+    python -c "import yaml; yaml.safe_load(open('$file'))" 2>/dev/null
+  else
+    # No validator available, assume valid
+    return 0
+  fi
+}
+
+# Main interactive release orchestrator
+do-release() {
+  ([[ ${OLD_VERSION:-} ]] && [[ ${NEW_VERSION:-} ]]) ||
+    die 'ERROR: Usage: make release o=OLD_VERSION n=NEW_VERSION'
+
+  echo "============================================================"
+  echo "  YAMLStar Release Workflow"
+  echo "  Version: $OLD_VERSION → $NEW_VERSION"
+  echo "============================================================"
+  echo
+  echo "This will guide you through the release process."
+  echo "Press Ctrl+C at any time to quit."
+  echo
+
+  # Step 1: Sanity checks
+  echo "Step 1: Running sanity checks..."
+  do-sanity-check
+  echo
+
+  # Step 2: Version bump
+  if confirm "Step 2: Bump version in all files?" Y; then
+    do-version-bump-files
+  fi
+  echo
+
+  # Step 3: Changelog
+  if confirm "Step 3: Edit changelog?" Y; then
+    do-changelog
+  fi
+  echo
+
+  # Step 4: Commit
+  if confirm "Step 4: Commit changes?" Y; then
+    do-commit
+  fi
+  echo
+
+  # Step 5: Tag
+  if confirm "Step 5: Create git tag?" Y; then
+    do-tag
+  fi
+  echo
+
+  # Step 6: Push
+  if confirm "Step 6: Push to remote?" Y; then
+    do-push
+  fi
+  echo
+
+  # Step 7: Build on GitHub
+  if confirm "Step 7: Trigger GitHub Actions build?" Y; then
+    do-build-github
+  fi
+  echo
+
+  # Step 8: Release bindings
+  if confirm "Step 8: Release all bindings?" Y; then
+    make release-bindings
+  fi
+  echo
+
+  echo "============================================================"
+  echo "  Release workflow complete!"
+  echo "============================================================"
+}
+
+# Step 1: Sanity checks
+do-sanity-check() {
+  # Check that old version matches Meta file
+  local meta_version
+  meta_version=$(grep '^version:' Meta | cut -d' ' -f2)
+
+  if [[ $meta_version != "$OLD_VERSION" ]]; then
+    die "ERROR: Old version mismatch!" \
+        "  Meta file has: $meta_version" \
+        "  You specified: $OLD_VERSION" \
+        "" \
+        "Please use: make release o=$meta_version n=$NEW_VERSION"
+  fi
+  echo "✓ Old version matches Meta file: $OLD_VERSION"
+
+  # Check working tree is clean
+  if [[ -n $(git status --porcelain) ]]; then
+    echo "ERROR: Working tree is not clean!"
+    echo "Uncommitted changes:"
+    git status --short
+    die "" "Please commit or stash your changes first."
+  fi
+  echo "✓ Working tree is clean"
+
+  # Validate semver bump
+  if ! [[ $NEW_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?$ ]]; then
+    die "ERROR: Invalid version format: $NEW_VERSION" \
+        "Expected semver format: X.Y.Z or X.Y.Z-prerelease"
+  fi
+  echo "✓ New version format is valid: $NEW_VERSION"
+
+  echo "✓ All sanity checks passed"
+}
+
+# Step 2: Version bump files only (no changelog)
+do-version-bump-files() {
+  echo "Bumping version from $OLD_VERSION to $NEW_VERSION in all files..."
+
+  export ROOT=$PWD
+  export YS_RELEASE_VERSION_OLD=$OLD_VERSION
+  export YS_RELEASE_VERSION_NEW=$NEW_VERSION
+
+  ./util/version-bump
+
+  echo "✓ Version bumped in all files"
+  echo
+  echo "Changed files:"
+  git status --short
+}
+
+# Step 3: Interactive changelog editing with YAML validation
+do-changelog() {
+  local changes_file="Changes"
+  local temp_changes="release-changes.txt"
+  local entry_file="release-entry.txt"
+
+  # Check if entry already exists for this version
+  if grep -q "^- version: $NEW_VERSION" "$changes_file" 2>/dev/null; then
+    echo "⚠ Changelog already has an entry for version $NEW_VERSION"
+    if ! confirm "Edit it anyway?" n; then
+      echo "Skipping changelog edit"
+      return 0
+    fi
+  fi
+
+  echo "Generating changelog from git history..."
+
+  # Generate changes from git log
+  if git log --oneline "$OLD_VERSION"..HEAD 2>/dev/null | tac | sed 's/^[a-f0-9]* /  - /' > "$temp_changes"; then
+    echo "Generated $(wc -l < "$temp_changes") changes from git history"
+  else
+    echo "  - Update to version $NEW_VERSION" > "$temp_changes"
+    echo "No git history found, using default entry"
+  fi
+
+  # Loop until valid YAML
+  while true; do
+    echo
+    echo "Opening editor to review changelog entry..."
+    ${EDITOR:-vi} "$temp_changes"
+
+    # Build full entry
+    {
+      echo "- version: $NEW_VERSION"
+      echo "  date:    $(date '+%a %b %d %I:%M:%S %p %Z %Y')"
+      echo "  changes:"
+      cat "$temp_changes"
+      echo ""
+    } > "$entry_file"
+
+    # Validate YAML by prepending to Changes and checking
+    cat "$entry_file" "$changes_file" > Changes.new
+
+    echo
+    echo "Validating YAML syntax..."
+    if validate_yaml Changes.new; then
+      echo "✓ YAML is valid"
+      mv Changes.new Changes
+      rm -f "$temp_changes" "$entry_file"
+      echo "✓ Changelog updated"
+      break
+    else
+      echo "✗ Invalid YAML syntax!"
+      rm -f Changes.new
+      echo
+      read -r -p "Press Enter to re-edit or Ctrl+C to quit..."
+    fi
+  done
+}
+
+# Step 4: Commit with readline prompt
+do-commit() {
+  # Check if there are changes to commit
+  if [[ -z $(git status --porcelain) ]]; then
+    echo "No changes to commit"
+    return 0
+  fi
+
+  echo "Changes to be committed:"
+  git --no-pager diff --stat HEAD
+  echo
+
+  # Get commit message with readline (editable default)
+  local default_msg="Version $NEW_VERSION"
+  local commit_msg
+
+  echo "Enter commit message (use arrow keys to edit):"
+  commit_msg=$(readline_prompt "> " "$default_msg")
+
+  if [[ -z $commit_msg ]]; then
+    echo "Empty commit message, skipping commit"
+    return 0
+  fi
+
+  # Commit all changes
+  git add -A
+  git commit -m "$commit_msg"
+
+  echo "✓ Committed with message: $commit_msg"
+}
+
+# Step 5: Tag with deletion handling
+do-tag() {
+  local tag=$NEW_VERSION
+
+  # Check if tag already exists locally
+  if git rev-parse "$tag" >/dev/null 2>&1; then
+    echo "⚠ Tag $tag already exists locally"
+    if confirm "Delete and recreate it?" n; then
+      # Delete local tag
+      git tag -d "$tag"
+      echo "Deleted local tag $tag"
+
+      # Check if tag exists on remote
+      if git ls-remote --tags origin | grep -q "refs/tags/$tag"; then
+        if confirm "Also delete remote tag $tag?" n; then
+          git push origin ":refs/tags/$tag"
+          echo "Deleted remote tag $tag"
+        fi
+      fi
+    else
+      echo "Skipping tag creation"
+      return 0
+    fi
+  fi
+
+  # Create the tag
+  git tag "$tag"
+  echo "✓ Created tag $tag"
+}
+
+# Step 6: Push with confirmation
+do-push() {
+  local current_branch
+  current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+  echo "This will push:"
+  echo "  - Branch: $current_branch"
+  echo "  - Tag: $NEW_VERSION"
+  echo
+
+  if confirm "Push to origin?" Y; then
+    git push origin "$current_branch"
+    git push origin "$NEW_VERSION"
+    echo "✓ Pushed changes and tag to origin"
+  else
+    echo "Skipping push"
+  fi
+}
+
+# Step 7: Trigger GitHub Actions build
+do-build-github() {
+  # Check if gh is available
+  if ! command -v gh &>/dev/null; then
+    echo "⚠ GitHub CLI (gh) not found"
+    echo "Install it to trigger builds automatically"
+    return 1
+  fi
+
+  # Get workflow name/ID
+  local workflow_file=".github/workflows/release.yml"
+
+  if [[ ! -f $workflow_file ]]; then
+    echo "⚠ No release workflow found at $workflow_file"
+    echo "You may need to trigger the build manually"
+    return 1
+  fi
+
+  echo "Triggering GitHub Actions workflow..."
+
+  if gh workflow run release.yml -f version="$NEW_VERSION"; then
+    echo "✓ GitHub Actions workflow triggered"
+    echo
+    echo "Monitor progress:"
+    echo "  gh run watch"
+    echo "  or visit: https://github.com/$(gh repo view --json nameWithOwner -q .nameWithOwner)/actions"
+  else
+    echo "✗ Failed to trigger workflow"
+    echo "You may need to trigger it manually on GitHub"
+    return 1
+  fi
+}
 
 die() {
   printf '%s\n' "$@" >&2

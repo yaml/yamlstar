@@ -104,12 +104,15 @@ RELEASE-TARGETS := \
   check-version \
   check-tag \
   release-lib \
-  release-tag \
   release-github \
   check-release \
 
 $(RELEASE-TARGETS):
 	util/release $@
+
+# Legacy target for backward compatibility
+release-tag-legacy:
+	util/release release-tag
 
 RELEASE-BINDINGS := $(BINDING-LANGS:%=release-%)
 
@@ -120,5 +123,33 @@ $(filter-out release-perl, $(RELEASE-BINDINGS)): $(GH)
 
 release-perl:
 	$(MAKE) -C perl release-cpan
+
+# Interactive release workflow targets
+release:
+	util/release release
+
+release-list:
+	util/release release-list
+
+release-sanity-check:
+	util/release sanity-check
+
+release-version-bump:
+	util/release version-bump-files
+
+release-changelog:
+	util/release changelog
+
+release-commit:
+	util/release commit
+
+release-tag:
+	util/release tag
+
+release-push:
+	util/release push
+
+release-build-github:
+	util/release build-github
 
 .PHONY: cli core libyamlstar test
