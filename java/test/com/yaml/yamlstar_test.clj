@@ -114,7 +114,7 @@
   (testing "Get version string"
     (let [version (YAMLStar/version)]
       (is (string? version))
-      (is (= "0.1.0" version)))))
+      (is (= "0.1.1" version)))))
 
 (deftest test-special-float-values
   (testing "Load special float values"

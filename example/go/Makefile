@@ -14,7 +14,7 @@ MAKES-CLEAN := \
 # libyamlstar.mk installs headers and libraries to .cache/.local/
 # Use absolute paths for CGO since go compiles from module cache
 override export CGO_CFLAGS := \
-  -I $(dir $M)/.local/include/libyamlstar-0.1.0
+  -I $(dir $M)/.local/include/libyamlstar-0.1.1
 override export CGO_LDFLAGS := \
   -L $(dir $M)/.local/lib
 
@@ -30,4 +30,4 @@ go.sum: go.mod
 
 go.mod:
 	go mod init yamlstar-example
-	go get github.com/yaml/yamlstar-go@v0.1.0
+	go get github.com/yaml/yamlstar-go@v0.1.1

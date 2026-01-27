@@ -1,4 +1,4 @@
-(defproject yamlstar/core "0.1.0-SNAPSHOT"
+(defproject yamlstar/core "0.1.1-SNAPSHOT"
   :description "YAMLStar - A pure YAML 1.2 loader for Clojure"
   :url "https://github.com/yaml/yamlstar"
   :license {:name "MIT License"

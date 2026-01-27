@@ -1,3 +1,23 @@
+- version: 0.1.1
+  date:    Tue Jan 27 10:16:02 AM PST 2026
+  changes:
+  - Add a release process
+  - Change npm publishing name to just yamlstar
+  - Add a Clojure library for YAMLStar
+  - Add example/clojure
+  - Add example program for Python
+  - Add example/go
+  - Perl release refactor
+  - Remove SNAPSHOT from shared library name
+  - Refactor binding Makefiles for Windows
+  - Update doc/RELEASING.md
+  - Add a Java binding
+  - Java Maven Central release process
+  - Add example/java/
+  - Makefile work for examples
+  - Replace group org.yamlstar with com.yaml
+  - Add interactive make release workflow
+
 - version: 0.1.0
   date:    Sat Jan 10 02:25:23 PM EST 2026
   changes:

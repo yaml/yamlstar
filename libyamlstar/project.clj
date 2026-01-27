@@ -1,10 +1,10 @@
-(defproject yamlstar/libyamlstar "0.1.0-SNAPSHOT"
+(defproject yamlstar/libyamlstar "0.1.1-SNAPSHOT"
   :description "Shared Library for YAMLStar"
   :url "https://github.com/yaml/yamlstar"
   :license {:name "MIT License"
             :url "https://opensource.org/licenses/MIT"}
 
-  :dependencies [[yamlstar/core "0.1.0-SNAPSHOT"]
+  :dependencies [[yamlstar/core "0.1.1-SNAPSHOT"]
                  [org.clojure/clojure "1.12.0"]
                  [org.clojure/data.json "2.5.0"]]
 
