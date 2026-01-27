@@ -93,14 +93,6 @@ jobs:
           -exec mv {} dist/ \;
         ls -la dist/
 
-    - name: Create and push tag
-      run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        make release-tag VERSION=${{ inputs.version }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Create GitHub Release
       run: make release-github VERSION=${{ inputs.version }}
       env:

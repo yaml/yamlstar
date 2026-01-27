@@ -83,10 +83,27 @@ do-check-version() (
 
 # Check if git tag already exists
 do-check-tag() (
-  if git rev-parse "$VERSION" >/dev/null 2>&1; then
-    die "ERROR: Tag $VERSION already exists"
+  # Tag should exist (created by `make release` locally)
+  if ! git rev-parse "$VERSION" >/dev/null 2>&1; then
+    die "ERROR: Tag $VERSION does not exist" \
+        "Run 'make release o=OLD n=$VERSION' first to create the tag"
   fi
-  echo "Tag $VERSION does not exist - proceeding with release"
+  echo "✓ Tag $VERSION exists"
+
+  # Tag must point to current commit (HEAD)
+  local tag_commit head_commit
+  tag_commit=$(git rev-parse "$VERSION^{commit}")
+  head_commit=$(git rev-parse HEAD)
+  if [[ $tag_commit != "$head_commit" ]]; then
+    die "ERROR: Tag $VERSION ($tag_commit) does not point to HEAD ($head_commit)"
+  fi
+  echo "✓ Tag $VERSION points to HEAD"
+
+  # Fail if GitHub release already exists with assets
+  if gh release view "$VERSION" --json assets --jq '.assets | length' 2>/dev/null | grep -q '^[1-9]'; then
+    die "ERROR: GitHub release $VERSION already has assets - already released"
+  fi
+  echo "✓ No existing release assets - OK to build"
 )
 
 # Build shared library for current platform
