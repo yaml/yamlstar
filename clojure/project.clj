@@ -1,4 +1,4 @@
-(defproject com.yaml/yamlstar "0.1.1"
+(defproject com.yaml/yamlstar "0.1.2"
   :description "YAMLStar - A pure YAML 1.2 loader for Clojure"
   :url "https://github.com/yaml/yamlstar"
 

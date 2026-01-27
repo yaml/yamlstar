@@ -10,7 +10,7 @@ them to Python objects.
 """
 
 # Version matching the yamlstar shared library
-yamlstar_version = '0.1.1'
+yamlstar_version = '0.1.2'
 
 import os
 import sys
@@ -35,7 +35,7 @@ def find_libyamlstar_path():
       "Unsupported platform '%s' for yamlstar." % sys.platform)
 
   # We currently bind to an exact version of libyamlstar.
-  # eg 'libyamlstar.so.0.1.1-SNAPSHOT'
+  # eg 'libyamlstar.so.0.1.2-SNAPSHOT'
   libyamlstar_name = \
     "libyamlstar.%s.%s" % (so, yamlstar_version)
 

@@ -1,5 +1,5 @@
-- version: 0.1.1
-  date:    Tue Jan 27 10:16:02 AM PST 2026
+- version: 0.1.2
+  date:    Tue Jan 27 10:31:13 AM PST 2026
   changes:
   - Add a release process
   - Change npm publishing name to just yamlstar
@@ -17,6 +17,12 @@
   - Makefile work for examples
   - Replace group org.yamlstar with com.yaml
   - Add interactive make release workflow
+  - These were all done in 0.1.1 but release process failed
+
+- version: 0.1.1
+  date:    Tue Jan 27 10:16:02 AM PST 2026
+  changes:
+  - Release process failed. See 0.1.2
 
 - version: 0.1.0
   date:    Sat Jan 10 02:25:23 PM EST 2026
