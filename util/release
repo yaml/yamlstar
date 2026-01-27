@@ -305,7 +305,7 @@ do-release-github() (
 
 # Check that GitHub release exists with all shared library assets
 do-check-release() (
-  git fetch --tags
+  git fetch --tags --force
   if [[ -f ~/.yamlstar-secrets.yaml ]]; then
     export GH_TOKEN=$(ys -e '.github.token:say' ~/.yamlstar-secrets.yaml)
   fi
