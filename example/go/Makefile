@@ -1,4 +1,4 @@
-LIBYAMLSTAR-VERSION := 0.1.2
+LIBYAMLSTAR-VERSION := 0.1.3
 
 M := $(abspath ../../.cache/makes)
 $(shell [ -d $M ] || git clone -q https://github.com/makeplus/makes $M)
@@ -16,7 +16,7 @@ MAKES-CLEAN := \
 # libyamlstar.mk installs headers and libraries to .cache/.local/
 # Use absolute paths for CGO since go compiles from module cache
 override export CGO_CFLAGS := \
-  -I $(dir $M)/.local/include/libyamlstar-0.1.2
+  -I $(dir $M)/.local/include/libyamlstar-0.1.3
 override export CGO_LDFLAGS := \
   -L $(dir $M)/.local/lib
 
@@ -32,4 +32,4 @@ go.sum: go.mod
 
 go.mod:
 	go mod init yamlstar-example
-	go get github.com/yaml/yamlstar-go@v0.1.2
+	go get github.com/yaml/yamlstar-go@v0.1.3

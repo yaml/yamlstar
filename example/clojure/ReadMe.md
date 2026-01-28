@@ -45,7 +45,7 @@ YAMLStar Example - Loading YAML and outputting JSON
 
 Input YAML:
 name: YAMLStar Example
-version: 0.1.2
+version: 0.1.3
 ...
 
 ---
@@ -53,7 +53,7 @@ version: 0.1.2
 Output JSON:
 {
   "name": "YAMLStar Example",
-  "version": "0.1.2",
+  "version": "0.1.3",
   ...
 }
 

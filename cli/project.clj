@@ -1,10 +1,10 @@
-(defproject yamlstar/cli "0.1.2-SNAPSHOT"
+(defproject yamlstar/cli "0.1.3-SNAPSHOT"
   :description "YAMLStar CLI - YAML loader command-line tool"
   :url "https://github.com/yaml/yamlstar"
   :license {:name "MIT License"
             :url "https://opensource.org/licenses/MIT"}
 
-  :dependencies [[yamlstar/core "0.1.2-SNAPSHOT"]
+  :dependencies [[yamlstar/core "0.1.3-SNAPSHOT"]
                  [org.clojure/clojure "1.12.0"]
                  [org.clojure/tools.cli "1.1.230"]
                  [org.clojure/data.json "2.5.0"]]

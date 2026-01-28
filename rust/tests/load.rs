@@ -170,7 +170,7 @@ fn version() {
     let ys = yamlstar::YAMLStar::new().unwrap();
     let ver = ys.version().unwrap();
     assert!(!ver.is_empty());
-    assert!(ver.contains('.')); // Version should contain dots like "0.1.2-SNAPSHOT"
+    assert!(ver.contains('.')); // Version should contain dots like "0.1.3-SNAPSHOT"
 }
 
 #[test]
