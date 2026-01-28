@@ -68,6 +68,18 @@ Choose your language below for installation instructions.
     dotnet add package YAMLStar
     ```
 
+=== "Delphi (Pascal)"
+
+    Requires building the shared library first:
+    ```bash
+    cd libyamlstar
+    make native
+    sudo make install PREFIX=/usr/local
+
+    cd ../delphi
+    make build
+    ```
+
 === "Fortran"
 
     See [fortran/ReadMe.md](https://github.com/yaml/yamlstar/tree/main/fortran)
@@ -174,6 +186,63 @@ person:
   hobbies: [reading, coding]
 ")
 ;=> {"person" {"name" "Alice", "age" 30, "hobbies" ["reading" "coding"]}}
+```
+
+### Delphi (Pascal)
+
+```pascal
+program example;
+uses yamlstar, fpjson, sysutils;
+
+var
+  ys: TYAMLStar;
+  data: TJSONData;
+  docs: TJSONArray;
+  yaml: string;
+  i: Integer;
+begin
+  // Create a YAMLStar instance
+  ys := TYAMLStar.Create;
+  try
+    // Load a YAML string
+    data := ys.Load('key: value');
+    try
+      WriteLn(data.FormatJSON);
+      // {"key":"value"}
+    finally
+      data.Free;
+    end;
+
+    // Load with type coercion
+    yaml := 'num: 42' + LineEnding +
+            'bool: true' + LineEnding +
+            'null: null';
+    data := ys.Load(yaml);
+    try
+      WriteLn(data.FormatJSON);
+      // {"num":42,"bool":true,"null":null}
+    finally
+      data.Free;
+    end;
+
+    // Load multiple documents
+    yaml := '---' + LineEnding +
+            'doc1' + LineEnding +
+            '---' + LineEnding +
+            'doc2';
+    docs := ys.LoadAll(yaml);
+    try
+      for i := 0 to docs.Count - 1 do
+        WriteLn(docs.Items[i].AsString);
+      // doc1
+      // doc2
+    finally
+      docs.Free;
+    end;
+  finally
+    ys.Free;
+  end;
+end.
 ```
 
 ### Go

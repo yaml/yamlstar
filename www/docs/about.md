@@ -161,8 +161,8 @@ YAMLStar supports YAML streams with multiple documents separated by `---`:
 - **Grammar Rules**: 211 (YAML 1.2 spec)
 - **Test Coverage**: 23+ comprehensive tests
 - **Dependencies**: 2 (Clojure + data.json for FFI)
-- **Language Bindings**: 9 (Clojure, C#, Fortran, Go, Java, Node.js, Perl,
-  Python, Rust)
+- **Language Bindings**: 10 (Clojure, C#, Delphi, Fortran, Go, Java, Node.js,
+  Perl, Python, Rust)
 
 ## Credits
 

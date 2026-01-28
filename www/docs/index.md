@@ -18,6 +18,7 @@ hide:
   <span class="ykey">Languages</span><span class="ysep">:</span>
     - <span class="ystr">Clojure</span>
     - <span class="ystr">C#</span>
+    - <span class="ystr">Delphi</span>
     - <span class="ystr">Fortran</span>
     - <span class="ystr">Go</span>
     - <span class="ystr">Java</span>

@@ -1,6 +1,6 @@
 # Language Bindings
 
-YAMLStar provides native bindings for 9 programming languages, all using the
+YAMLStar provides native bindings for 10 programming languages, all using the
 same underlying shared library.
 This ensures 100% consistent behavior across all platforms.
 
@@ -212,6 +212,49 @@ ys.Close();
 
 <div class="binding-card" markdown>
 
+### Delphi (Pascal)
+
+Free Pascal binding using native FFI.
+
+**Install:**
+```bash
+# Build the YAMLStar shared library first
+cd libyamlstar
+make native && sudo make install
+
+# Build the Delphi binding
+cd ../delphi
+make build
+```
+
+**Quick Example:**
+```pascal
+program example;
+uses yamlstar, fpjson;
+var
+  ys: TYAMLStar;
+  data: TJSONData;
+begin
+  ys := TYAMLStar.Create;
+  try
+    data := ys.Load('key: value');
+    try
+      WriteLn(data.FormatJSON);
+    finally
+      data.Free;
+    end;
+  finally
+    ys.Free;
+  end;
+end.
+```
+
+[Full Documentation →](https://github.com/yaml/yamlstar/tree/main/delphi)
+
+</div>
+
+<div class="binding-card" markdown>
+
 ### Fortran
 
 Modern Fortran binding using iso_c_binding.
@@ -379,6 +422,13 @@ built using GraalVM native-image for optimal performance and small binary size.
 - Uses P/Invoke
 - Returns standard .NET collections
 - Available on NuGet
+
+### Delphi (Pascal)
+
+- Requires Free Pascal Compiler (FPC) 3.0+
+- Uses native FFI
+- Returns FPJson TJSONData objects
+- Compatible with Delphi and Lazarus
 
 ### Fortran
 

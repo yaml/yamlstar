@@ -21,9 +21,10 @@ support.
 - ✅ Multi-document streams
 - ✅ Comprehensive test suite (23+ tests)
 - ✅ GraalVM native-image shared library
-- ✅ 9 language bindings:
+- ✅ 10 language bindings:
     - Clojure
     - C#
+    - Delphi (Pascal)
     - Fortran
     - Go
     - Java
