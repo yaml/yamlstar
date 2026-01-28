@@ -95,6 +95,23 @@ The release includes:
 
 After shared libraries are released, publish language bindings locally.
 
+## Step 4: Publish Website
+
+After releasing bindings, deploy the updated website to GitHub Pages.
+
+```bash
+# Publish website to yamlstar.org
+make publish
+```
+
+This will:
+- Build the MkDocs site from `www/docs/`
+- Deploy to GitHub Pages using `mkdocs gh-deploy`
+- Update https://yamlstar.org with the new version
+
+The website version is automatically updated during the version bump step (Step 1),
+as `www/docs/index.md` is included in the `.version.ys` file list.
+
 ### Setup Secrets File
 
 Create `~/.yamlstar-secrets.yaml`:

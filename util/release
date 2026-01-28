@@ -434,6 +434,12 @@ do-release-delphi() (
   ../util/release-delphi
 )
 
+# Publish website to GitHub Pages
+do-publish-www() (
+  echo 'Publishing website to GitHub Pages...'
+  make -C www publish
+)
+
 #------------------------------------------------------------------------------
 # Interactive release workflow functions
 #------------------------------------------------------------------------------
@@ -482,6 +488,9 @@ Or run each step individually:
      - Release all language bindings to their registries
      - (Requires prior GitHub release with shared library assets)
 
+  9. make publish
+     - Deploy website to GitHub Pages (yamlstar.org)
+
 Example manual workflow:
   make release-sanity-check o=0.1.0 n=0.1.1
   make release-version-bump o=0.1.0 n=0.1.1
@@ -491,6 +500,7 @@ Example manual workflow:
   make release-push n=0.1.1
   make release-build-github n=0.1.1
   make release-bindings
+  make publish
 
 Note: All steps are idempotent and can be re-run safely.
 EOF
@@ -597,6 +607,12 @@ do-release() {
   # Step 8: Release bindings
   if confirm "Step 8: Release all bindings?" Y; then
     make release-bindings
+  fi
+  echo
+
+  # Step 9: Publish website
+  if confirm "Step 9: Publish website to GitHub Pages?" Y; then
+    do-publish-www
   fi
   echo
 

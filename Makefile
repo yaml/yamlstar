@@ -81,6 +81,12 @@ cli:
 libyamlstar:
 	$(MAKE) -C libyamlstar build
 
+serve:
+	$(MAKE) -C www serve
+
+publish:
+	$(MAKE) -C www publish
+
 clean:: $(ALL-CLEAN)
 	$(MAKE) -C example $@
 

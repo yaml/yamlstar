@@ -1,0 +1,289 @@
+/* YAMLStar Custom Styles - Gold Star Theme */
+
+/* Color Palette */
+:root {
+  --ys-gold: #FFA000;
+  --ys-gold-deep: #F57C00;
+  --ys-gold-warm: #FFB300;
+  --ys-gold-dark: #FF8F00;
+  --ys-gold-light: #FFECB3;
+  --ys-star-glow: rgba(255, 160, 0, 0.3);
+}
+
+/* Dark mode color adjustments */
+[data-md-color-scheme="slate"] {
+  --ys-gold-light: #4A3600;
+}
+
+/* Primary color override for Material theme */
+[data-md-color-primary="custom"] {
+  --md-primary-fg-color: var(--ys-gold);
+  --md-primary-fg-color--light: var(--ys-gold-warm);
+  --md-primary-fg-color--dark: var(--ys-gold-deep);
+}
+
+/* Homepage Hero Section */
+.home-hero {
+  text-align: center;
+  padding: 3rem 1rem 2rem;
+  background: linear-gradient(135deg, var(--ys-gold) 0%, var(--ys-gold-deep) 100%);
+  color: white;
+  margin: -1rem -1rem 2rem;
+  border-radius: 0 0 1rem 1rem;
+}
+
+.home-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.star-icon {
+  font-size: 4rem;
+  display: inline-block;
+  animation: starGlow 2s ease-in-out infinite;
+}
+
+@keyframes starGlow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+.home-subtitle {
+  font-size: 1.3rem;
+  margin: 0.5rem 0 0;
+  opacity: 0.95;
+}
+
+/* YAML-styled homepage content */
+.home-page {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  overflow-x: auto;
+  margin: 2rem 0;
+}
+
+[data-md-color-scheme="slate"] .home-page {
+  background: #1e1e1e;
+  border-color: #404040;
+}
+
+/* YAML Syntax Highlighting */
+.ykey { color: #0066cc; font-weight: 600; }
+.ysep { color: #666; }
+.ystr { color: #008000; }
+.ynum { color: #b8860b; font-weight: 600; }
+.ybool { color: #a020f0; font-weight: 600; }
+.ycom { color: #888; font-style: italic; }
+.yurl { color: #0066cc; text-decoration: underline; }
+.ykw { color: #d73a49; font-weight: 600; }
+.yver { color: var(--ys-gold-dark); font-weight: 700; }
+
+[data-md-color-scheme="slate"] .ykey { color: #6eb4ff; }
+[data-md-color-scheme="slate"] .ystr { color: #7ec699; }
+[data-md-color-scheme="slate"] .ynum { color: #e5c07b; }
+[data-md-color-scheme="slate"] .ybool { color: #c678dd; }
+[data-md-color-scheme="slate"] .ycom { color: #999; }
+[data-md-color-scheme="slate"] .yurl { color: #6eb4ff; }
+[data-md-color-scheme="slate"] .ykw { color: #e06c75; }
+[data-md-color-scheme="slate"] .yver { color: var(--ys-gold-warm); }
+
+/* Call-to-Action Buttons */
+.home-cta {
+  text-align: center;
+  margin: 2rem 0 3rem;
+}
+
+.cta-button,
+.cta-button-secondary {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  margin: 0.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.cta-button {
+  background: linear-gradient(135deg, var(--ys-gold) 0%, var(--ys-gold-deep) 100%);
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px var(--ys-star-glow);
+  color: white;
+}
+
+.cta-button-secondary {
+  background: transparent;
+  border: 2px solid var(--ys-gold);
+  color: var(--ys-gold);
+}
+
+.cta-button-secondary:hover {
+  background: var(--ys-gold-light);
+  border-color: var(--ys-gold-deep);
+  color: var(--ys-gold-dark);
+}
+
+[data-md-color-scheme="slate"] .cta-button-secondary:hover {
+  background: var(--ys-gold-light);
+  color: var(--ys-gold-warm);
+}
+
+/* Homepage Footer */
+.home-footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #666;
+  border-top: 1px solid #dee2e6;
+  margin-top: 3rem;
+}
+
+.home-footer p {
+  margin: 0.3rem 0;
+}
+
+[data-md-color-scheme="slate"] .home-footer {
+  border-top-color: #404040;
+  color: #999;
+}
+
+/* Language Binding Cards */
+.binding-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.binding-card {
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.binding-card:hover {
+  border-color: var(--ys-gold);
+  box-shadow: 0 4px 12px var(--ys-star-glow);
+  transform: translateY(-4px);
+}
+
+[data-md-color-scheme="slate"] .binding-card {
+  background: #1e1e1e;
+  border-color: #404040;
+}
+
+[data-md-color-scheme="slate"] .binding-card:hover {
+  border-color: var(--ys-gold-warm);
+}
+
+.binding-card h3 {
+  color: var(--ys-gold-dark);
+  margin-top: 0;
+  font-size: 1.4rem;
+}
+
+.binding-card code {
+  background: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+}
+
+[data-md-color-scheme="slate"] .binding-card code {
+  background: #2d2d2d;
+}
+
+/* Architecture Diagram */
+.architecture-diagram {
+  background: var(--ys-gold-light);
+  border-left: 4px solid var(--ys-gold);
+  padding: 1.5rem;
+  margin: 2rem 0;
+  border-radius: 0.5rem;
+}
+
+.architecture-diagram pre {
+  margin: 0;
+  background: transparent;
+}
+
+/* Admonitions with star theme */
+.md-typeset .admonition.star,
+.md-typeset details.star {
+  border-color: var(--ys-gold);
+}
+
+.md-typeset .star > .admonition-title,
+.md-typeset .star > summary {
+  background-color: var(--ys-star-glow);
+}
+
+.md-typeset .star > .admonition-title::before,
+.md-typeset .star > summary::before {
+  content: "★";
+  font-size: 1.2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .home-title {
+    font-size: 2.5rem;
+  }
+
+  .star-icon {
+    font-size: 3rem;
+  }
+
+  .home-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .home-page {
+    padding: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .binding-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Code block enhancements */
+.highlight .filename {
+  background: var(--ys-gold-light);
+  color: var(--ys-gold-dark);
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem 0.25rem 0 0;
+  font-weight: 600;
+}
+
+/* Link hover effects */
+.md-typeset a {
+  transition: color 0.2s ease;
+}
+
+.md-typeset a:hover {
+  color: var(--ys-gold-dark);
+}
+
+/* Navigation tabs accent */
+.md-tabs__link--active {
+  color: var(--ys-gold) !important;
+}
+
+/* Search highlight */
+.md-search-result__article--document:hover {
+  background-color: var(--ys-star-glow);
+}

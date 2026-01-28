@@ -21,6 +21,7 @@ vo =: v-old.str/replace(/\./ '\\.')
   - regx:: "()${vp}()"
     file:
     - Meta
+    - www/docs/index.md
     - fortran/fpm.toml
     - csharp/YAMLStar.csproj
     - delphi/src/yamlstar.pas
