@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+
+[ -z "$BASH" ] && {
+  echo "This script must be run with 'bash' instead of '$0'." >&2
+  exit 1
+}
+
+[[ ${DEBUG-} == 1 ]] && set -x
+
+set -e -u -o pipefail
+
+YAMLSTAR_VERSION=0.1.3
+VERSION=${VERSION:-$YAMLSTAR_VERSION}
+export VERSION
+
+main() (
+  setup "$@"
+
+  # CLI releases don't exist yet
+  if [[ ${BIN-} ]]; then
+    die "CLI binary releases are not yet available." \
+        "" \
+        "To use the yaml CLI, build from source:" \
+        "  git clone https://github.com/yaml/yamlstar" \
+        "  cd yamlstar/cli && make build"
+  fi
+
+  # Default: install library only
+  install libyamlstar
+)
+
+install() (
+  name=$1
+
+  url+=/$vers/$name-$vers-$os-$arch.tar.xz
+
+  curl -s -S -L -o "$dir/download.tar.xz" "$url"
+
+  release_dir=$dir/$name
+  mkdir -- "$release_dir"
+  tar -xf "$dir/download.tar.xz" -C "$release_dir"
+
+  (
+    CDPATH='' cd -- "$release_dir" || exit
+    make -s --no-print-directory -C "$name"-* install >/dev/null
+  )
+
+  if [[ ! ${QUIET-} ]]; then
+    if [[ $name == libyamlstar ]]; then
+      echo "Installed $PREFIX/lib/$name.so.$vers"
+      echo "Installed $PREFIX/include/$name-$vers/$name.h"
+    fi
+  fi
+
+  if [[ ! ${QUIET-} &&
+        $name == libyamlstar &&
+        $PREFIX != "$HOME/.local" &&
+        $PREFIX != /usr/local &&
+        ${LD_LIBRARY_PATH-} != *"$PREFIX"/lib*
+     ]]; then
+    echo
+    echo "  *** WARNING: '$PREFIX/lib' is not in your LD_LIBRARY_PATH yet ***"
+    echo
+    echo "  You may need to add it by running:"
+    echo "    export LD_LIBRARY_PATH=$PREFIX/lib:\$LD_LIBRARY_PATH"
+    echo
+  fi
+)
+
+setup() {
+  vers=${VERSION:-$YAMLSTAR_VERSION}
+
+  if [[ ! ${PREFIX-} ]]; then
+    if [[ $(id -u) == 0 ]]; then
+      PREFIX=/usr/local
+    else
+      PREFIX=$HOME/.local
+    fi
+  fi
+  export PREFIX
+
+  if [[ $OSTYPE == *darwin* ]]; then
+    os=macos
+  elif [[ $OSTYPE == *linux* ]]; then
+    os=linux
+  else
+    die "Unknown/unsupported OS type: '$OSTYPE'"
+  fi
+
+  if [[ $MACHTYPE == *x86_64* ]]; then
+    arch=x64
+  elif [[ $MACHTYPE == *arm64* || $MACHTYPE == *aarch64* ]]; then
+    arch=arm64  # YAMLStar uses arm64, not aarch64
+  else
+    die "Unknown machine/unsupported type: '$MACHTYPE'"
+  fi
+
+  url=https://github.com/yaml/yamlstar/releases/download
+
+  if [[ ${PREFIX-} && $PREFIX != /* ]]; then
+    export PREFIX=$PWD/$PREFIX
+  fi
+
+  unset -v dir
+  trap '[[ ${dir-} ]] && rm -fr -- "$dir"' EXIT
+  dir=$(mktemp -d)
+}
+
+die() {
+  printf '%s\n' "$@" >&2
+  exit 1
+}
+
+main "$@"
