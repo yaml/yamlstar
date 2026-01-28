@@ -1,3 +1,5 @@
+LIBYAMLSTAR-VERSION := 0.1.2
+
 M := $(abspath ../../.cache/makes)
 $(shell [ -d $M ] || git clone -q https://github.com/makeplus/makes $M)
 include $M/init.mk

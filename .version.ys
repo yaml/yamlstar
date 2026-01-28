@@ -21,29 +21,32 @@ vo =: v-old.str/replace(/\./ '\\.')
   - regx:: "()${vp}()"
     file:
     - Meta
-    - www/docs/index.md
-    - fortran/fpm.toml
+    - cli/src/yamlstar/cli.clj
+    - clojure/ReadMe.md
+    - core/src/yamlstar/core.clj
     - csharp/YAMLStar.csproj
     - delphi/src/yamlstar.pas
-    - go/yamlstar.go
-    - nodejs/lib/yamlstar/index.js
-    - perl/lib/YAMLStar.pm
-    - rust/src/lib.rs
-    - rust/ReadMe.md
-    - rust/tests/load.rs
-    - python/lib/yamlstar/__init__.py
-    - util/yamlj
-    - cli/src/yamlstar/cli.clj
-    - core/src/yamlstar/core.clj
-    - java/src/com/yaml/yamlstar.clj
-    - java/ReadMe.md
-    - java/Makefile
-    - clojure/ReadMe.md
+    - example/delphi/Makefile
+    - example/go/Makefile
+    - example/python/Makefile
     - example/clojure/ReadMe.md
     - example/delphi/ReadMe.md
-    - example/java/ReadMe.md
     - example/go/ReadMe.md
+    - example/java/ReadMe.md
     - example/python/ReadMe.md
+    - fortran/fpm.toml
+    - go/yamlstar.go
+    - java/Makefile
+    - java/ReadMe.md
+    - java/src/com/yaml/yamlstar.clj
+    - nodejs/lib/yamlstar/index.js
+    - perl/lib/YAMLStar.pm
+    - python/lib/yamlstar/__init__.py
+    - rust/ReadMe.md
+    - rust/src/lib.rs
+    - rust/tests/load.rs
+    - util/yamlj
+    - www/docs/index.md
 
 #------------------------------------------------------------------------------
 # These changes are very specific to not accidentally bump something wrongly.
@@ -69,8 +72,11 @@ vo =: v-old.str/replace(/\./ '\\.')
 
   - regx:: "(defproject com\\.yaml/yamlstar \")${vp}(\")"
     file:
-    - clojure/project.clj
     - java/project.clj
+
+  - regx:: "(defproject org\\.yamlstar/yamlstar \")${vp}(\")"
+    file:
+    - clojure/project.clj
 
   - regx:: "(version.*)${vp}(.*)"
     file:
@@ -102,3 +108,8 @@ vo =: v-old.str/replace(/\./ '\\.')
   - regx:: "(yamlstar-go@v)${vp}()"
     file:
     - example/go/Makefile
+
+  # Example java pom.xml - Maven dependency version
+  - regx:: "(<artifactId>yamlstar</artifactId>\\s*<version>)${vp}(</version>)"
+    file:
+    - example/java/pom.xml
