@@ -34,6 +34,8 @@ BINDING-LANGS := \
   python \
   rust \
 
+BINDING-LANGS := $(filter-out $(BINDING-SKIP),$(BINDING-LANGS))
+
 ALL-DIRS := \
   cli \
   core \
