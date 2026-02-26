@@ -2,8 +2,7 @@ M := .cache/makes
 $(shell [ -d $M ] || git clone -q https://github.com/makeplus/makes $M)
 include $M/init.mk
 include $M/gh.mk
-include $M/graalvm.mk
-include $M/lein.mk
+include $M/gloat.mk
 include $M/yamlscript.mk
 include $M/clean.mk
 include $M/shell.mk
@@ -54,10 +53,8 @@ ALL-TESTS := \
   $(BINDING-TESTS)
 
 
-build jar install::
-	$(MAKE) -C core $@ v=$v
-	$(MAKE) -C cli $@ v=$v
-	$(MAKE) -C libyamlstar $@ v=$v
+build install::
+	$(MAKE) -C libyamlstar $@
 
 test:: test-core
 
