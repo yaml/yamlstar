@@ -6,7 +6,7 @@
 (declare auto-detect auto-detect-indent trace-start trace-flush)
 
 ;; TRACE flag from environment
-(def TRACE (Boolean/parseBoolean (or (env "TRACE") "false")))
+(def TRACE (= (os.Getenv "TRACE") "true"))
 
 ;; Default state when stack is empty
 (def default-state
@@ -202,8 +202,13 @@
   (or (end-of-stream* parser)
       (and (:doc (state-curr parser))
            (start-of-line* parser)
-           (let [remaining (subs @(:input parser) @(:pos parser))]
-             (re-find #"^(?:---|\.\.\.)(?=\s|$)" remaining)))))
+           ;; RE2 doesn't support lookaheads; check the char after manually
+           (let [remaining (subs @(:input parser) @(:pos parser))
+                 prefix (re-find #"^(?:---|\.\.\.)" remaining)]
+             (when prefix
+               (let [after (subs remaining (count prefix))]
+                 (or (empty? after)
+                     (re-find #"^\s" after))))))))
 
 ;; Grammar-callable versions (return functions)
 (defn start-of-line [parser]
@@ -240,9 +245,9 @@
               remaining (subs input pos)
               pattern (re-pattern (str "^[" low "-" high "]"))]
           (when (re-find pattern remaining)
-            ;; Handle surrogate pairs
-            (let [cp (.codePointAt remaining 0)]
-              (when (> cp 65535)
+            ;; Handle multi-byte runes (Go uses UTF-8, advance by rune width)
+            (let [[r _] (unicode:utf8.DecodeRuneInString remaining)]
+              (when (> (int r) 65535)
                 (swap! (:pos p) inc)))
             (swap! (:pos p) inc)
             true))))

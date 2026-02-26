@@ -10,19 +10,23 @@
   Each constructor takes a node and returns native Clojure data.
   Supports both short form (!!null) and fully qualified (tag:yaml.org,2002:null) tags."
   (let [null-fn  (fn [_node] nil)
-        bool-fn  (fn [node] (Boolean/parseBoolean (:value node)))
-        int-fn   (fn [node] (Long/parseLong (:value node)))
+        bool-fn  (fn [node]
+                   (contains? #{"true" "True" "TRUE"} (:value node)))
+        int-fn   (fn [node]
+                   (let [[n _] (strconv.ParseInt (:value node) 10 64)]
+                     n))
         float-fn (fn [node]
                    (let [value (:value node)]
                      (cond
                        (re-matches #"[+-]?\.inf|\.Inf|\.INF" value)
-                       (if (= (first value) \-) Double/NEGATIVE_INFINITY Double/POSITIVE_INFINITY)
+                       (if (= (first value) \-) (math.Inf -1) (math.Inf 1))
 
                        (re-matches #"\.nan|\.NaN|\.NAN" value)
-                       Double/NaN
+                       (math.NaN)
 
                        :else
-                       (Double/parseDouble value))))
+                       (let [[f _] (strconv.ParseFloat value 64)]
+                         f))))
         str-fn   (fn [node] (:value node))]
     {"!!null"                  null-fn
      "tag:yaml.org,2002:null"  null-fn
@@ -65,7 +69,7 @@
                                           (construct-node val-node anchors)))
                                   []
                                   pairs)]
-              (apply array-map entries))
+              (reduce (fn [m [k v]] (assoc m k v)) {} (partition 2 entries)))
 
             :sequence
             (let [items (:value node)]
