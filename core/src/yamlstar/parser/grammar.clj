@@ -272,8 +272,8 @@
       "\uFFFD"
     ),
     (p/rng parser
-       (String. (int-array [0x010000]) 0 1),
-      (String. (int-array [0x10FFFF]) 0 1)
+       "𐀀",
+      "􏿿"
     )
   ))
     {:trace "c_printable" :name "c_printable"}))
@@ -291,7 +291,7 @@
     ),
     (p/rng parser
        "\u0020",
-      (String. (int-array [0x10FFFF]) 0 1)
+      "􏿿"
     )
   ))
     {:trace "nb_json" :name "nb_json"}))
