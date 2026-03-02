@@ -1,7 +1,6 @@
 const yamlstarVersion = '0.1.3';
 
 const ffi = require('@makeomatic/ffi-napi');
-const ref = require('ref-napi');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -10,35 +9,19 @@ function defineForeignFunctionInterface() {
   let libPath = findLibyamlstarPath();
 
   return ffi.Library(libPath, {
-    'graal_create_isolate': ['int', ['pointer', 'pointer', 'pointer']],
-    'graal_tear_down_isolate': ['int', ['pointer']],
-    'yamlstar_load': ['string', ['pointer', 'string']],
-    'yamlstar_load_all': ['string', ['pointer', 'string']],
-    'yamlstar_version': ['string', ['pointer']],
+    'yamlstar_load': ['string', ['string', 'string']],
+    'yamlstar_load_all': ['string', ['string', 'string']],
+    'yamlstar_version': ['string', []],
   });
 }
 
 class YAMLStar {
   constructor(config = {}) {
     this.libyamlstar = defineForeignFunctionInterface();
-    this.isolatethread = ref.NULL_POINTER;
-
-    let rc = this.libyamlstar.graal_create_isolate(
-      null,
-      null,
-      this.isolatethread,
-    );
-
-    if (rc !== 0) {
-      throw new Error('Failed to create GraalVM isolate');
-    }
   }
 
   load(input) {
-    let dataJson = this.libyamlstar.yamlstar_load(
-      this.isolatethread.deref(),
-      input,
-    );
+    let dataJson = this.libyamlstar.yamlstar_load(input, '{}');
 
     let resp = JSON.parse(dataJson);
 
@@ -54,10 +37,7 @@ class YAMLStar {
   }
 
   loadAll(input) {
-    let dataJson = this.libyamlstar.yamlstar_load_all(
-      this.isolatethread.deref(),
-      input,
-    );
+    let dataJson = this.libyamlstar.yamlstar_load_all(input, '{}');
 
     let resp = JSON.parse(dataJson);
 
@@ -73,17 +53,10 @@ class YAMLStar {
   }
 
   version() {
-    return this.libyamlstar.yamlstar_version(this.isolatethread.deref());
+    return this.libyamlstar.yamlstar_version();
   }
 
   close() {
-    let ret = this.libyamlstar.graal_tear_down_isolate(
-      this.isolatethread.deref(),
-    );
-
-    if (ret !== 0) {
-      throw new Error("Failed to tear down isolate.");
-    }
   }
 }
 
@@ -91,7 +64,7 @@ class YAMLStar {
 function findLibyamlstarPath() {
   let platform = os.platform();
   let soExtension = platform === 'win32' ? 'dll' : (platform === 'linux' ? 'so' : 'dylib');
-  let libyamlstarName = `libyamlstar.${soExtension}.${yamlstarVersion}`;
+  let libyamlstarName = `libyamlstar.${soExtension}`;
 
   let searchPaths = [];
 
@@ -119,7 +92,7 @@ function findLibyamlstarPath() {
   throw new Error(
 `Shared library file '${libyamlstarName}' not found
 Search paths: ${searchPaths.join(':')}
-Build with: cd libyamlstar && make native`);
+Build with: cd libyamlstar && make build`);
 }
 
 module.exports = YAMLStar;

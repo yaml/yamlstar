@@ -7,7 +7,6 @@ use warnings;
 package YAMLStar;
 
 use Moo;
-use FFI::CheckLib ();
 use FFI::Platypus;
 use Cpanel::JSON::XS ();
 
@@ -28,67 +27,28 @@ my $ffi = FFI::Platypus->new(
     lib => $libyamlstar,
 );
 
-my $graal_create_isolate = $ffi->function(
-    graal_create_isolate =>
-        ['opaque', 'opaque*', 'opaque*'] => 'int',
-);
-
-my $graal_tear_down_isolate = $ffi->function(
-    graal_tear_down_isolate =>
-        ['opaque'] => 'int',
-);
-
 my $yamlstar_load = $ffi->function(
     yamlstar_load =>
-        ['sint64', 'string'] => 'string',
+        ['string', 'string'] => 'string',
 );
 
 my $yamlstar_load_all = $ffi->function(
     yamlstar_load_all =>
-        ['sint64', 'string'] => 'string',
+        ['string', 'string'] => 'string',
 );
 
 my $yamlstar_version = $ffi->function(
     yamlstar_version =>
-        ['sint64'] => 'string',
+        [] => 'string',
 );
 
 #------------------------------------------------------------------------------
 # YAMLStar Moo attributes:
 #------------------------------------------------------------------------------
 
-has 'isolatethread' => (
-    is => 'rw',
-);
-
 has 'error' => (
     is => 'rw',
 );
-
-#------------------------------------------------------------------------------
-# YAMLStar object lifecycle:
-#------------------------------------------------------------------------------
-
-# BUILD is called after new() to create the graal isolate:
-sub BUILD {
-    my ($self, $args) = @_;
-
-    my ($isolatethread);
-    $graal_create_isolate->(undef, undef, \$isolatethread) == 0
-        or die 'Failed to create graal isolate';
-
-    $self->isolatethread(\$isolatethread);
-}
-
-# DEMOLISH tears down the graal isolate when the object goes out of scope:
-sub DEMOLISH {
-    my ($self) = @_;
-
-    if (my $isolatethread = $self->isolatethread) {
-        $graal_tear_down_isolate->($$isolatethread) == 0
-            or die "Failed to tear down graal isolate";
-    }
-}
 
 #------------------------------------------------------------------------------
 # YAMLStar API methods:
@@ -101,7 +61,7 @@ sub load {
     $self->error(undef);
 
     my $resp = Cpanel::JSON::XS::decode_json(
-        $yamlstar_load->(${$self->isolatethread}, $yaml)
+        $yamlstar_load->($yaml, '{}')
     );
 
     return $resp->{data} if exists $resp->{data};
@@ -120,7 +80,7 @@ sub load_all {
     $self->error(undef);
 
     my $resp = Cpanel::JSON::XS::decode_json(
-        $yamlstar_load_all->(${$self->isolatethread}, $yaml)
+        $yamlstar_load_all->($yaml, '{}')
     );
 
     return $resp->{data} if exists $resp->{data};
@@ -136,7 +96,7 @@ sub load_all {
 sub version {
     my ($self) = @_;
 
-    return $yamlstar_version->(${$self->isolatethread});
+    return $yamlstar_version->();
 }
 
 #------------------------------------------------------------------------------
@@ -145,9 +105,8 @@ sub version {
 
 # Look for the local libyamlstar first, then look in system paths:
 sub find_libyamlstar {
-    my $vers = $libyamlstar_version;
     my $so = $^O eq 'darwin' ? 'dylib' : $^O eq 'MSWin32' ? 'dll' : 'so';
-    my $name = "libyamlstar.$so.$vers";
+    my $name = "libyamlstar.$so";
     my @paths;
 
     # Add relative path for development:
@@ -189,7 +148,7 @@ sub find_libyamlstar {
     die <<"..."
 Shared library file $name not found
 Search paths: @paths
-Build with: cd libyamlstar && make native
+Build with: cd libyamlstar && make build
 ...
 }
 

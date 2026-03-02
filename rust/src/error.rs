@@ -15,8 +15,6 @@ pub enum Error {
     NotFound,
     /// An error while loading the library.
     Load(dlopen::Error),
-    /// An error with GraalVM.
-    GraalVM(i32),
     /// An error in the FFI while calling a libyamlstar function.
     Ffi(String),
     /// An error from the libyamlstar library.
@@ -32,13 +30,11 @@ impl Debug for Error {
         match self {
             Self::NotFound => write!(
                 f,
-                "Shared library file 'libyamlstar.so.{0}' not found\n\
-                Try: cd libyamlstar && make native\n\
+                "Shared library file 'libyamlstar.so' not found\n\
+                Try: cd libyamlstar && make build\n\
                 Or set LD_LIBRARY_PATH to include the library location",
-                &super::LIBYAMLSTAR_VERSION
             ),
             Error::Load(e) => write!(f, "Error::Load({e:?})"),
-            Error::GraalVM(e) => write!(f, "Error::GraalVM({e:?})"),
             Error::Ffi(e) => write!(f, "Error::Ffi({e:?})"),
             Error::YAMLStar(e) => write!(f, "Error::YAMLStar({e:?})"),
             Error::Serde(e) => write!(f, "Error::Serde({e:?})"),
@@ -50,13 +46,8 @@ impl Debug for Error {
 impl Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::NotFound => write!(
-                f,
-                "Shared library file 'libyamlstar.so.{0}' not found",
-                &super::LIBYAMLSTAR_VERSION
-            ),
+            Self::NotFound => write!(f, "Shared library file 'libyamlstar.so' not found"),
             Error::Load(e) => write!(f, "Failed to load library: {e}"),
-            Error::GraalVM(code) => write!(f, "GraalVM error (code {code})"),
             Error::Ffi(msg) => write!(f, "FFI error: {msg}"),
             Error::YAMLStar(e) => write!(f, "YAML parsing error: {}", e.cause),
             Error::Serde(e) => write!(f, "JSON deserialization error: {e}"),

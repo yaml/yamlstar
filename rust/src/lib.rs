@@ -37,7 +37,6 @@
 use std::path::Path;
 
 use dlopen::symbor::Library;
-use libc::{c_int, c_void as void};
 
 mod error;
 
@@ -64,29 +63,17 @@ const LIBYAMLSTAR_EXTENSION: &str = "dll";
 #[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
 compile_error!("Unsupported platform for yamlstar.");
 
-/// Prototype of the `graal_create_isolate` function.
-type CreateIsolateFn = unsafe extern "C" fn(*mut void, *const *mut void, *const *mut void) -> c_int;
-/// Prototype of the `graal_tear_down_isolate` function.
-type TearDownIsolateFn = unsafe extern "C" fn(*mut void) -> c_int;
 /// Prototype of the `yamlstar_load` function.
-type YamlstarLoadFn = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
+type YamlstarLoadFn = unsafe extern "C" fn(*const u8, *const u8) -> *mut i8;
 /// Prototype of the `yamlstar_load_all` function.
-type YamlstarLoadAllFn = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
+type YamlstarLoadAllFn = unsafe extern "C" fn(*const u8, *const u8) -> *mut i8;
 /// Prototype of the `yamlstar_version` function.
-type YamlstarVersionFn = unsafe extern "C" fn(*mut void) -> *mut i8;
+type YamlstarVersionFn = unsafe extern "C" fn() -> *mut i8;
 
 /// A wrapper around libyamlstar.
 pub struct YAMLStar {
     /// A handle to the opened dynamic library.
     _handle: Library,
-    /// A GraalVM isolate.
-    _isolate: *mut void,
-    /// A GraalVM isolate thread.
-    isolate_thread: *mut void,
-    /// Pointer to the function in GraalVM to create the isolate and its thread.
-    _create_isolate_fn: CreateIsolateFn,
-    /// Pointer to the function in GraalVM to free an isolate thread.
-    tear_down_isolate_fn: TearDownIsolateFn,
     /// Pointer to the `yamlstar_load` function.
     load_fn: YamlstarLoadFn,
     /// Pointer to the `yamlstar_load_all` function.
@@ -103,57 +90,26 @@ impl YAMLStar {
     /// Returns [`Error::NotFound`] if the library cannot be found.
     #[allow(clippy::crosspointer_transmute)]
     pub fn new() -> Result<Self, Error> {
-        // Open library and create pointers the library needs.
         let handle = Self::open_library()?;
-        let isolate = std::ptr::null_mut();
-        let isolate_thread = std::ptr::null_mut();
 
         // Fetch symbols.
-        let create_isolate_fn =
-            unsafe { handle.ptr_or_null::<CreateIsolateFn>("graal_create_isolate")? };
-        let tear_down_isolate_fn =
-            unsafe { handle.ptr_or_null::<TearDownIsolateFn>("graal_tear_down_isolate")? };
         let load_fn = unsafe { handle.ptr_or_null::<YamlstarLoadFn>("yamlstar_load")? };
         let load_all_fn =
             unsafe { handle.ptr_or_null::<YamlstarLoadAllFn>("yamlstar_load_all")? };
         let version_fn = unsafe { handle.ptr_or_null::<YamlstarVersionFn>("yamlstar_version")? };
 
         // Check for null-ness.
-        if create_isolate_fn.is_null()
-            || tear_down_isolate_fn.is_null()
-            || load_fn.is_null()
-            || load_all_fn.is_null()
-            || version_fn.is_null()
-        {
+        if load_fn.is_null() || load_all_fn.is_null() || version_fn.is_null() {
             return Err(Error::Load(dlopen::Error::NullSymbol));
         }
 
         // Transmute to remove borrow and convert to correct Rust type.
-        let create_isolate_fn: CreateIsolateFn = unsafe { std::mem::transmute(*create_isolate_fn) };
-        let tear_down_isolate_fn: TearDownIsolateFn =
-            unsafe { std::mem::transmute(*tear_down_isolate_fn) };
         let load_fn: YamlstarLoadFn = unsafe { std::mem::transmute(*load_fn) };
         let load_all_fn: YamlstarLoadAllFn = unsafe { std::mem::transmute(*load_all_fn) };
         let version_fn: YamlstarVersionFn = unsafe { std::mem::transmute(*version_fn) };
 
-        // Create GraalVM isolate.
-        let x = unsafe {
-            (create_isolate_fn)(
-                std::ptr::null_mut(),
-                &raw const isolate,
-                &raw const isolate_thread,
-            )
-        };
-        if x != 0 {
-            return Err(Error::GraalVM(x));
-        }
-
         Ok(Self {
             _handle: handle,
-            _isolate: isolate,
-            isolate_thread,
-            _create_isolate_fn: create_isolate_fn,
-            tear_down_isolate_fn,
             load_fn,
             load_all_fn,
             version_fn,
@@ -199,7 +155,7 @@ impl YAMLStar {
     /// # Errors
     /// Returns an error if the version string cannot be retrieved.
     pub fn version(&self) -> Result<String, Error> {
-        let raw = unsafe { (self.version_fn)(self.isolate_thread) };
+        let raw = unsafe { (self.version_fn)() };
         if raw.is_null() {
             return Err(Error::Ffi("yamlstar_version: returned null".to_string()));
         }
@@ -211,7 +167,9 @@ impl YAMLStar {
     fn load_raw(&self, yaml: &str) -> Result<*mut i8, Error> {
         let input = std::ffi::CString::new(yaml)
             .map_err(|_| Error::Ffi("load: input contains a nil-byte".to_string()))?;
-        let json = unsafe { (self.load_fn)(self.isolate_thread, input.as_bytes().as_ptr()) };
+        let opts = std::ffi::CString::new("{}")
+            .map_err(|_| Error::Ffi("load: opts contains a nil-byte".to_string()))?;
+        let json = unsafe { (self.load_fn)(input.as_bytes().as_ptr(), opts.as_bytes().as_ptr()) };
         if json.is_null() {
             Err(Error::Ffi("yamlstar_load: returned null".to_string()))
         } else {
@@ -223,7 +181,10 @@ impl YAMLStar {
     fn load_all_raw(&self, yaml: &str) -> Result<*mut i8, Error> {
         let input = std::ffi::CString::new(yaml)
             .map_err(|_| Error::Ffi("load_all: input contains a nil-byte".to_string()))?;
-        let json = unsafe { (self.load_all_fn)(self.isolate_thread, input.as_bytes().as_ptr()) };
+        let opts = std::ffi::CString::new("{}")
+            .map_err(|_| Error::Ffi("load_all: opts contains a nil-byte".to_string()))?;
+        let json =
+            unsafe { (self.load_all_fn)(input.as_bytes().as_ptr(), opts.as_bytes().as_ptr()) };
         if json.is_null() {
             Err(Error::Ffi(
                 "yamlstar_load_all: returned null".to_string(),
@@ -261,8 +222,8 @@ impl YAMLStar {
         }
 
         let library_filename = format!(
-            "{}.{}.{}",
-            LIBYAMLSTAR_BASENAME, LIBYAMLSTAR_EXTENSION, LIBYAMLSTAR_VERSION
+            "{}.{}",
+            LIBYAMLSTAR_BASENAME, LIBYAMLSTAR_EXTENSION
         );
 
         for path in &search_paths {
@@ -285,15 +246,6 @@ impl YAMLStar {
         match first_error {
             Some(x) => Err(x.into()),
             None => Err(Error::NotFound),
-        }
-    }
-}
-
-impl Drop for YAMLStar {
-    fn drop(&mut self) {
-        let res = unsafe { (self.tear_down_isolate_fn)(self.isolate_thread) };
-        if res != 0 {
-            eprintln!("Warning: Failed to tear down yamlstar's GraalVM isolate");
         }
     }
 }
