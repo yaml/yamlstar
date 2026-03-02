@@ -6,22 +6,7 @@ namespace YAMLStar;
 
 public sealed class YAMLStar : IDisposable
 {
-    private readonly IntPtr _isolateThread;
     private bool _disposed;
-
-    public YAMLStar()
-    {
-        _isolateThread = IntPtr.Zero;
-        var rc = YAMLStarNative.graal_create_isolate(
-            IntPtr.Zero,
-            IntPtr.Zero,
-            ref _isolateThread);
-
-        if (rc != 0 || _isolateThread == IntPtr.Zero)
-        {
-            throw new YAMLStarException("Failed to create GraalVM isolate");
-        }
-    }
 
     public object? Load(string yaml)
     {
@@ -30,7 +15,7 @@ public sealed class YAMLStar : IDisposable
             throw new ObjectDisposedException(nameof(YAMLStar));
         }
 
-        var result = YAMLStarNative.yamlstar_load(_isolateThread, yaml);
+        var result = YAMLStarNative.yamlstar_load(yaml, "");
 
         if (result == IntPtr.Zero)
         {
@@ -53,7 +38,7 @@ public sealed class YAMLStar : IDisposable
             throw new ObjectDisposedException(nameof(YAMLStar));
         }
 
-        var result = YAMLStarNative.yamlstar_load_all(_isolateThread, yaml);
+        var result = YAMLStarNative.yamlstar_load_all(yaml, "");
 
         if (result == IntPtr.Zero)
         {
@@ -76,7 +61,7 @@ public sealed class YAMLStar : IDisposable
             throw new ObjectDisposedException(nameof(YAMLStar));
         }
 
-        var result = YAMLStarNative.yamlstar_version(_isolateThread);
+        var result = YAMLStarNative.yamlstar_version();
 
         if (result == IntPtr.Zero)
         {
@@ -115,15 +100,6 @@ public sealed class YAMLStar : IDisposable
 
     public void Dispose()
     {
-        if (!_disposed && _isolateThread != IntPtr.Zero)
-        {
-            var rc = YAMLStarNative.graal_tear_down_isolate(_isolateThread);
-            if (rc != 0)
-            {
-                // Log error but don't throw since we're in Dispose
-                Console.Error.WriteLine($"Failed to tear down isolate: {rc}");
-            }
-            _disposed = true;
-        }
+        _disposed = true;
     }
 }
