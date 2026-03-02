@@ -1,13 +1,13 @@
 (ns yamlstar.parser.prelude
   (:require [clojure.string :as str]))
 
-;; Environment access
+;; Environment access - returns nil (falsy) when not set
 (defn env [key]
-  (System/getenv key))
+  (not-empty (os.Getenv key)))
 
 ;; Type checking predicates
 (defn is-null? [x] (nil? x))
-(defn is-boolean? [x] (instance? Boolean x))
+(defn is-boolean? [x] (or (true? x) (false? x)))
 (defn is-number? [x] (number? x))
 (defn is-string? [x] (string? x))
 (defn is-function? [x] (fn? x))
@@ -17,7 +17,7 @@
 (defn typeof* [value]
   (cond
     (nil? value) "null"
-    (instance? Boolean value) "boolean"
+    (or (true? value) (false? value)) "boolean"
     (number? value) "number"
     (string? value) "string"
     (keyword? value) "string"  ;; Keywords treated as strings
@@ -25,7 +25,7 @@
     (fn? value) "function"
     (or (vector? value) (seq? value)) "array"
     (map? value) "object"
-    :else (throw (ex-info "Unknown type" {:value value :type (type value)}))))
+    :else (throw (ex-info "Unknown type" {:value value}))))
 
 ;; String helpers
 (defn stringify [o]
@@ -38,18 +38,17 @@
     :else (pr-str o)))
 
 (defn hex-char [chr]
-  (format "%x" (int (first chr))))
+  (fmt.Sprintf "%x" (int (first chr))))
 
 ;; Debug and error functions
 (defn warn [msg]
-  (binding [*out* *err*]
-    (println msg)))
+  (fmt.Fprintln os.Stderr msg))
 
 (defn die [msg]
   (throw (ex-info msg {})))
 
 (defn die* [msg]
-  (die (str (.getStackTrace (Thread/currentThread)) "\n" msg)))
+  (die msg))
 
 (defn debug [msg]
   (warn (str ">>> " msg)))
@@ -68,7 +67,7 @@
 (defn name* [name func trace]
   (with-meta func {:trace (or trace name)}))
 
-;; Timer (for performance measurement)
+;; Timer (for performance measurement - stubbed, tracing not used in Glojure)
 (defn timer
-  ([] (System/nanoTime))
-  ([start] (/ (- (System/nanoTime) start) 1000000000.0)))
+  ([] 0)
+  ([start] 0.0))

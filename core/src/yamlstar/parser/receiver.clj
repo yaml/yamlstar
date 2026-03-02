@@ -1,9 +1,15 @@
 (ns yamlstar.parser.receiver
   (:require [clojure.string :as str]
-            [yamlstar.parser.prelude :refer :all]))
+            [yamlstar.parser.prelude :refer :all]
+            [yamlstar.parser.parser :as parser]))
 
 ;; Forward declarations
 (declare push-event check-document-start check-document-end)
+
+;; Helper: convert hex string to Unicode character string
+(defn hex->char [hex-val]
+  (let [[n _] (strconv.ParseInt hex-val 16 32)]
+    (str (go/rune n))))
 
 ;; Event constructors
 (defn stream-start-event []
@@ -190,15 +196,17 @@
                        ;; hex escapes
                        (re-matches (re-pattern (str "\\\\x(" hex "{2})")) match)
                        (let [[_ hex-val] (re-matches (re-pattern (str "\\\\x(" hex "{2})")) match)]
-                         (str (char (Integer/parseInt hex-val 16))))
+                         (hex->char hex-val))
 
                        (re-matches (re-pattern (str "\\\\u(" hex "{4})")) match)
                        (let [[_ hex-val] (re-matches (re-pattern (str "\\\\u(" hex "{4})")) match)]
-                         (str (char (Integer/parseInt hex-val 16))))
+                         (hex->char hex-val))
 
                        (re-matches (re-pattern (str "\\\\U(" hex "{8})")) match)
                        (let [[_ hex-val] (re-matches (re-pattern (str "\\\\U(" hex "{8})")) match)]
-                         (String. (Character/toChars (Integer/parseInt hex-val 16))))
+                         ;; go/rune handles all Unicode including above U+FFFF
+                         (let [[n _] (strconv.ParseInt hex-val 16 32)]
+                           (str (go/rune n))))
 
                        ;; line continuation
                        (re-matches #"(?:\\ ?\r?\n[ \t]*)" match)
@@ -440,9 +448,8 @@
            lines (map #(str (:text %) "\n") lines)
            text (apply str lines)
            ;; :parser is stored directly (not as atom) in the receiver passed to callbacks
-           parser (:parser receiver)
-           state-curr @(requiring-resolve 'yamlstar.parser.parser/state-curr)
-           t (:t (state-curr parser))
+           p (:parser receiver)
+           t (:t (parser/state-curr p))
            text (cond
                   (= t "clip") (str/replace text #"\n+$" "\n")
                   (= t "strip") (str/replace text #"\n+$" "")
@@ -485,15 +492,15 @@
      (reset! (:in-scalar receiver) false)
      (let [lines (map :text (cache-drop receiver))
            text (str/join "\n" lines)
+           ;; RE2 doesn't support lookaheads; capture and reinsert next char
            text (-> text
-                    (str/replace #"(?m)^(\S.*)\n(?=\S)" "$1 ")
+                    (str/replace #"(?m)^(\S.*)\n(\S)" "$1 $2")
                     (str/replace #"(?m)^(\S.*)\n(\n+)" "$1$2")
-                    (str/replace #"(?m)^([ \t]+\S.*)\n(\n+)(?=\S)" "$1$2"))
+                    (str/replace #"(?m)^([ \t]+\S.*)\n(\n+)(\S)" "$1$2$3"))
            text (str text "\n")
            ;; :parser is stored directly (not as atom) in the receiver passed to callbacks
-           parser (:parser receiver)
-           state-curr @(requiring-resolve 'yamlstar.parser.parser/state-curr)
-           t (:t (state-curr parser))
+           p (:parser receiver)
+           t (:t (parser/state-curr p))
            text (cond
                   (= t "clip") (let [t (str/replace text #"\n+$" "\n")]
                                  (if (= t "\n") "" t))
@@ -557,7 +564,7 @@
            ;; URL-decode percent escapes
            resolved-tag (str/replace resolved-tag #"%([0-9a-fA-F]{2})"
                                      (fn [[_ hex]]
-                                       (str (char (Integer/parseInt hex 16)))))]
+                                       (hex->char hex)))]
        (reset! (:tag receiver) resolved-tag)))
 
    ;; Alias node
