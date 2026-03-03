@@ -162,8 +162,12 @@
                  pos @(:pos parser)
                  _ (receive parser func :try pos)
 
-                 ;; Call the function
-                 value (loop [v (apply func parser args)]
+                 ;; Call the function — bypass clojure.core/apply
+                ;; when args is empty (common case) to avoid
+                ;; lang.Apply []any allocation and reflection.
+                 value (loop [v (if (empty? args)
+                                  (func parser)
+                                  (apply func parser args))]
                          (if (or (fn? v) (vector? v))
                            (recur (call parser v))
                            v))]
