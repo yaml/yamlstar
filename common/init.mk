@@ -10,6 +10,7 @@ include $M/init.mk
 include $M/git.mk
 include $M/clean.mk
 
-ROOT := $(GIT-REPO-DIR)
+# Use --show-toplevel so worktrees resolve to their own path (not the main repo)
+ROOT := $(shell git rev-parse --show-toplevel)
 COMMON := ../common
 LIBYS := ../libyamlstar

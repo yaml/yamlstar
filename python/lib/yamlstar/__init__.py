@@ -21,9 +21,8 @@ import json
 assert sys.version_info >= (3, 6), \
   "Python 3.6 or greater required for 'yamlstar'."
 
-# Find the libyamlstar shared library file path:
-def find_libyamlstar_path():
-  # Confirm platform and determine file extension:
+def find_libyamlstar():
+  """Find libyamlstar shared library. Returns (path, backend)."""
   if sys.platform == 'linux':
     so = 'so'
   elif sys.platform == 'darwin':
@@ -34,8 +33,6 @@ def find_libyamlstar_path():
     raise Exception(
       "Unsupported platform '%s' for yamlstar." % sys.platform)
 
-  libyamlstar_name = "libyamlstar.%s" % so
-
   # Use LD_LIBRARY_PATH to find libyamlstar shared library, or default to
   # '/usr/local/lib' (where it is installed by default):
   ld_library_path = os.environ.get('LD_LIBRARY_PATH')
@@ -44,42 +41,61 @@ def find_libyamlstar_path():
   ld_library_paths.append(os.environ.get('HOME') + '/.local/lib')
 
   # Also check relative to this file (for development)
-  lib_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), '..', 'libyamlstar', 'lib')
-  lib_path = os.path.abspath(lib_path)
-  ld_library_paths.insert(0, lib_path)
+  lib_path = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+    '..', 'libyamlstar', 'lib')
+  ld_library_paths.insert(0, os.path.abspath(lib_path))
 
-  libyamlstar_path = None
+  if os.environ.get('YAMLSTAR_GLOJURE'):
+    lib_name, backend = 'libyamlstarglj', 'gloat'
+  else:
+    lib_name, backend = 'libyamlstar', 'graalvm'
+
+  filename = "%s.%s" % (lib_name, so)
   for path in ld_library_paths:
-    full_path = os.path.join(path, libyamlstar_name)
+    full_path = os.path.join(path, filename)
     if os.path.isfile(full_path):
-      libyamlstar_path = full_path
-      break
+      return full_path, backend
 
-  if not libyamlstar_path:
-    raise Exception(
-      """\
+  raise Exception(
+    """\
 Shared library file '%s' not found
 Search paths: %s
 Build with: cd libyamlstar && make build
-""" % (libyamlstar_name, ':'.join(ld_library_paths)))
+""" % (filename, ':'.join(ld_library_paths)))
 
-  return libyamlstar_path
+# Load libyamlstar shared library and detect backend:
+_libyamlstar_path, _backend = find_libyamlstar()
+libyamlstar = ctypes.CDLL(_libyamlstar_path)
 
-# Load libyamlstar shared library:
-libyamlstar = ctypes.CDLL(find_libyamlstar_path())
+# Create bindings to library functions (signatures differ by backend):
+if _backend == 'gloat':
+  # Gloat: functions take (yaml_bytes, opts_bytes) -> json_bytes
+  yamlstar_load_fn = libyamlstar.yamlstar_load
+  yamlstar_load_fn.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+  yamlstar_load_fn.restype = ctypes.c_char_p
 
-# Create bindings to library functions:
-yamlstar_load = libyamlstar.yamlstar_load
-yamlstar_load.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
-yamlstar_load.restype = ctypes.c_char_p
+  yamlstar_load_all_fn = libyamlstar.yamlstar_load_all
+  yamlstar_load_all_fn.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+  yamlstar_load_all_fn.restype = ctypes.c_char_p
 
-yamlstar_load_all = libyamlstar.yamlstar_load_all
-yamlstar_load_all.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
-yamlstar_load_all.restype = ctypes.c_char_p
+  yamlstar_version_fn = libyamlstar.yamlstar_version
+  yamlstar_version_fn.argtypes = []
+  yamlstar_version_fn.restype = ctypes.c_char_p
 
-yamlstar_version_fn = libyamlstar.yamlstar_version
-yamlstar_version_fn.argtypes = []
-yamlstar_version_fn.restype = ctypes.c_char_p
+else:
+  # GraalVM: functions take (isolatethread, yaml_bytes) -> json_bytes
+  yamlstar_load_fn = libyamlstar.yamlstar_load
+  yamlstar_load_fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+  yamlstar_load_fn.restype = ctypes.c_char_p
+
+  yamlstar_load_all_fn = libyamlstar.yamlstar_load_all
+  yamlstar_load_all_fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+  yamlstar_load_all_fn.restype = ctypes.c_char_p
+
+  yamlstar_version_fn = libyamlstar.yamlstar_version
+  yamlstar_version_fn.argtypes = [ctypes.c_void_p]
+  yamlstar_version_fn.restype = ctypes.c_char_p
 
 
 # The YAMLStar class is the main user facing API for this module.
@@ -97,6 +113,18 @@ class YAMLStar():
     # Returns: ['doc1', 'doc2']
   """
 
+  def __init__(self):
+    if _backend == 'graalvm':
+      # Create a new GraalVM isolate thread for the life of this instance:
+      self._isolatethread = ctypes.c_void_p()
+      rc = libyamlstar.graal_create_isolate(
+        None,
+        None,
+        ctypes.byref(self._isolatethread),
+      )
+      if rc != 0:
+        raise Exception("Failed to create GraalVM isolate")
+
   # Load a single YAML document and return the result:
   def load(self, yaml_input):
     """
@@ -111,30 +139,21 @@ class YAMLStar():
     Raises:
       Exception if the YAML is malformed
     """
-    # Reset any previous error:
     self.error = None
+    yaml_bytes = ctypes.c_char_p(bytes(yaml_input, "utf8"))
 
-    # Call 'yamlstar_load' function in libyamlstar shared library:
-    data_json = yamlstar_load(
-      ctypes.c_char_p(bytes(yaml_input, "utf8")),
-      ctypes.c_char_p(b"{}"),
-    ).decode()
+    if _backend == 'gloat':
+      data_json = yamlstar_load_fn(yaml_bytes, ctypes.c_char_p(b"{}")).decode()
+    else:
+      data_json = yamlstar_load_fn(self._isolatethread, yaml_bytes).decode()
 
-    # Decode the JSON response:
     resp = json.loads(data_json)
-
-    # Check for libyamlstar error in JSON response:
     self.error = resp.get('error')
     if self.error:
       raise Exception(self.error['cause'])
-
-    # Get the response object from loading the YAML string:
     if 'data' not in resp:
       raise Exception("Unexpected response from 'libyamlstar'")
-    data = resp.get('data')
-
-    # Return the response object:
-    return data
+    return resp.get('data')
 
   # Load all YAML documents and return the results:
   def load_all(self, yaml_input):
@@ -150,30 +169,23 @@ class YAMLStar():
     Raises:
       Exception if the YAML is malformed
     """
-    # Reset any previous error:
     self.error = None
+    yaml_bytes = ctypes.c_char_p(bytes(yaml_input, "utf8"))
 
-    # Call 'yamlstar_load_all' function in libyamlstar shared library:
-    data_json = yamlstar_load_all(
-      ctypes.c_char_p(bytes(yaml_input, "utf8")),
-      ctypes.c_char_p(b"{}"),
-    ).decode()
+    if _backend == 'gloat':
+      data_json = \
+        yamlstar_load_all_fn(yaml_bytes, ctypes.c_char_p(b"{}")).decode()
+    else:
+      data_json = \
+        yamlstar_load_all_fn(self._isolatethread, yaml_bytes).decode()
 
-    # Decode the JSON response:
     resp = json.loads(data_json)
-
-    # Check for libyamlstar error in JSON response:
     self.error = resp.get('error')
     if self.error:
       raise Exception(self.error['cause'])
-
-    # Get the response object from loading the YAML string:
     if 'data' not in resp:
       raise Exception("Unexpected response from 'libyamlstar'")
-    data = resp.get('data')
-
-    # Return the response object:
-    return data
+    return resp.get('data')
 
   # Get the YAMLStar version:
   def version(self):
@@ -183,4 +195,13 @@ class YAMLStar():
     Returns:
       Version string
     """
-    return yamlstar_version_fn().decode()
+    if _backend == 'gloat':
+      return yamlstar_version_fn().decode()
+    else:
+      return yamlstar_version_fn(self._isolatethread).decode()
+
+  def __del__(self):
+    if _backend == 'graalvm' and hasattr(self, '_isolatethread'):
+      rc = libyamlstar.graal_tear_down_isolate(self._isolatethread)
+      if rc != 0:
+        raise Exception("Failed to tear down GraalVM isolate")

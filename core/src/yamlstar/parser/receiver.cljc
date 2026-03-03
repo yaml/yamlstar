@@ -6,10 +6,14 @@
 ;; Forward declarations
 (declare push-event check-document-start check-document-end)
 
-;; Helper: convert hex string to Unicode character string
+;; Helper: convert hex string to Unicode character string (handles all codepoints)
 (defn hex->char [hex-val]
-  (let [[n _] (strconv.ParseInt hex-val 16 32)]
-    (str (go/rune n))))
+  #?(:clj (let [cp (Integer/parseInt hex-val 16)]
+            (if (> cp 65535)
+              (String. (Character/toChars cp))
+              (str (char cp))))
+     :glj (let [[n _] (strconv.ParseInt hex-val 16 32)]
+            (str (go/rune n)))))
 
 ;; Event constructors
 (defn stream-start-event []
@@ -204,9 +208,7 @@
 
                        (re-matches (re-pattern (str "\\\\U(" hex "{8})")) match)
                        (let [[_ hex-val] (re-matches (re-pattern (str "\\\\U(" hex "{8})")) match)]
-                         ;; go/rune handles all Unicode including above U+FFFF
-                         (let [[n _] (strconv.ParseInt hex-val 16 32)]
-                           (str (go/rune n))))
+                         (hex->char hex-val))
 
                        ;; line continuation
                        (re-matches #"(?:\\ ?\r?\n[ \t]*)" match)
@@ -492,11 +494,17 @@
      (reset! (:in-scalar receiver) false)
      (let [lines (map :text (cache-drop receiver))
            text (str/join "\n" lines)
-           ;; RE2 doesn't support lookaheads; capture and reinsert next char
-           text (-> text
-                    (str/replace #"(?m)^(\S.*)\n(\S)" "$1 $2")
-                    (str/replace #"(?m)^(\S.*)\n(\n+)" "$1$2")
-                    (str/replace #"(?m)^([ \t]+\S.*)\n(\n+)(\S)" "$1$2$3"))
+           text #?(:clj (-> text
+                            ;; Use re-pattern strings (not literals) to avoid RE2
+                            ;; compile errors when Gloat reads this file
+                            (str/replace (re-pattern "(?m)^(\\S.*)\\n(?=\\S)") "$1 ")
+                            (str/replace (re-pattern "(?m)^(\\S.*)\\n(?=\\n+)") "$1")
+                            (str/replace (re-pattern "(?m)^([ \\t]+\\S.*)\\n(?=\\n+\\S)") "$1"))
+                   :glj (-> text
+                            ;; RE2 lacks lookaheads; capture and reinsert next char
+                            (str/replace #"(?m)^(\S.*)\n(\S)" "$1 $2")
+                            (str/replace #"(?m)^(\S.*)\n(\n+)" "$1$2")
+                            (str/replace #"(?m)^([ \t]+\S.*)\n(\n+)(\S)" "$1$2$3")))
            text (str text "\n")
            ;; :parser is stored directly (not as atom) in the receiver passed to callbacks
            p (:parser receiver)

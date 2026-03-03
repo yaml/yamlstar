@@ -13,20 +13,26 @@
         bool-fn  (fn [node]
                    (contains? #{"true" "True" "TRUE"} (:value node)))
         int-fn   (fn [node]
-                   (let [[n _] (strconv.ParseInt (:value node) 10 64)]
-                     n))
+                   #?(:clj (Long/parseLong (:value node))
+                      :glj (let [[n _] (strconv.ParseInt (:value node) 10 64)]
+                             n)))
         float-fn (fn [node]
                    (let [value (:value node)]
                      (cond
                        (re-matches #"[+-]?\.inf|\.Inf|\.INF" value)
-                       (if (= (first value) \-) (math.Inf -1) (math.Inf 1))
+                       #?(:clj (if (= (first value) \-)
+                                 Double/NEGATIVE_INFINITY
+                                 Double/POSITIVE_INFINITY)
+                          :glj (if (= (first value) \-) (math.Inf -1) (math.Inf 1)))
 
                        (re-matches #"\.nan|\.NaN|\.NAN" value)
-                       (math.NaN)
+                       #?(:clj Double/NaN
+                          :glj (math.NaN))
 
                        :else
-                       (let [[f _] (strconv.ParseFloat value 64)]
-                         f))))
+                       #?(:clj (Double/parseDouble value)
+                          :glj (let [[f _] (strconv.ParseFloat value 64)]
+                                 f)))))
         str-fn   (fn [node] (:value node))]
     {"!!null"                  null-fn
      "tag:yaml.org,2002:null"  null-fn

@@ -33,7 +33,12 @@ BINDING-LANGS ?= \
   python \
   rust \
 
+# Gloat build cannot run JVM-based bindings (clojure, java)
+ifdef YAMLSTAR_GLOJURE
 BINDING-SKIP ?= clojure java
+else
+BINDING-SKIP ?=
+endif
 
 BINDING-LANGS := $(filter-out $(BINDING-SKIP),$(BINDING-LANGS))
 

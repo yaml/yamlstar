@@ -3,7 +3,8 @@
 
 ;; Environment access - returns nil (falsy) when not set
 (defn env [key]
-  (not-empty (os.Getenv key)))
+  #?(:clj (not-empty (System/getenv key))
+     :glj (not-empty (os.Getenv key))))
 
 ;; Type checking predicates
 (defn is-null? [x] (nil? x))
@@ -28,32 +29,32 @@
     :else (throw (ex-info "Unknown type" {:value value}))))
 
 ;; Sentinel keyword used to retrieve the name from a name*-wrapped function.
-;; Must be defined before func-name and stringify.
-(def GET-NAME-SENTINEL :yamlstar/get-name)
+;; Only needed for Gloat (JVM uses metadata instead).
+#?(:glj (def GET-NAME-SENTINEL :yamlstar/get-name))
 
-;; Look up the trace name of a name*-wrapped function via sentinel call.
-;; Safely handles non-name*-wrapped functions (which would arity-crash if called
-;; with the sentinel) by catching any Go panic and returning nil.
+;; Look up the trace name of a function.
+;; On JVM: reads :trace from function metadata (set by with-meta in name*).
+;; On Gloat: calls the function with GET-NAME-SENTINEL (since (meta f) = nil).
 (defn func-name [f]
   (when (fn? f)
-    (try
-      (let [result (f GET-NAME-SENTINEL)]
-        (when (string? result) result))
-      (catch go/any _ nil))))
+    #?(:clj (:trace (meta f))
+       :glj (try
+              (let [result (f GET-NAME-SENTINEL)]
+                (when (string? result) result))
+              (catch go/any _ nil)))))
 
-;; Creates a function that embeds its name via a closure sentinel.
-;; When called with GET-NAME-SENTINEL as the sole arg, returns the trace name.
-;; When called with normal args, delegates to func.
-;; Uses explicit multi-arity (not variadic+apply) for Glojure compatibility.
+;; Creates a named function.
+;; On JVM: wraps func with metadata {:trace trace :name name}.
+;; On Gloat: returns a multi-arity closure; called with GET-NAME-SENTINEL returns trace.
 (defn name* [name func trace]
-  (let [the-trace (or trace name)]
-    (fn
-      ([a]
-       (if (= a GET-NAME-SENTINEL)
-         the-trace
-         (func a)))
-      ([a b] (func a b))
-      ([a b c] (func a b c)))))
+  #?(:clj (with-meta func {:trace (or trace name) :name name})
+     :glj (let [the-trace (or trace name)]
+            (fn
+              ([a] (if (= a GET-NAME-SENTINEL)
+                     the-trace
+                     (func a)))
+              ([a b] (func a b))
+              ([a b c] (func a b c))))))
 
 ;; String helpers
 (defn stringify [o]
@@ -66,11 +67,13 @@
     :else (pr-str o)))
 
 (defn hex-char [chr]
-  (fmt.Sprintf "%x" (int (first chr))))
+  #?(:clj (format "%x" (int (first chr)))
+     :glj (fmt.Sprintf "%x" (int (first chr)))))
 
 ;; Debug and error functions
 (defn warn [msg]
-  (fmt.Fprintln os.Stderr msg))
+  #?(:clj (binding [*out* *err*] (println msg))
+     :glj (fmt.Fprintln os.Stderr msg)))
 
 (defn die [msg]
   (throw (ex-info msg {})))
@@ -91,7 +94,7 @@
     (prn o))
   (die (str "FAIL '" (or (first args) "???") "'")))
 
-;; Timer (for performance measurement - stubbed, tracing not used in Glojure)
+;; Timer (for performance measurement)
 (defn timer
-  ([] 0)
-  ([start] 0.0))
+  ([] #?(:clj (System/nanoTime) :glj 0))
+  ([start] #?(:clj (/ (- (System/nanoTime) start) 1000000000.0) :glj 0.0)))

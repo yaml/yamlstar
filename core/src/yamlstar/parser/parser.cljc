@@ -6,7 +6,9 @@
 (declare auto-detect auto-detect-indent trace-start trace-flush)
 
 ;; TRACE flag from environment
-(def TRACE (= (os.Getenv "TRACE") "true"))
+(def TRACE
+  #?(:clj (Boolean/parseBoolean (or (env "TRACE") "false"))
+     :glj (= (os.Getenv "TRACE") "true")))
 
 ;; Default state when stack is empty
 (def default-state
@@ -203,13 +205,13 @@
   (or (end-of-stream* parser)
       (and (:doc (state-curr parser))
            (start-of-line* parser)
-           ;; RE2 doesn't support lookaheads; check the char after manually
-           (let [remaining (subs @(:input parser) @(:pos parser))
-                 prefix (re-find #"^(?:---|\.\.\.)" remaining)]
-             (when prefix
-               (let [after (subs remaining (count prefix))]
-                 (or (empty? after)
-                     (re-find #"^\s" after))))))))
+           (let [remaining (subs @(:input parser) @(:pos parser))]
+             #?(:clj (re-find (re-pattern "^(?:---|\\.\\.\\.)((?=\\s)|$)") remaining)
+                :glj (let [prefix (re-find #"^(?:---|\.\.\.)" remaining)]
+                       (when prefix
+                         (let [after (subs remaining (count prefix))]
+                           (or (empty? after)
+                               (re-find #"^\s" after))))))))))
 
 ;; Grammar-callable versions (return functions)
 (defn start-of-line [parser]
@@ -248,10 +250,12 @@
                 remaining (subs input pos)
                 pattern (re-pattern (str "^[" low "-" high "]"))]
             (when (re-find pattern remaining)
-              ;; Handle multi-byte runes (Go uses UTF-8, advance by rune width)
-              (let [[r _] (unicode:utf8.DecodeRuneInString remaining)]
-                (when (> (int r) 65535)
-                  (swap! (:pos p) inc)))
+              ;; Advance by 1, plus 1 more for codepoints above U+FFFF
+              #?(:clj (when (> (.codePointAt ^String remaining 0) 65535)
+                        (swap! (:pos p) inc))
+                 :glj (let [[r _] (unicode:utf8.DecodeRuneInString remaining)]
+                        (when (> (int r) 65535)
+                          (swap! (:pos p) inc))))
               (swap! (:pos p) inc)
               true))))
       trace)))

@@ -14,13 +14,22 @@ MAKES-CLEAN := \
 
 PYTHON-VENV-SETUP := pip install pytest setuptools twine
 
+# Python uses the gloat library when YAMLSTAR_GLOJURE=1, GraalVM otherwise
+ifdef YAMLSTAR_GLOJURE
+PYTHON-SO := $(LIBYS)/lib/libyamlstarglj.$(SO)
+$(PYTHON-SO):
+	$(MAKE) -C $(LIBYS) build YAMLSTAR_GLOJURE=1
+else
+PYTHON-SO := $(LIBYAMLSTAR-SO)
+endif
+
 
 test: test-pytest
 
-test-pytest: $(LIBYAMLSTAR-SO) $(PYTHON-VENV)
+test-pytest: $(PYTHON-SO) $(PYTHON-VENV)
 	$(VENV) && pytest test/
 
-build: $(LIBYAMLSTAR-SO)
+build: $(PYTHON-SO)
 
 dist: $(PYTHON-VENV)
 	$(VENV) && python setup.py sdist
