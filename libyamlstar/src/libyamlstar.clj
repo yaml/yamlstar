@@ -5,8 +5,9 @@
             [ys.json :as json]))
 
 (def EXPORT
-  {"yamlstar-load"    [:str :str :str]
-   "yamlstar-version" [:str]})
+  {"yamlstar-load"     [:str :str :str]
+   "yamlstar-load-all" [:str :str :str]
+   "yamlstar-version"  [:str]})
 
 (defn nil-keys->string
   "Replace nil keys with string 'null' for JSON serialization.
@@ -26,6 +27,16 @@
   [yaml-str opts-json]
   (try
     (let [result (yaml/load yaml-str)]
+      (json/dump {:data (nil-keys->string result)}))
+    (catch go/any e
+      (json/dump {:error {:cause (fmt.Sprintf "%v" e)
+                          :type (fmt.Sprintf "%T" e)}}))))
+
+(defn yamlstar-load-all
+  "Load all YAML documents, return JSON string with {:data [...]} or {:error ...}"
+  [yaml-str opts-json]
+  (try
+    (let [result (yaml/load-all yaml-str)]
       (json/dump {:data (nil-keys->string result)}))
     (catch go/any e
       (json/dump {:error {:cause (str e)

@@ -27,11 +27,39 @@
     (map? value) "object"
     :else (throw (ex-info "Unknown type" {:value value}))))
 
+;; Sentinel keyword used to retrieve the name from a name*-wrapped function.
+;; Must be defined before func-name and stringify.
+(def GET-NAME-SENTINEL :yamlstar/get-name)
+
+;; Look up the trace name of a name*-wrapped function via sentinel call.
+;; Safely handles non-name*-wrapped functions (which would arity-crash if called
+;; with the sentinel) by catching any Go panic and returning nil.
+(defn func-name [f]
+  (when (fn? f)
+    (try
+      (let [result (f GET-NAME-SENTINEL)]
+        (when (string? result) result))
+      (catch go/any _ nil))))
+
+;; Creates a function that embeds its name via a closure sentinel.
+;; When called with GET-NAME-SENTINEL as the sole arg, returns the trace name.
+;; When called with normal args, delegates to func.
+;; Uses explicit multi-arity (not variadic+apply) for Glojure compatibility.
+(defn name* [name func trace]
+  (let [the-trace (or trace name)]
+    (fn
+      ([a]
+       (if (= a GET-NAME-SENTINEL)
+         the-trace
+         (func a)))
+      ([a b] (func a b))
+      ([a b c] (func a b c)))))
+
 ;; String helpers
 (defn stringify [o]
   (cond
     (= o "\ufeff") "\\uFEFF"
-    (fn? o) (str "@" (or (:trace (meta o)) "fn"))
+    (fn? o) (str "@" (or (func-name o) "fn"))
     (map? o) (pr-str (keys o))
     (or (vector? o) (seq? o)) (str "[" (str/join "," (map stringify o)) "]")
     (string? o) o
@@ -62,10 +90,6 @@
   (doseq [o args]
     (prn o))
   (die (str "FAIL '" (or (first args) "???") "'")))
-
-;; Utility functions
-(defn name* [name func trace]
-  (with-meta func {:trace (or trace name)}))
 
 ;; Timer (for performance measurement - stubbed, tracing not used in Glojure)
 (defn timer
