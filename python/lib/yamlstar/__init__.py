@@ -34,10 +34,7 @@ def find_libyamlstar_path():
     raise Exception(
       "Unsupported platform '%s' for yamlstar." % sys.platform)
 
-  # We currently bind to an exact version of libyamlstar.
-  # eg 'libyamlstar.so.0.1.3-SNAPSHOT'
-  libyamlstar_name = \
-    "libyamlstar.%s.%s" % (so, yamlstar_version)
+  libyamlstar_name = "libyamlstar.%s" % so
 
   # Use LD_LIBRARY_PATH to find libyamlstar shared library, or default to
   # '/usr/local/lib' (where it is installed by default):
@@ -63,7 +60,7 @@ def find_libyamlstar_path():
       """\
 Shared library file '%s' not found
 Search paths: %s
-Build with: cd libyamlstar && make native
+Build with: cd libyamlstar && make build
 """ % (libyamlstar_name, ':'.join(ld_library_paths)))
 
   return libyamlstar_path
@@ -73,12 +70,15 @@ libyamlstar = ctypes.CDLL(find_libyamlstar_path())
 
 # Create bindings to library functions:
 yamlstar_load = libyamlstar.yamlstar_load
+yamlstar_load.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
 yamlstar_load.restype = ctypes.c_char_p
 
 yamlstar_load_all = libyamlstar.yamlstar_load_all
+yamlstar_load_all.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
 yamlstar_load_all.restype = ctypes.c_char_p
 
 yamlstar_version_fn = libyamlstar.yamlstar_version
+yamlstar_version_fn.argtypes = []
 yamlstar_version_fn.restype = ctypes.c_char_p
 
 
@@ -96,21 +96,6 @@ class YAMLStar():
     docs = ys.load_all("---\\ndoc1\\n---\\ndoc2")
     # Returns: ['doc1', 'doc2']
   """
-
-  # YAMLStar instance constructor:
-  def __init__(self):
-    # Create a new GraalVM isolatethread for life of the YAMLStar instance:
-    self.isolatethread = ctypes.c_void_p()
-
-    # Create a new GraalVM isolate:
-    rc = libyamlstar.graal_create_isolate(
-      None,
-      None,
-      ctypes.byref(self.isolatethread),
-    )
-
-    if rc != 0:
-      raise Exception("Failed to create isolate")
 
   # Load a single YAML document and return the result:
   def load(self, yaml_input):
@@ -131,8 +116,8 @@ class YAMLStar():
 
     # Call 'yamlstar_load' function in libyamlstar shared library:
     data_json = yamlstar_load(
-      self.isolatethread,
       ctypes.c_char_p(bytes(yaml_input, "utf8")),
+      ctypes.c_char_p(b"{}"),
     ).decode()
 
     # Decode the JSON response:
@@ -170,8 +155,8 @@ class YAMLStar():
 
     # Call 'yamlstar_load_all' function in libyamlstar shared library:
     data_json = yamlstar_load_all(
-      self.isolatethread,
       ctypes.c_char_p(bytes(yaml_input, "utf8")),
+      ctypes.c_char_p(b"{}"),
     ).decode()
 
     # Decode the JSON response:
@@ -198,12 +183,4 @@ class YAMLStar():
     Returns:
       Version string
     """
-    return yamlstar_version_fn(self.isolatethread).decode()
-
-  # YAMLStar instance destructor:
-  def __del__(self):
-    # Tear down the isolate thread to free resources:
-    if hasattr(self, 'isolatethread'):
-      rc = libyamlstar.graal_tear_down_isolate(self.isolatethread)
-      if rc != 0:
-        raise Exception("Failed to tear down isolate")
+    return yamlstar_version_fn().decode()
