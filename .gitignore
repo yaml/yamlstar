@@ -1,5 +1,6 @@
 /.cache/
 /note/
+/worktree/
 /ToDo
 CLAUDE.md
 .cpcache/
@@ -10,6 +11,8 @@ META-INF/
 /release-*
 /*.clj
 /*.json
+/*.md
+/*.txt
 /*.yaml
 /*.ys
 /out*
