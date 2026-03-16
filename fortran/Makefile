@@ -8,6 +8,7 @@ MAKES-CLEAN := \
 
 DEPS := \
   $(FPM) \
+  $(GFORTRAN) \
   $(LIBYAMLSTAR-SO) \
 
 
