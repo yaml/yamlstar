@@ -1,4 +1,5 @@
 include ../common/init.mk
+include $M/fpc.mk
 include $(COMMON)/common.mk
 include $(COMMON)/binding.mk
 
@@ -13,24 +14,13 @@ MAKES-CLEAN := \
 
 DEPS := \
   $(LIBYAMLSTAR-SO) \
-
-FPC := $(shell command -v fpc 2>/dev/null)
+  $(FPC) \
 
 test: $(DEPS)
-	@if [ -z "$(FPC)" ]; then \
-		echo "Error: Free Pascal Compiler (fpc) not found."; \
-		echo "Please install FPC: https://www.freepascal.org/"; \
-		exit 1; \
-	fi
 	fpc -Fusrc -Fl$(LIBYS)/lib -otest/test_yamlstar test/test_yamlstar.pas
 	LD_LIBRARY_PATH=$(LIBYS)/lib test/test_yamlstar
 
 build: $(DEPS)
-	@if [ -z "$(FPC)" ]; then \
-		echo "Error: Free Pascal Compiler (fpc) not found."; \
-		echo "Please install FPC: https://www.freepascal.org/"; \
-		exit 1; \
-	fi
 	fpc -Fusrc -Fl$(LIBYS)/lib src/yamlstar.pas
 
 # Delphi/FPC has no standard package registry.
