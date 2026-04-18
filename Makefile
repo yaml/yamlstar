@@ -180,6 +180,14 @@ YRP-CLJ := $(YRP-DIR)/parser-1.2/clojure/src/yaml_parser
 YRP-BIN := $(YRP-DIR)/parser-1.2/clojure/bin
 YRP-SPEC := $(YRP-DIR)/parser-1.2/build/yaml-spec-1.2-patched.yaml
 
+GLOJURE-REPO := https://github.com/gloathub/glojure.git
+GLOJURE-BRANCH := perf
+GLOJURE-DIR := ext/glojure
+
+GLOAT-REPO := https://github.com/gloathub/gloat.git
+GLOAT-EXT-BRANCH := perf
+GLOAT-EXT-DIR := ext/gloat
+
 PARSER-DIR := core/src/yamlstar/parser
 PARSER-NS := yamlstar.parser
 
@@ -187,15 +195,21 @@ $(YRP-DIR):
 	git clone -q -b $(YRP-BRANCH) $(YRP-REPO-HTTPS) $@
 	git -C $@ remote add push $(YRP-REPO-SSH)
 
+$(GLOJURE-DIR):
+	git clone -q -b $(GLOJURE-BRANCH) $(GLOJURE-REPO) $@
+
+$(GLOAT-EXT-DIR):
+	git clone -q -b $(GLOAT-EXT-BRANCH) $(GLOAT-REPO) $@
+
 $(PARSER-DIR): $(YRP-DIR)
 	@mkdir -p $@
-	@for f in $(YRP-CLJ)/prelude.cljc $(YRP-CLJ)/parser.cljc $(YRP-CLJ)/receiver.cljc; do \
-	  sed 's/yaml-parser/$(PARSER-NS)/g' "$$f" > $@/$$(basename "$$f"); \
+	@for f in prelude.cljc parser.cljc receiver.cljc; do \
+	  ln -sf $(abspath $(YRP-CLJ)/$$f) $@/$$f; \
 	done
 	$(BB) $(YRP-BIN)/generate-yaml-grammar \
 	  --from $(YRP-SPEC) \
 	  --namespace $(PARSER-NS) > $@/grammar.cljc
 
-ext: $(PARSER-DIR)
+ext: $(PARSER-DIR) $(GLOJURE-DIR) $(GLOAT-EXT-DIR)
 
 .PHONY: cli core libyamlstar test

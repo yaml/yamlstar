@@ -1,98 +1,98 @@
 #!/usr/bin/env bash
 
 # Build a native Go benchmark binary from Clojure sources via gloat,
-# then run it. Usage: ./bench2.sh [glojure-commit]
-# Assumes deps already bootstrapped (run make build once).
+# then run it.
+#
+# Prerequisites: run `make ext` to clone ext/glojure and ext/gloat.
+# Uses the makes system for Go and gloat tooling.
 
 set -euo pipefail
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
-GLOJURE=$ROOT/../glojure
-COMMIT=${1:-gloat}
 
-echo "=== 0. Clone glojure @ $COMMIT ==="
-GLOJURE_BUILD=/tmp/glojure/$COMMIT
-rm -fr "$GLOJURE_BUILD"
-git clone -q "$GLOJURE/.git" "$GLOJURE_BUILD"
-git -C "$GLOJURE_BUILD" checkout -q "$COMMIT"
+GLOJURE=$ROOT/ext/glojure
+GLOAT_EXT=$ROOT/ext/gloat
+CORE=$ROOT/core/src/yamlstar
 
-# Auto-detect local root and gloat installation
-GLOAT_HOME=$HOME/.local/share/gloat
-if [[ -d /tmp/yamlstar-local/go-1.26.0 ]]; then
-  LOCAL=/tmp/yamlstar-local
-  GLOAT_DIR=$LOCAL/cache/gloat-main
-elif [[ -d $ROOT/.cache/.local/go-1.26.0 ]]; then
-  LOCAL=$ROOT/.cache/.local
-  GLOAT_DIR=$LOCAL/cache/gloat-main
-elif [[ -d $GLOAT_HOME/.cache/.local/go-1.26.0 ]]; then
-  LOCAL=$GLOAT_HOME/.cache/.local
-  GLOAT_DIR=$GLOAT_HOME
-else
-  echo "ERROR: Cannot find Go installation" >&2
+# Verify ext/ repos exist
+for d in "$GLOJURE" "$GLOAT_EXT"; do
+  if [[ ! -d "$d" ]]; then
+    echo "ERROR: $d not found. Run 'make ext' first." >&2
+    exit 1
+  fi
+done
+
+# Get tool paths from gloat's makes system
+cd "$GLOAT_EXT"
+make --quiet path-deps >/dev/null 2>&1 || true
+GLOAT_BIN=$GLOAT_EXT/bin
+GLOAT=$GLOAT_BIN/gloat
+
+# Find Go via makes cache
+GO=$(cd "$GLOAT_EXT" && make shell cmd='which go' 2>/dev/null | tail -1)
+if [[ -z "$GO" || ! -x "$GO" ]]; then
+  echo "ERROR: Cannot find Go. Run 'make -C ext/gloat path-deps'." >&2
   exit 1
 fi
 
-GO=$LOCAL/go-1.26.0/bin/go
-GLOAT=$GLOAT_DIR/bin/gloat
-GLJ=$LOCAL/bin/glj
+# Find glj (gloat installs it)
+GLJ=$(cd "$GLOAT_EXT" && make shell cmd='which glj' 2>/dev/null | tail -1)
 
-# Find gloat's own glj path (may differ from $GLJ).
-# Always query from GLOAT_HOME which has the Makefile with gloat-vars.
-GLOAT_GLJ=$(cd "$GLOAT_HOME" && make --quiet --no-print-directory gloat-vars 2>/dev/null \
-  | grep ':GLJ ' | sed 's/.*:GLJ "\(.*\)"/\1/')
+cd "$ROOT"
 
 BUILD_DIR=/tmp/yamlstar-bench
 BINARY=$BUILD_DIR/bench
 
+# Gloat requires .clj extensions; create .clj symlinks for .cljc files.
+LINK_DIR=$ROOT/bench/cache/gloat-srcs
+rm -rf "$LINK_DIR"
+mkdir -p "$LINK_DIR/parser"
+for f in prelude parser receiver grammar; do
+  ln -sf "$CORE/parser/$f.cljc" "$LINK_DIR/parser/$f.clj"
+done
+ln -sf "$CORE/constructor.cljc" "$LINK_DIR/constructor.clj"
+
 SRCS=(
-  $ROOT/core/src/yamlstar/parser/prelude.clj
-  $ROOT/core/src/yamlstar/parser/parser.clj
-  $ROOT/core/src/yamlstar/parser/receiver.clj
-  $ROOT/core/src/yamlstar/parser/grammar.clj
-  $ROOT/core/src/yamlstar/parser.clj
-  $ROOT/core/src/yamlstar/composer.clj
-  $ROOT/core/src/yamlstar/resolver.clj
-  $ROOT/core/src/yamlstar/constructor.clj
-  $ROOT/core/src/yamlstar/core.clj
-  $ROOT/bench/bench2.clj
+  $LINK_DIR/parser/prelude.clj
+  $LINK_DIR/parser/parser.clj
+  $LINK_DIR/parser/receiver.clj
+  $LINK_DIR/parser/grammar.clj
+  $CORE/parser.clj
+  $CORE/composer.clj
+  $CORE/resolver.clj
+  $LINK_DIR/constructor.clj
+  $CORE/core.clj
+  $ROOT/bench/bench.clj
 )
 
-# Patch gloat's template go.mod to use the cloned glojure.
-# The template may not have a replace line, so append one if missing.
-for gomod in "$GLOAT_DIR/template/go.mod" "$GLOAT_DIR/ys/pkg/go.mod"; do
+echo "=== 1. Build glj from ext/glojure ==="
+time (cd "$GLOJURE" && $GO build -o "$GLJ" ./cmd/glj)
+
+# Patch gloat's template go.mod to use ext/glojure.
+for gomod in "$GLOAT_EXT/template/go.mod" "$GLOAT_EXT/ys/pkg/go.mod"; do
+  [[ -f "$gomod" ]] || continue
   if grep -q 'replace github.com/gloathub/glojure =>' "$gomod"; then
-    sed -i "s|replace github.com/gloathub/glojure => .*|replace github.com/gloathub/glojure => $GLOJURE_BUILD|" "$gomod"
+    sed -i "s|replace github.com/gloathub/glojure => .*|replace github.com/gloathub/glojure => $GLOJURE|" "$gomod"
   else
-    echo "replace github.com/gloathub/glojure => $GLOJURE_BUILD" >> "$gomod"
+    echo "replace github.com/gloathub/glojure => $GLOJURE" >> "$gomod"
   fi
 done
-
-echo
-echo "=== 1. Build glj from $COMMIT ==="
-time (cd "$GLOJURE_BUILD" && $GO build -o "$GLJ" ./cmd/glj)
-# Copy to gloat's glj path if different, so gloat uses our build
-if [[ -n "$GLOAT_GLJ" && "$GLOAT_GLJ" != "$GLJ" ]]; then
-  echo "Copying glj to gloat path: $GLOAT_GLJ"
-  cp "$GLJ" "$GLOAT_GLJ"
-  touch "$GLOAT_GLJ"
-fi
-touch "$GLJ"
 
 echo
 echo "=== 2. Compile to Go project ==="
 time (</dev/null env -u GOROOT "$GLOAT" "${SRCS[@]}" -o "$BUILD_DIR/" --force)
 
-# Patch the generated go.mod to use the cloned glojure.
+# Patch the generated go.mod to use ext/glojure.
 if grep -q 'replace github.com/gloathub/glojure =>' "$BUILD_DIR/go.mod"; then
-  sed -i "s|replace github.com/gloathub/glojure => .*|replace github.com/gloathub/glojure => $GLOJURE_BUILD|" \
+  sed -i "s|replace github.com/gloathub/glojure => .*|replace github.com/gloathub/glojure => $GLOJURE|" \
     "$BUILD_DIR/go.mod"
 else
-  echo "replace github.com/gloathub/glojure => $GLOJURE_BUILD" >> "$BUILD_DIR/go.mod"
+  echo "replace github.com/gloathub/glojure => $GLOJURE" >> "$BUILD_DIR/go.mod"
 fi
 
 echo
 echo "=== 3. Build binary ==="
-# Patch main.go to call bench2/-main instead of whatever gloat picked
+# Patch main.go to call bench2/-main
 sed -i 's|Var("[^"]*", "-main")|Var("bench2", "-main")|' "$BUILD_DIR/main.go"
 sed -i 's|FindOrCreateNamespace(lang.NewSymbol("[^"]*"))|FindOrCreateNamespace(lang.NewSymbol("bench2"))|' "$BUILD_DIR/main.go"
 time (cd "$BUILD_DIR" && $GO mod tidy && $GO build -o "$BINARY" .)

@@ -38,13 +38,13 @@
                 yaml-str
                 (str yaml-str "\n"))]
     ;; Reset parser state
-    (reset! (:input parser) input)
-    (reset! (:end parser) (count input))
-    (reset! (:pos parser) 0)
-    (reset! (:state parser) [])
+    (vreset! (:input parser) input)
+    (vreset! (:end parser) (count input))
+    (vreset! (:pos parser) 0)
+    (vreset! (:state parser) [])
 
     (when p/TRACE
-      (reset! (:trace-on parser) (not (p/trace-start parser))))
+      (vreset! (:trace-on parser) (not (p/trace-start parser))))
 
     ;; Parse using grammar - no requiring-resolve needed!
     (try
