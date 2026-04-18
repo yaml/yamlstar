@@ -31,3 +31,5 @@ pom.xml.asc
 
 /*-repo/
 /*-x64/
+/ext/
+/core/src/yamlstar/parser/

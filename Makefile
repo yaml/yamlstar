@@ -1,5 +1,6 @@
 M := .cache/makes
 include common/init.mk
+include $M/babashka.mk
 include $M/gh.mk
 include $M/gloat.mk
 include $M/yamlscript.mk
@@ -20,6 +21,7 @@ MAKES-DISTCLEAN += \
   .clj-kondo/ \
   .lsp/ \
   $(INGY-LOCAL-DIR) \
+  ext/ \
 
 BINDING-LANGS ?= \
   clojure \
@@ -165,5 +167,35 @@ release-push:
 
 release-build-github:
 	util/release build-github
+
+#------------------------------------------------------------------------------
+# External dependencies
+#------------------------------------------------------------------------------
+
+YRP-REPO-HTTPS := https://github.com/yaml/yaml-reference-parser.git
+YRP-REPO-SSH := git@github.com:yaml/yaml-reference-parser.git
+YRP-BRANCH := perf
+YRP-DIR := ext/yaml-reference-parser
+YRP-CLJ := $(YRP-DIR)/parser-1.2/clojure/src/yaml_parser
+YRP-BIN := $(YRP-DIR)/parser-1.2/clojure/bin
+YRP-SPEC := $(YRP-DIR)/parser-1.2/build/yaml-spec-1.2-patched.yaml
+
+PARSER-DIR := core/src/yamlstar/parser
+PARSER-NS := yamlstar.parser
+
+$(YRP-DIR):
+	git clone -q -b $(YRP-BRANCH) $(YRP-REPO-HTTPS) $@
+	git -C $@ remote add push $(YRP-REPO-SSH)
+
+$(PARSER-DIR): $(YRP-DIR)
+	@mkdir -p $@
+	@for f in $(YRP-CLJ)/prelude.cljc $(YRP-CLJ)/parser.cljc $(YRP-CLJ)/receiver.cljc; do \
+	  sed 's/yaml-parser/$(PARSER-NS)/g' "$$f" > $@/$$(basename "$$f"); \
+	done
+	$(BB) $(YRP-BIN)/generate-yaml-grammar \
+	  --from $(YRP-SPEC) \
+	  --namespace $(PARSER-NS) > $@/grammar.cljc
+
+ext: $(PARSER-DIR)
 
 .PHONY: cli core libyamlstar test
