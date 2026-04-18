@@ -2,6 +2,7 @@ M := .cache/makes
 include common/init.mk
 include $M/babashka.mk
 include $M/gh.mk
+include $M/go.mk
 include $M/gloat.mk
 include $M/yamlscript.mk
 include $M/clean.mk
@@ -79,6 +80,9 @@ $(ALL-TESTS):
 	@echo '   $@'
 	@echo '--------------------------------------------------'
 	$(MAKE) -C $(@:test-%=%) test v=$v
+
+bench: $(GO) $(GLOJURE-DIR) $(GLOAT-EXT-DIR)
+	GO=$(GO) GLOAT_EXT=$(GLOAT-EXT-DIR) ./bench/compare.sh
 
 core:
 	$(MAKE) -C core install
@@ -212,4 +216,4 @@ $(PARSER-DIR): $(YRP-DIR)
 
 ext: $(PARSER-DIR) $(GLOJURE-DIR) $(GLOAT-EXT-DIR)
 
-.PHONY: cli core libyamlstar test
+.PHONY: bench cli core libyamlstar test

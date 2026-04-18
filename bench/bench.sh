@@ -4,14 +4,14 @@
 # then run it.
 #
 # Prerequisites: run `make ext` to clone ext/glojure and ext/gloat.
-# Uses the makes system for Go and gloat tooling.
+# Accepts GO and GLOAT_EXT env vars (set by `make bench`).
 
 set -euo pipefail
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 
 GLOJURE=$ROOT/ext/glojure
-GLOAT_EXT=$ROOT/ext/gloat
+GLOAT_EXT=${GLOAT_EXT:-$ROOT/ext/gloat}
 CORE=$ROOT/core/src/yamlstar
 
 # Verify ext/ repos exist
@@ -22,25 +22,30 @@ for d in "$GLOJURE" "$GLOAT_EXT"; do
   fi
 done
 
-# Get tool paths from gloat's makes system
-cd "$GLOAT_EXT"
-make --quiet path-deps >/dev/null 2>&1 || true
-GLOAT_BIN=$GLOAT_EXT/bin
-GLOAT=$GLOAT_BIN/gloat
-
-# Find Go via makes cache
-GO=$(cd "$GLOAT_EXT" && make shell cmd='which go' 2>/dev/null | tail -1)
+# Use GO from env, or discover via gloat's makes system
+if [[ -z "${GO:-}" ]]; then
+  GO=$(cd "$GLOAT_EXT" && make shell cmd='which go' 2>/dev/null | tail -1)
+fi
 if [[ -z "$GO" || ! -x "$GO" ]]; then
-  echo "ERROR: Cannot find Go. Run 'make -C ext/gloat path-deps'." >&2
+  echo "ERROR: Cannot find Go. Use 'make bench' or set GO=." >&2
   exit 1
 fi
 
-# Find glj (gloat installs it)
-GLJ=$(cd "$GLOAT_EXT" && make shell cmd='which glj' 2>/dev/null | tail -1)
+# Set glj and gloat binary paths
+GLJ=$GLOAT_EXT/bin/glj
+GLOAT=$GLOAT_EXT/bin/gloat
 
 cd "$ROOT"
 
+# Use /tmp for Go caches to avoid permission issues with read-only cache files
+export GOPATH=/tmp/yamlstar-gopath
+export GOCACHE=/tmp/yamlstar-gocache
+export GOMODCACHE=/tmp/yamlstar-gomodcache
+mkdir -p "$GOPATH" "$GOCACHE" "$GOMODCACHE"
+chmod -R u+w "$GOPATH" "$GOCACHE" "$GOMODCACHE" 2>/dev/null || true
+
 BUILD_DIR=/tmp/yamlstar-bench
+rm -rf "$BUILD_DIR"
 BINARY=$BUILD_DIR/bench
 
 # Gloat requires .clj extensions; create .clj symlinks for .cljc files.
@@ -99,7 +104,7 @@ time (cd "$BUILD_DIR" && $GO mod tidy && $GO build -o "$BINARY" .)
 
 echo
 echo "=== 4. Benchmark ==="
-MAX_LOAD=${MAX_LOAD:-2.0}
+MAX_LOAD=${MAX_LOAD:-1.0}
 while true; do
   load=$(awk '{print $1}' /proc/loadavg)
   if awk "BEGIN{exit !($load < $MAX_LOAD)}"; then
