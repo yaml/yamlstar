@@ -37,6 +37,8 @@ def find_libyamlstar():
   # '/usr/local/lib' (where it is installed by default):
   ld_library_path = os.environ.get('LD_LIBRARY_PATH')
   ld_library_paths = ld_library_path.split(':') if ld_library_path else []
+  ld_library_paths.append(
+    os.path.join(os.path.dirname(__file__), 'libyamlstar'))
   ld_library_paths.append('/usr/local/lib')
   ld_library_paths.append(os.environ.get('HOME') + '/.local/lib')
 

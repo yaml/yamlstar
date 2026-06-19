@@ -329,94 +329,104 @@ do-check-release() (
 do-release-python() (
   echo 'Publishing Python package to PyPI...'
   make dist
-  if [[ -f ~/.yamlstar-secrets.yaml ]]; then
+  PYPI_TOKEN=${PYPI_API_TOKEN:-${PYPI_TOKEN:-}}
+  if [[ -z $PYPI_TOKEN && -f ~/.yamlstar-secrets.yaml ]]; then
     PYPI_TOKEN=$(ys -e '.pypi.token:say' ~/.yamlstar-secrets.yaml)
-    TWINE_USERNAME=__token__ \
-    TWINE_PASSWORD=$PYPI_TOKEN \
-      twine upload dist/*.tar.gz
-  else
-    die 'ERROR: ~/.yamlstar-secrets.yaml not found'
   fi
+  [[ $PYPI_TOKEN ]] ||
+    die 'ERROR: ~/.yamlstar-secrets.yaml not found'
+  TWINE_USERNAME=__token__ \
+  TWINE_PASSWORD=$PYPI_TOKEN \
+    twine upload dist/*.tar.gz
 )
 
 # Node.js - publish to npm
 do-release-nodejs() (
   echo 'Publishing Node.js package to npm...'
-  if [[ -f ~/.yamlstar-secrets.yaml ]]; then
-    # Temporarily update version in package.json (strip -SNAPSHOT)
-    $SED "s/\"version\": \".*\"/\"version\": \"$VERSION\"/" package.json
-
+  NPM_TOKEN=${NODE_AUTH_TOKEN:-${NPM_TOKEN:-}}
+  if [[ -z $NPM_TOKEN && -f ~/.yamlstar-secrets.yaml ]]; then
     NPM_TOKEN=$(ys -e '.npm.token:say' ~/.yamlstar-secrets.yaml)
-    echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
-    npm publish --access public
-    rm -f .npmrc
-
-    # Restore -SNAPSHOT version
-    $SED "s/\"version\": \".*\"/\"version\": \"$VERSION-SNAPSHOT\"/" package.json
-  else
-    die 'ERROR: ~/.yamlstar-secrets.yaml not found'
   fi
+  [[ $NPM_TOKEN ]] ||
+    die 'ERROR: NPM_TOKEN not set and ~/.yamlstar-secrets.yaml not found'
+
+  # Temporarily update version in package.json (strip -SNAPSHOT)
+  $SED "s/\"version\": \".*\"/\"version\": \"$VERSION\"/" package.json
+  echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+  npm publish --access public
+  rm -f .npmrc
+  $SED "s/\"version\": \".*\"/\"version\": \"$VERSION-SNAPSHOT\"/" package.json
 )
 
 # Rust - publish to crates.io
 do-release-rust() (
   echo 'Publishing Rust crate to crates.io...'
-  if [[ -f ~/.yamlstar-secrets.yaml ]]; then
+  CARGO_TOKEN=${CRATES_TOKEN:-${CARGO_TOKEN:-}}
+  if [[ -z $CARGO_TOKEN && -f ~/.yamlstar-secrets.yaml ]]; then
     CARGO_TOKEN=$(ys -e '.crates.token:say' ~/.yamlstar-secrets.yaml)
-    cargo publish --token "$CARGO_TOKEN"
-  else
-    die 'ERROR: ~/.yamlstar-secrets.yaml not found'
   fi
+  [[ $CARGO_TOKEN ]] ||
+    die 'ERROR: CRATES_TOKEN not set and ~/.yamlstar-secrets.yaml not found'
+  cargo publish --token "$CARGO_TOKEN"
 )
 
 # C# - publish to NuGet
 do-release-csharp() (
   echo 'Publishing C# package to NuGet...'
-  if [[ -f ~/.yamlstar-secrets.yaml ]]; then
+  NUGET_KEY=${NUGET_API_KEY:-${NUGET_KEY:-}}
+  if [[ -z $NUGET_KEY && -f ~/.yamlstar-secrets.yaml ]]; then
     NUGET_KEY=$(ys -e '.nuget.token:say' ~/.yamlstar-secrets.yaml)
-    dotnet pack -c Release
-    dotnet nuget push "bin/Release/YAMLStar.$VERSION.nupkg" \
-      --api-key "$NUGET_KEY" \
-      --source https://api.nuget.org/v3/index.json
-  else
-    die 'ERROR: ~/.yamlstar-secrets.yaml not found'
   fi
+  [[ $NUGET_KEY ]] ||
+    die 'ERROR: NUGET_API_KEY not set and ~/.yamlstar-secrets.yaml not found'
+  dotnet pack -c Release
+  dotnet nuget push "bin/Release/YAMLStar.$VERSION.nupkg" \
+    --api-key "$NUGET_KEY" \
+    --source https://api.nuget.org/v3/index.json
 )
 
 # Perl - publish to CPAN
 do-release-perl() (
   echo 'Publishing Perl package to CPAN...'
-  PAUSE_USER=$(ys -e '.pause.user:say' ~/.yamlstar-secrets.yaml)
-  PAUSE_PASS=$(ys -e '.pause.pass:say' ~/.yamlstar-secrets.yaml)
+  if [[ -z ${PAUSE_USER:-} && -f ~/.yamlstar-secrets.yaml ]]; then
+    PAUSE_USER=$(ys -e '.pause.user:say' ~/.yamlstar-secrets.yaml)
+  fi
+  if [[ -z ${PAUSE_PASS:-} && -f ~/.yamlstar-secrets.yaml ]]; then
+    PAUSE_PASS=$(ys -e '.pause.pass:say' ~/.yamlstar-secrets.yaml)
+  fi
+  [[ ${PAUSE_USER:-} && ${PAUSE_PASS:-} ]] ||
+    die 'ERROR: PAUSE_USER/PAUSE_PASS not set'
   cpan-upload -u "$PAUSE_USER" -p "$PAUSE_PASS" cpan/*.tar.gz
 )
 
 # Clojure - publish to Clojars
 do-release-clojure() (
   echo 'Publishing Clojure JAR to Clojars...'
-  if [[ -f ~/.yamlstar-secrets.yaml ]]; then
+  if [[ -z ${CLOJARS_USERNAME:-} && -f ~/.yamlstar-secrets.yaml ]]; then
     CLOJARS_USERNAME=$(ys -e '.clojars.user:say' ~/.yamlstar-secrets.yaml)
-    CLOJARS_PASSWORD=$(ys -e '.clojars.token:say' ~/.yamlstar-secrets.yaml)
-    export CLOJARS_USERNAME CLOJARS_PASSWORD
-    make deploy
-  else
-    die 'ERROR: ~/.yamlstar-secrets.yaml not found'
   fi
+  if [[ -z ${CLOJARS_PASSWORD:-} && -f ~/.yamlstar-secrets.yaml ]]; then
+    CLOJARS_PASSWORD=$(ys -e '.clojars.token:say' ~/.yamlstar-secrets.yaml)
+  fi
+  [[ ${CLOJARS_USERNAME:-} && ${CLOJARS_PASSWORD:-} ]] ||
+    die 'ERROR: CLOJARS_USERNAME/CLOJARS_PASSWORD not set'
+  export CLOJARS_USERNAME CLOJARS_PASSWORD
+  make deploy
 )
 
 # Java - publish to Maven Central (via Central Portal)
 do-release-java() (
   echo 'Publishing Java JAR to Maven Central Portal...'
-  if [[ -f ~/.yamlstar-secrets.yaml ]]; then
+  if [[ -z ${GPG_KEY_ID:-} && -f ~/.yamlstar-secrets.yaml ]]; then
     GPG_KEY_ID=$(ys -e '.gpg.key-id:say' ~/.yamlstar-secrets.yaml)
-    # Central Portal token (base64-encoded username:password)
-    CENTRAL_TOKEN=$(ys -e '.central.token:say' ~/.yamlstar-secrets.yaml)
-    export GPG_KEY_ID CENTRAL_TOKEN
-
-    make deploy
-  else
-    die 'ERROR: ~/.yamlstar-secrets.yaml not found'
   fi
+  if [[ -z ${CENTRAL_TOKEN:-} && -f ~/.yamlstar-secrets.yaml ]]; then
+    CENTRAL_TOKEN=$(ys -e '.central.token:say' ~/.yamlstar-secrets.yaml)
+  fi
+  [[ ${CENTRAL_TOKEN:-} ]] ||
+    die 'ERROR: CENTRAL_TOKEN not set and ~/.yamlstar-secrets.yaml not found'
+  export GPG_KEY_ID CENTRAL_TOKEN
+  make deploy
 )
 
 # Go - delegate to release-go script
@@ -813,8 +823,8 @@ do-push() {
 
 # Step 7: Trigger GitHub Actions build
 do-build-github() {
-  local workflow_file=".github/workflows/release-libs.yaml"
-  local workflow_url="https://github.com/yaml/yamlstar/actions/workflows/release-libs.yaml"
+  local workflow_file=".github/workflows/release.yaml"
+  local workflow_url="https://github.com/yaml/yamlstar/actions/workflows/release.yaml"
 
   if [[ ! -f $workflow_file ]]; then
     echo "⚠ No release workflow found at $workflow_file"
@@ -838,7 +848,7 @@ do-build-github() {
 
   echo "Triggering GitHub Actions workflow..."
 
-  if gh workflow run release-libs.yaml -f version="$NEW_VERSION" 2>/dev/null; then
+  if gh workflow run release.yaml -f version="$NEW_VERSION" 2>/dev/null; then
     echo "✓ GitHub Actions workflow triggered"
     echo
     echo "Monitor progress:"

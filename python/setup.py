@@ -4,8 +4,11 @@ from setuptools import setup
 import re
 from pathlib import Path
 
-# Read version from ../Meta file
-meta_file = Path(__file__).parent.parent / 'Meta'
+# Read version from bundled Meta first, then from the repository root.
+base_dir = Path(__file__).parent
+meta_file = base_dir / 'Meta'
+if not meta_file.exists():
+    meta_file = base_dir.parent / 'Meta'
 meta_content = meta_file.read_text()
 match = re.search(r'^version:\s*(.+)$', meta_content, re.MULTILINE)
 version = match.group(1) if match else None
@@ -26,9 +29,10 @@ setup(
     license = 'MIT',
     packages = ['yamlstar'],
     package_dir = {'': 'lib'},
+    package_data = {'yamlstar': ['libyamlstar/libyamlstar.*']},
+    include_package_data = True,
     python_requires = '>=3.6, <4',
     install_requires = [],
-    setup_requires = ['wheel'],
     classifiers = [
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',

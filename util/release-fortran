@@ -7,7 +7,7 @@ root=$(cd "$(dirname "$0")/.." && pwd)
 update() (
   cp "$root/License" "$repo_dir/LICENSE"
 
-  cd "$from_dir"
+  cd "$from_dir" || exit
   cp \
     ReadMe.md \
     fpm.toml \

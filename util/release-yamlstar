@@ -1,0 +1,611 @@
+#!/usr/bin/env ys-0
+
+# This script automates the YAMLStar release process.
+#
+# Usage:
+#   release-yamlstar release <old-version> <new-version>  # Interactive
+#   release-yamlstar <command> [args]                      # Individual step
+#
+# Commands:
+#   release             - Run full interactive release workflow
+#   list                - Show all release steps
+#   sanity-check        - Verify prerequisites (old/new versions)
+#   secrets-list        - Show release credential status
+#   secrets-update      - Refresh due release credentials
+#   secrets-publish     - Publish credentials to GitHub Actions secrets
+#   version-bump        - Update versions in all files
+#   changelog           - Edit changelog interactively
+#   binding-changelogs  - Update binding changelogs
+#   commit              - Commit changes
+#   tag                 - Create git tag
+#   push                - Push to remote
+#   build-github        - Trigger GitHub Actions workflows
+#   bindings            - Release all language bindings
+#   website             - Publish yamlstar.org
+#
+# Environment variables:
+#   YS_RELEASE_DRYRUN=1     - Don't run commands, just show them
+#   YS_RELEASE_VERBOSE=1    - Show more information
+#   YS_RELEASE_CI=1         - Run non-interactively in GitHub Actions
+#   YS_RELEASE_FORCE_BINDINGS=1
+#                            - Try bindings even when already published
+#   YS_RELEASE_BINDINGS="..." - Release only listed binding directories
+#   YS_RELEASE_BINDINGS_SKIP  - Skip listed binding directories
+
+version-file =: '.version.ys'
+
+bindings =::
+- clojure
+- csharp
+- go
+- delphi
+- fortran
+- java
+- nodejs
+- perl
+- python
+- rust
+
+verbose =: B(ENV.YS_RELEASE_VERBOSE)
+dryrun =: boolean(ENV.YS_RELEASE_DRYRUN)
+
+#------------------------------------------------------------------------------
+# Main entry point with command dispatch
+#------------------------------------------------------------------------------
+
+defn main(cmd *args):
+  case cmd:
+    'release'            : do-release(args*)
+    'list'               : do-list()
+    'sanity-check'       : do-sanity-check(args*)
+    'secrets-list'       : do-secrets-list()
+    'secrets-update'     : do-secrets-update()
+    'secrets-publish'    : do-secrets-publish()
+    'version-bump'       : do-version-bump()
+    'changelog'          : do-changelog(args*)
+    'binding-changelogs' : do-binding-changelogs()
+    'commit'             : do-commit(args*)
+    'tag'                : do-tag(args*)
+    'push'               : do-push(args*)
+    'build-github'       : do-build-github(args*)
+    'bindings'           : do-bindings(args*)
+    'website'            : do-website()
+    else                 :
+      die: |
+        Unknown command: $cmd
+        Run 'make release-list' for help")
+
+
+#------------------------------------------------------------------------------
+# Show list of all release steps
+#------------------------------------------------------------------------------
+
+defn do-list():
+  say: |
+    YAMLStar Release Process Steps
+    =================================
+
+    Full interactive workflow:
+      make release o=OLD_VERSION n=NEW_VERSION
+
+    Or run individual steps:
+
+      1. make release-sanity-check o=X n=Y
+         Verify old version, clean tree, valid new version
+
+      2. make secrets-update
+         Refresh due release credentials
+
+      3. make secrets-list
+         Show release credential status
+
+      4. make secrets-publish
+         Publish release credentials to GitHub Actions secrets
+
+      5. make release-version-bump
+         Update versions in all files via .version.ys
+
+      6. make release-changelog o=X n=Y
+         Edit changelog interactively, validate YAML
+
+      7. make release-commit n=Y
+         Commit all changes
+
+      8. make release-tag n=Y
+         Create git tag
+
+      9. make release-push n=Y
+         Push commits and tags to origin
+
+     10. make release-build-github n=Y
+         Trigger release workflow and watch it
+
+     11. make release-bindings n=Y
+         Release all language bindings
+
+     12. make release-homebrew n=Y
+         Publish the Homebrew tap formulas
+
+     13. make release-website
+         Publish yamlstar.org website
+
+
+#------------------------------------------------------------------------------
+# Interactive release workflow with confirmations between steps
+#------------------------------------------------------------------------------
+
+defn do-release(old new):
+  ctx =: check-args(old new)
+
+  say: "\n============================================================"
+  say: "  YAMLStar Release Workflow"
+  say: "  Version: $old → $new"
+  say: "============================================================\n"
+  say: "This will guide you through the release process."
+  say: "Press Ctrl+C at any time to quit.\n"
+
+  # Step 1: Sanity checks
+  o: 'Step 1: Running sanity checks...'
+  do-sanity-check: old new
+  say:
+
+  # Step 2: Release credentials
+  confirm: 'Step 2 - Update due release credentials?'
+  do-secrets-update:
+  say:
+
+  confirm: 'Step 3 - Review release credentials?'
+  do-secrets-list:
+  say:
+
+  confirm: 'Step 4 - Publish release credentials to GitHub?'
+  do-secrets-publish:
+  say:
+
+  # Step 5: Version bump
+  confirm: 'Step 5 - Bump version in all files?'
+  do-version-bump:
+  say:
+
+  # Step 6: Changelog
+  confirm: 'Step 6 - Edit changelog?'
+  do-changelog: old new
+  say:
+
+  # Step 7: Commit
+  confirm: 'Step 7 - Commit changes?'
+  do-commit: new
+  say:
+
+  # Step 8: Tag
+  do-tag: new
+  say:
+
+  # Step 9: Push
+  do-push: new
+  say:
+
+  # Step 10: Build on GitHub
+  confirm: 'Step 10 - Trigger GitHub Actions workflow?'
+  do-build-github: new
+  say:
+
+  say: "============================================================"
+  say: "  Release workflow complete!"
+  say: "============================================================\n"
+
+
+#------------------------------------------------------------------------------
+# Sanity check: verify old version, clean tree, valid new version
+#------------------------------------------------------------------------------
+
+defn do-sanity-check(old new):
+  # Get current version from common/vars.mk
+  current-version =:
+    bash('grep "^version:" Meta | cut -d" " -f2').out:trim
+
+  when current-version != old:
+    die: |
+      ERROR: Old version mismatch!
+        Current version: $current-version
+        You specified: $old
+
+      Please use: make release o=$current-version n=$new
+
+  say: "✓ Old version matches current: $old"
+
+  # Check working tree is clean
+  status =: sh('git status --porcelain').out
+  when status.?:
+    say: 'ERROR: Working tree is not clean!'
+    say: 'Uncommitted changes:'
+    run:: git status --short
+    die: '\nPlease commit or stash your changes first.'
+
+  # Check if tag already exists
+  tag-exists =: sh("git rev-parse $new 2>/dev/null"):ok
+
+  when tag-exists:
+    die: "⚠ Tag $new already exists"
+
+  say: '✓ Working tree is clean'
+
+  # Validate new version format
+  when-not new =~ /^0\.[12]\.\d+$/:
+    die: "ERROR: Invalid version format: $new\nExpected: 0.X.Y"
+
+  say: "✓ New version format valid: $new"
+  say: '✓ All sanity checks passed'
+
+
+#------------------------------------------------------------------------------
+# Helper: Ask user for confirmation (Y/n or y/N)
+#------------------------------------------------------------------------------
+
+defn confirm(msg default='y'):
+  prompt-text =:
+    if default == 'y':
+      then: "$msg [Y/n]: "
+      else: "$msg [y/N]: "
+
+  print: prompt-text
+  answer =: read-line():trim
+
+  if answer.?:
+    if answer =~ /^[Yy]/:
+      true
+      exit()
+    else: default == 'y'
+
+
+#------------------------------------------------------------------------------
+# Individual step functions (can be called independently)
+#------------------------------------------------------------------------------
+
+defn do-version-bump():
+  o: 'Running util/version-bump to update versions in all files'
+  run: 'ROOT=$PWD ./util/version-bump'
+  show-version-diff:
+  confirm: 'Continue?'
+  say: '✓ Version bump complete'
+
+
+defn do-secrets-list():
+  o: 'Showing release credential status'
+  run:: make secrets-list
+
+
+defn do-secrets-update():
+  o: 'Updating due release credentials'
+  run:: make secrets-update
+
+
+defn do-secrets-publish():
+  o: 'Publishing release credentials to GitHub Actions'
+  run:: make secrets-publish
+
+
+defn show-version-diff():
+  o: 'Version edit diff'
+  run:: git -P diff
+
+
+defn show-changelog-diff():
+  o: 'Changelog edit diff'
+  run:: git -P diff -- Changes
+
+
+defn do-changelog(old new):
+  ctx =: check-args(old new)
+  changes-file =: "release-changes.txt.$(ctx.new)"
+  o: "Updating 'Changes' file"
+
+  when-not dryrun:
+    when-not fs-e(changes-file):
+      changes =: make-changes-entry(ctx)
+      write changes-file: changes
+
+    say: "Opening editor to review changelog entry..."
+    editor =: ENV.EDITOR || 'vi'
+    run: "$editor $changes-file"
+
+    say: 'Validating YAML syntax...'
+    validate-yaml: read(changes-file)
+
+    # Prepend to Changes file with version/date header
+    changes =: read(changes-file)
+
+    file-prepend 'Changes': |
+      - version: $(ctx.new)
+        date:    $(ctx.date-time)
+        changes:
+      $(changes:str/trimr)
+
+    validate-yaml: read('Changes')
+
+  say: '✓ Changes log file updated'
+  show-changelog-diff:
+  confirm: 'Continue?'
+
+
+defn do-binding-changelogs():
+  o: 'No binding changelog files to update'
+
+
+defn do-commit(new):
+  o: 'Committing release changes'
+
+  # Check if there are changes to commit
+  status =: sh('git status --porcelain').out
+  when-not status.?:
+    say: 'No changes to commit'
+    exit: 0
+
+  # Show what will be committed
+  when verbose:
+    run:: git -P diff --stat HEAD
+
+  run: "git commit -a -m 'release: $new'"
+  say: "✓ Committed changes for release $new"
+
+
+defn do-tag(new):
+  o: "Creating git tag for version $new"
+
+  confirm: "Create git tag $new now?"
+  run: "git tag $new"
+  say: "✓ Created tag $new"
+
+
+defn do-push(new):
+  o: 'Pushing commits and tags to remote'
+
+  current-branch =: sh('git rev-parse --abbrev-ref HEAD').out:trim
+  say: "  Branch: $current-branch"
+  say: "  Tag: $new"
+
+  confirm: "Push $current-branch and tag $new to origin now?"
+  run: "git push origin $current-branch"
+  run: "git push origin $new"
+
+  say: '✓ Pushed to remote'
+
+
+defn do-build-github(new):
+  o: 'Triggering GitHub Actions release and test workflows'
+
+  token =:
+    ENV.GH_TOKEN || ENV.GITHUB_TOKEN || legacy-github-token()
+
+  current-branch =: sh-out('git branch --show-current'):trim
+  gh-available =: bash('command -v gh'):ok
+
+  if gh-available:
+    then:
+      say: 'Triggering release workflow...'
+      trigger-result =:
+        shell {:extra-env {"GH_TOKEN" token}}:
+          str: +"gh workflow run release.yaml --repo yaml/yamlstar "
+            "--ref $current-branch -f version=$new"
+
+      if trigger-result:ok:
+        then:
+          say: '✓ Release workflow triggered'
+          sleep: 5
+          run-id =:
+            trim:
+              sh-out {:extra-env {"GH_TOKEN" token}}:
+                str: +"gh run list --workflow=release.yaml --limit=1 "
+                  "--repo yaml/yamlstar --json databaseId "
+                  "--jq '.[0].databaseId'"
+
+          # 3. Watch build workflow
+          say: "\nWatching release workflow (run $run-id)..."
+          watch-result =:
+            shell {:extra-env {"GH_TOKEN" token}}:
+              str: +"gh run watch $run-id --repo yaml/yamlstar "
+                "--exit-status --interval=10"
+
+          when watch-result:ok:
+            release-url =:
+              str: +"https://github.com/yaml/yamlstar/releases/tag/"
+                new
+            say: "✓ Release workflow completed"
+            say: "  Release page: $release-url"
+
+        else:
+          workflow-url =:
+            'https://github.com/yaml/yamlstar/actions/workflows/release.yaml'
+          say: |
+            ⚠ Could not trigger workflow (insufficient permissions?)
+
+            Please manually trigger the workflow:
+              1. Go to: $workflow-url
+              2. Click 'Run workflow'
+              3. Enter version: $new
+
+          prompt: 'Press Enter when workflow has completed...'
+    else:
+      workflow-url =:
+        'https://github.com/yaml/yamlstar/actions/workflows/release.yaml'
+      say: |
+        ⚠ GitHub CLI (gh) not found
+
+        Please manually trigger the workflow:
+          1. Go to: $workflow-url
+          2. Click 'Run workflow'
+          3. Enter version: $new
+          4. Click 'Run workflow' button
+          5. Wait for completion
+
+      prompt: 'Press Enter when workflow has completed...'
+
+defn do-bindings(new):
+  o: "Releasing all language bindings"
+  check-version: new
+
+  when-not ENV.YS_RELEASE_CI:
+    say: 'Waiting for GitHub Release assets to be ready...'
+    prompt: 'Press Enter when ready to continue.'
+
+  failures =: atom([])
+
+  each dir release-bindings():
+    if binding-published?(dir new):
+      say: "\nSkipping binding already published: $dir"
+      else:
+        say: "\nReleasing binding: $dir"
+        try:
+          run: "make -C $dir release n=$new"
+          catch Exception e:
+            warn: "Failed to release $dir. Continuing."
+            swap failures: \(_.conj(dir))
+
+  when failures.@.?:
+    die: "Failed binding release(s): $(failures.@.join(', '))"
+
+  say: '✓ All bindings released'
+
+
+defn release-bindings():
+  list =: ENV.YS_RELEASE_BINDINGS
+  skip =: ENV.YS_RELEASE_BINDINGS_SKIP
+  allowed =: set(bindings)
+
+  selected =:
+    if list.?:
+      then:
+        binding-list =: parse-binding-list(list allowed 'binding')
+        expand-binding-list: binding-list
+      else:
+        =>: bindings
+
+  if skip.?:
+    then:
+      skip-list =: parse-binding-list(skip allowed 'skip binding')
+      skip-set =: set(expand-binding-list(skip-list))
+      remove: \(contains? skip-set %1) selected
+    else:
+      =>: selected
+
+
+defn parse-binding-list(list allowed what):
+  binding-list =: list:trim.split('[,\s]+')
+  invalid =:
+    remove(\(contains? allowed %1) binding-list)
+
+  when invalid.?:
+    die: "Invalid $what list: $(invalid.join(', '))"
+
+  =>: binding-list
+
+
+defn expand-binding-list(items):
+  =>: items
+
+
+defn binding-published?(dir new):
+  if ENV.YS_RELEASE_FORCE_BINDINGS:
+    then: false
+    else:
+      try:
+        shell {:extra-env {"YS_RELEASE_PUBLISHED_QUIET" "1"}}:
+          "util/release-binding-published $dir $new"
+        =>: true
+        catch Exception e:
+          =>: false
+
+
+defn do-website():
+  o: 'Publishing yamlstar.org website'
+
+  run: 'make -C www publish'
+
+  say: '✓ Website published'
+
+
+#------------------------------------------------------------------------------
+# Helper functions:
+#------------------------------------------------------------------------------
+defn o(msg): say("\n$msg")
+
+defn prompt(msg):
+  print: "$msg "
+  trim: read-line()
+
+defn file-prepend(file text):
+  write file:
+    str: text read(file)
+
+defn make-changes-entry(ctx):
+  lines =:
+    sh("git log --oneline $(ctx.old)..HEAD")
+      .out:str/split-lines:reverse
+
+  str/join "\n":
+    map \(str/replace %1, /^\w+ /, '  - '): lines
+
+defn validate-yaml(yaml):
+  when-not dryrun:
+    try:
+      yaml/load: yaml
+
+      catch Exception e:
+        die: "Invalid YAML: $e"
+
+defn run(cmd):
+  say: "+ $cmd"
+
+  when-not dryrun:
+    shell {:extra-env github-env()}: cmd
+
+defn check-args(old new):
+  check-version: old 'old'
+  check-version: new 'new'
+
+  # Return context mapping:
+  =>::
+    old:: old
+    new:: new
+    date:: sh('date +%Y-%m-%d').out:str/trim-newline
+    date-time:: sh('date').out:str/trim-newline
+
+defn make-context():
+  # Create context with current version info
+  current-version =:
+    bash('grep "^version:" Meta | cut -d" " -f2').out:trim
+
+  =>::
+    old:: current-version
+    new:: current-version
+    date:: sh('date +%Y-%m-%d').out:str/trim-newline
+    date-time:: sh('date').out:str/trim-newline
+
+defn ok(sh):
+  sh.exit == 0
+
+defn check-version(version name='version'):
+  valid =: (string? version) && (version =~ /^0\.\d+\.\d+$/)
+
+  when-not valid:
+    die: "Invalid $name version '$version'"
+
+defn github-env():
+  token =:
+    ENV.GH_TOKEN || ENV.GITHUB_TOKEN || legacy-github-token()
+
+  env =:
+    if token.?:
+      hash-map: +"GH_TOKEN" token
+      hash-map:
+
+  =>: env
+
+defn legacy-github-token():
+  secrets =: "$(ENV.HOME)/.yamlstar-secrets.yaml"
+  token =:
+    if bash("test -f '$secrets'"):ok:
+      sh-out: "ys -l $secrets -e '.github.token:say'"
+      =>: ''
+
+  =>: token

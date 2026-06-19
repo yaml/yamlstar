@@ -6,3 +6,6 @@ __pycache__/
 /lib/yamlstar.egg-info/
 /build/
 *.pyc
+/MANIFEST.in
+/Meta
+/lib/yamlstar/libyamlstar/

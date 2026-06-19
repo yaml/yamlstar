@@ -1,0 +1,123 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+binding=${1:?Usage: release-binding-published <binding> <version>}
+version=${2:?Usage: release-binding-published <binding> <version>}
+quiet=${YS_RELEASE_PUBLISHED_QUIET:-}
+
+log() {
+  [[ $quiet ]] || echo "$@"
+}
+
+url-exists() {
+  curl -A yamlstar-release -fsIL "$1" >/dev/null 2>&1
+}
+
+json-url-exists() {
+  curl -A yamlstar-release -fsL "$1" >/dev/null 2>&1
+}
+
+git-tag-exists() {
+  git ls-remote --exit-code --tags "$1" "refs/tags/$2" \
+    >/dev/null 2>&1
+}
+
+cpan-package-exists() {
+  local package=$1
+  local cpan_version
+  local url='https://www.cpan.org/modules/02packages.details.txt.gz'
+  cpan_version=$(perl-cpan-version)
+  curl -A yamlstar-release -fsL "$url" |
+    gzip -dc |
+    awk \
+      -v package="$package" \
+      -v version="$version" \
+      -v cpan_version="$cpan_version" '
+      $1 == package && ($2 == version || $2 == cpan_version) { found = 1 }
+      END { exit found ? 0 : 1 }
+    '
+}
+
+pause-dist-verified() {
+  local dist=$1
+  local path="I/IN/INGY/$dist-$version.tar.gz"
+  local url='https://pause.perl.org/pause/authenquery?ACTION=tail_logfile'
+  [[ ${PAUSE_USER:-} && ${PAUSE_PASS:-} ]] || return 1
+  curl -A yamlstar-release -fsL -u "$PAUSE_USER:$PAUSE_PASS" "$url" |
+    grep -Fq "Verified $path"
+}
+
+perl-cpan-version() {
+  awk -v version="$version" '
+    BEGIN {
+      n = split(version, part, ".")
+      if (n == 3 && part[1] ~ /^[0-9]+$/ &&
+          part[2] ~ /^[0-9]+$/ && part[3] ~ /^[0-9]+$/) {
+        printf "%d.%03d%03d\n", part[1], part[2], part[3]
+        exit
+      }
+      print version
+    }
+  '
+}
+
+published=false
+
+case $binding in
+  clojure)
+    url='https://repo.clojars.org/org/yamlstar/yamlstar'
+    url-exists "$url/$version/yamlstar-$version.jar" &&
+      published=true
+    ;;
+  csharp)
+    lower_version=$(printf '%s' "$version" | tr '[:upper:]' '[:lower:]')
+    url='https://api.nuget.org/v3-flatcontainer/yamlstar'
+    url-exists "$url/$lower_version/yamlstar.$lower_version.nupkg" &&
+      published=true
+    ;;
+  delphi|fortran)
+    git-tag-exists "https://github.com/yaml/yamlstar-$binding" "$version" &&
+      published=true
+    ;;
+  go)
+    git-tag-exists https://github.com/yaml/yamlstar-go "v$version" &&
+      published=true
+    ;;
+  java)
+    url='https://repo1.maven.org/maven2/com/yaml/yamlstar'
+    url-exists "$url/$version/yamlstar-$version.jar" &&
+      published=true
+    ;;
+  nodejs)
+    export NPM_CONFIG_CACHE="${NPM_CONFIG_CACHE:-.cache/npm}"
+    npm view "yamlstar@$version" version >/dev/null 2>&1 &&
+      published=true
+    ;;
+  perl)
+    if pause-dist-verified YAMLStar ||
+        cpan-package-exists YAMLStar; then
+      published=true
+    fi
+    ;;
+  python)
+    json-url-exists "https://pypi.org/pypi/yamlstar/$version/json" &&
+      published=true
+    ;;
+  rust)
+    json-url-exists "https://crates.io/api/v1/crates/yamlstar/$version" &&
+      published=true
+    ;;
+  *)
+    echo "Unknown binding: $binding" >&2
+    exit 2
+    ;;
+esac
+
+if $published; then
+  log "Published: $binding $version"
+  exit 0
+fi
+
+log "Not published: $binding $version"
+exit 1

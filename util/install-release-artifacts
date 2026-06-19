@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+artifact_dir=${1:-.}
+version=$(sed -n 's/^version: //p' Meta)
+
+lib_tar=$(
+  find "$artifact_dir" -maxdepth 2 -type f \
+    -name "libyamlstar-$version-*.tar.xz" |
+    LC_ALL=C sort |
+    head -n1
+)
+
+lib_zip=$(
+  find "$artifact_dir" -maxdepth 2 -type f \
+    -name "libyamlstar-$version-*.zip" |
+    LC_ALL=C sort |
+    head -n1
+)
+
+if [[ -z "$lib_tar" && -z "$lib_zip" ]]; then
+  echo "ERROR: No libyamlstar release artifact found in $artifact_dir" >&2
+  exit 1
+fi
+
+work_dir=$(mktemp -d)
+trap 'rm -rf "$work_dir"' EXIT
+
+if [[ $lib_tar ]]; then
+  tar -C "$work_dir" -xf "$lib_tar"
+else
+  unzip -q "$lib_zip" -d "$work_dir"
+fi
+
+lib_dir=$(
+  find "$work_dir" -mindepth 1 -maxdepth 1 -type d \
+    -name "libyamlstar-$version-*" |
+    LC_ALL=C sort |
+    head -n1
+)
+
+if [[ -z "$lib_dir" ]]; then
+  echo "ERROR: No unpacked libyamlstar release directory found" >&2
+  exit 1
+fi
+
+mkdir -p libyamlstar/lib
+cp -pP "$lib_dir"/libyamlstar.* libyamlstar/lib/
+cp -pP "$lib_dir"/*.h libyamlstar/lib/
+find libyamlstar/lib -type f -exec touch {} +
+
+echo "Installed release artifacts:"
+ls -lh libyamlstar/lib/libyamlstar*

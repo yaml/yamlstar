@@ -1,0 +1,175 @@
+#!/usr/bin/env ys-0
+
+releases-url =: 'https://github.com/yaml/yamlstar/releases'
+brew-url =: ENV.YS_HOMEBREW_URL ||
+  'git@github.com:yaml/homebrew-yamlstar'
+
+
+defn main(version):
+  check-version: version
+  download-releases: version
+  update-brew: version
+  commit-brew: version
+
+
+defn update-brew(version):
+  clone-brew:
+  shas =: release-shas(version)
+
+  write 'homebrew-yamlstar/libyamlstar.rb':
+    libyamlstar-formula(version 'Libyamlstar' shas)
+
+  write "homebrew-yamlstar/libyamlstar@$version.rb":
+    libyamlstar-formula(version class-name('LibyamlstarAT' version) shas)
+
+  write 'homebrew-yamlstar/ReadMe.md':
+    readme(version)
+
+  show-status:
+
+
+defn clone-brew():
+  when-not fs/e('homebrew-yamlstar'):
+    say: "Cloning $brew-url"
+    res =: sh("git clone $brew-url homebrew-yamlstar")
+    when res.exit:N.?:
+      die: "git clone of '$brew-url' failed\n$(res.err)"
+
+
+defn commit-brew(version):
+  status =: sh('git -C homebrew-yamlstar status --short').out
+  if status.?:
+    then:
+      run-cmd: 'git -C homebrew-yamlstar add .'
+      run-cmd: "git -C homebrew-yamlstar commit -m 'Add $version'"
+      if ENV.YS_HOMEBREW_PUSH == '0':
+        say: 'Skipping Homebrew tap push'
+        run-cmd: 'git -C homebrew-yamlstar push'
+    else:
+      say: 'Homebrew tap already up to date'
+
+
+defn show-status():
+  status =: sh('git -C homebrew-yamlstar status --short --ignored').out
+  when status.?:
+    say: status
+
+
+defn run-cmd(command):
+  say: "+ $command"
+  res =: sh(command)
+  when res.exit:N.?:
+    die: |
+      Command failed: $command
+      $(res.err)
+
+
+defn download-releases(version):
+  each file release-files(version):
+    when-not fs/e(file):
+      say: "Downloading $file"
+      url =: "$releases-url/download/$version/$file"
+      res =: sh("curl -fsSLO $url")
+      when res.exit:N.?:
+        die: "Download of '$url' failed:\n$(res.err)"
+
+
+defn release-shas(version):
+  reduce _ hash-map() release-files(version):
+    fn(shas file):
+      shas.assoc(file sha256(file))
+
+
+defn sha256(file):
+  sh("shasum -a 256 $file").out:words.0
+
+
+defn release-files(version): +
+  [
+    "libyamlstar-${version}-linux-x64.tar.xz"
+    "libyamlstar-${version}-macos-arm64.tar.xz"
+  ]
+
+
+defn libyamlstar-formula(version class shas):
+  lin-file =: "libyamlstar-${version}-linux-x64.tar.xz"
+  mac-file =: "libyamlstar-${version}-macos-arm64.tar.xz"
+  lin =: shas.$lin-file
+  mac =: shas.$mac-file
+  formula =:: |
+    class CLASS < Formula
+      desc "YAMLStar shared library"
+      homepage "https://github.com/yaml/yamlstar"
+      version "VERSION"
+      license "MIT"
+
+      on_linux do
+        if Hardware::CPU.intel?
+          url "https://github.com/yaml/yamlstar/releases/download/" \
+            "#{version}/libyamlstar-#{version}-linux-x64.tar.xz"
+          sha256 "LINUX_SHA"
+        else
+          odie "libyamlstar is not available for this Linux architecture"
+        end
+      end
+
+      on_macos do
+        if Hardware::CPU.arm?
+          url "https://github.com/yaml/yamlstar/releases/download/" \
+            "#{version}/libyamlstar-#{version}-macos-arm64.tar.xz"
+          sha256 "MACOS_SHA"
+        else
+          odie "libyamlstar is not available for this macOS architecture"
+        end
+      end
+
+      def install
+        lib.install Dir["libyamlstar*.so*"]
+        lib.install Dir["libyamlstar*.dylib*"]
+        (include/"libyamlstar-#{version}").install Dir["*.h"]
+      end
+
+      test do
+        if OS.mac?
+          assert_predicate lib/"libyamlstar.dylib", :exist?
+        else
+          assert_predicate lib/"libyamlstar.so", :exist?
+        end
+      end
+    end
+  formula:
+    .replace('CLASS' class)
+    .replace('VERSION' version)
+    .replace('LINUX_SHA' lin)
+    .replace('MACOS_SHA' mac)
+
+
+defn readme(version): |
+  homebrew-yamlstar
+  ===================
+
+  [Homebrew](https://brew.sh/) for YAMLStar
+
+
+  ## Install YAMLStar with Homebrew
+
+  Works on Linux Intel and macOS ARM.
+
+  ```
+  $ brew install yaml/yamlstar/libyamlstar
+  $ brew install yaml/yamlstar/libyamlstar@$version
+  ```
+
+
+defn class-name(prefix version):
+  "$prefix$(version.replace('.'))"
+
+
+defn check-version(version):
+  when version !~ /^0\.[12]\.\d+$/:
+    die: "Invalid version '$version'"
+
+  try:
+    curl: "$releases-url/tag/$version"
+    catch:
+      die: "No YAMLStar release for version '$version'"
