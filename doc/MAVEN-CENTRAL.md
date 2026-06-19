@@ -89,15 +89,19 @@ java:
   days: 90
 gpg:
   key-id: "YOUR_GPG_KEY_ID"
+  priv: "/path/to/exported-private-key.asc"
+  passphrase: "YOUR_GPG_KEY_PASSPHRASE"
 ```
 
 The `java.token` value is the Maven Central Portal token used for the Publisher
 API upload.
+The `gpg.priv` value is a path to an exported ASCII-armored private key file;
+`gpg.passphrase` is optional if the key has no passphrase.
 
 The release script (`util/release`) automatically:
 1. Reads the token from `~/.yamlstar-secrets.yaml`
 2. Exports it as `CENTRAL_TOKEN` for the upload API
-3. Exports `GPG_KEY_ID` for artifact signing
+3. Publishes/imports the GPG signing key and exports `GPG_KEY_ID`
 4. Runs `make deploy` which builds and uploads the bundle
 
 ## Publishing

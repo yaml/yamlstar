@@ -46,7 +46,11 @@ bundle:: jar pom sources-jar javadoc-jar
 	cp target/$(ARTIFACT)-$(VERSION)-javadoc.jar $(BUNDLE_DIR)/
 	# Sign all artifacts (jar, pom, sources, javadoc)
 	@for f in $(BUNDLE_DIR)/*.jar $(BUNDLE_DIR)/*.pom; do \
-	  gpg --batch --yes -ab -u $(GPG_KEY_ID) "$$f"; \
+	  gpg_args=(--batch --yes -ab -u "$(GPG_KEY_ID)"); \
+	  if [[ -n "$${GPG_PASSPHRASE:-}" ]]; then \
+	    gpg_args+=(--pinentry-mode loopback --passphrase "$$GPG_PASSPHRASE"); \
+	  fi; \
+	  gpg "$${gpg_args[@]}" "$$f"; \
 	done
 	# Generate checksums for all artifacts and signatures
 	@for f in $(BUNDLE_DIR)/*.jar $(BUNDLE_DIR)/*.pom $(BUNDLE_DIR)/*.asc; do \
