@@ -43,8 +43,10 @@ defn commit-brew(version):
       run-cmd: 'git -C homebrew-yamlstar add .'
       run-cmd: "git -C homebrew-yamlstar commit -m 'Add $version'"
       if ENV.YS_HOMEBREW_PUSH == '0':
-        say: 'Skipping Homebrew tap push'
-        run-cmd: 'git -C homebrew-yamlstar push'
+        then:
+          say: 'Skipping Homebrew tap push'
+        else:
+          run-cmd: 'git -C homebrew-yamlstar push'
     else:
       say: 'Homebrew tap already up to date'
 

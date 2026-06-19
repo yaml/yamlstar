@@ -149,8 +149,11 @@ do-release-lib() (
     cp -P "$f" "$RELEASE_PATH/"
   done
 
-  # Fix symlinks to point to correct names
+  # Make the versioned library the real file, then point compatibility
+  # symlinks at it. The build tree may have the inverse layout.
   cd "$RELEASE_PATH"
+  cp -L libyamlstar.$EXT libyamlstar.$EXT.$VERSION.tmp
+  mv libyamlstar.$EXT.$VERSION.tmp libyamlstar.$EXT.$VERSION
   rm -f libyamlstar.$EXT libyamlstar.$EXT.0
   ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$EXT
   ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$EXT.0
@@ -335,9 +338,15 @@ do-release-python() (
   fi
   [[ $PYPI_TOKEN ]] ||
     die 'ERROR: ~/.yamlstar-secrets.yaml not found'
+  shopt -s nullglob
+  files=(dist/*.tar.gz dist/*.whl)
+  wheels=(dist/*.whl)
+  if [[ ${YS_RELEASE_CI:-} && ${#wheels[@]} == 0 ]]; then
+    die 'ERROR: No Python wheels found in python/dist'
+  fi
   TWINE_USERNAME=__token__ \
   TWINE_PASSWORD=$PYPI_TOKEN \
-    twine upload dist/*.tar.gz
+    twine upload --skip-existing "${files[@]}"
 )
 
 # Node.js - publish to npm

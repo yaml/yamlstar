@@ -10,9 +10,9 @@ CPAN-DEPS := \
   Moo \
   Test2::V0 \
 
-PERL-LOCAL := $(ROOT)/perl/local
-PERL-LOCAL-LIB := $(PERL-LOCAL)/lib/perl5
-PERL-LOCAL-BIN := $(PERL-LOCAL)/bin
+YAMLSTAR-PERL-LOCAL := $(ROOT)/perl/local
+YAMLSTAR-PERL-LOCAL-LIB := $(YAMLSTAR-PERL-LOCAL)/lib/perl5
+YAMLSTAR-PERL-LOCAL-BIN := $(YAMLSTAR-PERL-LOCAL)/bin
 
 MAKES-CLEAN := \
   cpan/LICENSE \
@@ -29,14 +29,14 @@ MAKES-CLEAN := \
   cpan/pm_to_blib \
 
 MAKES-REALCLEAN := \
-  $(PERL-LOCAL) \
+  $(YAMLSTAR-PERL-LOCAL) \
 
-override export PATH := $(PERL-LOCAL-BIN):$(PATH)
-export PERL5LIB := $(PERL-LOCAL-LIB)
+override export PATH := $(YAMLSTAR-PERL-LOCAL-BIN):$(PATH)
+export PERL5LIB := $(YAMLSTAR-PERL-LOCAL-LIB)
 export PERL5OPT :=
 
 TEST-DEPS := \
-  $(PERL-LOCAL) \
+  $(YAMLSTAR-PERL-LOCAL) \
   $(LIBYAMLSTAR-SO) \
 
 ifeq ($(OS-NAME),windows)
@@ -49,13 +49,15 @@ endif
 
 build: $(LIBYAMLSTAR-SO)
 
-$(PERL-LOCAL): $(PERL)
+$(YAMLSTAR-PERL-LOCAL): $(PERL)
 	MAKES_CACHE_NAME='yamlstar-perl-$(PERL-VERSION)-local-cpan' \
 	makes-cache '$@' \
 	  cpanm -L '$@' -n $(CPAN-DEPS)
 
 release-cpan: cpan-test cpan-dist
 	$(ROOT)/util/release release-perl
+
+release: release-cpan
 
 cpan-build:
 	mkdir -p cpan/lib cpan/t
@@ -66,7 +68,7 @@ cpan-build:
 cpan-test: cpan-build $(TEST-DEPS)
 	cd cpan && perl Makefile.PL && make && make test
 
-cpan-dist: cpan-build $(PERL) $(PERL-LOCAL)
+cpan-dist: cpan-build $(PERL) $(YAMLSTAR-PERL-LOCAL)
 	cd cpan && perl Makefile.PL && make manifest && make dist
 
 cpan-clean:

@@ -12,7 +12,7 @@ MAKES-CLEAN := \
   lib/yamlstar/__pycache__ \
   test/__pycache__ \
 
-PYTHON-VENV-SETUP := pip install pytest setuptools twine wheel
+PYTHON-VENV-SETUP := $(UV) pip install --python $(PYTHON-VENV) pytest setuptools twine wheel
 
 WHEEL-PLAT-linux-int64 := manylinux_2_31_x86_64
 WHEEL-PLAT-macos-arm64 := macosx_14_0_arm64

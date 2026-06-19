@@ -308,6 +308,23 @@ endif
 release-website: $(YS)
 	$(YS) $(ROOT)/util/release-yamlstar website
 
+release-publish-homebrew: $(GH)
+ifndef n
+	$(error 'make release-publish-homebrew' requires n=NEW_VERSION)
+endif
+	@set -e; \
+	  branch=$$(git branch --show-current); \
+	  git push origin HEAD:$$branch; \
+	  gh workflow run release.yaml \
+	    --repo yaml/yamlstar --ref $$branch -f version=$(n) \
+	    -f publish_homebrew_only=true; \
+	  sleep 5; \
+	  run_id=$$(gh run list --workflow=release.yaml \
+	    --repo yaml/yamlstar --branch $$branch --limit=1 \
+	    --json databaseId --jq '.[0].databaseId'); \
+	  gh run watch $$run_id --repo yaml/yamlstar \
+	    --exit-status --interval 10
+
 release-publish-bindings: $(GH)
 ifndef n
 	$(error 'make release-publish-bindings' requires n=NEW_VERSION)
@@ -318,6 +335,7 @@ endif
 	  gh workflow run release.yaml \
 	    --repo yaml/yamlstar --ref $$branch -f version=$(n) \
 	    -f publish_bindings_only=true \
+	    -f force_bindings='$(if $(YS_RELEASE_FORCE_BINDINGS),true,false)' \
 	    -f bindings='$(YS_RELEASE_BINDINGS)' \
 	    -f bindings_skip='$(YS_RELEASE_BINDINGS_SKIP)'; \
 	  sleep 5; \

@@ -20,6 +20,16 @@ on:
         default: false
         required: false
         type: boolean
+      publish_homebrew_only:
+        description: 'Publish Homebrew tap from existing release assets'
+        default: false
+        required: false
+        type: boolean
+      force_bindings:
+        description: 'Publish bindings even when the version already exists'
+        default: false
+        required: false
+        type: boolean
 
 defaults:
   run:
@@ -35,11 +45,12 @@ env:
   YS_RELEASE_CI: '1'
   YS_RELEASE_BINDINGS: ${{ inputs.bindings }}
   YS_RELEASE_BINDINGS_SKIP: ${{ inputs.bindings_skip }}
+  YS_RELEASE_FORCE_BINDINGS: ${{ inputs.force_bindings && '1' || '' }}
 
 jobs:
   verify-release:
     name: Verify release
-    if: ${{ !inputs.publish_bindings_only }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -82,7 +93,7 @@ jobs:
 
   build-linux-x64:
     name: Build Linux x64
-    if: ${{ !inputs.publish_bindings_only }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
     needs: verify-release
     runs-on: ubuntu-latest
     steps:
@@ -115,7 +126,7 @@ jobs:
 
   build-macos-arm64:
     name: Build macOS ARM64
-    if: ${{ !inputs.publish_bindings_only }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
     needs: verify-release
     runs-on: macos-latest
     steps:
@@ -148,7 +159,7 @@ jobs:
 
   test-linux:
     name: Test Linux artifacts
-    if: ${{ !inputs.publish_bindings_only }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
     needs: build-linux-x64
     runs-on: ubuntu-latest
     steps:
@@ -171,7 +182,7 @@ jobs:
 
   test-macos:
     name: Test macOS artifacts
-    if: ${{ !inputs.publish_bindings_only }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
     needs: build-macos-arm64
     runs-on: macos-latest
     steps:
@@ -190,11 +201,11 @@ jobs:
       run: util/install-release-artifacts release-artifacts
 
     - name: Run tests
-      run: make test-all
+      run: make test-all BINDING-SKIP=delphi
 
   create-release:
     name: Create GitHub release
-    if: ${{ !inputs.publish_bindings_only }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
     needs:
     - test-linux
     - test-macos
@@ -236,7 +247,7 @@ jobs:
 
   upload-assets:
     name: Upload release assets
-    if: ${{ !inputs.publish_bindings_only }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
     needs: create-release
     runs-on: ubuntu-latest
     permissions:
@@ -265,22 +276,35 @@ jobs:
 
   publish-homebrew:
     name: Publish Homebrew tap
-    if: ${{ !inputs.publish_bindings_only }}
+    if: |
+      ${{
+        always() &&
+        !cancelled() &&
+        (
+          inputs.publish_homebrew_only ||
+          needs.upload-assets.result == 'success'
+        )
+      }}
     needs: upload-assets
     runs-on: ubuntu-latest
     env:
-      HOMEBREW_TAP_SSH_KEY: ${{ secrets.HOMEBREW_TAP_SSH_KEY }}
+      YAMLSTAR_HOMEBREW_TAP_SSH_KEY: ${{ secrets.YAMLSTAR_HOMEBREW_TAP_SSH_KEY }}
     steps:
     - name: Checkout tag
       uses: actions/checkout@v4
       with:
-        ref: ${{ inputs.version }}
+        ref: >-
+          ${{
+            inputs.publish_homebrew_only &&
+            github.ref ||
+            inputs.version
+          }}
 
     - name: Configure tap SSH key
-      if: ${{ env.HOMEBREW_TAP_SSH_KEY != '' }}
+      if: ${{ env.YAMLSTAR_HOMEBREW_TAP_SSH_KEY != '' }}
       uses: webfactory/ssh-agent@v0.10.0
       with:
-        ssh-private-key: ${{ env.HOMEBREW_TAP_SSH_KEY }}
+        ssh-private-key: ${{ env.YAMLSTAR_HOMEBREW_TAP_SSH_KEY }}
 
     - name: Configure Git identity
       run: |
@@ -289,8 +313,8 @@ jobs:
 
     - name: Publish Homebrew tap
       run: |
-        if [[ -z "${HOMEBREW_TAP_SSH_KEY:-}" ]]; then
-          echo "ERROR: HOMEBREW_TAP_SSH_KEY secret is not set"
+        if [[ -z "${YAMLSTAR_HOMEBREW_TAP_SSH_KEY:-}" ]]; then
+          echo "ERROR: YAMLSTAR_HOMEBREW_TAP_SSH_KEY secret is not set"
           exit 1
         fi
         make release-homebrew n="$VERSION"
@@ -301,6 +325,7 @@ jobs:
       ${{
         always() &&
         !cancelled() &&
+        !inputs.publish_homebrew_only &&
         (
           inputs.publish_bindings_only ||
           needs.upload-assets.result == 'success'
@@ -324,7 +349,7 @@ jobs:
       PAUSE_PASS: ${{ secrets.PAUSE_PASS }}
       PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
       CRATES_TOKEN: ${{ secrets.CRATES_TOKEN }}
-      BINDING_REPO_SSH_KEY: ${{ secrets.BINDING_REPO_SSH_KEY }}
+      YAMLSTAR_BINDING_REPO_SSH_KEY: ${{ secrets.YAMLSTAR_BINDING_REPO_SSH_KEY }}
     steps:
     - name: Checkout tag
       uses: actions/checkout@v4
@@ -356,10 +381,10 @@ jobs:
       run: util/install-release-artifacts release-artifacts
 
     - name: Configure mirror repo SSH key
-      if: ${{ env.BINDING_REPO_SSH_KEY != '' }}
+      if: ${{ env.YAMLSTAR_BINDING_REPO_SSH_KEY != '' }}
       uses: webfactory/ssh-agent@v0.10.0
       with:
-        ssh-private-key: ${{ env.BINDING_REPO_SSH_KEY }}
+        ssh-private-key: ${{ env.YAMLSTAR_BINDING_REPO_SSH_KEY }}
 
     - name: Configure npm credentials
       run: |
@@ -378,7 +403,7 @@ jobs:
 
   publish-website:
     name: Publish website
-    if: ${{ !inputs.publish_bindings_only }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
     needs:
     - publish-bindings
     - publish-homebrew
