@@ -93,8 +93,8 @@ gpg:
   passphrase: "YOUR_GPG_KEY_PASSPHRASE"
 ```
 
-The `java.token` value is the Maven Central Portal token used for the Publisher
-API upload.
+The `java.token` value is the base64 "username:password" value from the Maven
+Central Portal user token page. The upload API receives it as a Bearer token.
 The `gpg.priv` value is a path to an exported ASCII-armored private key file;
 `gpg.passphrase` is optional if the key has no passphrase.
 
