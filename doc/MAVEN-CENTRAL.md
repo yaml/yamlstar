@@ -83,18 +83,19 @@ this file and exports them as environment variables.
 Add your Maven Central credentials to `~/.yamlstar-secrets.yaml`:
 
 ```yaml
-central:
-  token: "YOUR_BASE64_ENCODED_TOKEN"
+java:
+  uses: maven-central
+  token: "YOUR_CENTRAL_PORTAL_TOKEN"
+  days: 90
 gpg:
   key-id: "YOUR_GPG_KEY_ID"
 ```
 
-The `central.token` is the base64-encoded "Username : Password" value shown
-when you generate a user token at https://central.sonatype.com/usertoken.
-Copy the value from the "Username : Password (base64)" field.
+The `java.token` value is the Maven Central Portal token used for the Publisher
+API upload.
 
 The release script (`util/release`) automatically:
-1. Reads the base64 token from `~/.yamlstar-secrets.yaml`
+1. Reads the token from `~/.yamlstar-secrets.yaml`
 2. Exports it as `CENTRAL_TOKEN` for the upload API
 3. Exports `GPG_KEY_ID` for artifact signing
 4. Runs `make deploy` which builds and uploads the bundle
@@ -150,7 +151,7 @@ Your credentials may be incorrect or expired:
 1. Regenerate user token in Central Portal at
    https://central.sonatype.com/usertoken
 2. Copy the "Username : Password (base64)" value
-3. Update `central.token` in `~/.yamlstar-secrets.yaml`
+3. Update `java.token` in `~/.yamlstar-secrets.yaml`
 
 ### Upload Fails with curl Error
 

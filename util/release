@@ -430,7 +430,9 @@ do-release-java() (
     GPG_KEY_ID=$(ys -e '.gpg.key-id:say' ~/.yamlstar-secrets.yaml)
   fi
   if [[ -z ${CENTRAL_TOKEN:-} && -f ~/.yamlstar-secrets.yaml ]]; then
-    CENTRAL_TOKEN=$(ys -e '.central.token:say' ~/.yamlstar-secrets.yaml)
+    CENTRAL_TOKEN=$(
+      ys -e '(.java.token || .central.token):say' ~/.yamlstar-secrets.yaml
+    )
   fi
   [[ ${CENTRAL_TOKEN:-} ]] ||
     die 'ERROR: CENTRAL_TOKEN not set and ~/.yamlstar-secrets.yaml not found'
