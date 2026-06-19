@@ -264,7 +264,7 @@ defn confirm(msg default='y'):
 
 defn do-version-bump():
   o: 'Running util/version-bump to update versions in all files'
-  run: 'ROOT=$PWD ./util/version-bump'
+  run: 'ys-0 ./util/version-bump'
   show-version-diff:
   confirm: 'Continue?'
   say: '✓ Version bump complete'
@@ -557,7 +557,10 @@ defn run(cmd):
   say: "+ $cmd"
 
   when-not dryrun:
-    shell {:extra-env github-env()}: cmd
+    shell {:extra-env run-env()}: cmd
+
+defn run-env():
+  github-env().assoc('ROOT' ENV.PWD)
 
 defn check-args(old new):
   check-version: old 'old'
