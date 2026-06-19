@@ -5,7 +5,37 @@ This guide will get you up and running quickly.
 
 ## Installation
 
-Choose your language below for installation instructions.
+### Shared Library
+
+All language bindings require the `libyamlstar` shared library:
+
+```bash
+curl -sSL https://yamlstar.org/install | bash
+```
+
+This installs to `~/.local` by default. Use environment variables to customize:
+
+```bash
+# Install to /usr/local (requires sudo)
+curl -sSL https://yamlstar.org/install | sudo bash
+
+# Install to custom location
+curl -sSL https://yamlstar.org/install | PREFIX=/opt/yamlstar bash
+```
+
+Or you can install `libyamlstar` on macOS or Linux with Homebrew.
+
+```bash
+brew trust yaml/yamlstar
+brew tap yaml/yamlstar
+
+brew install yaml/yamlstar/libyamlstar    # Install libyamlstar first time
+brew upgrade yaml/yamlstar/libyamlstar    # Install new libyamlstar version later
+```
+
+### Language Binding Packages
+
+Choose your language below for package manager installation.
 
 === "Python"
 

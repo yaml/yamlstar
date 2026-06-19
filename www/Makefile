@@ -7,8 +7,6 @@ include $M/typos.mk
 SHELL-DEPS += $(PYTHON-VENV)
 include $M/shell.mk
 
-PYTHON-VENV-SETUP := pip install -r requirements.txt
-
 REPO ?= git@github.com:yaml/yamlstar
 
 WATCHER-PID := .watcher.pid
@@ -20,6 +18,7 @@ MAKES-DISTCLEAN := .cache/
 DEPS := \
   $(PYTHON-VENV) \
 
+WATCH-DEPS := $(if $(wildcard src),watch)
 
 default::
 # Build main site (production)
@@ -28,7 +27,7 @@ site: $(DEPS)
 	cp -r spec type $@/
 
 # Serve locally with MkDocs (starts watcher automatically)
-serve: $(DEPS) watch
+serve: $(DEPS) $(WATCH-DEPS)
 	mkdocs serve --livereload
 
 # Build alias for backwards compatibility

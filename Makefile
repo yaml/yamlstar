@@ -22,6 +22,8 @@ MAKES-CLEAN := \
 MAKES-REALCLEAN := \
   $(MAVEN-REPOSITORY) \
   python/.eggs/ \
+  www/site/ \
+  www/venv/ \
 
 MAKES-DISTCLEAN += \
   .clj-kondo/ \
