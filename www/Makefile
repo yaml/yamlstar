@@ -24,7 +24,7 @@ default::
 # Build main site (production)
 site: $(DEPS)
 	mkdocs build -d $@
-	cp -r spec type $@/
+	$(foreach dir,spec type,$(if $(wildcard $(dir)),cp -r $(dir) $@/;))
 
 # Serve locally with MkDocs (starts watcher automatically)
 serve: $(DEPS) $(WATCH-DEPS)
