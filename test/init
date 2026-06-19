@@ -1,0 +1,16 @@
+#!/bash
+
+set -euo pipefail
+
+source "$BPAN_ROOT/lib/bpan.bash" --
+
+bpan:source bashplus +cmd +sys
+bpan:source test-tap --
+
+export BPAN_TEST_RUNNING=1
+
+FILE=$0
+NAME=$(basename "$FILE")
+NAME=${NAME%.t}
+ROOT=$(cd "$(dirname "$FILE")"/.. && pwd -P)
+TEST=$ROOT/test

@@ -4,6 +4,8 @@ include $M/gh.mk
 include $M/gloat.mk
 include $M/yamlscript.mk
 include $M/clean.mk
+include $M/perl.mk
+include $M/bpan.mk
 include $M/shellcheck.mk
 include $M/shell.mk
 
@@ -67,9 +69,16 @@ ALL-TESTS := \
 build install::
 	$(MAKE) -C libyamlstar $@
 
-test:: test-core
+test ?= test/*.t
+
+unexport PERL5OPT PERL5LIB
+
+test: test-unit test-core
 
 test-all: $(ALL-TESTS)
+
+test-unit: $(PERL) $(BPAN) $(SHELLCHECK)
+	prove$(if $(v), -v,) $(test)
 
 test-bindings: $(BINDING-TESTS)
 
