@@ -55,7 +55,7 @@ vo =: v-old.str/replace(/\./ '\\.')
   bump:
   - regx:: "(yamlstar/core.*)${vp}(.*)"
     file:
-    - libyamlstar/project.clj
+    - libyamlstar/graalvm/project.clj
     - cli/project.clj
 
   - regx:: "(defproject yamlstar/core \")${vp}(-SNAPSHOT\")"
@@ -68,7 +68,7 @@ vo =: v-old.str/replace(/\./ '\\.')
 
   - regx:: "(defproject yamlstar/libyamlstar \")${vp}(-SNAPSHOT\")"
     file:
-    - libyamlstar/project.clj
+    - libyamlstar/graalvm/project.clj
 
   - regx:: "(defproject com\\.yaml/yamlstar \")${vp}(\")"
     file:
