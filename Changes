@@ -1,3 +1,9 @@
+- version: 0.1.5
+  date:    Sat Jun 20 10:35:29 AM EDT 2026
+  changes:
+  - Document Homebrew install
+  - Fix CLI build jar paths and tool PATH
+  - Add CLI release install and Homebrew support
 - version: 0.1.4
   date:    Fri Jun 19 10:53:43 AM EDT 2026
   changes:

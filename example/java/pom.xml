@@ -22,7 +22,7 @@
     <dependency>
       <groupId>com.yaml</groupId>
       <artifactId>yamlstar</artifactId>
-      <version>0.1.4</version>
+      <version>0.1.5</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>
