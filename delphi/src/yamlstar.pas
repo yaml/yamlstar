@@ -20,7 +20,7 @@ uses
 
 const
   { Version matching the yamlstar shared library }
-  YAMLSTAR_VERSION = '0.1.5';
+  YAMLSTAR_VERSION = '0.1.6';
 
 type
   { Exception raised when YAMLStar encounters an error }

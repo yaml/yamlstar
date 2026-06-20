@@ -1,3 +1,8 @@
+- version: 0.1.6
+  date:    Sat Jun 20 11:42:23 AM EDT 2026
+  changes:
+  - Fix release website publish auth
+  - Fix implicit empty scalar resolution
 - version: 0.1.5
   date:    Sat Jun 20 10:35:29 AM EDT 2026
   changes:
