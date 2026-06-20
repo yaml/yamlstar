@@ -450,4 +450,6 @@ jobs:
         git config --global user.email 'yamlstar-release@yaml.com'
 
     - name: Publish website
-      run: make release-website
+      run: |
+        REPO="https://x-access-token:${GITHUB_TOKEN}@github.com/yaml/yamlstar" \
+          make release-website
