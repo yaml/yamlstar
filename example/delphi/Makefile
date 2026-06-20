@@ -1,4 +1,4 @@
-LIBYAMLSTAR-VERSION := 0.1.6
+LIBYAMLSTAR-VERSION := 0.1.7
 
 M := $(abspath ../../.cache/makes)
 $(shell [ -d $M ] || git clone -q https://github.com/makeplus/makes $M)

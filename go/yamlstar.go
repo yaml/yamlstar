@@ -39,7 +39,7 @@ import (
 )
 
 // Version is the version of the yamlstar library this binding works with.
-const Version = "0.1.6"
+const Version = "0.1.7"
 
 // ErrNotInitialized is returned when the library failed to initialize.
 var ErrNotInitialized = errors.New("yamlstar: library not initialized")

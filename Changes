@@ -1,3 +1,7 @@
+- version: 0.1.7
+  date:    Sat Jun 20 03:53:11 PM EDT 2026
+  changes:
+  - Add Windows CI and release builds
 - version: 0.1.6
   date:    Sat Jun 20 11:42:23 AM EDT 2026
   changes:

@@ -44,7 +44,7 @@ YAMLStar Example - Loading ../sample.yaml and outputting JSON
 
 Input YAML:
 name: YAMLStar Example
-version: 0.1.6
+version: 0.1.7
 ...
 
 ---
@@ -52,7 +52,7 @@ version: 0.1.6
 Output JSON:
 {
   "name": "YAMLStar Example",
-  "version": "0.1.6",
+  "version": "0.1.7",
   ...
 }
 ```
@@ -80,5 +80,5 @@ Exit the shell with `exit` or Ctrl-D.
 - libyamlstar shared library (downloaded from GitHub releases)
 - CGO enabled
 
-The example uses the published YAMLStar Go module from `github.com/yaml/yamlstar-go` v0.1.6
+The example uses the published YAMLStar Go module from `github.com/yaml/yamlstar-go` v0.1.7
 and the downloaded libyamlstar shared library.

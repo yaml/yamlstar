@@ -26,7 +26,7 @@ Update the version number across all files and create a changelog entry:
 
 ```bash
 # Run version bump (handles versions AND changelog)
-make version-bump o=0.1.6 n=0.1.6
+make version-bump o=0.1.7 n=0.1.7
 ```
 
 This command will:
@@ -34,7 +34,7 @@ This command will:
    - `Meta` (single source of truth)
    - All language binding files (`setup.py`, `package.json`, `Cargo.toml`, etc.)
    - Clojure project files
-2. Generate a changelog entry from git commits since v0.1.6
+2. Generate a changelog entry from git commits since v0.1.7
 3. Open your editor to review/edit the changelog entry
 4. Prompt you to save the entry to the `Changes` file
 
@@ -44,7 +44,7 @@ git diff
 
 # Commit and push
 git add -A
-git commit -m "Bump version to 0.1.6"
+git commit -m "Bump version to 0.1.7"
 git push
 ```
 
@@ -52,7 +52,7 @@ git push
 
 The `Changes` file uses YAML format:
 ```yaml
-- version: 0.1.6
+- version: 0.1.7
   date:    Mon Jan  9 10:00:00 AM PST 2026
   changes:
   - core: Add new feature X
@@ -73,7 +73,7 @@ creates a GitHub Release.
 2. Click **Actions** tab
 3. Select **Release YAMLStar** workflow
 4. Click **Run workflow** button
-5. Enter the version (e.g., `0.1.6`)
+5. Enter the version (e.g., `0.1.7`)
 6. Click **Run workflow**
 
 The workflow will:
@@ -88,10 +88,10 @@ The workflow will:
 ### Artifacts Created
 
 The release includes:
-- `yamlstar-0.1.6-linux-x64.tar.xz`
-- `yamlstar-0.1.6-macos-arm64.tar.xz`
-- `libyamlstar-0.1.6-linux-x64.tar.xz`
-- `libyamlstar-0.1.6-macos-arm64.tar.xz`
+- `yamlstar-0.1.7-linux-x64.tar.xz`
+- `yamlstar-0.1.7-macos-arm64.tar.xz`
+- `libyamlstar-0.1.7-linux-x64.tar.xz`
+- `libyamlstar-0.1.7-macos-arm64.tar.xz`
 
 ## Step 3: Release Language Bindings
 
@@ -144,11 +144,11 @@ To get Maven Central credentials:
 
 ```bash
 # This checks for shared library assets, then publishes to PyPI
-make release-bindings VERSION=0.1.6
+make release-bindings VERSION=0.1.7
 ```
 
 The `release-bindings` target:
-1. Verifies GitHub Release `v0.1.6` exists
+1. Verifies GitHub Release `v0.1.7` exists
 2. Checks for all required shared library assets
 3. Builds Python package
 4. Uploads to PyPI using `twine`
@@ -157,7 +157,7 @@ The `release-bindings` target:
 
 ```bash
 # Check PyPI
-pip install yamlstar==0.1.6
+pip install yamlstar==0.1.7
 
 # Verify it works
 python -c "import yamlstar; print(yamlstar.__version__)"
@@ -169,34 +169,34 @@ For advanced usage or debugging:
 
 ```bash
 # Check version matches Meta file
-make check-version VERSION=0.1.6
+make check-version VERSION=0.1.7
 
 # Build shared library for current platform only
-make release-lib VERSION=0.1.6
+make release-lib VERSION=0.1.7
 
 # Build CLI for current platform only
-make release-cli VERSION=0.1.6
+make release-cli VERSION=0.1.7
 
 # Create and push git tag (normally done by workflow)
-make release-tag VERSION=0.1.6
+make release-tag VERSION=0.1.7
 
 # Create GitHub release (normally done by workflow)
-make release-github VERSION=0.1.6
+make release-github VERSION=0.1.7
 
 # Check that GitHub release exists with all assets
-make check-release VERSION=0.1.6
+make check-release VERSION=0.1.7
 
 # Publish Homebrew formulas
-make release-homebrew n=0.1.6
+make release-homebrew n=0.1.7
 
 # Publish Python only
-make release-python VERSION=0.1.6
+make release-python VERSION=0.1.7
 
 # Publish Java only (requires Maven Central credentials)
 make release-java
 
 # Publish all enabled bindings
-make release-bindings VERSION=0.1.6
+make release-bindings VERSION=0.1.7
 ```
 
 ## Troubleshooting
@@ -204,7 +204,7 @@ make release-bindings VERSION=0.1.6
 ### Version Mismatch Error
 
 ```
-ERROR: VERSION=0.1.6 does not match Meta file version: 0.1.6
+ERROR: VERSION=0.1.7 does not match Meta file version: 0.1.7
 ```
 
 Solution: Run `./util/version-bump` to update all version strings.
@@ -212,7 +212,7 @@ Solution: Run `./util/version-bump` to update all version strings.
 ### Missing Release Assets
 
 ```
-ERROR: Missing yamlstar-0.1.6-linux-x64.tar.xz
+ERROR: Missing yamlstar-0.1.7-linux-x64.tar.xz
 ```
 
 Solution: Wait for the GitHub Actions workflow to complete, or check if it
@@ -229,7 +229,7 @@ Solution: Create the secrets file with your PyPI token (see Step 3 above).
 ### Tag Already Exists
 
 ```
-ERROR: Tag v0.1.6 already exists
+ERROR: Tag v0.1.7 already exists
 ```
 
 Solution: Either delete the tag and release, or bump to a new version.
