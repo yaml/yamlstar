@@ -22,6 +22,31 @@ main() (
   "do-$1"
 )
 
+detect-platform() {
+  case "$(uname -m)" in
+    x86_64|amd64) ARCH=x64 ;;
+    aarch64|arm64) ARCH=arm64 ;;
+    *) die "ERROR: Unsupported architecture $(uname -m)" ;;
+  esac
+
+  if [[ $OS_NAME == linux ]]; then
+    PLATFORM=linux-$ARCH
+    EXT=so
+    ARCHIVE_CMD='tar -cJf'
+    ARCHIVE_EXT=tar.xz
+  elif [[ $OS_NAME == macos ]]; then
+    PLATFORM=macos-$ARCH
+    EXT=dylib
+    ARCHIVE_CMD='tar -cJf'
+    ARCHIVE_EXT=tar.xz
+  elif [[ $OS_NAME == windows ]]; then
+    PLATFORM=windows-$ARCH
+    EXT=dll
+    ARCHIVE_CMD='zip -r'
+    ARCHIVE_EXT=zip
+  fi
+}
+
 # Bump version and update changelog
 # Usage: make version-bump o=0.1.0 n=0.1.1
 do-version-bump() (
@@ -108,33 +133,15 @@ do-check-tag() (
 
 # Build shared library for current platform
 do-release-lib() (
+  detect-platform
+
+  # Release artifact installs use the inverse symlink layout from the build
+  # tree. Clear old library files so `make build` can recover either way.
+  rm -f libyamlstar/lib/libyamlstar.$EXT \
+    libyamlstar/lib/libyamlstar.$EXT.*
+
   # Build the library
   make -C libyamlstar build
-
-  # Detect architecture
-  case "$(uname -m)" in
-    x86_64|amd64) ARCH=x64 ;;
-    aarch64|arm64) ARCH=arm64 ;;
-    *) die "ERROR: Unsupported architecture $(uname -m)" ;;
-  esac
-
-  # Set platform-specific values
-  if [[ $OS_NAME == linux ]]; then
-    PLATFORM=linux-$ARCH
-    EXT=so
-    ARCHIVE_CMD='tar -cJf'
-    ARCHIVE_EXT=tar.xz
-  elif [[ $OS_NAME == macos ]]; then
-    PLATFORM=macos-$ARCH
-    EXT=dylib
-    ARCHIVE_CMD='tar -cJf'
-    ARCHIVE_EXT=tar.xz
-  elif [[ $OS_NAME == windows ]]; then
-    PLATFORM=windows-$ARCH
-    EXT=dll
-    ARCHIVE_CMD='zip -r'
-    ARCHIVE_EXT=zip
-  fi
 
   # Create release directory structure
   RELEASE_DIR=libyamlstar-$VERSION-$PLATFORM
@@ -170,7 +177,7 @@ ROOT := $(shell cd '$(abspath $(dir $(lastword $(MAKEFILE_LIST))))' && pwd -P)
 
 YAMLSTAR_VERSION := VERSION_PLACEHOLDER
 
-LIBYAMLSTAR := $(firstword $(wildcard libyamlstar.*))
+LIBYAMLSTAR := $(firstword $(wildcard libyamlstar.EXT_PLACEHOLDER*))
 
 PREFIX ?= /usr/local
 
@@ -276,6 +283,89 @@ gcc -o myapp myapp.c -lyamlstar
   fi
 )
 
+# Build CLI archive for current platform
+do-release-cli() (
+  make -C cli build
+
+  detect-platform
+  if [[ $ARCHIVE_EXT != tar.xz ]]; then
+    die "ERROR: CLI release is not supported on $PLATFORM yet"
+  fi
+
+  RELEASE_DIR=yamlstar-$VERSION-$PLATFORM
+  RELEASE_PATH=dist/$RELEASE_DIR
+
+  echo "Creating release package: $RELEASE_DIR"
+  rm -rf "$RELEASE_PATH"
+  mkdir -p "$RELEASE_PATH"
+  cp cli/bin/yaml "$RELEASE_PATH/"
+
+  cat > "$RELEASE_PATH/Makefile" <<'...'
+SHELL := bash
+
+YAMLSTAR_VERSION := VERSION_PLACEHOLDER
+YAMLSTAR := $(firstword $(wildcard yaml))
+
+PREFIX ?= /usr/local
+
+install:
+ifneq (,$(YAMLSTAR))
+	mkdir -p $(PREFIX)/bin
+	cp -pP yaml $(PREFIX)/bin/
+	@echo 'Installed $(PREFIX)/bin/yaml - version $(YAMLSTAR_VERSION)'
+else
+	$(error Weird! Nothing to install in this directory.)
+endif
+...
+
+  $SED "s/VERSION_PLACEHOLDER/$VERSION/g" "$RELEASE_PATH/Makefile"
+
+  cat > "$RELEASE_PATH/ReadMe.md" <<'...'
+# YAMLStar CLI
+
+YAMLStar VERSION_PLACEHOLDER for PLATFORM_PLACEHOLDER
+
+## Contents
+
+- `yaml` - YAMLStar command-line loader
+- `Makefile` - Installation script
+
+## Installation
+
+```bash
+make install
+```
+
+Default installation prefix is `/usr/local`. To install elsewhere:
+
+```bash
+make install PREFIX=/opt/yamlstar
+```
+
+## Usage
+
+```bash
+yaml --help
+yaml file.yaml
+printf 'a: 1\n' | yaml -J
+```
+
+More information: https://yamlstar.org/cli/
+...
+
+  $SED "s/VERSION_PLACEHOLDER/$VERSION/g" "$RELEASE_PATH/ReadMe.md"
+  $SED "s/PLATFORM_PLACEHOLDER/$PLATFORM/g" "$RELEASE_PATH/ReadMe.md"
+
+  mkdir -p dist
+  cd dist
+  $ARCHIVE_CMD "$RELEASE_DIR.$ARCHIVE_EXT" "$RELEASE_DIR"
+  cd ..
+
+  echo "Built release artifact: dist/$RELEASE_DIR.$ARCHIVE_EXT"
+  echo 'Contents:'
+  tar -tf "dist/$RELEASE_DIR.$ARCHIVE_EXT"
+)
+
 # Create and push git tag
 do-release-tag() (
   if git rev-parse "$VERSION" >/dev/null 2>&1; then
@@ -297,6 +387,7 @@ do-release-github() (
     gh release create "$VERSION" \
       --title "YAMLStar $VERSION" \
       --notes-file release-notes.txt \
+      "dist/yamlstar-$VERSION-*.tar.xz" \
       "dist/libyamlstar-$VERSION-*.tar.xz" \
       "dist/libyamlstar-$VERSION-*.zip"
     rm -f release-notes.txt
@@ -306,7 +397,7 @@ do-release-github() (
   fi
 )
 
-# Check that GitHub release exists with all shared library assets
+# Check that GitHub release exists with required binary assets
 do-check-release() (
   git fetch --tags --force
   if [[ -f ~/.yamlstar-secrets.yaml ]]; then
@@ -316,15 +407,16 @@ do-check-release() (
   gh release view "$VERSION" >/dev/null 2>&1 ||
     die "ERROR: Release $VERSION not found"
   echo 'Checking for required assets...'
-  gh release view "$VERSION" --json assets --jq '.assets[].name' |
-    grep -q "libyamlstar-$VERSION-linux-x64.tar.xz" ||
-      die 'ERROR: Missing linux-x64 asset'
-  gh release view "$VERSION" --json assets --jq '.assets[].name' |
-    grep -q "libyamlstar-$VERSION-macos-arm64.tar.xz" ||
-      die 'ERROR: Missing macos-arm64 asset'
-  gh release view "$VERSION" --json assets --jq '.assets[].name' |
-    grep -q "libyamlstar-$VERSION-windows-x64.zip" ||
-      die 'ERROR: Missing windows-x64 asset'
+  assets=$(gh release view "$VERSION" --json assets --jq '.assets[].name')
+  for asset in \
+    "yamlstar-$VERSION-linux-x64.tar.xz" \
+    "yamlstar-$VERSION-macos-arm64.tar.xz" \
+    "libyamlstar-$VERSION-linux-x64.tar.xz" \
+    "libyamlstar-$VERSION-macos-arm64.tar.xz"
+  do
+    grep -qx "$asset" <<<"$assets" ||
+      die "ERROR: Missing $asset"
+  done
   echo "All required assets found for $VERSION"
 )
 

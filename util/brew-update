@@ -1,7 +1,7 @@
 #!/usr/bin/env ys-0
 
 releases-url =: 'https://github.com/yaml/yamlstar/releases'
-brew-url =: ENV.YS_HOMEBREW_URL ||
+brew-url =: ENV.YAMLSTAR_HOMEBREW_URL ||
   'git@github.com:yaml/homebrew-yamlstar'
 
 
@@ -15,6 +15,12 @@ defn main(version):
 defn update-brew(version):
   clone-brew:
   shas =: release-shas(version)
+
+  write 'homebrew-yamlstar/yamlstar.rb':
+    yamlstar-formula(version 'Yamlstar' shas)
+
+  write "homebrew-yamlstar/yamlstar@$version.rb":
+    yamlstar-formula(version class-name('YamlstarAT' version) shas)
 
   write 'homebrew-yamlstar/libyamlstar.rb':
     libyamlstar-formula(version 'Libyamlstar' shas)
@@ -38,17 +44,15 @@ defn clone-brew():
 
 defn commit-brew(version):
   status =: sh('git -C homebrew-yamlstar status --short').out
-  if status.?:
-    then:
-      run-cmd: 'git -C homebrew-yamlstar add .'
-      run-cmd: "git -C homebrew-yamlstar commit -m 'Add $version'"
-      if ENV.YS_HOMEBREW_PUSH == '0':
-        then:
-          say: 'Skipping Homebrew tap push'
-        else:
-          run-cmd: 'git -C homebrew-yamlstar push'
-    else:
-      say: 'Homebrew tap already up to date'
+  when status.?:
+    run-cmd: 'git -C homebrew-yamlstar add .'
+    run-cmd: "git -C homebrew-yamlstar commit -m 'Add $version'"
+    when ENV.YAMLSTAR_HOMEBREW_PUSH == '0':
+      say: 'Skipping Homebrew tap push'
+    when-not ENV.YAMLSTAR_HOMEBREW_PUSH == '0':
+      run-cmd: 'git -C homebrew-yamlstar push'
+  when-not status.?:
+    say: 'Homebrew tap already up to date'
 
 
 defn show-status():
@@ -88,9 +92,59 @@ defn sha256(file):
 
 defn release-files(version): +
   [
+    "yamlstar-${version}-linux-x64.tar.xz"
+    "yamlstar-${version}-macos-arm64.tar.xz"
     "libyamlstar-${version}-linux-x64.tar.xz"
     "libyamlstar-${version}-macos-arm64.tar.xz"
   ]
+
+
+defn yamlstar-formula(version class shas):
+  lin-file =: "yamlstar-${version}-linux-x64.tar.xz"
+  mac-file =: "yamlstar-${version}-macos-arm64.tar.xz"
+  lin =: shas.$lin-file
+  mac =: shas.$mac-file
+  formula =:: |
+    class CLASS < Formula
+      desc "YAMLStar command-line YAML loader"
+      homepage "https://yamlstar.org"
+      version "VERSION"
+      license "MIT"
+
+      on_linux do
+        if Hardware::CPU.intel?
+          url "https://github.com/yaml/yamlstar/releases/download/" \
+            "#{version}/yamlstar-#{version}-linux-x64.tar.xz"
+          sha256 "LINUX_SHA"
+        else
+          odie "YAMLStar is not available for this Linux architecture"
+        end
+      end
+
+      on_macos do
+        if Hardware::CPU.arm?
+          url "https://github.com/yaml/yamlstar/releases/download/" \
+            "#{version}/yamlstar-#{version}-macos-arm64.tar.xz"
+          sha256 "MACOS_SHA"
+        else
+          odie "YAMLStar is not available for this macOS architecture"
+        end
+      end
+
+      def install
+        bin.install "yaml"
+      end
+
+      test do
+        assert_match "yamlstar version #{version}",
+          pipe_output("#{bin}/yaml --version")
+      end
+    end
+  formula:
+    .replace('CLASS' class)
+    .replace('VERSION' version)
+    .replace('LINUX_SHA' lin)
+    .replace('MACOS_SHA' mac)
 
 
 defn libyamlstar-formula(version class shas):
@@ -101,7 +155,7 @@ defn libyamlstar-formula(version class shas):
   formula =:: |
     class CLASS < Formula
       desc "YAMLStar shared library"
-      homepage "https://github.com/yaml/yamlstar"
+      homepage "https://yamlstar.org"
       version "VERSION"
       license "MIT"
 
@@ -148,7 +202,7 @@ defn libyamlstar-formula(version class shas):
 
 defn readme(version): |
   homebrew-yamlstar
-  ===================
+  =================
 
   [Homebrew](https://brew.sh/) for YAMLStar
 
@@ -158,6 +212,8 @@ defn readme(version): |
   Works on Linux Intel and macOS ARM.
 
   ```
+  $ brew install yaml/yamlstar/yamlstar
+  $ brew install yaml/yamlstar/yamlstar@$version
   $ brew install yaml/yamlstar/libyamlstar
   $ brew install yaml/yamlstar/libyamlstar@$version
   ```
@@ -168,7 +224,7 @@ defn class-name(prefix version):
 
 
 defn check-version(version):
-  when version !~ /^0\.[12]\.\d+$/:
+  when version !~ /^0\.[12]\.[0-9]+$/:
     die: "Invalid version '$version'"
 
   try:

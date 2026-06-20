@@ -1,14 +1,14 @@
 # YAMLStar Release Process
 
-This document describes how to release YAMLStar shared libraries and language
-bindings.
+This document describes how to release YAMLStar CLI binaries, shared libraries,
+Homebrew formulas, and language bindings.
 
 ## Overview
 
 YAMLStar uses a two-phase release process:
 
-1. **Shared Library Release** (GitHub Actions) - Builds and publishes platform
-   binaries to GitHub Releases
+1. **Binary Release** (GitHub Actions) - Builds and publishes CLI and shared
+   library binaries to GitHub Releases
 2. **Language Binding Release** (Local) - Publishes to package registries after
    shared libraries are released
 
@@ -17,9 +17,8 @@ YAMLStar uses a two-phase release process:
 Currently building and releasing for:
 - Linux x64 (primary build platform)
 - macOS ARM64 (Apple Silicon)
-- Windows x64
 
-Linux ARM64 support exists but is disabled due to slow GitHub Actions runners.
+Linux ARM64, macOS x64, and Windows support are not published yet.
 
 ## Step 1: Bump Version and Update Changelog
 
@@ -63,33 +62,36 @@ The `Changes` file uses YAML format:
 
 These changelog entries are automatically used as GitHub Release notes.
 
-## Step 2: Release Shared Libraries
+## Step 2: Release Binaries
 
-This step builds shared libraries for all platforms and creates a GitHub Release.
+This step builds CLI and shared-library archives for all supported platforms and
+creates a GitHub Release.
 
 ### Via GitHub Actions (Recommended)
 
 1. Go to your GitHub repository
 2. Click **Actions** tab
-3. Select **Release Shared Libraries** workflow
+3. Select **Release YAMLStar** workflow
 4. Click **Run workflow** button
 5. Enter the version (e.g., `0.1.1`)
 6. Click **Run workflow**
 
 The workflow will:
 - Verify the version matches the `Meta` file
+- Build `yaml` on Linux x64
+- Build `yaml` on macOS ARM64
 - Build `libyamlstar.so` on Linux x64
 - Build `libyamlstar.dylib` on macOS ARM64
-- Build `libyamlstar.dll` on Windows x64
-- Create git tag `v0.1.1`
 - Create GitHub Release with all platform binaries attached
+- Publish Homebrew formulas for the CLI and shared library
 
 ### Artifacts Created
 
 The release includes:
-- `libyamlstar-0.1.1-linux-x64.tar.gz`
-- `libyamlstar-0.1.1-macos-arm64.tar.gz`
-- `libyamlstar-0.1.1-windows-x64.zip`
+- `yamlstar-0.1.1-linux-x64.tar.xz`
+- `yamlstar-0.1.1-macos-arm64.tar.xz`
+- `libyamlstar-0.1.1-linux-x64.tar.xz`
+- `libyamlstar-0.1.1-macos-arm64.tar.xz`
 
 ## Step 3: Release Language Bindings
 
@@ -172,6 +174,9 @@ make check-version VERSION=0.1.1
 # Build shared library for current platform only
 make release-lib VERSION=0.1.1
 
+# Build CLI for current platform only
+make release-cli VERSION=0.1.1
+
 # Create and push git tag (normally done by workflow)
 make release-tag VERSION=0.1.1
 
@@ -180,6 +185,9 @@ make release-github VERSION=0.1.1
 
 # Check that GitHub release exists with all assets
 make check-release VERSION=0.1.1
+
+# Publish Homebrew formulas
+make release-homebrew n=0.1.1
 
 # Publish Python only
 make release-python VERSION=0.1.1
@@ -201,10 +209,10 @@ ERROR: VERSION=0.1.1 does not match Meta file version: 0.1.0
 
 Solution: Run `./util/version-bump` to update all version strings.
 
-### Missing Shared Library Assets
+### Missing Release Assets
 
 ```
-ERROR: Missing linux-x64 asset
+ERROR: Missing yamlstar-0.1.1-linux-x64.tar.xz
 ```
 
 Solution: Wait for the GitHub Actions workflow to complete, or check if it

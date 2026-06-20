@@ -1,6 +1,56 @@
 # YAMLStar
 
-A YAML framwork for all programming languages
+A YAML framework for all programming languages.
+
+Documentation: <https://yamlstar.org>
+
+## Install
+
+Install the `yaml` CLI and the `libyamlstar` shared library:
+
+```bash
+curl -sSL https://yamlstar.org/install | bash
+```
+
+Install only the CLI or only the shared library:
+
+```bash
+curl -sSL https://yamlstar.org/install | BIN=1 bash
+curl -sSL https://yamlstar.org/install | LIB=1 bash
+```
+
+Install to a custom prefix:
+
+```bash
+curl -sSL https://yamlstar.org/install | PREFIX=/opt/yamlstar bash
+```
+
+Homebrew is also supported on Linux x64 and macOS ARM64:
+
+```bash
+brew trust yaml/yamlstar
+brew tap yaml/yamlstar
+
+brew install yaml/yamlstar/yamlstar
+brew install yaml/yamlstar/libyamlstar
+```
+
+## CLI
+
+The `yaml` command loads YAML and prints compact JSON by default:
+
+```bash
+printf 'a: 1\n' | yaml
+yaml config.yaml
+yaml -J config.yaml
+yaml -s stream.yaml
+yaml -e 'a: 1' -o out.json
+yaml -D parse config.yaml
+yaml --version
+```
+
+Run `yaml --help` or see <https://yamlstar.org/cli/> for the full CLI
+reference.
 
 ## Vision
 
@@ -113,7 +163,8 @@ See [DEVELOPMENT.md](DEVELOPMENT.md) for detailed development guide.
 
 YAMLStar provides bindings for multiple programming languages via a shared GraalVM native-image library (`libyamlstar.so`). All bindings provide identical behavior and API.
 
-**No installation required!** The build system automatically installs language tools, compilers, and dependencies on first run.
+For language bindings that use FFI, install the matching `libyamlstar`
+release with the install script or Homebrew before loading YAML.
 
 | Language | Directory | Test Command |
 |----------|-----------|--------------|

@@ -20,11 +20,13 @@ vo =: v-old.str/replace(/\./ '\\.')
   bump:
   - regx:: "()${vp}()"
     file:
+    - ReadMe.md
     - Meta
     - cli/src/yamlstar/cli.clj
     - clojure/ReadMe.md
     - core/src/yamlstar/core.clj
     - csharp/YAMLStar.csproj
+    - doc/RELEASING.md
     - delphi/src/yamlstar.pas
     - example/delphi/Makefile
     - example/go/Makefile
@@ -46,6 +48,9 @@ vo =: v-old.str/replace(/\./ '\\.')
     - rust/src/lib.rs
     - rust/tests/load.rs
     - util/yamlj
+    - www/docs/cli.md
+    - www/docs/install
+    - www/docs/installation.md
     - www/docs/index.md
 
 #------------------------------------------------------------------------------

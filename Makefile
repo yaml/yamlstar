@@ -159,6 +159,7 @@ RELEASE-TARGETS := \
   check-version \
   check-tag \
   release-lib \
+  release-cli \
   release-github \
   check-release \
 

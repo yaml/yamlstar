@@ -5,35 +5,45 @@ This guide will get you up and running quickly.
 
 ## Installation
 
-### Shared Library
-
-All language bindings require the `libyamlstar` shared library:
+Install the `yaml` CLI and the `libyamlstar` shared library:
 
 ```bash
 curl -sSL https://yamlstar.org/install | bash
 ```
 
-This installs to `~/.local` by default. Use environment variables to customize:
+Use `BIN=1` to install only the CLI, `LIB=1` to install only the shared
+library, or `PREFIX=...` to choose an installation directory.
 
 ```bash
-# Install to /usr/local (requires sudo)
-curl -sSL https://yamlstar.org/install | sudo bash
-
-# Install to custom location
+curl -sSL https://yamlstar.org/install | BIN=1 bash
+curl -sSL https://yamlstar.org/install | LIB=1 bash
 curl -sSL https://yamlstar.org/install | PREFIX=/opt/yamlstar bash
 ```
 
-Or you can install `libyamlstar` on macOS or Linux with Homebrew.
+Or install with Homebrew:
 
 ```bash
 brew trust yaml/yamlstar
 brew tap yaml/yamlstar
 
-brew install yaml/yamlstar/libyamlstar    # Install libyamlstar first time
-brew upgrade yaml/yamlstar/libyamlstar    # Install new libyamlstar version later
+brew install yaml/yamlstar/yamlstar
+brew install yaml/yamlstar/libyamlstar
 ```
 
-### Language Binding Packages
+See [Installing YAMLStar](installation.md) for details.
+
+## CLI
+
+The `yaml` command reads YAML from a file or stdin and prints compact JSON:
+
+```bash
+printf 'a: 1\n' | yaml
+yaml -J config.yaml
+```
+
+See the [CLI documentation](cli.md) for all options.
+
+## Language Binding Packages
 
 Choose your language below for package manager installation.
 

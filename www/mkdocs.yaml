@@ -71,6 +71,8 @@ markdown_extensions:
 nav:
   - Home: index.md
   - About: about.md
+  - Install: installation.md
+  - CLI: cli.md
   - Getting Started: getting-started.md
   - Language Bindings: bindings.md
   - Roadmap: roadmap.md
