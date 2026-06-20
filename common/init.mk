@@ -7,6 +7,12 @@ endif
 M ?= ../.cache/makes
 $(shell [ -d $M ] || git clone -q https://github.com/makeplus/makes $M)
 include $M/init.mk
+
+# Keep build helper scripts first, then prefer system tools over user-local
+# shims that may not be executable in sandboxed build environments.
+override PATH := $(MAKES)/util:/usr/local/bin:/usr/bin:/bin:$(PATH)
+export PATH
+
 include $M/git.mk
 include $M/clean.mk
 

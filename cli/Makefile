@@ -11,10 +11,10 @@ MAKES-CLEAN := \
   bin \
 
 CLI-BIN := bin/yaml
-CLI-JAR := target/cli-$(LIBYAMLSTAR-VERSION)-standalone.jar
+CLI-JAR := target/cli-$(LIBYAMLSTAR-VERSION)-SNAPSHOT-standalone.jar
 
 # Core dependency jar in local maven repository
-CORE-JAR := $(MAVEN-REPOSITORY)/yamlstar/core/$(LIBYAMLSTAR-VERSION)/core-$(LIBYAMLSTAR-VERSION).jar
+CORE-JAR := $(MAVEN-REPOSITORY)/yamlstar/core/$(LIBYAMLSTAR-VERSION)-SNAPSHOT/core-$(LIBYAMLSTAR-VERSION)-SNAPSHOT.jar
 
 
 test: $(CORE-JAR) $(LEIN)
