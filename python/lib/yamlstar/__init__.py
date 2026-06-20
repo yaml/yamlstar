@@ -33,20 +33,26 @@ def find_libyamlstar():
     raise Exception(
       "Unsupported platform '%s' for yamlstar." % sys.platform)
 
-  # Use LD_LIBRARY_PATH to find libyamlstar shared library, or default to
-  # '/usr/local/lib' (where it is installed by default):
-  ld_library_path = os.environ.get('LD_LIBRARY_PATH')
-  ld_library_paths = ld_library_path.split(':') if ld_library_path else []
-  ld_library_paths.append(
+  # Use the platform library path, plus package and common install locations.
+  if sys.platform == 'win32':
+    library_path = os.environ.get('PATH')
+    library_paths = library_path.split(';') if library_path else []
+  else:
+    library_path = os.environ.get('LD_LIBRARY_PATH')
+    library_paths = library_path.split(':') if library_path else []
+  library_paths.append(
     os.path.join(os.path.dirname(__file__), 'libyamlstar'))
-  ld_library_paths.append('/usr/local/lib')
-  ld_library_paths.append(os.environ.get('HOME') + '/.local/lib')
+  if sys.platform != 'win32':
+    library_paths.append('/usr/local/lib')
+  home = os.environ.get('HOME') or os.path.expanduser('~')
+  if home:
+    library_paths.append(os.path.join(home, '.local', 'lib'))
 
   # Also check relative to this file (for development)
   lib_path = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
     '..', 'libyamlstar', 'lib')
-  ld_library_paths.insert(0, os.path.abspath(lib_path))
+  library_paths.insert(0, os.path.abspath(lib_path))
 
   if os.environ.get('YAMLSTAR_GLOJURE'):
     lib_name, backend = 'libyamlstarglj', 'gloat'
@@ -54,7 +60,7 @@ def find_libyamlstar():
     lib_name, backend = 'libyamlstar', 'graalvm'
 
   filename = "%s.%s" % (lib_name, so)
-  for path in ld_library_paths:
+  for path in library_paths:
     full_path = os.path.join(path, filename)
     if os.path.isfile(full_path):
       return full_path, backend
@@ -64,7 +70,7 @@ def find_libyamlstar():
 Shared library file '%s' not found
 Search paths: %s
 Build with: cd libyamlstar && make build
-""" % (filename, ':'.join(ld_library_paths)))
+""" % (filename, os.pathsep.join(library_paths)))
 
 # Load libyamlstar shared library and detect backend:
 _libyamlstar_path, _backend = find_libyamlstar()

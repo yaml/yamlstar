@@ -113,10 +113,14 @@ LIB-HEADER := $(LIB-DIR)/$(LIB-NAME).h
 LIB-HEADER-GLOAT := $(LIB-DIR)/$(LIB-NAME-GLOAT).h
 
 build-gloat: $(LIB-SO-GLOAT)
+ifneq ($(OS-NAME),windows)
 	ln -sf $(notdir $(LIB-SO-GLOAT)) $(LIB-DIR)/$(LIB-NAME-GLOAT).$(SO).$(VERSION)
+endif
 
 build-graalvm: $(LIB-SO)
+ifneq ($(OS-NAME),windows)
 	ln -sf $(notdir $(LIB-SO)) $(LIB-DIR)/$(LIB-NAME).$(SO).$(VERSION)
+endif
 
 # Build both: each requires separate make invocations (tool includes conflict)
 build-all:
@@ -144,11 +148,12 @@ $(LIB-JAR): $(CORE-JAR) $(LEIN)
 $(LIB-SO): $(LIB-JAR) $(REFLECTION-JSON) $(GRAALVM)
 	@echo "Building GraalVM shared library..."
 	mkdir -p $(LIB-DIR)
-	$(GRAALVM) \
+	$(NATIVE-IMAGE) \
 	  $(NATIVE-OPTS) \
 	  --shared \
 	  -jar $< \
 	  -o $(LIB-DIR)/$(LIB-NAME)
+	test -f $@
 	@echo "GraalVM shared library created at: $@"
 	@echo "Header: $(LIB-HEADER)"
 

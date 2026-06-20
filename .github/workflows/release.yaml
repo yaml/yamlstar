@@ -161,6 +161,62 @@ jobs:
           python/dist/*.whl
         retention-days: 7
 
+  build-windows-x64:
+    name: Build Windows x64
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
+    needs: verify-release
+    runs-on: windows-latest
+    steps:
+    - name: Checkout tag
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.version }}
+
+    - name: Set up MSVC
+      uses: ilammy/msvc-dev-cmd@v1
+
+    - name: Set up GraalVM
+      uses: graalvm/setup-graalvm@v1
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: graalvm
+        github-token: ${{ github.token }}
+        native-image-job-reports: 'true'
+
+    - name: Install zip
+      run: choco install zip -y
+
+    - name: Install shasum shim
+      run: |
+        mkdir -p "$RUNNER_TEMP/bin"
+        {
+          echo '#!/usr/bin/env bash'
+          echo 'if [[ ${1:-} == -a && ${2:-} == 256 && ${3:-} == -c ]]; then'
+          echo '  sha256sum -c'
+          echo 'else'
+          echo '  echo "Unsupported shasum arguments: $*" >&2'
+          echo '  exit 2'
+          echo 'fi'
+        } > "$RUNNER_TEMP/bin/shasum"
+        chmod +x "$RUNNER_TEMP/bin/shasum"
+        echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
+    - name: Build release archives and Python wheel
+      run: |
+        make release-lib VERSION="$VERSION"
+        make release-cli VERSION="$VERSION"
+        make -C python wheel VERSION="$VERSION"
+
+    - name: Upload Windows artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: windows-x64
+        path: |
+          dist/yamlstar-${{ inputs.version }}-windows-x64.zip
+          dist/libyamlstar-${{ inputs.version }}-windows-x64.zip
+          python/dist/*.whl
+        retention-days: 7
+
   test-linux:
     name: Test Linux artifacts
     if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
@@ -217,14 +273,48 @@ jobs:
     - name: Run tests
       run: make test-all BINDING-SKIP=delphi
 
+  test-windows:
+    name: Test Windows artifacts
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
+    needs: build-windows-x64
+    runs-on: windows-latest
+    steps:
+    - name: Checkout tag
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.version }}
+
+    - name: Download Windows artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: windows-x64
+        path: release-artifacts
+
+    - name: Install release artifacts
+      run: util/install-release-artifacts release-artifacts
+
+    - name: Smoke test CLI
+      run: |
+        cli/bin/yaml.exe --version
+        [[ $(printf 'a: 1\n' | cli/bin/yaml.exe) == '{"a":1}' ]]
+
+    - name: Smoke test Python wheel
+      run: |
+        wheel=$(find release-artifacts -type f -name '*.whl' | head -n1)
+        test -n "$wheel"
+        python -m pip install --force-reinstall "$wheel"
+        python -c "import yamlstar; print(yamlstar.YAMLStar().load('a: 1'))"
+
   create-release:
     name: Create GitHub release
     if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
     needs:
     - test-linux
     - test-macos
+    - test-windows
     - build-linux-x64
     - build-macos-arm64
+    - build-windows-x64
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -278,15 +368,16 @@ jobs:
     - name: Prepare release assets
       run: |
         find . -type f -name '*.tar.xz' -exec mv {} . \;
+        find . -type f -name '*.zip' -exec mv {} . \;
         find . -type f -name '*.whl' -exec mv {} . \;
-        ls -lh yamlstar-*.tar.xz libyamlstar-*.tar.xz *.whl
+        ls -lh yamlstar-* libyamlstar-* *.whl
 
     - name: Upload release assets
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
         gh release upload "$VERSION" \
-          yamlstar-*.tar.xz libyamlstar-*.tar.xz *.whl --clobber
+          yamlstar-*.tar.xz yamlstar-*.zip libyamlstar-* *.whl --clobber
         gh release view "$VERSION"
 
   publish-homebrew:

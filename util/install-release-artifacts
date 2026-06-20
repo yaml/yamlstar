@@ -12,6 +12,13 @@ cli_tar=$(
     head -n1
 )
 
+cli_zip=$(
+  find "$artifact_dir" -maxdepth 2 -type f \
+    -name "yamlstar-$version-*.zip" |
+    LC_ALL=C sort |
+    head -n1
+)
+
 lib_tar=$(
   find "$artifact_dir" -maxdepth 2 -type f \
     -name "libyamlstar-$version-*.tar.xz" |
@@ -31,7 +38,7 @@ if [[ -z "$lib_tar" && -z "$lib_zip" ]]; then
   exit 1
 fi
 
-if [[ -z "$cli_tar" ]]; then
+if [[ -z "$cli_tar" && -z "$cli_zip" ]]; then
   echo "ERROR: No yamlstar CLI release artifact found in $artifact_dir" >&2
   exit 1
 fi
@@ -39,7 +46,11 @@ fi
 work_dir=$(mktemp -d)
 trap 'rm -rf "$work_dir"' EXIT
 
-tar -C "$work_dir" -xf "$cli_tar"
+if [[ $cli_tar ]]; then
+  tar -C "$work_dir" -xf "$cli_tar"
+else
+  unzip -q "$cli_zip" -d "$work_dir"
+fi
 
 if [[ $lib_tar ]]; then
   tar -C "$work_dir" -xf "$lib_tar"
@@ -72,9 +83,14 @@ if [[ -z "$cli_dir" ]]; then
 fi
 
 mkdir -p cli/bin
-rm -f cli/bin/yaml
-cp -pP "$cli_dir"/yaml cli/bin/
-chmod 755 cli/bin/yaml
+rm -f cli/bin/yaml cli/bin/yaml.exe
+if [[ -f "$cli_dir/yaml.exe" ]]; then
+  cp -pP "$cli_dir"/yaml.exe cli/bin/
+  chmod 755 cli/bin/yaml.exe
+else
+  cp -pP "$cli_dir"/yaml cli/bin/
+  chmod 755 cli/bin/yaml
+fi
 
 mkdir -p libyamlstar/lib
 rm -f libyamlstar/lib/libyamlstar.*
@@ -83,5 +99,5 @@ cp -pP "$lib_dir"/*.h libyamlstar/lib/
 find cli/bin libyamlstar/lib -type f -exec touch {} +
 
 echo "Installed release artifacts:"
-ls -lh cli/bin/yaml
+ls -lh cli/bin/yaml*
 ls -lh libyamlstar/lib/libyamlstar*

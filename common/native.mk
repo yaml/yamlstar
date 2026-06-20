@@ -1,6 +1,11 @@
 REFLECTION-JSON := $(COMMON)/reflection.json
 
 GRAALVM-O ?= 1
+ifeq ($(OS-NAME),windows)
+NATIVE-IMAGE := $(GRAALVM).cmd
+else
+NATIVE-IMAGE := $(GRAALVM)
+endif
 
 NATIVE-OPTS := \
   -O$(GRAALVM-O) \

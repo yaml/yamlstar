@@ -80,14 +80,28 @@ test: test-unit test-core
 
 test-all: $(ALL-TESTS)
 
-test-unit: $(PERL) $(BPAN) $(SHELLCHECK)
-	prove$(if $(v), -v,) $(test)
+TEST-UNIT-DEPS := $(PERL) $(BPAN)
+ifneq ($(OS-NAME),windows)
+TEST-UNIT-DEPS += $(SHELLCHECK)
+endif
+
+ifeq ($(OS-NAME),windows)
+test-unit:
+	@echo 'Skipping Perl unit tests on Windows'
+else
+test-unit: $(TEST-UNIT-DEPS)
+	perl -x "$$(command -v prove)"$(if $(v), -v,) $(test)
+endif
 
 test-bindings: $(BINDING-TESTS)
 
 test-examples:
 	$(MAKE) --no-pr -C example test
 
+ifeq ($(OS-NAME),windows)
+shellcheck:
+	@echo 'Skipping shellcheck on Windows'
+else
 shellcheck: $(SHELLCHECK)
 	$(SHELLCHECK) -x \
 	  -e SC1091,SC2030,SC2031,SC2034,SC2086,SC2154,SC2155,SC2162,SC2231 \
@@ -98,6 +112,7 @@ shellcheck: $(SHELLCHECK)
 	  util/release-go \
 	  util/release-fortran \
 	  util/release-delphi
+endif
 
 $(ALL-TESTS):
 	@echo '--------------------------------------------------'

@@ -16,13 +16,15 @@ PYTHON-VENV-SETUP := $(UV) pip install --python $(PYTHON-VENV) pytest setuptools
 
 WHEEL-PLAT-linux-int64 := manylinux_2_31_x86_64
 WHEEL-PLAT-macos-arm64 := macosx_14_0_arm64
+WHEEL-PLAT-windows-int64 := win_amd64
 WHEEL-PLAT := $(WHEEL-PLAT-$(OS-ARCH))
 WHEEL-LIB-DIR := lib/yamlstar/libyamlstar
 WHEEL-LIB = $(WHEEL-LIB-DIR)/$(notdir $(PYTHON-SO))
 RELEASE-WHEEL-VERSION := $(or $(n),$(VERSION))
 RELEASE-WHEEL-DIR ?= dist/release-assets
-RELEASE-WHEEL-TARS := \
-  $(wildcard $(RELEASE-WHEEL-DIR)/libyamlstar-$(RELEASE-WHEEL-VERSION)-*.tar.xz)
+RELEASE-WHEEL-ARCHIVES := \
+  $(wildcard $(RELEASE-WHEEL-DIR)/libyamlstar-$(RELEASE-WHEEL-VERSION)-*.tar.xz) \
+  $(wildcard $(RELEASE-WHEEL-DIR)/libyamlstar-$(RELEASE-WHEEL-VERSION)-*.zip)
 
 # Python uses the gloat library when YAMLSTAR_GLOJURE=1, GraalVM otherwise
 ifdef YAMLSTAR_GLOJURE
@@ -56,26 +58,32 @@ $(WHEEL-LIB): $(PYTHON-SO)
 	cp -p $< $@
 
 wheels-from-release: $(PYTHON-VENV) MANIFEST.in Meta
-	@test -n "$(RELEASE-WHEEL-TARS)" || { \
+	@test -n "$(RELEASE-WHEEL-ARCHIVES)" || { \
 	  echo 'No libyamlstar release archives found in $(RELEASE-WHEEL-DIR)'; \
 	  exit 1; \
 	}
 	@set -e; \
-	  for tar in $(RELEASE-WHEEL-TARS); do \
-	    name=$$(basename "$$tar" .tar.xz); \
+	  for archive in $(RELEASE-WHEEL-ARCHIVES); do \
+	    name=$$(basename "$$archive"); \
+	    name=$${name%.tar.xz}; \
+	    name=$${name%.zip}; \
 	    relplat=$${name#libyamlstar-$(RELEASE-WHEEL-VERSION)-}; \
 	    case "$$relplat" in \
 	      linux-x64) plat=manylinux_2_31_x86_64; libpat='libyamlstar.so*' ;; \
 	      macos-arm64) plat=macosx_14_0_arm64; libpat='libyamlstar.dylib*' ;; \
+	      windows-x64) plat=win_amd64; libpat='libyamlstar.dll' ;; \
 	      *) echo "Skipping unsupported Python wheel asset: $$name"; \
 	         continue ;; \
 	    esac; \
 	    rm -rf build $(WHEEL-LIB-DIR); \
 	    mkdir -p $(WHEEL-LIB-DIR); \
 	    tmp=$$(mktemp -d); \
-	    tar -C "$$tmp" -xf "$$tar"; \
+	    case "$$archive" in \
+	      *.zip) unzip -q "$$archive" -d "$$tmp" ;; \
+	      *) tar -C "$$tmp" -xf "$$archive" ;; \
+	    esac; \
 	    lib=$$(find "$$tmp" -type f -name "$$libpat" | sort | head -n1); \
-	    test -n "$$lib" || { echo "No $$libpat found in $$tar"; exit 1; }; \
+	    test -n "$$lib" || { echo "No $$libpat found in $$archive"; exit 1; }; \
 	    cp -p "$$lib" $(WHEEL-LIB-DIR)/; \
 	    echo "Building Python wheel for $$relplat"; \
 	    $(VENV) && python setup.py bdist_wheel --plat-name "$$plat"; \

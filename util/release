@@ -156,15 +156,17 @@ do-release-lib() (
     cp -P "$f" "$RELEASE_PATH/"
   done
 
-  # Make the versioned library the real file, then point compatibility
-  # symlinks at it. The build tree may have the inverse layout.
-  cd "$RELEASE_PATH"
-  cp -L libyamlstar.$EXT libyamlstar.$EXT.$VERSION.tmp
-  mv libyamlstar.$EXT.$VERSION.tmp libyamlstar.$EXT.$VERSION
-  rm -f libyamlstar.$EXT libyamlstar.$EXT.0
-  ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$EXT
-  ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$EXT.0
-  cd - > /dev/null
+  if [[ $OS_NAME != windows ]]; then
+    # Make the versioned library the real file, then point compatibility
+    # symlinks at it. The build tree may have the inverse layout.
+    cd "$RELEASE_PATH"
+    cp -L libyamlstar.$EXT libyamlstar.$EXT.$VERSION.tmp
+    mv libyamlstar.$EXT.$VERSION.tmp libyamlstar.$EXT.$VERSION
+    rm -f libyamlstar.$EXT libyamlstar.$EXT.0
+    ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$EXT
+    ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$EXT.0
+    cd - > /dev/null
+  fi
 
   # Copy header files
   cp libyamlstar/lib/*.h "$RELEASE_PATH/"
@@ -263,6 +265,11 @@ gcc -o myapp myapp.c -lyamlstar
   $SED "s/VERSION_PLACEHOLDER/$VERSION/g" "$RELEASE_PATH/ReadMe.md"
   $SED "s/PLATFORM_PLACEHOLDER/$PLATFORM/g" "$RELEASE_PATH/ReadMe.md"
   $SED "s/EXT_PLACEHOLDER/$EXT/g" "$RELEASE_PATH/ReadMe.md"
+  if [[ $OS_NAME == windows ]]; then
+    $SED "s/- \`libyamlstar.$EXT.$VERSION\` - Versioned shared library/- \`libyamlstar.$EXT\` - Shared library/" \
+      "$RELEASE_PATH/ReadMe.md"
+    $SED "/Symlink/d" "$RELEASE_PATH/ReadMe.md"
+  fi
 
   # Create archive
   mkdir -p dist
@@ -288,9 +295,6 @@ do-release-cli() (
   make -C cli build
 
   detect-platform
-  if [[ $ARCHIVE_EXT != tar.xz ]]; then
-    die "ERROR: CLI release is not supported on $PLATFORM yet"
-  fi
 
   RELEASE_DIR=yamlstar-$VERSION-$PLATFORM
   RELEASE_PATH=dist/$RELEASE_DIR
@@ -298,21 +302,25 @@ do-release-cli() (
   echo "Creating release package: $RELEASE_DIR"
   rm -rf "$RELEASE_PATH"
   mkdir -p "$RELEASE_PATH"
-  cp cli/bin/yaml "$RELEASE_PATH/"
+  if [[ $OS_NAME == windows ]]; then
+    cp cli/bin/yaml.exe "$RELEASE_PATH/"
+  else
+    cp cli/bin/yaml "$RELEASE_PATH/"
+  fi
 
   cat > "$RELEASE_PATH/Makefile" <<'...'
 SHELL := bash
 
 YAMLSTAR_VERSION := VERSION_PLACEHOLDER
-YAMLSTAR := $(firstword $(wildcard yaml))
+YAMLSTAR := $(firstword $(wildcard yaml yaml.exe))
 
 PREFIX ?= /usr/local
 
 install:
 ifneq (,$(YAMLSTAR))
 	mkdir -p $(PREFIX)/bin
-	cp -pP yaml $(PREFIX)/bin/
-	@echo 'Installed $(PREFIX)/bin/yaml - version $(YAMLSTAR_VERSION)'
+	cp -pP $(YAMLSTAR) $(PREFIX)/bin/
+	@echo 'Installed $(PREFIX)/bin/$(YAMLSTAR) - version $(YAMLSTAR_VERSION)'
 else
 	$(error Weird! Nothing to install in this directory.)
 endif
@@ -327,7 +335,7 @@ YAMLStar VERSION_PLACEHOLDER for PLATFORM_PLACEHOLDER
 
 ## Contents
 
-- `yaml` - YAMLStar command-line loader
+- `yaml` / `yaml.exe` - YAMLStar command-line loader
 - `Makefile` - Installation script
 
 ## Installation
@@ -363,7 +371,11 @@ More information: https://yamlstar.org/cli/
 
   echo "Built release artifact: dist/$RELEASE_DIR.$ARCHIVE_EXT"
   echo 'Contents:'
-  tar -tf "dist/$RELEASE_DIR.$ARCHIVE_EXT"
+  if [[ $ARCHIVE_EXT == zip ]]; then
+    unzip -l "dist/$RELEASE_DIR.$ARCHIVE_EXT" | tail -n +4
+  else
+    tar -tf "dist/$RELEASE_DIR.$ARCHIVE_EXT"
+  fi
 )
 
 # Create and push git tag
@@ -388,6 +400,7 @@ do-release-github() (
       --title "YAMLStar $VERSION" \
       --notes-file release-notes.txt \
       "dist/yamlstar-$VERSION-*.tar.xz" \
+      "dist/yamlstar-$VERSION-*.zip" \
       "dist/libyamlstar-$VERSION-*.tar.xz" \
       "dist/libyamlstar-$VERSION-*.zip"
     rm -f release-notes.txt
@@ -411,8 +424,10 @@ do-check-release() (
   for asset in \
     "yamlstar-$VERSION-linux-x64.tar.xz" \
     "yamlstar-$VERSION-macos-arm64.tar.xz" \
+    "yamlstar-$VERSION-windows-x64.zip" \
     "libyamlstar-$VERSION-linux-x64.tar.xz" \
-    "libyamlstar-$VERSION-macos-arm64.tar.xz"
+    "libyamlstar-$VERSION-macos-arm64.tar.xz" \
+    "libyamlstar-$VERSION-windows-x64.zip"
   do
     grep -qx "$asset" <<<"$assets" ||
       die "ERROR: Missing $asset"

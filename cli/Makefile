@@ -10,7 +10,12 @@ MAKES-CLEAN := \
   .lein-* \
   bin \
 
+ifeq ($(OS-NAME),windows)
+CLI-BIN := bin/yaml.exe
+else
 CLI-BIN := bin/yaml
+endif
+CLI-OUT := bin/yaml
 CLI-JAR := target/cli-$(LIBYAMLSTAR-VERSION)-SNAPSHOT-standalone.jar
 
 # Core dependency jar in local maven repository
@@ -34,8 +39,9 @@ $(CORE-JAR):
 
 $(CLI-BIN): $(CLI-JAR) $(GRAALVM)
 	mkdir -p $(dir $@)
-	native-image \
+	$(NATIVE-IMAGE) \
 	  $(NATIVE-OPTS) \
 	  -jar $< \
-	  -o $@
+	  -o $(CLI-OUT)
+	test -f $@
 	@echo "Native binary created at: $@"
