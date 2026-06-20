@@ -19,6 +19,13 @@
     (is (nil? (yaml/load "NULL")))
     (is (nil? (yaml/load "~")))))
 
+(deftest test-load-implicit-empty-values
+  (testing "Load implicit empty mapping values as null"
+    (is (= {"a" nil "b" nil "c" nil}
+           (yaml/load "{a,b,c}")))
+    (is (= {"a" nil}
+           (yaml/load "a:")))))
+
 (deftest test-load-boolean-values
   (testing "Load boolean values"
     (is (= true (yaml/load "true")))
@@ -140,7 +147,12 @@
 (deftest test-load-quoted-strings
   (testing "Load single and double quoted strings"
     (is (= "hello world" (yaml/load "'hello world'")))
-    (is (= "hello world" (yaml/load "\"hello world\"")))))
+    (is (= "hello world" (yaml/load "\"hello world\"")))
+    (is (= "" (yaml/load "''")))
+    (is (= "" (yaml/load "\"\"")))
+    (is (= "null" (yaml/load "\"null\"")))
+    (is (= "true" (yaml/load "'true'")))
+    (is (= "42" (yaml/load "\"42\"")))))
 
 (deftest test-load-multiline-literal
   (testing "Load literal block scalar"

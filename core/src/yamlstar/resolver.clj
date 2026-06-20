@@ -18,7 +18,8 @@
   [value]
   (cond
     ;; null values
-    (re-matches #"null|Null|NULL|~" value) "!!null"
+    (or (= value "")
+        (re-matches #"null|Null|NULL|~" value)) "!!null"
 
     ;; booleans
     (re-matches #"true|True|TRUE|false|False|FALSE" value) "!!bool"
@@ -51,7 +52,10 @@
   (when node
     (case (:kind node)
       :scalar
-      (let [tag (or (:tag node) (infer-scalar-tag (:value node)))]
+      (let [tag (or (:tag node)
+                    (if (:style node)
+                      "!!str"
+                      (infer-scalar-tag (:value node))))]
         (assoc node :tag tag))
 
       :mapping
