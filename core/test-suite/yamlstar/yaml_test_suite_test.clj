@@ -8,13 +8,13 @@
 (def default-suite-dir "../yaml-test-suite")
 
 (def loader-expected-failures-resource
-  "yamlstar/yaml-test-suite-expected-failures.yaml")
+  "expected-fails/load.yaml")
 
 (def roundtrip-expected-failures-resource
-  "yamlstar/yaml-test-suite-roundtrip-expected-failures.yaml")
+  "expected-fails/roundtrip.yaml")
 
 (def emit-expected-failures-resource
-  "yamlstar/yaml-test-suite-emit-expected-failures.yaml")
+  "expected-fails/emit.yaml")
 
 (defn read-expected-failures [resource-name]
   (if-let [resource (io/resource resource-name)]

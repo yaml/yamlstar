@@ -91,7 +91,7 @@ test-unit: $(TEST-UNIT-DEPS)
 	perl -x "$$(command -v prove)"$(if $(v), -v,) $(test)
 endif
 
-test-suite:
+test-suite test-suite-load test-suite-roundtrip test-suite-emit:
 	$(MAKE) -C core $@
 
 test-all: $(ALL-TESTS)
