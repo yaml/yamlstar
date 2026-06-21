@@ -1,3 +1,11 @@
+- version: 0.1.8
+  date:    Sun Jun 21 03:11:36 PM EDT 2026
+  changes:
+  - Add yaml-test-suite conformance harness
+  - Add Dumper functionality to YAMLStar
+  - Enforce safe integer range
+  - Preserve YAML mapping order
+  - Resolve explicit non-specific tags
 - version: 0.1.7
   date:    Sat Jun 20 03:53:11 PM EDT 2026
   changes:

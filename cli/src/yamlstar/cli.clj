@@ -11,7 +11,7 @@
             [yamlstar.constructor :as constructor])
   (:gen-class))
 
-(def version "0.1.7-SNAPSHOT")
+(def version "0.1.8-SNAPSHOT")
 
 (defmacro with-timing [stage-name & body]
   `(let [start# (System/nanoTime)
