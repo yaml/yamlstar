@@ -186,6 +186,13 @@
     (is (= "foo:\n- - bar\n"
            (yaml/dump {"foo" [["bar"]]})))))
 
+(deftest test-dump-sequence-of-mappings-aligns-sibling-keys
+  (testing "Dump sequence item mappings with sibling keys aligned after the dash"
+    (is (= "steps:\n- name: Checkout tag\n  uses: 'actions/checkout@v4'\n  with:\n    ref: main\n"
+           (yaml/dump {"steps" [{"name" "Checkout tag"
+                                  "uses" "actions/checkout@v4"
+                                  "with" {"ref" "main"}}]})))))
+
 (deftest test-emitter-keeps-node-properties-on-header-line
   (testing "Emit anchors tags and literal markers with mapping keys and sequence dashes"
     (is (= "foo: &x !y |\n  ...\nbar:\n- &xx !yy |\n  ...\n"

@@ -217,7 +217,7 @@
             compact-prefix (when (and prefix (not props-header)) prefix)
             child-level (cond
                           props-header (+ level 2)
-                          compact-prefix (+ level (count compact-prefix))
+                          compact-prefix (+ level 2)
                           :else level)]
         (str props-header
              (loop [pairs (mapping-pairs body)
