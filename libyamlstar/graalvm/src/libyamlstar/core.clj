@@ -83,10 +83,11 @@
   JSON allows null values but not null keys."
   [x]
   (cond
-    (map? x) (into {} (map (fn [[k v]]
-                             [(if (nil? k) "null" (nil-keys->string k))
-                              (nil-keys->string v)])
-                           x))
+    (map? x) (apply array-map
+                    (mapcat (fn [[k v]]
+                              [(if (nil? k) "null" (nil-keys->string k))
+                               (nil-keys->string v)])
+                            x))
     (vector? x) (mapv nil-keys->string x)
     (seq? x) (map nil-keys->string x)
     :else x))

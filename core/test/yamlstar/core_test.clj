@@ -1,5 +1,6 @@
 (ns yamlstar.core-test
   (:require [clojure.test :refer :all]
+            [clojure.data.json :as json]
             [yamlstar.core :as yaml]
             [yamlstar.emitter :as emitter]
             [yamlstar.serializer :as serializer]))
@@ -88,6 +89,14 @@
             "key2" "value2"
             "key3" "value3"}
            (yaml/load "key1: value1\nkey2: value2\nkey3: value3")))))
+
+(deftest test-load-preserves-mapping-order
+  (testing "Load mappings in source order beyond Clojure hash-map threshold"
+    (is (= "{\"a\":null,\"b\":null,\"c\":null,\"d\":null,\"e\":null,\"f\":null,\"g\":null,\"h\":null,\"i\":null}"
+           (json/write-str (yaml/load "{a,b,c,d,e,f,g,h,i}")))))
+  (testing "Load nested mappings in source order"
+    (is (= "{\"outer\":{\"a\":null,\"b\":null,\"c\":null,\"d\":null,\"e\":null,\"f\":null,\"g\":null,\"h\":null,\"i\":null},\"z\":0}"
+           (json/write-str (yaml/load "{outer: {a,b,c,d,e,f,g,h,i}, z: 0}"))))))
 
 ;; Sequence Tests
 (deftest test-load-simple-sequence

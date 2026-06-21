@@ -74,7 +74,7 @@
                                           (construct-node val-node anchors)))
                                   []
                                   pairs)]
-              (reduce (fn [m [k v]] (assoc m k v)) {} (partition 2 entries)))
+              (apply array-map entries))
 
             :sequence
             (let [items (:value node)]
