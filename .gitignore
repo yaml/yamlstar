@@ -1,4 +1,5 @@
 /.cache/
+/yaml-test-suite/
 /note/
 /worktree/
 /homebrew-yamlstar/

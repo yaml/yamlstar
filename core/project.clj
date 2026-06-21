@@ -11,6 +11,7 @@
   :test-paths ["test"]
 
   :profiles {:dev {:dependencies [[org.clojure/test.check "1.1.1"]]}
+             :test-suite {:test-paths ["test" "test-suite"]}
              :uberjar {:aot :all
                        :global-vars {*assert* false
                                      *warn-on-reflection* true}

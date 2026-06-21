@@ -24,6 +24,7 @@ MAKES-REALCLEAN := \
   python/.eggs/ \
   www/site/ \
   www/venv/ \
+  yaml-test-suite/ \
 
 MAKES-DISTCLEAN += \
   .clj-kondo/ \
@@ -68,7 +69,6 @@ ALL-TESTS := \
   test-libyamlstar \
   $(BINDING-TESTS)
 
-
 build install::
 	$(MAKE) -C libyamlstar $@
 
@@ -76,9 +76,7 @@ test ?= test/*.t
 
 unexport PERL5OPT PERL5LIB
 
-test: test-unit test-core
-
-test-all: $(ALL-TESTS)
+test: test-unit test-core test-suite
 
 TEST-UNIT-DEPS := $(PERL) $(BPAN)
 ifneq ($(OS-NAME),windows)
@@ -92,6 +90,11 @@ else
 test-unit: $(TEST-UNIT-DEPS)
 	perl -x "$$(command -v prove)"$(if $(v), -v,) $(test)
 endif
+
+test-suite:
+	$(MAKE) -C core $@
+
+test-all: $(ALL-TESTS)
 
 test-bindings: $(BINDING-TESTS)
 
