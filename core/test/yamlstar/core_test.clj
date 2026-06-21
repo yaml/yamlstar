@@ -150,6 +150,16 @@
     (is (= true (yaml/load "!!bool true")))
     (is (nil? (yaml/load "!!null null")))))
 
+(deftest test-load-non-specific-explicit-tag
+  (testing "Explicit ! tag resolves scalars as strings"
+    (is (= "12" (yaml/load "! 12")))
+    (is (= "true" (yaml/load "! true")))
+    (is (= "null" (yaml/load "! null")))
+    (is (= {"a" "12"} (yaml/load "a: ! 12"))))
+  (testing "Explicit ! tag resolves collections by kind"
+    (is (= [1] (yaml/load "! [1]")))
+    (is (= {"a" 1} (yaml/load "! {a: 1}")))))
+
 ;; Multi-Document Tests
 (deftest test-load-null
   (testing "Load nil from null input"

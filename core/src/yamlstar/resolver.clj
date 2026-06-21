@@ -40,7 +40,8 @@
   "Add resolved tag to a node.
 
   For untagged nodes, infers the tag based on YAML 1.2 core schema.
-  For already-tagged nodes, leaves the tag unchanged.
+  For the explicit non-specific tag (!), uses the kind-specific default tag.
+  For other already-tagged nodes, leaves the tag unchanged.
   Recursively processes child nodes.
 
   Args:
@@ -52,14 +53,17 @@
   (when node
     (case (:kind node)
       :scalar
-      (let [tag (or (:tag node)
-                    (if (:style node)
-                      "!!str"
-                      (infer-scalar-tag (:value node))))]
+      (let [tag (cond
+                  (= "!" (:tag node)) "!!str"
+                  (:tag node) (:tag node)
+                  (:style node) "!!str"
+                  :else (infer-scalar-tag (:value node)))]
         (assoc node :tag tag))
 
       :mapping
-      (let [tag (or (:tag node) "!!map")
+      (let [tag (if (= "!" (:tag node))
+                  "!!map"
+                  (or (:tag node) "!!map"))
             pairs (:value node)
             resolved-pairs (mapv (fn [[k v]]
                                    [(resolve-node k) (resolve-node v)])
@@ -69,7 +73,9 @@
                :value resolved-pairs))
 
       :sequence
-      (let [tag (or (:tag node) "!!seq")
+      (let [tag (if (= "!" (:tag node))
+                  "!!seq"
+                  (or (:tag node) "!!seq"))
             items (:value node)
             resolved-items (mapv resolve-node items)]
         (assoc node
