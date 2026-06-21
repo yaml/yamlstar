@@ -33,7 +33,7 @@ Expected output:
 ```
 Testing yamlstar.core-test
 
-Ran 23 tests containing XX assertions.
+Ran core tests containing XX assertions.
 0 failures, 0 errors.
 ```
 
@@ -76,6 +76,14 @@ doc1
 doc2
 ")
 ;; => ["doc1" "doc2"]
+
+;; Dump a native value
+(yaml/dump {"foo" [["bar"]]})
+;; => "foo:\n- - bar\n"
+
+;; Dump multiple documents
+(yaml/dump-all ["doc1" {"a" 1} ["b"]])
+;; => "---\ndoc1\n---\na: 1\n---\n- b\n"
 ```
 
 ### Testing Individual Components
@@ -245,11 +253,15 @@ Clojure Data: {"key" "value"}
 ```
 core/
 ├── src/yamlstar/
-│   ├── core.clj            - Public API (load, load-all)
+│   ├── core.clj            - Public API (load, load-all, dump, dump-all)
 │   ├── parser.clj          - Parser wrapper
 │   ├── composer.clj        - Event → Node composer
 │   ├── resolver.clj        - Node → Resolved node resolver
 │   ├── constructor.clj     - Resolved node → Data constructor
+│   ├── representer.cljc    - Data → Node representer for dumping
+│   ├── desolver.cljc       - Dump tag/style selection
+│   ├── serializer.cljc     - Node → Event serializer
+│   ├── emitter.cljc        - Event → YAML emitter
 │   └── parser/             - Pure Clojure YAML parser
 │       ├── core.clj        - Parser entry point
 │       ├── parser.clj      - PEG parsing engine

@@ -8,12 +8,12 @@ hide:
   <h1 class="home-title">
     <span class="star-icon">★</span> YAMLStar
   </h1>
-  <p class="home-subtitle">A YAML framework for all programming languages</p>
+  <p class="home-subtitle">A YAML load/dump framework for all programming languages</p>
 </div>
 
 <pre class="home-page">
 <span class="ykey">What Is YAMLStar</span><span class="ysep">:</span>
-  <span class="ykey">Description</span><span class="ysep">:</span> <span class="ystr">Pure YAML 1.2 loader with cross-language consistency</span>
+  <span class="ykey">Description</span><span class="ysep">:</span> <span class="ystr">Pure YAML 1.2 loading and dumping with cross-language consistency</span>
   <span class="ykey">Version</span><span class="ysep">:</span> <span class="yver">0.1.7</span>
   <span class="ykey">Languages</span><span class="ysep">:</span>
     - <span class="ystr">Clojure</span>
@@ -29,6 +29,7 @@ hide:
   <span class="ykey">Features</span><span class="ysep">:</span>
     <span class="ykey">Spec Compliant</span><span class="ysep">:</span> <span class="ybool">true</span>   <span class="ycom"># 100% YAML 1.2 specification</span>
     <span class="ykey">Pure Clojure</span><span class="ysep">:</span> <span class="ybool">true</span>    <span class="ycom"># No SnakeYAML dependencies</span>
+    <span class="ykey">Dump Stack</span><span class="ysep">:</span> <span class="ybool">true</span>      <span class="ycom"># Native values back to YAML</span>
     <span class="ykey">Lightweight</span><span class="ysep">:</span> <span class="ybool">true</span>     <span class="ycom"># Minimal dependencies</span>
     <span class="ykey">Extensible</span><span class="ysep">:</span> <span class="ybool">true</span>      <span class="ycom"># Plugin system (Phase 3)</span>
 
@@ -40,6 +41,9 @@ hide:
     ys = YAMLStar()
     data = ys.load(<span class="ystr">'key: value'</span>)
     <span class="ycom"># {'key': 'value'}</span>
+    text = ys.dump({<span class="ystr">'foo'</span>: [[<span class="ystr">'bar'</span>]]})
+    <span class="ycom"># foo:
+    # - - bar</span>
     ys.close()
 
   <span class="ykey">Node.js</span><span class="ysep">:</span> |
@@ -49,6 +53,9 @@ hide:
     <span class="ykw">const</span> ys = <span class="ykw">new</span> YAMLStar();
     <span class="ykw">const</span> data = ys.load(<span class="ystr">'key: value'</span>);
     <span class="ycom">// { key: 'value' }</span>
+    <span class="ykw">const</span> text = ys.dump({foo: [[<span class="ystr">'bar'</span>]]});
+    <span class="ycom">// foo:
+    // - - bar</span>
     ys.close();
 
   <span class="ykey">Clojure</span><span class="ysep">:</span> |
@@ -57,6 +64,8 @@ hide:
 
     (yaml/load <span class="ystr">"key: value"</span>)
     <span class="ycom">;=> {"key" "value"}</span>
+    (yaml/dump {<span class="ystr">"foo"</span> [[<span class="ystr">"bar"</span>]]})
+    <span class="ycom">;=> "foo:\n- - bar\n"</span>
 
   <span class="ykey">Go</span><span class="ysep">:</span> |
     <span class="ycom">// go get github.com/yaml/yamlstar-go</span>
@@ -65,14 +74,22 @@ hide:
     ys := yamlstar.New()
     data := ys.Load(<span class="ystr">"key: value"</span>)
     <span class="ycom">// map[string]interface{}{"key": "value"}</span>
+    text := yamlstar.Dump(map[string]interface{}{<span class="ystr">"foo"</span>: [][]string{{<span class="ystr">"bar"</span>}}})
+    <span class="ycom">// foo:
+    // - - bar</span>
     ys.Close()
 
 <span class="ykey">Architecture</span><span class="ysep">:</span>
-  <span class="ykey">Pipeline</span><span class="ysep">:</span>
+  <span class="ykey">Load Stack</span><span class="ysep">:</span>
     - <span class="ykey">Parser</span><span class="ysep">:</span> <span class="ystr">Pure Clojure YAML 1.2 parser</span>
     - <span class="ykey">Composer</span><span class="ysep">:</span> <span class="ystr">Event stream to node tree</span>
     - <span class="ykey">Resolver</span><span class="ysep">:</span> <span class="ystr">Type inference (!!str, !!int, !!bool, etc.)</span>
     - <span class="ykey">Constructor</span><span class="ysep">:</span> <span class="ystr">Nodes to native data structures</span>
+  <span class="ykey">Dump Stack</span><span class="ysep">:</span>
+    - <span class="ykey">Representer</span><span class="ysep">:</span> <span class="ystr">Native data to node tree</span>
+    - <span class="ykey">Desolver</span><span class="ysep">:</span> <span class="ystr">Minimal tags and scalar styles</span>
+    - <span class="ykey">Serializer</span><span class="ysep">:</span> <span class="ystr">Node tree to event stream</span>
+    - <span class="ykey">Emitter</span><span class="ysep">:</span> <span class="ystr">Events to YAML text</span>
   <span class="ykey">Dependencies</span><span class="ysep">:</span> <span class="ynum">0</span>  <span class="ycom"># Zero external dependencies</span>
 
 <span class="ykey">Resources</span><span class="ysep">:</span>

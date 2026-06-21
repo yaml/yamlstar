@@ -1,6 +1,7 @@
 # Getting Started
 
-YAMLStar provides a consistent YAML loading API across all supported languages.
+YAMLStar provides consistent YAML loading and dumping APIs across all supported
+languages.
 This guide will get you up and running quickly.
 
 ## Installation
@@ -159,6 +160,22 @@ doc2
 ''')
 print(docs)  # ['doc1', 'doc2']
 
+# Dump native values to YAML
+yaml_text = ys.dump({'foo': [['bar']]})
+print(yaml_text)
+# foo:
+# - - bar
+
+# Dump multiple YAML documents
+stream = ys.dump_all(['doc1', {'a': 1}, ['b']])
+print(stream)
+# ---
+# doc1
+# ---
+# a: 1
+# ---
+# - b
+
 # Always close when done
 ys.close()
 ```
@@ -193,6 +210,22 @@ doc2
 `);
 console.log(docs);  // ['doc1', 'doc2']
 
+// Dump native values to YAML
+const yamlText = ys.dump({foo: [['bar']]});
+console.log(yamlText);
+// foo:
+// - - bar
+
+// Dump multiple YAML documents
+const stream = ys.dumpAll(['doc1', {a: 1}, ['b']]);
+console.log(stream);
+// ---
+// doc1
+// ---
+// a: 1
+// ---
+// - b
+
 // Always close when done
 ys.close();
 ```
@@ -217,6 +250,14 @@ null: null
 ;; Load multiple documents
 (yaml/load-all "---\ndoc1\n---\ndoc2")
 ;=> ["doc1" "doc2"]
+
+;; Dump native values to YAML
+(yaml/dump {"foo" [["bar"]]})
+;=> "foo:\n- - bar\n"
+
+;; Dump multiple YAML documents
+(yaml/dump-all ["doc1" {"a" 1} ["b"]])
+;=> "---\ndoc1\n---\na: 1\n---\n- b\n"
 
 ;; Complex nested structures
 (yaml/load "
@@ -430,6 +471,35 @@ document: 3
 
 Use `load_all()` (or `loadAll()` in camelCase languages) to get all documents
 as a list.
+
+## Dumping YAML
+
+Use `dump()` to emit one YAML document from JSON-compatible native values, and
+`dump_all()` / `dumpAll()` to emit a YAML stream:
+
+=== "Python"
+
+    ```python
+    ys.dump({'name': 'YAMLStar', 'items': ['load', 'dump']})
+    ys.dump_all(['doc1', {'doc': 2}])
+    ```
+
+=== "Node.js"
+
+    ```javascript
+    ys.dump({name: 'YAMLStar', items: ['load', 'dump']});
+    ys.dumpAll(['doc1', {doc: 2}]);
+    ```
+
+=== "Clojure"
+
+    ```clojure
+    (yaml/dump {"name" "YAMLStar" "items" ["load" "dump"]})
+    (yaml/dump-all ["doc1" {"doc" 2}])
+    ```
+
+Dump currently targets JSON-compatible data: maps with string keys, lists,
+strings, numbers, booleans, and null values.
 
 ## Advanced Usage
 

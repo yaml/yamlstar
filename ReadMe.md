@@ -37,13 +37,16 @@ brew install yaml/yamlstar/libyamlstar
 
 ## CLI
 
-The `yaml` command loads YAML and prints compact JSON by default:
+The `yaml` command loads YAML and prints compact JSON by default. Use `-Y` to
+emit YAML through YAMLStar's dump stack:
 
 ```bash
 printf 'a: 1\n' | yaml
 yaml config.yaml
 yaml -J config.yaml
+yaml -Y config.yaml
 yaml -s stream.yaml
+yaml -Y -s stream.yaml
 yaml -e 'a: 1' -o out.json
 yaml -D parse config.yaml
 yaml --version
@@ -54,22 +57,25 @@ reference.
 
 ## Vision
 
-YAMLStar aims to be the best YAML loader available, with these key features:
+YAMLStar aims to be the best YAML load/dump framework available, with these key
+features:
 
 - **YAML 1.2 Spec Compliance**: 100% compliant with the YAML 1.2 specification
 - **Pure Clojure Parser**: No dependencies on SnakeYAML or other external parsers
+- **Dump Stack**: Convert JSON-compatible native values back to YAML
 - **Cross-Language Consistency**: Identical behavior in 15+ languages via shared library
 - **Highly Configurable**: Plugin system for extensibility (coming in Phase 3)
 - **Lightweight**: Minimal dependencies, fast startup, small binaries
 
 ## Project Status
 
-✅ **Phase 1 Complete** - Ready for production use with 9 language bindings!
+✅ **Phase 1 Complete** - Ready for production use with 10 language bindings!
 
 ### Roadmap
 
-- **Phase 1: Minimal Viable Loader** ✅ Complete
+- **Phase 1: Minimal Viable YAML Stack** ✅ Complete
   - YAML 1.2 loading
+  - YAML dumping for JSON-compatible values
   - Event-based parser integration
   - Clojure data structure output
   - GraalVM native-image shared library
@@ -100,6 +106,22 @@ Resolver (nodes → Clojure data)
 Output (maps, vectors, scalars)
 ```
 
+Dumping follows the reverse stack:
+
+```
+Native Data
+    ↓
+Representer (data → node tree)
+    ↓
+Desolver (tags/styles for readable YAML)
+    ↓
+Serializer (nodes → events)
+    ↓
+Emitter (events → YAML text)
+    ↓
+YAML Output
+```
+
 ## Current Status
 
 ✅ **Phase 1A Complete** - Core implementation finished!
@@ -107,10 +129,10 @@ Output (maps, vectors, scalars)
 - Pure Clojure YAML 1.2 parser integrated (100% spec compliant)
 - Event-to-node composer implemented
 - Node-to-data resolver implemented
-- Complete test suite (23 tests covering all major features)
+- Complete test suite covering all major features
 - Zero external dependencies (except Clojure + data.json)
 - GraalVM native-image shared library (`libyamlstar.so`)
-- **9 language bindings**: Clojure, C#, Fortran, Go, Java, Node.js, Perl, Python, Rust
+- **10 language bindings**: Clojure, C#, Delphi, Fortran, Go, Java, Node.js, Perl, Python, Rust
 
 **Ready for testing!** Run `make test` in the `core/` directory, or try any of the language bindings.
 
@@ -146,6 +168,14 @@ make repl
 ;; Load multiple documents
 (yaml/load-all "---\ndoc1\n---\ndoc2")
 ;=> ["doc1" "doc2"]
+
+;; Dump native values as YAML
+(yaml/dump {"foo" [["bar"]]})
+;=> "foo:\n- - bar\n"
+
+;; Dump multiple documents
+(yaml/dump-all ["doc1" {"a" 1} ["b"]])
+;=> "---\ndoc1\n---\na: 1\n---\n- b\n"
 
 ;; Complex nested structures
 (yaml/load "
@@ -187,6 +217,11 @@ const ys = new YAMLStar();
 const data = ys.load('key: value');
 console.log(data);  // { key: 'value' }
 
+const text = ys.dump({foo: [['bar']]});
+console.log(text);
+// foo:
+// - - bar
+
 ys.close();
 ```
 
@@ -198,6 +233,12 @@ from yamlstar import YAMLStar
 ys = YAMLStar()
 data = ys.load('key: value')
 print(data)  # {'key': 'value'}
+
+text = ys.dump({'foo': [['bar']]})
+print(text)
+# foo:
+# - - bar
+
 ys.close()
 ```
 
@@ -208,6 +249,9 @@ ys.close()
 
 (yaml/load "key: value")
 ;=> {"key" "value"}
+
+(yaml/dump {"foo" [["bar"]]})
+;=> "foo:\n- - bar\n"
 ```
 
 Each binding directory contains its own `ReadMe.md` with detailed installation and usage instructions.
@@ -218,9 +262,9 @@ YAMLStar is derived from YAMLScript but with a different focus:
 
 | Feature | YAMLScript | YAMLStar |
 |---------|-----------|----------|
-| **Purpose** | YAML + scripting language | YAML loader |
+| **Purpose** | YAML + scripting language | YAML load/dump framework |
 | **Runtime** | Includes SCI interpreter | No runtime evaluation |
-| **Pipeline** | 7 stages (parser → runtime) | 3 stages (parser → data) |
+| **Pipeline** | 7 stages (parser → runtime) | load and dump stacks |
 | **Dependencies** | Heavy (Babashka, SCI, etc.) | Minimal (Clojure only) |
 | **Extensibility** | Built-in scripting | Plugin system (Phase 3) |
 

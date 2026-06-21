@@ -49,6 +49,8 @@
 ### API
 - `yamlstar.core/load` - Load single YAML document
 - `yamlstar.core/load-all` - Load multi-document YAML
+- `yamlstar.core/dump` - Dump one JSON-compatible value as YAML
+- `yamlstar.core/dump-all` - Dump multiple values as a YAML stream
 - `yamlstar.core/version` - Get version string
 
 ### Complete Pipeline
@@ -66,16 +68,32 @@ Constructor (yamlstar.constructor)
 Clojure Data (maps, vectors, scalars)
 ```
 
+### Dump Pipeline
+```
+Clojure Data (maps, vectors, scalars)
+    ↓
+Representer (yamlstar.representer)
+    ↓ nodes
+Desolver (yamlstar.desolver)
+    ↓ desolved nodes
+Serializer (yamlstar.serializer)
+    ↓ events
+Emitter (yamlstar.emitter)
+    ↓
+YAML String
+```
+
 ---
 
 ## ✅ Phase 1 Complete!
 
 Phase 1 has been successfully completed with:
 - ✅ YAML 1.2 loading working
+- ✅ YAML dumping working for JSON-compatible values
 - ✅ Complete 4-stage pipeline tested
-- ✅ 23 tests passing
+- ✅ Core test suite passing
 - ✅ GraalVM native-image shared library built
-- ✅ 9 language bindings working (Clojure, C#, Fortran, Go, Java, Node.js, Perl, Python, Rust)
+- ✅ 10 language bindings working (Clojure, C#, Delphi, Fortran, Go, Java, Node.js, Perl, Python, Rust)
 
 ---
 
@@ -151,7 +169,7 @@ Composer, Resolver, and Constructor.
 - [x] Handle all YAML 1.2 core schema types
 - [x] Support anchors and aliases
 - [x] Support multi-document streams
-- [x] Pass basic YAML test suite cases (23 tests)
+- [x] Pass basic YAML test suite cases
 - [x] Create shared library with FFI (`libyamlstar`)
 - [x] Create at least one language binding (9 bindings created!)
 

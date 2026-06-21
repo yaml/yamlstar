@@ -1,6 +1,7 @@
 # YAMLStar CLI
 
-The `yaml` command loads YAML and prints JSON by default.
+The `yaml` command loads YAML and prints JSON by default. It can also emit YAML
+with `-Y`.
 
 ## Examples
 
@@ -22,10 +23,22 @@ Pretty-print JSON:
 yaml -J config.yaml
 ```
 
+Emit YAML:
+
+```bash
+yaml -Y config.yaml
+```
+
 Load every document in a YAML stream:
 
 ```bash
 yaml -s stream.yaml
+```
+
+Emit every document in a YAML stream:
+
+```bash
+yaml -Y -s stream.yaml
 ```
 
 Evaluate a YAML string directly:
@@ -62,8 +75,19 @@ Options:
   -h, --help               Print help
 ```
 
-`-Y` emits YAML using YAMLStar's dump stack. With `-s`, it emits all input
-documents as a YAML stream with document separators.
+`-Y` emits YAML using YAMLStar's dump stack:
+
+```text
+native value
+  -> representer/represent
+  -> desolver/desolve
+  -> serializer/serialize
+  -> emitter/emit
+  -> YAML string
+```
+
+With `-s`, it emits all input documents as a YAML stream with document
+separators.
 
 ## Debugging
 

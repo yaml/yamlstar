@@ -332,6 +332,38 @@ Dump JSON-compatible native values to YAML:
 - **Perl**: `$ys->dump($value)` and `$ys->dump_all($values)`
 - **Fortran**: `ys%dump(json_value)` and `ys%dump_all(json_values)`
 
+For example:
+
+=== "Python"
+
+    ```python
+    ys.dump({'foo': [['bar']]})
+    # "foo:\n- - bar\n"
+
+    ys.dump_all(['doc1', {'a': 1}])
+    # "---\ndoc1\n---\na: 1\n"
+    ```
+
+=== "Node.js"
+
+    ```javascript
+    ys.dump({foo: [['bar']]});
+    // "foo:\n- - bar\n"
+
+    ys.dumpAll(['doc1', {a: 1}]);
+    // "---\ndoc1\n---\na: 1\n"
+    ```
+
+=== "Clojure"
+
+    ```clojure
+    (yaml/dump {"foo" [["bar"]]})
+    ;; "foo:\n- - bar\n"
+
+    (yaml/dump-all ["doc1" {"a" 1}])
+    ;; "---\ndoc1\n---\na: 1\n"
+    ```
+
 ### Cleanup
 
 Close the YAMLStar instance when done:
@@ -465,8 +497,9 @@ char* yamlstar_dump(char* data_json);
 char* yamlstar_dump_all(char* data_json);
 ```
 
-Both functions return JSON strings that can be parsed by your language's native
-JSON library.
+`yamlstar_load` and `yamlstar_load_all` return JSON strings that can be parsed
+by your language's native JSON library. `yamlstar_dump` and
+`yamlstar_dump_all` accept JSON strings and return YAML text.
 
 ## Performance
 

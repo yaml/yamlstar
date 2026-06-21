@@ -2,10 +2,12 @@
 
 ## Vision
 
-YAMLStar aims to be the best YAML loader available, with these key features:
+YAMLStar aims to be the best YAML load/dump framework available, with these key
+features:
 
 - **YAML 1.2 Spec Compliance**: 100% compliant with the YAML 1.2 specification
 - **Pure Clojure Parser**: No dependencies on SnakeYAML or other external parsers
+- **Dump Stack**: Convert JSON-compatible native values back to readable YAML
 - **Cross-Language Consistency**: Identical behavior in 15+ languages via shared
   library
 - **Highly Configurable**: Plugin system for extensibility (coming in Phase 3)
@@ -13,8 +15,8 @@ YAMLStar aims to be the best YAML loader available, with these key features:
 
 ## What Makes YAMLStar Different
 
-YAMLStar is designed from the ground up to provide a consistent YAML loading
-experience across all programming languages.
+YAMLStar is designed from the ground up to provide a consistent YAML loading and
+dumping experience across all programming languages.
 Unlike traditional YAML libraries that are implemented separately for each
 language, YAMLStar uses a single core implementation compiled to a native
 shared library.
@@ -35,12 +37,12 @@ shared library.
   No SnakeYAML, libyaml, or other external YAML parsers.
 
 **Lightweight Design**
-: YAMLStar implements only what's needed for YAML loading.
-  The 4-stage pipeline is ~80% lighter than YAMLScript's 7-stage pipeline.
+: YAMLStar implements only what's needed for YAML loading and dumping.
+  The load and dump stacks are much lighter than YAMLScript's runtime pipeline.
 
 ## Architecture
 
-YAMLStar uses a clean 4-stage pipeline to convert YAML text into native data
+YAMLStar uses a clean 4-stage load stack to convert YAML text into native data
 structures:
 
 <div class="architecture-diagram">
@@ -85,6 +87,36 @@ Native Data: {"key" "value"}
 </pre>
 </div>
 
+Dumping uses the reverse stack to convert native data back into YAML text:
+
+<div class="architecture-diagram">
+<pre>
+Native Data: {"key" ["value"]}
+    ↓
+┌─────────────────────┐
+│  Representer        │  yamlstar.representer
+│  (Data conversion)  │  - Data→Node tree
+└─────────────────────┘
+    ↓ Node Tree
+┌─────────────────────┐
+│  Desolver           │  yamlstar.desolver
+│  (Presentation)     │  - Minimal tags
+└─────────────────────┘  - Scalar style hints
+    ↓ Desolved Nodes
+┌─────────────────────┐
+│  Serializer         │  yamlstar.serializer
+│  (Event stream)     │  - Node→Event stream
+└─────────────────────┘
+    ↓ Events
+┌─────────────────────┐
+│  Emitter            │  yamlstar.emitter
+│  (YAML output)      │  - Event→YAML text
+└─────────────────────┘
+    ↓
+YAML String (output)
+</pre>
+</div>
+
 ### Pipeline Stages
 
 1. **Parser**: Converts YAML text into a stream of events using a PEG
@@ -100,23 +132,33 @@ Native Data: {"key" "value"}
 4. **Constructor**: Converts resolved nodes into native data structures for the
    target language (maps, lists, strings, numbers, etc.).
 
+5. **Representer**: Converts JSON-compatible native values into YAMLStar node
+   trees for dumping.
+
+6. **Desolver**: Chooses minimal tags and scalar style hints for readable YAML.
+
+7. **Serializer**: Converts node trees into YAML events.
+
+8. **Emitter**: Emits valid YAML text from events, preserving requested
+   anchors, tags, aliases, and legal scalar styles.
+
 ## Comparison to YAMLScript
 
 YAMLStar is derived from YAMLScript but with a different focus:
 
 | Feature | YAMLScript | YAMLStar |
 |---------|-----------|----------|
-| **Purpose** | YAML + scripting language | Pure YAML loader |
+| **Purpose** | YAML + scripting language | Pure YAML load/dump framework |
 | **Runtime** | Includes SCI interpreter | No runtime evaluation |
-| **Pipeline** | 7 stages (parser → runtime) | 4 stages (parser → data) |
+| **Pipeline** | 7 stages (parser → runtime) | load and dump stacks |
 | **Dependencies** | Heavy (Babashka, SCI, etc.) | Minimal (Clojure only) |
 | **Extensibility** | Built-in scripting | Plugin system (Phase 3) |
-| **Use Case** | Dynamic config, scripting | Static config loading |
+| **Use Case** | Dynamic config, scripting | Static config loading and YAML output |
 
 YAMLScript is excellent for configurations that need dynamic behavior, template
 expansion, or computation.
-YAMLStar is ideal when you need a lightweight, reliable YAML loader that
-behaves identically across all your applications.
+YAMLStar is ideal when you need lightweight, reliable YAML loading and dumping
+that behaves identically across all your applications.
 
 ## Technical Details
 
@@ -153,6 +195,8 @@ YAMLStar supports YAML streams with multiple documents separated by `---`:
 
 - `load(yaml)` - Returns the first document (or only document)
 - `load_all(yaml)` - Returns a list of all documents
+- `dump(value)` - Emits one YAML document from JSON-compatible data
+- `dump_all(values)` - Emits a YAML stream from multiple values
 
 ## Project Statistics
 

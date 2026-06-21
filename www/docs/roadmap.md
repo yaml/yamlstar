@@ -5,16 +5,17 @@ Here's what's complete, what's in progress, and what's coming next.
 
 ## Phase 1: Minimal Viable Loader ✅ Complete
 
-**Status**: Released v0.1.2
+**Status**: Released v0.1.7
 
-Phase 1 delivers a production-ready YAML 1.2 loader with multi-language
-support.
+Phase 1 delivers production-ready YAML 1.2 loading and dumping with
+multi-language support.
 
 ### Completed Features
 
 - ✅ Pure Clojure YAML 1.2 parser integration
 - ✅ Event-based parsing with 211 grammar rules
 - ✅ 4-stage pipeline (Parser → Composer → Resolver → Constructor)
+- ✅ Dump stack (Representer → Desolver → Serializer → Emitter)
 - ✅ Complete YAML 1.2 Core Schema support
 - ✅ Anchors and aliases
 - ✅ Explicit tags (!!str, !!int, !!float, !!bool, !!null)
@@ -172,13 +173,19 @@ Long-term enhancements for specialized use cases.
 
 - **YAML 1.3 Support**: When the spec is finalized
 - **Streaming API**: Process large documents incrementally
-- **Pretty Printing**: Format and emit YAML (not just load)
-- **Source Maps**: Track line/column info through pipeline
 - **Comments Preservation**: Retain comments when round-tripping
+- **Source Maps**: Track line/column info through pipeline
 - **Performance Optimizations**: Profile and optimize hot paths
 - **Additional Bindings**: C, C++, Swift, Kotlin, Zig, etc.
 
 ## Recent Releases
+
+### v0.1.7 (June 2026)
+
+- Add YAML dump stack: representer, desolver, serializer, and emitter
+- Add `dump` and `dump_all` APIs to language bindings
+- Add CLI `-Y` output for emitting YAML
+- Improve block sequence and scalar formatting in emitted YAML
 
 ### v0.1.2 (January 27, 2026)
 
@@ -197,7 +204,7 @@ Long-term enhancements for specialized use cases.
 - Support for scalars, mappings, sequences, anchors/aliases
 - CLI tool for YAML to JSON conversion
 - GraalVM native-image shared library
-- Bindings for 9 languages
+- Bindings for 10 languages
 - Auto-installing build system via Makes
 
 ## Contributing

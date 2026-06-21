@@ -2,9 +2,9 @@
 
 ## What We've Built
 
-A **pure YAML 1.2 loader** with a clean 4-stage pipeline, zero dependencies
-(except Clojure), and 100% spec compliance via your pure Clojure YAML reference
-parser.
+A **pure YAML 1.2 loader and dumper** with a clean load stack, a matching dump
+stack, zero dependencies (except Clojure), and 100% spec compliance via your
+pure Clojure YAML reference parser.
 
 ### Complete Implementation
 
@@ -53,12 +53,25 @@ parser.
 (defn load-all [yaml-str])
   ;; Load multi-document YAML → sequence of documents
 
+(defn dump [value])
+  ;; Dump one JSON-compatible value → YAML string
+
+(defn dump-all [values])
+  ;; Dump multiple JSON-compatible values → YAML stream
+
 (defn version [])
   ;; Return version string
 ```
 
-#### 6. Test Suite ✅
-**23 comprehensive tests** covering:
+#### 6. Dump Stack ✅
+- **Representer** converts JSON-compatible native values to YAMLStar nodes
+- **Desolver** chooses minimal tags and scalar style hints
+- **Serializer** converts nodes to YAML events
+- **Emitter** converts events to valid YAML text
+- **CLI `-Y`** emits YAML instead of JSON
+
+#### 7. Test Suite ✅
+**A comprehensive test suite** covering:
 - ✅ Scalar types (strings, integers, floats, booleans, null)
 - ✅ Mappings (simple, nested, multiple keys)
 - ✅ Sequences (block, flow, nested)
@@ -68,7 +81,7 @@ parser.
 - ✅ Multi-document streams
 - ✅ Edge cases (empty strings, whitespace, quotes, multiline)
 
-#### 7. Documentation ✅
+#### 8. Documentation ✅
 - **README.md** - Project overview and quick start
 - **STATUS.md** - Detailed status and roadmap
 - **DEVELOPMENT.md** - Complete development guide with:
@@ -129,7 +142,7 @@ YAML String (input)
 ✅ **Pure Clojure** - No Java libraries
 ✅ **Portable** - Works with Clojure, Babashka, and (future) Glojure
 ✅ **Simple Pipeline** - 4 stages vs YAMLScript's 7 stages (~80% lighter)
-✅ **Well-Tested** - 23 tests covering major features
+✅ **Well-Tested** - Core tests covering major features
 ✅ **Well-Documented** - Complete dev guide and examples
 ✅ **Language Bindings** - 9 bindings for Clojure, C#, Fortran, Go, Java,
    Node.js, Perl, Python, Rust
@@ -153,7 +166,7 @@ yamlstar/
 │   │       ├── prelude.clj        (Utils, 77 lines)
 │   │       └── test_receiver.clj  (Test format, 60 lines)
 │   ├── test/yamlstar/
-│   │   └── core_test.clj          (23 tests, 153 lines)
+│   │   └── core_test.clj          (core tests)
 │   ├── project.clj                (Leiningen config)
 │   └── deps.edn                   (Clojure CLI config)
 ├── libyamlstar/                   (Shared library)
@@ -180,7 +193,7 @@ yamlstar/
 - **Total Source Files**: 12
 - **Total Lines of Code**: ~5,700 (including grammar)
 - **Core Implementation**: ~500 lines (excluding parser)
-- **Test Coverage**: 23 tests
+- **Test Coverage**: Core unit tests
 - **Dependencies**: 2 (Clojure + data.json)
 - **Grammar Rules**: 211 (YAML 1.2 spec)
 - **Language Bindings**: 9 (Clojure, C#, Fortran, Go, Java, Node.js, Perl, Python, Rust)
@@ -267,7 +280,7 @@ yamlstar/
 ## Design Philosophy
 
 1. **Spec First** - 100% YAML 1.2 compliance via reference parser
-2. **Simplicity** - 4-stage pipeline, minimal dependencies
+2. **Simplicity** - focused load and dump stacks, minimal dependencies
 3. **Portability** - Pure Clojure works everywhere
 4. **Consistency** - Identical behavior across all languages
 5. **Extensibility** - Plugin system (future) for custom behavior
@@ -283,7 +296,7 @@ YAMLStar builds on:
 ## Status Summary
 
 🟢 **Core Implementation** - DONE
-🟢 **Testing & Validation** - DONE (23 tests passing)
+🟢 **Testing & Validation** - DONE (core tests passing)
 🟢 **FFI Interface** - DONE (libyamlstar)
 🟢 **Language Bindings** - DONE (9 bindings)
 ⚪ **Glojure Migration** - TODO (Phase 2)
@@ -306,6 +319,6 @@ cd core
 lein test
 ```
 
-Expected: All 23 tests pass ✅
+Expected: All core tests pass ✅
 
 Let's make YAML great again! 🌟
