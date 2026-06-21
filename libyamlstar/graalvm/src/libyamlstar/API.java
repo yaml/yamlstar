@@ -63,6 +63,58 @@ public final class API {
     }
 
     /**
+     * Dump one JSON-encoded value and return YAML in JSON response envelope.
+     *
+     * @param isolateId The GraalVM isolate thread context
+     * @param dataJson The JSON value to dump
+     * @return JSON string: {"data": "..."} on success, {"error": {...}} on failure
+     */
+    @CEntryPoint(name = "yamlstar_dump")
+    public static @CConst CCharPointer dump(
+        @CEntryPoint.IsolateThreadContext long isolateId,
+        @CConst CCharPointer dataJson
+    ) {
+        debug("API - called yamlstar_dump");
+
+        String data = CTypeConversion.toJavaString(dataJson);
+        debug("API - java input string: " + data);
+
+        String json = libyamlstar.core.dumpYaml(data);
+        debug("API - java response string: " + json);
+
+        try (CTypeConversion.CCharPointerHolder holder =
+                CTypeConversion.toCString(json)) {
+            return holder.get();
+        }
+    }
+
+    /**
+     * Dump JSON-encoded documents and return YAML in JSON response envelope.
+     *
+     * @param isolateId The GraalVM isolate thread context
+     * @param dataJson The JSON array of documents to dump
+     * @return JSON string: {"data": "..."} on success, {"error": {...}} on failure
+     */
+    @CEntryPoint(name = "yamlstar_dump_all")
+    public static @CConst CCharPointer dumpAll(
+        @CEntryPoint.IsolateThreadContext long isolateId,
+        @CConst CCharPointer dataJson
+    ) {
+        debug("API - called yamlstar_dump_all");
+
+        String data = CTypeConversion.toJavaString(dataJson);
+        debug("API - java input string: " + data);
+
+        String json = libyamlstar.core.dumpYamlAll(data);
+        debug("API - java response string: " + json);
+
+        try (CTypeConversion.CCharPointerHolder holder =
+                CTypeConversion.toCString(json)) {
+            return holder.get();
+        }
+    }
+
+    /**
      * Get the YAMLStar version string.
      *
      * @param isolateId The GraalVM isolate thread context

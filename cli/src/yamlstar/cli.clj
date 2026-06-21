@@ -180,9 +180,10 @@ Options:")
 (defn format-output [data opts]
   (let [preprocessed (nil-keys->string data)]
     (cond
-      ;; YAML output - TODO: implement proper YAML serialization
       (:yaml opts)
-      (str "# YAML output not yet implemented\n" (json/write-str preprocessed :indent true))
+      (if (:stream opts)
+        (yaml/dump-all preprocessed)
+        (yaml/dump preprocessed))
 
       ;; Pretty JSON
       (:json opts)

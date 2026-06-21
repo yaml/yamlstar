@@ -37,6 +37,14 @@ function yamlstar_load(isolate_thread: Pointer; yaml: PAnsiChar): PAnsiChar;
 function yamlstar_load_all(isolate_thread: Pointer; yaml: PAnsiChar): PAnsiChar;
   cdecl; external LIBYAMLSTAR;
 
+{ Dump a JSON-encoded value to YAML }
+function yamlstar_dump(isolate_thread: Pointer; data_json: PAnsiChar): PAnsiChar;
+  cdecl; external LIBYAMLSTAR;
+
+{ Dump JSON-encoded documents to YAML }
+function yamlstar_dump_all(isolate_thread: Pointer; data_json: PAnsiChar): PAnsiChar;
+  cdecl; external LIBYAMLSTAR;
+
 { Get the YAMLStar version string }
 function yamlstar_version(isolate_thread: Pointer): PAnsiChar;
   cdecl; external LIBYAMLSTAR;

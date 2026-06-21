@@ -115,6 +115,17 @@ deepEqual(
   'LoadAll with explicit markers'
 );
 
+deepEqual(ys.dump({key: 'value'}), 'key: value\n', 'Dump simple mapping');
+
+const dumpValue = {items: ['a', 'b'], flag: true, text: '42'};
+deepEqual(ys.load(ys.dump(dumpValue)), dumpValue, 'Dump round trip');
+
+deepEqual(
+  ys.dumpAll(['doc1', {a: 1}]),
+  '---\ndoc1\n---\na: 1\n',
+  'DumpAll with multiple documents'
+);
+
 // Test version
 const version = ys.version();
 assert(typeof version === 'string' && version.length > 0, 'Version returns a string');

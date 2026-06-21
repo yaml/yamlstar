@@ -319,6 +319,19 @@ Load all documents from a multi-document YAML stream:
 - **Perl**: `$ys->load_all($yaml_string)`
 - **Fortran**: `call ys%load_all(yaml_string)`
 
+### Dumping Values
+
+Dump JSON-compatible native values to YAML:
+
+- **Python**: `ys.dump(value)` and `ys.dump_all(values)`
+- **Node.js**: `ys.dump(value)` and `ys.dumpAll(values)`
+- **Clojure**: `(yaml/dump value)` and `(yaml/dump-all values)`
+- **Go**: `yamlstar.Dump(value)` and `yamlstar.DumpAll(values)`
+- **Java/C#**: `dump(value)` / `Dump(value)` and `dumpAll(values)` / `DumpAll(values)`
+- **Rust**: `ys.dump(&value)` and `ys.dump_all(&values)`
+- **Perl**: `$ys->dump($value)` and `$ys->dump_all($values)`
+- **Fortran**: `ys%dump(json_value)` and `ys%dump_all(json_values)`
+
 ### Cleanup
 
 Close the YAMLStar instance when done:
@@ -448,6 +461,8 @@ The shared library provides a simple JSON-based FFI:
 ```c
 char* yamlstar_load(char* yaml_input);
 char* yamlstar_load_all(char* yaml_input);
+char* yamlstar_dump(char* data_json);
+char* yamlstar_dump_all(char* data_json);
 ```
 
 Both functions return JSON strings that can be parsed by your language's native

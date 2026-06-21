@@ -150,6 +150,30 @@ begin
   end;
 end;
 
+procedure TestDump;
+var
+  obj: TJSONObject;
+  arr: TJSONArray;
+  yamlStr: string;
+begin
+  obj := TJSONObject.Create(['key', 'value']);
+  try
+    yamlStr := ys.Dump(obj);
+    Test('Dump simple mapping', yamlStr = 'key: value' + LineEnding);
+  finally
+    obj.Free;
+  end;
+
+  arr := TJSONArray.Create(['doc1', TJSONObject.Create(['a', 1])]);
+  try
+    yamlStr := ys.DumpAll(arr);
+    Test('DumpAll emits documents', Pos('---', yamlStr) > 0);
+    Test('DumpAll emits mapping', Pos('a: 1', yamlStr) > 0);
+  finally
+    arr.Free;
+  end;
+end;
+
 procedure TestNestedStructure;
 var
   obj: TJSONObject;
@@ -197,6 +221,7 @@ begin
     TestLoadSequence;
     WriteLn;
     TestLoadAll;
+    TestDump;
     WriteLn;
     TestNestedStructure;
   finally

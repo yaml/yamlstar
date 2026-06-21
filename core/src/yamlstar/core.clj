@@ -14,7 +14,11 @@
   (:require [yamlstar.parser :as parser]
             [yamlstar.composer :as composer]
             [yamlstar.resolver :as resolver]
-            [yamlstar.constructor :as constructor]))
+            [yamlstar.constructor :as constructor]
+            [yamlstar.representer :as representer]
+            [yamlstar.desolver :as desolver]
+            [yamlstar.serializer :as serializer]
+            [yamlstar.emitter :as emitter]))
 
 (defn load
   "Parse a YAML string and return a Clojure data structure.
@@ -61,6 +65,23 @@
         composer/compose-all
         resolver/resolve-all
         constructor/construct-all)))
+
+(defn dump
+  "Dump a JSON-compatible Clojure value to a YAML string."
+  [value]
+  (-> value
+      representer/represent
+      desolver/desolve
+      serializer/serialize
+      emitter/emit))
+
+(defn dump-all
+  "Dump a sequence of JSON-compatible Clojure values to a YAML stream."
+  [values]
+  (-> (mapv representer/represent values)
+      desolver/desolve-all
+      serializer/serialize-all
+      (emitter/emit true)))
 
 (defn version
   "Return the YAMLStar version string"

@@ -66,6 +66,12 @@ type
       Note: Caller is responsible for freeing the returned TJSONArray }
     function LoadAll(const YAMLInput: string): TJSONArray;
 
+    { Dump JSON-compatible data to a YAML string. }
+    function Dump(const Data: TJSONData): string;
+
+    { Dump JSON-compatible documents to a multi-document YAML string. }
+    function DumpAll(const Data: TJSONData): string;
+
     { Get the YAMLStar version string.
 
       Returns:
@@ -176,6 +182,34 @@ begin
   end;
 
   Result := Data as TJSONArray;
+end;
+
+function TYAMLStar.Dump(const Data: TJSONData): string;
+var
+  JSONResponse: PAnsiChar;
+  ResponseData: TJSONData;
+begin
+  JSONResponse := yamlstar_native.yamlstar_dump(FIsolateThread, PAnsiChar(AnsiString(Data.AsJSON)));
+  ResponseData := ParseResponse(string(JSONResponse));
+  try
+    Result := ResponseData.AsString;
+  finally
+    ResponseData.Free;
+  end;
+end;
+
+function TYAMLStar.DumpAll(const Data: TJSONData): string;
+var
+  JSONResponse: PAnsiChar;
+  ResponseData: TJSONData;
+begin
+  JSONResponse := yamlstar_native.yamlstar_dump_all(FIsolateThread, PAnsiChar(AnsiString(Data.AsJSON)));
+  ResponseData := ParseResponse(string(JSONResponse));
+  try
+    Result := ResponseData.AsString;
+  finally
+    ResponseData.Free;
+  end;
 end;
 
 function TYAMLStar.Version: string;

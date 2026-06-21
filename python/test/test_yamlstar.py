@@ -186,6 +186,22 @@ b: 2
     assert result == [{"a": 1}, {"b": 2}]
 
 
+def test_dump_simple_mapping(ys):
+    """Test dumping a simple mapping."""
+    assert ys.dump({"key": "value"}) == "key: value\n"
+
+
+def test_dump_roundtrip(ys):
+    """Test dump output can be loaded back."""
+    value = {"items": ["a", "b"], "flag": True, "text": "42"}
+    assert ys.load(ys.dump(value)) == value
+
+
+def test_dump_all(ys):
+    """Test dumping multiple documents."""
+    assert ys.dump_all(["doc1", {"a": 1}]) == "---\ndoc1\n---\na: 1\n"
+
+
 def test_version(ys):
     """Test getting the version string."""
     version = ys.version()

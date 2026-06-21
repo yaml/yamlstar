@@ -193,6 +193,32 @@ b: 2
 	assert.Equal(t, expected, data)
 }
 
+func TestDumpSimpleMapping(t *testing.T) {
+	yaml, err := yamlstar.Dump(map[string]any{"key": "value"})
+	require.NoError(t, err)
+	assert.Equal(t, "key: value\n", yaml)
+}
+
+func TestDumpRoundTrip(t *testing.T) {
+	value := map[string]any{
+		"items": []any{"a", "b"},
+		"flag":  true,
+		"text":  "42",
+	}
+	yamlText, err := yamlstar.Dump(value)
+	require.NoError(t, err)
+
+	data, err := yamlstar.Load(yamlText)
+	require.NoError(t, err)
+	assert.Equal(t, value, data)
+}
+
+func TestDumpAll(t *testing.T) {
+	yaml, err := yamlstar.DumpAll([]any{"doc1", map[string]any{"a": 1}})
+	require.NoError(t, err)
+	assert.Equal(t, "---\ndoc1\n---\na: 1\n", yaml)
+}
+
 func TestLibVersion(t *testing.T) {
 	version, err := yamlstar.LibVersion()
 	require.NoError(t, err)

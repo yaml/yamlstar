@@ -69,6 +69,56 @@ public sealed class YAMLStar : IDisposable
         return ParseResponse(json);
     }
 
+    public string? Dump(object? value)
+    {
+        if (_disposed)
+        {
+            throw new ObjectDisposedException(nameof(YAMLStar));
+        }
+
+        var result = YAMLStarNative.yamlstar_dump(
+            _isolateThread,
+            JsonSerializer.Serialize(value));
+
+        if (result == IntPtr.Zero)
+        {
+            return null;
+        }
+
+        var json = Marshal.PtrToStringAnsi(result);
+        if (json == null)
+        {
+            return null;
+        }
+
+        return ParseStringResponse(json);
+    }
+
+    public string? DumpAll(object? values)
+    {
+        if (_disposed)
+        {
+            throw new ObjectDisposedException(nameof(YAMLStar));
+        }
+
+        var result = YAMLStarNative.yamlstar_dump_all(
+            _isolateThread,
+            JsonSerializer.Serialize(values));
+
+        if (result == IntPtr.Zero)
+        {
+            return null;
+        }
+
+        var json = Marshal.PtrToStringAnsi(result);
+        if (json == null)
+        {
+            return null;
+        }
+
+        return ParseStringResponse(json);
+    }
+
     public string? Version()
     {
         if (_disposed)
@@ -103,6 +153,31 @@ public sealed class YAMLStar : IDisposable
             if (response.TryGetProperty("data", out var dataElement))
             {
                 return JsonSerializer.Deserialize<object>(dataElement.GetRawText());
+            }
+
+            return null;
+        }
+        catch (JsonException ex)
+        {
+            throw new YAMLStarException($"Failed to parse response: {ex.Message}");
+        }
+    }
+
+    private string? ParseStringResponse(string json)
+    {
+        try
+        {
+            var response = JsonSerializer.Deserialize<JsonElement>(json);
+
+            if (response.TryGetProperty("error", out var errorElement))
+            {
+                var error = errorElement.GetProperty("cause").GetString();
+                throw new YAMLStarException(error ?? "Unknown error");
+            }
+
+            if (response.TryGetProperty("data", out var dataElement))
+            {
+                return dataElement.GetString();
             }
 
             return null;

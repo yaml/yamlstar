@@ -87,6 +87,14 @@ if _backend == 'gloat':
   yamlstar_load_all_fn.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
   yamlstar_load_all_fn.restype = ctypes.c_char_p
 
+  yamlstar_dump_fn = libyamlstar.yamlstar_dump
+  yamlstar_dump_fn.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+  yamlstar_dump_fn.restype = ctypes.c_char_p
+
+  yamlstar_dump_all_fn = libyamlstar.yamlstar_dump_all
+  yamlstar_dump_all_fn.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+  yamlstar_dump_all_fn.restype = ctypes.c_char_p
+
   yamlstar_version_fn = libyamlstar.yamlstar_version
   yamlstar_version_fn.argtypes = []
   yamlstar_version_fn.restype = ctypes.c_char_p
@@ -100,6 +108,14 @@ else:
   yamlstar_load_all_fn = libyamlstar.yamlstar_load_all
   yamlstar_load_all_fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
   yamlstar_load_all_fn.restype = ctypes.c_char_p
+
+  yamlstar_dump_fn = libyamlstar.yamlstar_dump
+  yamlstar_dump_fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+  yamlstar_dump_fn.restype = ctypes.c_char_p
+
+  yamlstar_dump_all_fn = libyamlstar.yamlstar_dump_all
+  yamlstar_dump_all_fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+  yamlstar_dump_all_fn.restype = ctypes.c_char_p
 
   yamlstar_version_fn = libyamlstar.yamlstar_version
   yamlstar_version_fn.argtypes = [ctypes.c_void_p]
@@ -186,6 +202,48 @@ class YAMLStar():
     else:
       data_json = \
         yamlstar_load_all_fn(self._isolatethread, yaml_bytes).decode()
+
+    resp = json.loads(data_json)
+    self.error = resp.get('error')
+    if self.error:
+      raise Exception(self.error['cause'])
+    if 'data' not in resp:
+      raise Exception("Unexpected response from 'libyamlstar'")
+    return resp.get('data')
+
+  def dump(self, value):
+    """
+    Dump a Python JSON-compatible value to YAML.
+    """
+    self.error = None
+    data_bytes = ctypes.c_char_p(bytes(json.dumps(value), "utf8"))
+
+    if _backend == 'gloat':
+      data_json = yamlstar_dump_fn(data_bytes, ctypes.c_char_p(b"{}")).decode()
+    else:
+      data_json = yamlstar_dump_fn(self._isolatethread, data_bytes).decode()
+
+    resp = json.loads(data_json)
+    self.error = resp.get('error')
+    if self.error:
+      raise Exception(self.error['cause'])
+    if 'data' not in resp:
+      raise Exception("Unexpected response from 'libyamlstar'")
+    return resp.get('data')
+
+  def dump_all(self, values):
+    """
+    Dump Python JSON-compatible values to a multi-document YAML stream.
+    """
+    self.error = None
+    data_bytes = ctypes.c_char_p(bytes(json.dumps(values), "utf8"))
+
+    if _backend == 'gloat':
+      data_json = \
+        yamlstar_dump_all_fn(data_bytes, ctypes.c_char_p(b"{}")).decode()
+    else:
+      data_json = \
+        yamlstar_dump_all_fn(self._isolatethread, data_bytes).decode()
 
     resp = json.loads(data_json)
     self.error = resp.get('error')

@@ -148,6 +148,19 @@ b: 2
   ],
   'Load_all with explicit markers');
 
+# Test dump:
+is($ys->dump({key => 'value'}), "key: value\n", 'Dump simple mapping');
+
+is(
+  $ys->load($ys->dump({items => ['a', 'b'], flag => JSON::PP::true, text => '42'})),
+  {items => ['a', 'b'], flag => JSON::PP::true, text => '42'},
+  'Dump round trip');
+
+is(
+  $ys->dump_all(['doc1', {a => 1}]),
+  "---\ndoc1\n---\na: 1\n",
+  'Dump_all with multiple documents');
+
 # Test version:
 like($ys->version(), qr/.+/, 'Version returns a string');
 

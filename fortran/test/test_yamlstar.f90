@@ -142,6 +142,31 @@ program test_yamlstar
   end if
   print *, ""
 
+  ! Test 11: Dump simple mapping
+  test_count = test_count + 1
+  print *, "Test 11: Dump simple mapping"
+  result = ys%dump('{"key":"value"}')
+  if (index(result, '"data"') > 0 .and. index(result, 'key: value') > 0) then
+    print *, "  PASS: ", trim(result)
+    pass_count = pass_count + 1
+  else
+    print *, "  FAIL: ", trim(result)
+  end if
+  print *, ""
+
+  ! Test 12: Dump all
+  test_count = test_count + 1
+  print *, "Test 12: Dump all"
+  result = ys%dump_all('["doc1",{"a":1}]')
+  if (index(result, '"data"') > 0 .and. index(result, '---') > 0 &
+      .and. index(result, 'a: 1') > 0) then
+    print *, "  PASS: ", trim(result)
+    pass_count = pass_count + 1
+  else
+    print *, "  FAIL: ", trim(result)
+  end if
+  print *, ""
+
   ! Cleanup
   call ys%destroy()
 

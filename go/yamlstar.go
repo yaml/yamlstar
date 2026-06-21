@@ -214,6 +214,79 @@ func LoadAll(input string) ([]any, error) {
 	return docs, nil
 }
 
+// Dump serializes a Go value to a YAML string.
+//
+// The value must be JSON-compatible: nil, bool, number, string, []any, or
+// map[string]any. Structs and other values supported by encoding/json are
+// accepted through their JSON representation.
+func Dump(value any) (string, error) {
+	data, err := json.Marshal(value)
+	if err != nil {
+		return "", fmt.Errorf("yamlstar: failed to encode dump input: %w", err)
+	}
+	return dumpJSON(data, false)
+}
+
+// DumpAll serializes multiple Go values to a YAML stream.
+func DumpAll(values []any) (string, error) {
+	data, err := json.Marshal(values)
+	if err != nil {
+		return "", fmt.Errorf("yamlstar: failed to encode dump_all input: %w", err)
+	}
+	return dumpJSON(data, true)
+}
+
+func dumpJSON(data []byte, all bool) (string, error) {
+	if err := ensureInitialized(); err != nil {
+		return "", err
+	}
+
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
+
+	var thread *C.graal_isolatethread_t
+	rc := C.graal_attach_thread(isolate, &thread)
+	if rc != 0 {
+		return "", fmt.Errorf("yamlstar: failed to attach thread (code %d)", int(rc))
+	}
+	defer C.graal_detach_thread(thread)
+
+	cInput := C.CString(string(data))
+	defer C.free(unsafe.Pointer(cInput))
+
+	var cResult *C.char
+	if all {
+		cResult = C.yamlstar_dump_all(
+			(C.longlong)(uintptr(unsafe.Pointer(thread))),
+			cInput,
+		)
+	} else {
+		cResult = C.yamlstar_dump(
+			(C.longlong)(uintptr(unsafe.Pointer(thread))),
+			cInput,
+		)
+	}
+	if cResult == nil {
+		return "", ErrNullResponse
+	}
+
+	jsonResult := C.GoString(cResult)
+
+	var resp response
+	if err := json.Unmarshal([]byte(jsonResult), &resp); err != nil {
+		return "", fmt.Errorf("yamlstar: failed to parse response: %w", err)
+	}
+	if resp.Error != nil {
+		return "", resp.Error
+	}
+
+	yaml, ok := resp.Data.(string)
+	if !ok {
+		return "", fmt.Errorf("yamlstar: unexpected response type for dump: %T", resp.Data)
+	}
+	return yaml, nil
+}
+
 // LibVersion returns the version string from the libyamlstar library.
 //
 // Returns an error if the library is not initialized.

@@ -5,6 +5,8 @@
   (:gen-class
    :methods [^:static [loadYaml [String] String]
              ^:static [loadYamlAll [String] String]
+             ^:static [dumpYaml [String] String]
+             ^:static [dumpYamlAll [String] String]
              ^:static [version [] String]]))
 
 (declare json-write-str error-map debug)
@@ -35,6 +37,34 @@
                (catch Exception e
                  (-> e error-map json-write-str)))]
     (debug "libyamlstar load-all - response:" resp)
+    resp))
+
+(defn -dumpYaml
+  "Dump one JSON-encoded value to YAML, return JSON string with result or error"
+  [^String data-json]
+  (debug "libyamlstar dump - input:" data-json)
+  (let [resp (try
+               (->> (json/read-str data-json)
+                    yaml/dump
+                    (assoc {} :data)
+                    json-write-str)
+               (catch Exception e
+                 (-> e error-map json-write-str)))]
+    (debug "libyamlstar dump - response:" resp)
+    resp))
+
+(defn -dumpYamlAll
+  "Dump JSON-encoded documents to YAML, return JSON string with result or error"
+  [^String data-json]
+  (debug "libyamlstar dump-all - input:" data-json)
+  (let [resp (try
+               (->> (json/read-str data-json)
+                    yaml/dump-all
+                    (assoc {} :data)
+                    json-write-str)
+               (catch Exception e
+                 (-> e error-map json-write-str)))]
+    (debug "libyamlstar dump-all - response:" resp)
     resp))
 
 (defn -version

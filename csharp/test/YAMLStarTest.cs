@@ -1,6 +1,7 @@
 using Xunit;
 using YAMLStar;
 using System.Text.Json;
+using System.Collections.Generic;
 
 namespace YAMLStar.Tests;
 
@@ -153,6 +154,44 @@ doc3";
         Assert.Equal("doc1", element[0].GetString());
         Assert.Equal("doc2", element[1].GetString());
         Assert.Equal("doc3", element[2].GetString());
+    }
+
+    [Fact]
+    public void TestDumpSimpleMapping()
+    {
+        using var ys = new YAMLStar();
+        var result = ys.Dump(new Dictionary<string, object?> { ["key"] = "value" });
+        Assert.Equal("key: value\n", result);
+    }
+
+    [Fact]
+    public void TestDumpRoundTrip()
+    {
+        using var ys = new YAMLStar();
+        var value = new Dictionary<string, object?>
+        {
+            ["items"] = new[] { "a", "b" },
+            ["flag"] = true,
+            ["text"] = "42"
+        };
+        var yaml = ys.Dump(value);
+        Assert.NotNull(yaml);
+        var loaded = ys.Load(yaml!);
+        var element = Assert.IsType<JsonElement>(loaded);
+        Assert.Equal("42", element.GetProperty("text").GetString());
+        Assert.True(element.GetProperty("flag").GetBoolean());
+    }
+
+    [Fact]
+    public void TestDumpAll()
+    {
+        using var ys = new YAMLStar();
+        var result = ys.DumpAll(new object?[]
+        {
+            "doc1",
+            new Dictionary<string, object?> { ["a"] = 1 }
+        });
+        Assert.Equal("---\ndoc1\n---\na: 1\n", result);
     }
 
     [Fact]

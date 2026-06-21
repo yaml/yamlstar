@@ -14,6 +14,8 @@ function defineForeignFunctionInterface() {
     'graal_tear_down_isolate': ['int', ['pointer']],
     'yamlstar_load': ['string', ['pointer', 'string']],
     'yamlstar_load_all': ['string', ['pointer', 'string']],
+    'yamlstar_dump': ['string', ['pointer', 'string']],
+    'yamlstar_dump_all': ['string', ['pointer', 'string']],
     'yamlstar_version': ['string', ['pointer']],
   });
 }
@@ -57,6 +59,44 @@ class YAMLStar {
     let dataJson = this.libyamlstar.yamlstar_load_all(
       this.isolatethread.deref(),
       input,
+    );
+
+    let resp = JSON.parse(dataJson);
+
+    if (resp.error) {
+      throw new Error(`libyamlstar: ${resp.error.cause}`);
+    }
+
+    if (!('data' in resp)) {
+      throw new Error("Unexpected response from 'libyamlstar'");
+    }
+
+    return resp.data;
+  }
+
+  dump(value) {
+    let dataJson = this.libyamlstar.yamlstar_dump(
+      this.isolatethread.deref(),
+      JSON.stringify(value),
+    );
+
+    let resp = JSON.parse(dataJson);
+
+    if (resp.error) {
+      throw new Error(`libyamlstar: ${resp.error.cause}`);
+    }
+
+    if (!('data' in resp)) {
+      throw new Error("Unexpected response from 'libyamlstar'");
+    }
+
+    return resp.data;
+  }
+
+  dumpAll(values) {
+    let dataJson = this.libyamlstar.yamlstar_dump_all(
+      this.isolatethread.deref(),
+      JSON.stringify(values),
     );
 
     let resp = JSON.parse(dataJson);

@@ -62,10 +62,8 @@ Options:
   -h, --help               Print help
 ```
 
-!!! note
-
-    `-Y` currently emits JSON with a YAML-output notice. Full YAML emission is
-    planned for a later release.
+`-Y` emits YAML using YAMLStar's dump stack. With `-s`, it emits all input
+documents as a YAML stream with document separators.
 
 ## Debugging
 

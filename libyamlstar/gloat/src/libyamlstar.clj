@@ -7,6 +7,8 @@
 (def EXPORT
   {"yamlstar-load"     [:str :str :str]
    "yamlstar-load-all" [:str :str :str]
+   "yamlstar-dump"     [:str :str :str]
+   "yamlstar-dump-all" [:str :str :str]
    "yamlstar-version"  [:str]})
 
 (defn nil-keys->string
@@ -38,6 +40,27 @@
   (try
     (let [result (yaml/load-all yaml-str)]
       (json/dump {:data (nil-keys->string result)}))
+    (catch go/any e
+      (json/dump {:error {:cause (str e)
+                          :type "Exception"
+                          :message (str e)}}))))
+
+(defn yamlstar-dump
+  "Dump one JSON-encoded value to YAML, return JSON string with {:data ...} or {:error ...}"
+  [data-json opts-json]
+  (try
+    (let [result (yaml/dump (json/load data-json))]
+      (json/dump {:data result}))
+    (catch go/any e
+      (json/dump {:error {:cause (fmt.Sprintf "%v" e)
+                          :type (fmt.Sprintf "%T" e)}}))))
+
+(defn yamlstar-dump-all
+  "Dump JSON-encoded documents to YAML, return JSON string with {:data ...} or {:error ...}"
+  [data-json opts-json]
+  (try
+    (let [result (yaml/dump-all (json/load data-json))]
+      (json/dump {:data result}))
     (catch go/any e
       (json/dump {:error {:cause (str e)
                           :type "Exception"

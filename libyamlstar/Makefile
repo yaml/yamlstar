@@ -53,11 +53,31 @@ $(GLOAT-LINK-DIR)/constructor.clj: $(CORE-YAMLSTAR)/constructor.cljc
 	@mkdir -p $(dir $@)
 	ln -sf $(abspath $<) $@
 
+$(GLOAT-LINK-DIR)/representer.clj: $(CORE-YAMLSTAR)/representer.cljc
+	@mkdir -p $(dir $@)
+	ln -sf $(abspath $<) $@
+
+$(GLOAT-LINK-DIR)/desolver.clj: $(CORE-YAMLSTAR)/desolver.cljc
+	@mkdir -p $(dir $@)
+	ln -sf $(abspath $<) $@
+
+$(GLOAT-LINK-DIR)/serializer.clj: $(CORE-YAMLSTAR)/serializer.cljc
+	@mkdir -p $(dir $@)
+	ln -sf $(abspath $<) $@
+
+$(GLOAT-LINK-DIR)/emitter.clj: $(CORE-YAMLSTAR)/emitter.cljc
+	@mkdir -p $(dir $@)
+	ln -sf $(abspath $<) $@
+
 GLOAT-LINKS := \
   $(GLOAT-LINK-DIR)/parser/prelude.clj \
   $(GLOAT-LINK-DIR)/parser/parser.clj \
   $(GLOAT-LINK-DIR)/parser/receiver.clj \
   $(GLOAT-LINK-DIR)/constructor.clj \
+  $(GLOAT-LINK-DIR)/representer.clj \
+  $(GLOAT-LINK-DIR)/desolver.clj \
+  $(GLOAT-LINK-DIR)/serializer.clj \
+  $(GLOAT-LINK-DIR)/emitter.clj \
 
 # Clojure source files compiled by gloat (order matters for namespaces)
 GLOAT-SRCS := \
@@ -69,6 +89,10 @@ GLOAT-SRCS := \
   $(CORE-YAMLSTAR)/composer.clj \
   $(CORE-YAMLSTAR)/resolver.clj \
   $(GLOAT-LINK-DIR)/constructor.clj \
+  $(GLOAT-LINK-DIR)/representer.clj \
+  $(GLOAT-LINK-DIR)/desolver.clj \
+  $(GLOAT-LINK-DIR)/serializer.clj \
+  $(GLOAT-LINK-DIR)/emitter.clj \
   $(CORE-YAMLSTAR)/core.clj \
   gloat/src/libyamlstar.clj \
 

@@ -110,6 +110,34 @@
       (is (= 42 (.get result 1)))
       (is (instance? HashMap (.get result 2))))))
 
+(deftest test-dump-simple-mapping
+  (testing "Dump a simple Java mapping"
+    (let [m (HashMap.)]
+      (.put m "key" "value")
+      (is (= "key: value\n" (YAMLStar/dump m))))))
+
+(deftest test-dump-roundtrip
+  (testing "Dump output loads back"
+    (let [m (HashMap.)
+          items (ArrayList.)]
+      (.add items "a")
+      (.add items "b")
+      (.put m "items" items)
+      (.put m "flag" true)
+      (.put m "text" "42")
+      (let [loaded (YAMLStar/load (YAMLStar/dump m))]
+        (is (= "42" (.get loaded "text")))
+        (is (= true (.get loaded "flag")))))))
+
+(deftest test-dump-all
+  (testing "Dump multiple Java documents"
+    (let [docs (ArrayList.)
+          m (HashMap.)]
+      (.put m "a" 1)
+      (.add docs "doc1")
+      (.add docs m)
+      (is (= "---\ndoc1\n---\na: 1\n" (YAMLStar/dumpAll docs))))))
+
 (deftest test-version
   (testing "Get version string"
     (let [version (YAMLStar/version)]

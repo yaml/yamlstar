@@ -2,11 +2,13 @@
   "YAMLStar Java binding - YAML 1.2 loader for Java"
   (:refer-clojure :exclude [load])
   (:require [yamlstar.core :as yaml])
-  (:import [java.util ArrayList HashMap])
+  (:import [java.util ArrayList HashMap Map List])
   (:gen-class
    :name com.yaml.YAMLStar
    :methods [^:static [load [String] Object]
              ^:static [loadAll [String] java.util.List]
+             ^:static [dump [Object] String]
+             ^:static [dumpAll [java.util.List] String]
              ^:static [version [] String]]))
 
 (defn- clj->java
@@ -26,6 +28,19 @@
       (doseq [item obj]
         (.add l (clj->java item)))
       l)
+
+    :else
+    obj))
+
+(defn- java->clj
+  "Convert Java collections to Clojure data for dumping."
+  [obj]
+  (cond
+    (instance? Map obj)
+    (into {} (map (fn [[k v]] [(java->clj k) (java->clj v)]) obj))
+
+    (instance? List obj)
+    (mapv java->clj obj)
 
     :else
     obj))
@@ -58,6 +73,16 @@
   (-> yaml-string
       yaml/load-all
       clj->java))
+
+(defn -dump
+  "Dump a Java JSON-compatible value to YAML."
+  [value]
+  (yaml/dump (java->clj value)))
+
+(defn -dumpAll
+  "Dump Java JSON-compatible values to a multi-document YAML stream."
+  [values]
+  (yaml/dump-all (java->clj values)))
 
 (defn -version
   "Return the YAMLStar version string."

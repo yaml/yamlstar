@@ -162,3 +162,53 @@
 (deftest test-load-multiline-folded
   (testing "Load folded block scalar"
     (is (string? (yaml/load ">\n  folded\n  text\n  here")))))
+
+;; Dump Tests
+(deftest test-dump-simple-scalar
+  (testing "Dump a simple scalar value"
+    (is (= "hello\n" (yaml/dump "hello")))
+    (is (= "42\n" (yaml/dump 42)))
+    (is (= "true\n" (yaml/dump true)))
+    (is (= "null\n" (yaml/dump nil)))))
+
+(deftest test-dump-simple-mapping
+  (testing "Dump a simple mapping"
+    (is (= "key: value\n" (yaml/dump {"key" "value"})))))
+
+(deftest test-dump-simple-sequence
+  (testing "Dump a simple sequence"
+    (is (= "- a\n- b\n- c\n" (yaml/dump ["a" "b" "c"])))))
+
+(deftest test-dump-empty-collections
+  (testing "Dump empty maps and sequences"
+    (is (= "{}\n" (yaml/dump {})))
+    (is (= "[]\n" (yaml/dump [])))
+    (is (= {"empty-map" {} "empty-seq" []}
+           (yaml/load (yaml/dump {"empty-map" {} "empty-seq" []}))))))
+
+(deftest test-dump-nested-structure-roundtrip
+  (testing "Dump and load nested JSON-compatible data"
+    (let [value {"users" [{"name" "Alice" "age" 30}
+                          {"name" "Bob" "age" 25}]
+                 "active" true
+                 "note" nil}]
+      (is (= value (yaml/load (yaml/dump value)))))))
+
+(deftest test-dump-quotes-ambiguous-strings
+  (testing "Dump strings so they reload as strings"
+    (doseq [value ["null" "true" "42" "3.14" "" "hello world"]]
+      (is (= value (yaml/load (yaml/dump value)))))))
+
+(deftest test-dump-all
+  (testing "Dump multiple documents"
+    (let [values ["doc1" {"a" 1} ["b"]]]
+      (is (= "---\ndoc1\n---\na: 1\n---\n- b\n"
+             (yaml/dump-all values)))
+      (is (= values (yaml/load-all (yaml/dump-all values)))))))
+
+(deftest test-dump-rejects-non-string-map-keys
+  (testing "Dump rejects non-string map keys"
+    (is (thrown-with-msg?
+         clojure.lang.ExceptionInfo
+         #"string map keys"
+         (yaml/dump {1 "one"})))))

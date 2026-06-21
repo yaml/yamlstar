@@ -43,6 +43,24 @@ module yamlstar_c
       type(c_ptr) :: json_ptr
     end function yamlstar_load_all_c
 
+    ! Dump a JSON-encoded value to YAML
+    function yamlstar_dump_c(isolate_thread, data_json) &
+        bind(C, name='yamlstar_dump') result(json_ptr)
+      import :: c_ptr, c_char
+      type(c_ptr), value :: isolate_thread
+      character(kind=c_char), intent(in) :: data_json(*)
+      type(c_ptr) :: json_ptr
+    end function yamlstar_dump_c
+
+    ! Dump JSON-encoded documents to YAML
+    function yamlstar_dump_all_c(isolate_thread, data_json) &
+        bind(C, name='yamlstar_dump_all') result(json_ptr)
+      import :: c_ptr, c_char
+      type(c_ptr), value :: isolate_thread
+      character(kind=c_char), intent(in) :: data_json(*)
+      type(c_ptr) :: json_ptr
+    end function yamlstar_dump_all_c
+
     ! Get YAMLStar version string
     function yamlstar_version_c(isolate_thread) &
         bind(C, name='yamlstar_version') result(ver_ptr)
@@ -73,6 +91,8 @@ module yamlstar
     procedure :: destroy => yamlstar_destroy
     procedure :: load => yamlstar_load
     procedure :: load_all => yamlstar_load_all
+    procedure :: dump => yamlstar_dump
+    procedure :: dump_all => yamlstar_dump_all
     procedure :: version => yamlstar_version
   end type yamlstar_t
 
@@ -146,6 +166,40 @@ contains
     ! Convert C string to Fortran string
     json = c_ptr_to_string(json_ptr)
   end function yamlstar_load_all
+
+  ! Dump a JSON-encoded value and return JSON response string
+  function yamlstar_dump(this, data_json) result(json)
+    class(yamlstar_t), intent(in) :: this
+    character(len=*), intent(in) :: data_json
+    character(len=:), allocatable :: json
+    type(c_ptr) :: json_ptr
+    character(len=:), allocatable :: data_json_c
+
+    if (.not. c_associated(this%isolate_thread)) then
+      error stop 'YAMLStar not initialized'
+    end if
+
+    data_json_c = f_string_to_c(data_json)
+    json_ptr = yamlstar_dump_c(this%isolate_thread, data_json_c)
+    json = c_ptr_to_string(json_ptr)
+  end function yamlstar_dump
+
+  ! Dump JSON-encoded documents and return JSON response string
+  function yamlstar_dump_all(this, data_json) result(json)
+    class(yamlstar_t), intent(in) :: this
+    character(len=*), intent(in) :: data_json
+    character(len=:), allocatable :: json
+    type(c_ptr) :: json_ptr
+    character(len=:), allocatable :: data_json_c
+
+    if (.not. c_associated(this%isolate_thread)) then
+      error stop 'YAMLStar not initialized'
+    end if
+
+    data_json_c = f_string_to_c(data_json)
+    json_ptr = yamlstar_dump_all_c(this%isolate_thread, data_json_c)
+    json = c_ptr_to_string(json_ptr)
+  end function yamlstar_dump_all
 
   ! Get YAMLStar version
   function yamlstar_version(this) result(ver)

@@ -42,7 +42,7 @@ use libc::{c_int, c_void as void};
 mod error;
 
 pub use error::Error;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::error::LibYSError;
 
@@ -72,6 +72,10 @@ type TearDownIsolateFn = unsafe extern "C" fn(*mut void) -> c_int;
 type YamlstarLoadFn = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
 /// Prototype of the `yamlstar_load_all` function.
 type YamlstarLoadAllFn = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
+/// Prototype of the `yamlstar_dump` function.
+type YamlstarDumpFn = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
+/// Prototype of the `yamlstar_dump_all` function.
+type YamlstarDumpAllFn = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
 /// Prototype of the `yamlstar_version` function.
 type YamlstarVersionFn = unsafe extern "C" fn(*mut void) -> *mut i8;
 
@@ -91,6 +95,10 @@ pub struct YAMLStar {
     load_fn: YamlstarLoadFn,
     /// Pointer to the `yamlstar_load_all` function.
     load_all_fn: YamlstarLoadAllFn,
+    /// Pointer to the `yamlstar_dump` function.
+    dump_fn: YamlstarDumpFn,
+    /// Pointer to the `yamlstar_dump_all` function.
+    dump_all_fn: YamlstarDumpAllFn,
     /// Pointer to the `yamlstar_version` function.
     version_fn: YamlstarVersionFn,
 }
@@ -116,6 +124,9 @@ impl YAMLStar {
         let load_fn = unsafe { handle.ptr_or_null::<YamlstarLoadFn>("yamlstar_load")? };
         let load_all_fn =
             unsafe { handle.ptr_or_null::<YamlstarLoadAllFn>("yamlstar_load_all")? };
+        let dump_fn = unsafe { handle.ptr_or_null::<YamlstarDumpFn>("yamlstar_dump")? };
+        let dump_all_fn =
+            unsafe { handle.ptr_or_null::<YamlstarDumpAllFn>("yamlstar_dump_all")? };
         let version_fn = unsafe { handle.ptr_or_null::<YamlstarVersionFn>("yamlstar_version")? };
 
         // Check for null-ness.
@@ -123,6 +134,8 @@ impl YAMLStar {
             || tear_down_isolate_fn.is_null()
             || load_fn.is_null()
             || load_all_fn.is_null()
+            || dump_fn.is_null()
+            || dump_all_fn.is_null()
             || version_fn.is_null()
         {
             return Err(Error::Load(dlopen::Error::NullSymbol));
@@ -134,6 +147,8 @@ impl YAMLStar {
             unsafe { std::mem::transmute(*tear_down_isolate_fn) };
         let load_fn: YamlstarLoadFn = unsafe { std::mem::transmute(*load_fn) };
         let load_all_fn: YamlstarLoadAllFn = unsafe { std::mem::transmute(*load_all_fn) };
+        let dump_fn: YamlstarDumpFn = unsafe { std::mem::transmute(*dump_fn) };
+        let dump_all_fn: YamlstarDumpAllFn = unsafe { std::mem::transmute(*dump_all_fn) };
         let version_fn: YamlstarVersionFn = unsafe { std::mem::transmute(*version_fn) };
 
         // Create GraalVM isolate.
@@ -156,6 +171,8 @@ impl YAMLStar {
             tear_down_isolate_fn,
             load_fn,
             load_all_fn,
+            dump_fn,
+            dump_all_fn,
             version_fn,
         })
     }
@@ -187,6 +204,42 @@ impl YAMLStar {
     {
         let raw = unsafe { std::ffi::CStr::from_ptr(self.load_all_raw(yaml)?) }.to_str()?;
         let response = serde_json::from_str::<YsResponse<Vec<T>>>(raw)?;
+
+        match response {
+            YsResponse::Data(value) => Ok(value),
+            YsResponse::Error(err) => Err(Error::YAMLStar(err)),
+        }
+    }
+
+    /// Dump a serializable value to a YAML string.
+    ///
+    /// # Errors
+    /// Returns an error if the value cannot be serialized to JSON or YAMLStar fails.
+    pub fn dump<T>(&self, value: &T) -> Result<String, Error>
+    where
+        T: Serialize,
+    {
+        let data = serde_json::to_string(value)?;
+        let raw = unsafe { std::ffi::CStr::from_ptr(self.dump_raw(&data)?) }.to_str()?;
+        let response = serde_json::from_str::<YsResponse<String>>(raw)?;
+
+        match response {
+            YsResponse::Data(value) => Ok(value),
+            YsResponse::Error(err) => Err(Error::YAMLStar(err)),
+        }
+    }
+
+    /// Dump serializable values to a multi-document YAML stream.
+    ///
+    /// # Errors
+    /// Returns an error if the values cannot be serialized to JSON or YAMLStar fails.
+    pub fn dump_all<T>(&self, values: &[T]) -> Result<String, Error>
+    where
+        T: Serialize,
+    {
+        let data = serde_json::to_string(values)?;
+        let raw = unsafe { std::ffi::CStr::from_ptr(self.dump_all_raw(&data)?) }.to_str()?;
+        let response = serde_json::from_str::<YsResponse<String>>(raw)?;
 
         match response {
             YsResponse::Data(value) => Ok(value),
@@ -227,6 +280,32 @@ impl YAMLStar {
         if json.is_null() {
             Err(Error::Ffi(
                 "yamlstar_load_all: returned null".to_string(),
+            ))
+        } else {
+            Ok(json)
+        }
+    }
+
+    /// Dump a JSON string, returning the raw buffer from the library.
+    fn dump_raw(&self, data_json: &str) -> Result<*mut i8, Error> {
+        let input = std::ffi::CString::new(data_json)
+            .map_err(|_| Error::Ffi("dump: input contains a nil-byte".to_string()))?;
+        let json = unsafe { (self.dump_fn)(self.isolate_thread, input.as_bytes().as_ptr()) };
+        if json.is_null() {
+            Err(Error::Ffi("yamlstar_dump: returned null".to_string()))
+        } else {
+            Ok(json)
+        }
+    }
+
+    /// Dump JSON documents, returning the raw buffer from the library.
+    fn dump_all_raw(&self, data_json: &str) -> Result<*mut i8, Error> {
+        let input = std::ffi::CString::new(data_json)
+            .map_err(|_| Error::Ffi("dump_all: input contains a nil-byte".to_string()))?;
+        let json = unsafe { (self.dump_all_fn)(self.isolate_thread, input.as_bytes().as_ptr()) };
+        if json.is_null() {
+            Err(Error::Ffi(
+                "yamlstar_dump_all: returned null".to_string(),
             ))
         } else {
             Ok(json)

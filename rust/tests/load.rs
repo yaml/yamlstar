@@ -166,6 +166,35 @@ fn load_all_mixed_types() {
 }
 
 #[test]
+fn dump_simple_mapping() {
+    let ys = yamlstar::YAMLStar::new().unwrap();
+    let value = serde_json::json!({"key": "value"});
+    let ret = ys.dump(&value).unwrap();
+    assert_eq!(ret, "key: value\n");
+}
+
+#[test]
+fn dump_roundtrip() {
+    let ys = yamlstar::YAMLStar::new().unwrap();
+    let value = serde_json::json!({
+        "items": ["a", "b"],
+        "flag": true,
+        "text": "42"
+    });
+    let yaml = ys.dump(&value).unwrap();
+    let ret = ys.load::<serde_json::Value>(&yaml).unwrap();
+    assert_eq!(ret, value);
+}
+
+#[test]
+fn dump_all_documents() {
+    let ys = yamlstar::YAMLStar::new().unwrap();
+    let values = vec![serde_json::json!("doc1"), serde_json::json!({"a": 1})];
+    let ret = ys.dump_all(&values).unwrap();
+    assert_eq!(ret, "---\ndoc1\n---\na: 1\n");
+}
+
+#[test]
 fn version() {
     let ys = yamlstar::YAMLStar::new().unwrap();
     let ver = ys.version().unwrap();
