@@ -1,6 +1,8 @@
 (ns yamlstar.core-test
   (:require [clojure.test :refer :all]
-            [yamlstar.core :as yaml]))
+            [yamlstar.core :as yaml]
+            [yamlstar.emitter :as emitter]
+            [yamlstar.serializer :as serializer]))
 
 (deftest test-version
   (testing "Version string is returned"
@@ -178,6 +180,49 @@
 (deftest test-dump-simple-sequence
   (testing "Dump a simple sequence"
     (is (= "- a\n- b\n- c\n" (yaml/dump ["a" "b" "c"])))))
+
+(deftest test-dump-compact-nested-sequence
+  (testing "Dump mapping value sequences in PyYAML-style block layout"
+    (is (= "foo:\n- - bar\n"
+           (yaml/dump {"foo" [["bar"]]})))))
+
+(deftest test-emitter-keeps-node-properties-on-header-line
+  (testing "Emit anchors tags and literal markers with mapping keys and sequence dashes"
+    (is (= "foo: &x !y |\n  ...\nbar:\n- &xx !yy |\n  ...\n"
+           (emitter/emit
+            [{:event "stream_start"}
+             {:event "document_start"}
+             {:event "mapping_start"}
+             {:event "scalar" :value "foo"}
+             {:event "scalar" :anchor "x" :tag "!y" :style "literal" :value "...\n"}
+             {:event "scalar" :value "bar"}
+             {:event "sequence_start"}
+             {:event "scalar" :anchor "xx" :tag "!yy" :style "literal" :value "...\n"}
+             {:event "sequence_end"}
+             {:event "mapping_end"}
+             {:event "document_end"}
+             {:event "stream_end"}])))))
+
+(deftest test-serializer-preserves-node-properties
+  (testing "Serialize anchors tags styles and aliases"
+    (is (= [{:event "stream_start"}
+            {:event "document_start"}
+            {:event "mapping_start" :anchor "m" :tag "!map"}
+            {:event "scalar" :value "foo"}
+            {:event "scalar" :value "bar" :anchor "x" :tag "!y" :style "literal"}
+            {:event "scalar" :value "alias"}
+            {:event "alias" :name "x"}
+            {:event "mapping_end"}
+            {:event "document_end"}
+            {:event "stream_end"}]
+           (serializer/serialize
+            {:kind :mapping
+             :anchor "m"
+             :tag "!map"
+             :value [[{:kind :scalar :value "foo"}
+                      {:kind :scalar :value "bar" :anchor "x" :tag "!y" :style "literal"}]
+                     [{:kind :scalar :value "alias"}
+                      {:kind :alias :name "x"}]]})))))
 
 (deftest test-dump-empty-collections
   (testing "Dump empty maps and sequences"

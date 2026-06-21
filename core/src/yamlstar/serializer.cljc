@@ -6,12 +6,16 @@
   (case (:kind node)
     :scalar
     [(cond-> {:event "scalar" :value (:value node)}
+       (:anchor node) (assoc :anchor (:anchor node))
        (:tag node) (assoc :tag (:tag node))
        (:style node) (assoc :style (:style node)))]
 
     :mapping
     (vec (concat
-          [{:event "mapping_start"}]
+          [(cond-> {:event "mapping_start"}
+             (:anchor node) (assoc :anchor (:anchor node))
+             (:tag node) (assoc :tag (:tag node))
+             (:flow node) (assoc :flow (:flow node)))]
           (mapcat (fn [[k v]]
                     (concat (serialize-node k) (serialize-node v)))
                   (:value node))
@@ -19,9 +23,15 @@
 
     :sequence
     (vec (concat
-          [{:event "sequence_start"}]
+          [(cond-> {:event "sequence_start"}
+             (:anchor node) (assoc :anchor (:anchor node))
+             (:tag node) (assoc :tag (:tag node))
+             (:flow node) (assoc :flow (:flow node)))]
           (mapcat serialize-node (:value node))
-          [{:event "sequence_end"}]))))
+          [{:event "sequence_end"}]))
+
+    :alias
+    [{:event "alias" :name (:name node)}]))
 
 (defn serialize
   "Serialize one YAML node tree to an event stream."
