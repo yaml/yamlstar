@@ -242,7 +242,7 @@
                           (emit-node val-events child-level key-prefix)
 
                           (= "sequence_start" (:event (first val-events)))
-                          (str (indent child-level) (emit-key key-events) ":\n"
+                          (str key-line-prefix (emit-key key-events) ":\n"
                                (emit-node val-events child-level nil))
 
                           :else

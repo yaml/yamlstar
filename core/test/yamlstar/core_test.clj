@@ -243,6 +243,11 @@
     (is (= "- 1\n- - 2\n  - - 3\n    - 4\n  - 5\n- 6\n"
            (yaml/dump [1 [2 [3 4] 5] 6])))))
 
+(deftest test-dump-mapping-inside-nested-sequence
+  (testing "Dump a compact mapping sequence item with a block sequence value"
+    (is (= "- 1\n- - 2\n  - foo:\n    - 3\n    - 4\n  - 5\n- 6\n"
+           (yaml/dump [1 [2 {"foo" [3 4]} 5] 6])))))
+
 (deftest test-dump-compact-nested-sequence
   (testing "Dump mapping value sequences in PyYAML-style block layout"
     (is (= "foo:\n- - bar\n"
