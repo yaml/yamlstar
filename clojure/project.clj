@@ -13,7 +13,8 @@
    :dir ".."}
 
   :dependencies
-  [[org.clojure/clojure "1.12.0"]]
+  [[org.clojure/clojure "1.12.0"]
+   [org.clojure/data.json "2.5.0"]]
 
   :source-paths ["../core/src"]
   :test-paths ["../core/test"]
