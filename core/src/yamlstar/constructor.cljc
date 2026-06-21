@@ -2,7 +2,8 @@
   "Construct native Clojure data from resolved YAML nodes
 
   The constructor takes nodes with resolved tags and converts them to
-  native Clojure data structures using a tag-based constructor lookup.")
+  native Clojure data structures using a tag-based constructor lookup."
+  (:require [yamlstar.numbers :as numbers]))
 
 (def constructors
   "Constructor functions for YAML core schema tags.
@@ -13,9 +14,7 @@
         bool-fn  (fn [node]
                    (contains? #{"true" "True" "TRUE"} (:value node)))
         int-fn   (fn [node]
-                   #?(:clj (Long/parseLong (:value node))
-                      :glj (let [[n _] (strconv.ParseInt (:value node) 10 64)]
-                             n)))
+                   (numbers/parse-safe-integer (:value node)))
         float-fn (fn [node]
                    (let [value (:value node)]
                      (cond

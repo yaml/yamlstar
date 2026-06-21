@@ -43,6 +43,25 @@
     (is (= -42 (yaml/load "-42")))
     (is (= 0 (yaml/load "0")))))
 
+(deftest test-load-safe-integer-range
+  (testing "Load integers within JSON-safe exact range"
+    (is (= 9007199254740991 (yaml/load "9007199254740991")))
+    (is (= 9007199254740991 (yaml/load "+9007199254740991")))
+    (is (= -9007199254740991 (yaml/load "-9007199254740991"))))
+  (testing "Reject integers outside JSON-safe exact range"
+    (doseq [value ["9007199254740992"
+                   "+9007199254740992"
+                   "-9007199254740992"
+                   "9999999999999999999"
+                   "!!int 9007199254740992"]]
+      (is (thrown-with-msg?
+           clojure.lang.ExceptionInfo
+           #"YAML integer out of supported range"
+           (yaml/load value)))))
+  (testing "Load quoted large integers as strings"
+    (is (= "9999999999999999999"
+           (yaml/load "\"9999999999999999999\"")))))
+
 (deftest test-load-float-values
   (testing "Load float values"
     (is (= 3.14 (yaml/load "3.14")))
@@ -172,6 +191,22 @@
     (is (= "42\n" (yaml/dump 42)))
     (is (= "true\n" (yaml/dump true)))
     (is (= "null\n" (yaml/dump nil)))))
+
+(deftest test-dump-safe-integer-range
+  (testing "Dump integers within JSON-safe exact range"
+    (is (= "9007199254740991\n" (yaml/dump 9007199254740991)))
+    (is (= "-9007199254740991\n" (yaml/dump -9007199254740991))))
+  (testing "Reject integers outside JSON-safe exact range"
+    (doseq [value [9007199254740992
+                   -9007199254740992
+                   (bigint "9999999999999999999")]]
+      (is (thrown-with-msg?
+           clojure.lang.ExceptionInfo
+           #"YAML integer out of supported range"
+           (yaml/dump value)))))
+  (testing "Dump string versions of large integers as strings"
+    (is (= "'9999999999999999999'\n"
+           (yaml/dump "9999999999999999999")))))
 
 (deftest test-dump-simple-mapping
   (testing "Dump a simple mapping"

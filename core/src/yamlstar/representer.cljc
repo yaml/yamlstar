@@ -1,5 +1,6 @@
 (ns yamlstar.representer
   "Represent native data as YAMLStar nodes."
+  (:require [yamlstar.numbers :as numbers])
   (:refer-clojure :exclude [represent]))
 
 (defn represent
@@ -16,7 +17,10 @@
     {:kind :scalar :tag "!!bool" :value "false"}
 
     (number? value)
-    {:kind :scalar :tag (if (integer? value) "!!int" "!!float") :value (str value)}
+    (do
+      (when (integer? value)
+        (numbers/validate-safe-integer value))
+      {:kind :scalar :tag (if (integer? value) "!!int" "!!float") :value (str value)})
 
     (string? value)
     {:kind :scalar :tag "!!str" :value value}

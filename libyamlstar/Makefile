@@ -53,6 +53,10 @@ $(GLOAT-LINK-DIR)/constructor.clj: $(CORE-YAMLSTAR)/constructor.cljc
 	@mkdir -p $(dir $@)
 	ln -sf $(abspath $<) $@
 
+$(GLOAT-LINK-DIR)/numbers.clj: $(CORE-YAMLSTAR)/numbers.cljc
+	@mkdir -p $(dir $@)
+	ln -sf $(abspath $<) $@
+
 $(GLOAT-LINK-DIR)/representer.clj: $(CORE-YAMLSTAR)/representer.cljc
 	@mkdir -p $(dir $@)
 	ln -sf $(abspath $<) $@
@@ -74,6 +78,7 @@ GLOAT-LINKS := \
   $(GLOAT-LINK-DIR)/parser/parser.clj \
   $(GLOAT-LINK-DIR)/parser/receiver.clj \
   $(GLOAT-LINK-DIR)/constructor.clj \
+  $(GLOAT-LINK-DIR)/numbers.clj \
   $(GLOAT-LINK-DIR)/representer.clj \
   $(GLOAT-LINK-DIR)/desolver.clj \
   $(GLOAT-LINK-DIR)/serializer.clj \
@@ -88,6 +93,7 @@ GLOAT-SRCS := \
   $(CORE-YAMLSTAR)/parser.clj \
   $(CORE-YAMLSTAR)/composer.clj \
   $(CORE-YAMLSTAR)/resolver.clj \
+  $(GLOAT-LINK-DIR)/numbers.clj \
   $(GLOAT-LINK-DIR)/constructor.clj \
   $(GLOAT-LINK-DIR)/representer.clj \
   $(GLOAT-LINK-DIR)/desolver.clj \
