@@ -256,7 +256,10 @@
     (if (empty? items)
       (str (or prefix (indent level)) (with-properties start "[]") "\n")
       (let [props-header (emit-collection-header start level prefix)
-            child-level (if props-header (+ level 2) level)
+            child-level (cond
+                          props-header (+ level 2)
+                          prefix (count prefix)
+                          :else level)
             first-prefix (when-not props-header prefix)]
         (loop [remaining items
                first? true

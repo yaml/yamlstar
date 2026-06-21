@@ -235,6 +235,14 @@
   (testing "Dump a simple sequence"
     (is (= "- a\n- b\n- c\n" (yaml/dump ["a" "b" "c"])))))
 
+(deftest test-dump-nested-sequence
+  (testing "Dump a nested sequence without flattening child items"
+    (is (= "- - 1\n  - 2\n  - 3\n"
+           (yaml/dump [[1 2 3]]))))
+  (testing "Dump a deeply nested sequence without over-indenting child items"
+    (is (= "- 1\n- - 2\n  - - 3\n    - 4\n  - 5\n- 6\n"
+           (yaml/dump [1 [2 [3 4] 5] 6])))))
+
 (deftest test-dump-compact-nested-sequence
   (testing "Dump mapping value sequences in PyYAML-style block layout"
     (is (= "foo:\n- - bar\n"
