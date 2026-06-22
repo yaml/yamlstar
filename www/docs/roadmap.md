@@ -22,18 +22,22 @@ multi-language support.
 - ✅ Multi-document streams
 - ✅ Comprehensive test suite (23+ tests)
 - ✅ GraalVM native-image shared library
-- ✅ 13 language bindings:
+- ✅ 17 language bindings:
     - Clojure
+    - Crystal
     - C#
     - Delphi (Pascal)
     - Fortran
     - Go
+    - Haskell
     - Java
+    - Julia
     - Lua
     - Node.js
     - Perl
     - PHP
     - Python
+    - Raku
     - Ruby
     - Rust
 
@@ -207,7 +211,7 @@ Long-term enhancements for specialized use cases.
 - Support for scalars, mappings, sequences, anchors/aliases
 - CLI tool for YAML to JSON conversion
 - GraalVM native-image shared library
-- Bindings for 13 languages
+- Bindings for 17 languages
 - Auto-installing build system via Makes
 
 ## Contributing

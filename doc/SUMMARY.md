@@ -144,8 +144,9 @@ YAML String (input)
 ✅ **Simple Pipeline** - 4 stages vs YAMLScript's 7 stages (~80% lighter)
 ✅ **Well-Tested** - Core tests covering major features
 ✅ **Well-Documented** - Complete dev guide and examples
-✅ **Language Bindings** - 9 bindings for Clojure, C#, Fortran, Go, Java,
-   Node.js, Perl, Python, Rust
+✅ **Language Bindings** - 17 bindings for Clojure, Crystal, C#, Delphi,
+   Fortran, Go, Haskell, Java, Julia, Lua, Node.js, Perl, PHP, Python, Raku,
+   Ruby, Rust
 
 ### Project Structure
 
@@ -170,12 +171,21 @@ yamlstar/
 │   ├── project.clj                (Leiningen config)
 │   └── deps.edn                   (Clojure CLI config)
 ├── libyamlstar/                   (Shared library)
+├── crystal/                       (Crystal binding)
 ├── csharp/                        (C# binding)
+├── delphi/                        (Delphi/Pascal binding)
 ├── fortran/                       (Fortran binding)
 ├── go/                            (Go binding)
+├── haskell/                       (Haskell binding)
+├── java/                          (Java binding)
+├── julia/                         (Julia binding)
+├── lua/                           (Lua binding)
 ├── nodejs/                        (Node.js binding)
 ├── perl/                          (Perl binding)
+├── php/                           (PHP binding)
 ├── python/                        (Python binding)
+├── raku/                          (Raku binding)
+├── ruby/                          (Ruby binding)
 ├── rust/                          (Rust binding)
 ├── cli/                           (CLI tool)
 ├── doc/
@@ -196,7 +206,7 @@ yamlstar/
 - **Test Coverage**: Core unit tests
 - **Dependencies**: 2 (Clojure + data.json)
 - **Grammar Rules**: 211 (YAML 1.2 spec)
-- **Language Bindings**: 9 (Clojure, C#, Fortran, Go, Java, Node.js, Perl, Python, Rust)
+- **Language Bindings**: 17 (Clojure, Crystal, C#, Delphi, Fortran, Go, Haskell, Java, Julia, Lua, Node.js, Perl, PHP, Python, Raku, Ruby, Rust)
 
 ## Next Steps (Phase 1B - Testing)
 
@@ -298,7 +308,7 @@ YAMLStar builds on:
 🟢 **Core Implementation** - DONE
 🟢 **Testing & Validation** - DONE (core tests passing)
 🟢 **FFI Interface** - DONE (libyamlstar)
-🟢 **Language Bindings** - DONE (9 bindings)
+🟢 **Language Bindings** - DONE (17 bindings)
 ⚪ **Glojure Migration** - TODO (Phase 2)
 ⚪ **Plugin System** - TODO (Phase 3)
 

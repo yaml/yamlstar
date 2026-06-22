@@ -17,14 +17,21 @@ hide:
   <span class="ykey">Version</span><span class="ysep">:</span> <span class="yver">0.1.9</span>
   <span class="ykey">Languages</span><span class="ysep">:</span>
     - <span class="ystr">Clojure</span>
+    - <span class="ystr">Crystal</span>
     - <span class="ystr">C#</span>
     - <span class="ystr">Delphi</span>
     - <span class="ystr">Fortran</span>
     - <span class="ystr">Go</span>
+    - <span class="ystr">Haskell</span>
     - <span class="ystr">Java</span>
+    - <span class="ystr">Julia</span>
+    - <span class="ystr">Lua</span>
     - <span class="ystr">Node.js</span>
     - <span class="ystr">Perl</span>
+    - <span class="ystr">PHP</span>
     - <span class="ystr">Python</span>
+    - <span class="ystr">Raku</span>
+    - <span class="ystr">Ruby</span>
     - <span class="ystr">Rust</span>
   <span class="ykey">Features</span><span class="ysep">:</span>
     <span class="ykey">Spec Compliant</span><span class="ysep">:</span> <span class="ybool">true</span>   <span class="ycom"># 100% YAML 1.2 specification</span>

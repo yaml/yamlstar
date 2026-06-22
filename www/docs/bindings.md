@@ -1,8 +1,8 @@
 # Language Bindings
 
-YAMLStar provides native bindings for 13 programming languages, all using the
+YAMLStar provides native bindings for 17 programming languages, all using the
 same underlying shared library.
-This ensures 100% consistent behavior across all platforms.
+This ensures consistent YAML behavior across supported binding platforms.
 
 ## Available Bindings
 
@@ -83,6 +83,33 @@ Native Clojure library (no FFI required).
 
 <div class="binding-card" markdown>
 
+### Crystal
+
+Crystal binding using native FFI.
+
+**Install:**
+```yaml
+dependencies:
+  yamlstar:
+    github: yaml/yamlstar-crystal
+```
+
+**Quick Example:**
+```crystal
+require "yamlstar"
+
+ys = YAMLStar.new
+data = ys.load("key: value")
+puts data["key"]
+ys.close
+```
+
+[Full Documentation →](https://github.com/yaml/yamlstar/tree/main/crystal)
+
+</div>
+
+<div class="binding-card" markdown>
+
 ### Go
 
 Native Go binding using cgo.
@@ -103,6 +130,30 @@ ys.Close()
 ```
 
 [Full Documentation →](https://github.com/yaml/yamlstar/tree/main/go)
+
+</div>
+
+<div class="binding-card" markdown>
+
+### Haskell
+
+Haskell binding using FFI.
+
+**Install:**
+```bash
+cabal install yamlstar
+```
+
+**Quick Example:**
+```haskell
+import YAMLStar
+
+main = do
+  data <- loadYAMLStar "key: value"
+  print data
+```
+
+[Full Documentation →](https://github.com/yaml/yamlstar/tree/main/haskell)
 
 </div>
 
@@ -132,6 +183,32 @@ ys.close();
 ```
 
 [Full Documentation →](https://github.com/yaml/yamlstar/tree/main/java)
+
+</div>
+
+<div class="binding-card" markdown>
+
+### Julia
+
+Julia binding using `ccall`.
+
+**Install:**
+```julia
+using Pkg
+Pkg.add("YAMLStar")
+```
+
+**Quick Example:**
+```julia
+import YAMLStar as YS
+
+ys = YS.Runtime()
+data = YS.load(ys, "key: value")
+println(data["key"])
+YS.close(ys)
+```
+
+[Full Documentation →](https://github.com/yaml/yamlstar/tree/main/julia)
 
 </div>
 
@@ -285,6 +362,30 @@ ys:close()
 
 <div class="binding-card" markdown>
 
+### Raku
+
+Raku binding using NativeCall.
+
+**Install:**
+```bash
+zef install YAMLStar
+```
+
+**Quick Example:**
+```raku
+use YAMLStar;
+
+my YAMLStar $ys .= new;
+say $ys.load('key: value')<key>;
+$ys.close;
+```
+
+[Full Documentation →](https://github.com/yaml/yamlstar/tree/main/raku)
+
+</div>
+
+<div class="binding-card" markdown>
+
 ### Delphi (Pascal)
 
 Free Pascal binding using native FFI.
@@ -363,10 +464,14 @@ Create a new YAMLStar instance:
 
 - **Python/Node.js/Java/C#**: `YAMLStar()` or `new YAMLStar()`
 - **Clojure**: `(require '[yamlstar.core :as yaml])` - no instance needed
+- **Crystal**: `YAMLStar.new`
 - **Go**: `yamlstar.New()`
+- **Haskell**: no instance needed
+- **Julia**: `YS.Runtime()`
 - **Rust**: `YAMLStar::new()`
 - **Perl**: `YAMLStar->new()`
 - **Ruby/PHP**: `YAMLStar.new` / `new YAMLStar\YAMLStar()`
+- **Raku**: `YAMLStar.new`
 - **Lua**: `yamlstar.new()`
 - **Fortran**: `yamlstar_new()`
 
@@ -377,9 +482,13 @@ Load a single YAML document:
 - **Python/Java/C#**: `ys.load(yaml_string)`
 - **Node.js/Go**: `ys.load(yaml_string)` or `ys.Load(yaml_string)`
 - **Clojure**: `(yaml/load yaml-string)`
+- **Crystal**: `ys.load(yaml_string)`
+- **Haskell**: `loadYAMLStar yaml_text`
+- **Julia**: `YS.load(ys, yaml_string)`
 - **Rust**: `ys.load(&yaml_string)`
 - **Perl**: `$ys->load($yaml_string)`
 - **Ruby/PHP**: `ys.load(yaml_string)` / `$ys->load($yaml_string)`
+- **Raku**: `$ys.load($yaml-string)`
 - **Lua**: `ys:load(yaml_string)`
 - **Fortran**: `call ys%load(yaml_string)`
 
@@ -390,12 +499,16 @@ Load all documents from a multi-document YAML stream:
 - **Python**: `ys.load_all(yaml_string)`
 - **Node.js**: `ys.loadAll(yaml_string)`
 - **Clojure**: `(yaml/load-all yaml-string)`
+- **Crystal**: `ys.load_all(yaml_string)`
 - **Go**: `ys.LoadAll(yaml_string)`
+- **Haskell**: `loadYAMLStarAll yaml_text`
 - **Java/C#**: `ys.loadAll(yaml_string)`
+- **Julia**: `YS.load_all(ys, yaml_string)`
 - **Rust**: `ys.load_all(&yaml_string)`
 - **Perl**: `$ys->load_all($yaml_string)`
 - **Ruby**: `ys.load_all(yaml_string)`
 - **PHP**: `$ys->loadAll($yaml_string)`
+- **Raku**: `$ys.load-all($yaml-string)`
 - **Lua**: `ys:load_all(yaml_string)`
 - **Fortran**: `call ys%load_all(yaml_string)`
 
@@ -406,12 +519,16 @@ Dump JSON-compatible native values to YAML:
 - **Python**: `ys.dump(value)` and `ys.dump_all(values)`
 - **Node.js**: `ys.dump(value)` and `ys.dumpAll(values)`
 - **Clojure**: `(yaml/dump value)` and `(yaml/dump-all values)`
+- **Crystal**: `ys.dump(value)` and `ys.dump_all(values)`
 - **Go**: `yamlstar.Dump(value)` and `yamlstar.DumpAll(values)`
+- **Haskell**: `dumpYAMLStar value` and `dumpYAMLStarAll values`
 - **Java/C#**: `dump(value)` / `Dump(value)` and `dumpAll(values)` / `DumpAll(values)`
+- **Julia**: `YS.dump(ys, value)` and `YS.dump_all(ys, values)`
 - **Rust**: `ys.dump(&value)` and `ys.dump_all(&values)`
 - **Perl**: `$ys->dump($value)` and `$ys->dump_all($values)`
 - **Ruby**: `ys.dump(value)` and `ys.dump_all(values)`
 - **PHP**: `$ys->dump($value)` and `$ys->dumpAll($values)`
+- **Raku**: `$ys.dump($value)` and `$ys.dump-all($values)`
 - **Lua**: `ys:dump(value)` and `ys:dump_all(values)`
 - **Fortran**: `ys%dump(json_value)` and `ys%dump_all(json_values)`
 
@@ -453,7 +570,11 @@ Close the YAMLStar instance when done:
 
 - **Python/Node.js/Java/C#/Rust/Perl/Ruby/PHP**: `ys.close()`
 - **Clojure**: No cleanup needed
+- **Crystal**: `ys.close`
 - **Go**: `ys.Close()`
+- **Haskell**: No cleanup needed
+- **Julia**: `YS.close(ys)`
+- **Raku**: `$ys.close`
 - **Lua**: `ys:close()`
 - **Fortran**: `call ys%close()`
 
@@ -489,10 +610,15 @@ YAMLStar bindings are tested on:
 
 - **Linux**: x86_64, arm64
 - **macOS**: x86_64 (Intel), arm64 (Apple Silicon)
-- **Windows**: x86_64 (via WSL or native)
+- **Windows**: x86_64 shared-library artifacts are built; binding-level
+  native Windows support varies by language
 
 The shared library (`libyamlstar.so`, `libyamlstar.dylib`, `yamlstar.dll`) is
 built using GraalVM native-image for optimal performance and small binary size.
+
+The Crystal, Haskell, Julia, and Raku bindings are currently tested on the
+Linux/macOS shared-library path. Native Windows support for these bindings is
+not claimed until their build and library lookup paths are verified there.
 
 ## Language-Specific Notes
 
@@ -517,6 +643,13 @@ built using GraalVM native-image for optimal performance and small binary size.
 - Works with Leiningen and deps.edn
 - Available on Clojars
 
+### Crystal
+
+- Requires Crystal 1.0+
+- Uses native FFI
+- Currently tested on Linux/macOS
+- Available from the YAMLStar Crystal split repository
+
 ### Go
 
 - Requires Go 1.20+
@@ -530,6 +663,20 @@ built using GraalVM native-image for optimal performance and small binary size.
 - Uses JNI for native calls
 - Returns standard Java collections
 - Available on Maven Central
+
+### Haskell
+
+- Requires GHC 9.4+
+- Uses FFI through Cabal
+- Currently tested on Linux/macOS
+- Available on Hackage
+
+### Julia
+
+- Requires Julia 1.x
+- Uses `ccall` and JSON for native value conversion
+- Currently tested on Linux/macOS
+- Available through the Julia General registry
 
 ### Rust
 
@@ -562,6 +709,13 @@ built using GraalVM native-image for optimal performance and small binary size.
 - Requires Lua 5.1+ with cffi-lua or LuaJIT FFI
 - Uses lua-cjson for JSON conversion
 - Available on LuaRocks
+
+### Raku
+
+- Requires Rakudo
+- Uses NativeCall
+- Currently tested on Linux/macOS
+- Available through zef/fez
 
 ### C#
 

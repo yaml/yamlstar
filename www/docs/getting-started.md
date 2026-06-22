@@ -109,6 +109,34 @@ Choose your language below for package manager installation.
     dotnet add package YAMLStar
     ```
 
+=== "Crystal"
+
+    Add to your `shard.yml`:
+    ```yaml
+    dependencies:
+      yamlstar:
+        github: yaml/yamlstar-crystal
+    ```
+
+=== "Haskell"
+
+    ```bash
+    cabal install yamlstar
+    ```
+
+=== "Julia"
+
+    ```julia
+    using Pkg
+    Pkg.add("YAMLStar")
+    ```
+
+=== "Raku"
+
+    ```bash
+    zef install YAMLStar
+    ```
+
 === "Delphi (Pascal)"
 
     Requires building the shared library first:
