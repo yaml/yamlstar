@@ -89,6 +89,11 @@ case $binding in
     url-exists "$url/$version/yamlstar-$version.jar" &&
       published=true
     ;;
+  lua)
+    url='https://luarocks.org/modules/ingy/yamlstar'
+    url-exists "$url/$version-1" &&
+      published=true
+    ;;
   nodejs)
     export NPM_CONFIG_CACHE="${NPM_CONFIG_CACHE:-.cache/npm}"
     npm view "yamlstar@$version" version >/dev/null 2>&1 &&
@@ -100,8 +105,17 @@ case $binding in
       published=true
     fi
     ;;
+  php)
+    git-tag-exists "https://github.com/yaml/yamlstar-php" "v$version" &&
+      published=true
+    ;;
   python)
     json-url-exists "https://pypi.org/pypi/yamlstar/$version/json" &&
+      published=true
+    ;;
+  ruby)
+    url='https://rubygems.org/api/v2/rubygems/yamlstar/versions'
+    json-url-exists "$url/$version.json" &&
       published=true
     ;;
   rust)

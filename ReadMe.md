@@ -69,7 +69,7 @@ features:
 
 ## Project Status
 
-✅ **Phase 1 Complete** - Ready for production use with 10 language bindings!
+✅ **Phase 1 Complete** - Ready for production use with 13 language bindings!
 
 ### Roadmap
 
@@ -132,7 +132,7 @@ YAML Output
 - Complete test suite covering all major features
 - Zero external dependencies (except Clojure + data.json)
 - GraalVM native-image shared library (`libyamlstar.so`)
-- **10 language bindings**: Clojure, C#, Delphi, Fortran, Go, Java, Node.js, Perl, Python, Rust
+- **13 language bindings**: Clojure, C#, Delphi, Fortran, Go, Java, Lua, Node.js, Perl, PHP, Python, Ruby, Rust
 
 **Ready for testing!** Run `make test` in the `core/` directory, or try any of the language bindings.
 
@@ -203,9 +203,12 @@ release with the install script or Homebrew before loading YAML.
 | **Fortran** | [fortran/](fortran/) | `make test` (auto-installs gfortran, FPM) |
 | **Go** | [go/](go/) | `make test` (auto-installs go) |
 | **Java** | [java/](java/) | `make test` (auto-installs lein, Maven) |
+| **Lua** | [lua/](lua/) | `make test` (auto-installs lua, luarocks) |
 | **Node.js** | [nodejs/](nodejs/) | `make test` (auto-installs node, npm) |
 | **Perl** | [perl/](perl/) | `make test` (auto-installs perl, cpanm) |
+| **PHP** | [php/](php/) | `make test` |
 | **Python** | [python/](python/) | `make test` (auto-installs python, pip) |
+| **Ruby** | [ruby/](ruby/) | `make test` (auto-installs ruby) |
 | **Rust** | [rust/](rust/) | `make test` (auto-installs cargo) |
 
 ### Quick Example (Node.js)

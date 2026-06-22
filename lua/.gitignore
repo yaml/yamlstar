@@ -1,0 +1,3 @@
+*.rock
+yamlstar-[0-9]*.rockspec
+*.tar.gz

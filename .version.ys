@@ -41,9 +41,14 @@ vo =: v-old.str/replace(/\./ '\\.')
     - java/Makefile
     - java/ReadMe.md
     - java/src/com/yaml/yamlstar.clj
+    - lua/lib/yamlstar.lua
+    - lua/yamlstar.rockspec
     - nodejs/lib/yamlstar/index.js
     - perl/lib/YAMLStar.pm
+    - php/composer.json
+    - php/src/YAMLStar.php
     - python/lib/yamlstar/__init__.py
+    - ruby/lib/yamlstar/version.rb
     - rust/ReadMe.md
     - rust/src/lib.rs
     - rust/tests/load.rs

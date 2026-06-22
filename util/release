@@ -501,6 +501,20 @@ do-release-csharp() (
     --source https://api.nuget.org/v3/index.json
 )
 
+# Ruby - publish to RubyGems
+do-release-ruby() (
+  echo 'Publishing Ruby gem to RubyGems...'
+  RUBYGEMS_API_KEY=${RUBYGEMS_API_KEY:-${GEM_HOST_API_KEY:-}}
+  if [[ -z $RUBYGEMS_API_KEY && -f ~/.yamlstar-secrets.yaml ]]; then
+    RUBYGEMS_API_KEY=$(ys -e '.ruby.token:say' ~/.yamlstar-secrets.yaml)
+  fi
+  [[ $RUBYGEMS_API_KEY ]] ||
+    die 'ERROR: RUBYGEMS_API_KEY not set and ~/.yamlstar-secrets.yaml not found'
+
+  gem build yamlstar.gemspec
+  GEM_HOST_API_KEY=$RUBYGEMS_API_KEY gem push "yamlstar-$VERSION.gem"
+)
+
 # Perl - publish to CPAN
 do-release-perl() (
   echo 'Publishing Perl package to CPAN...'
@@ -545,6 +559,41 @@ do-release-java() (
     die 'ERROR: CENTRAL_TOKEN not set and ~/.yamlstar-secrets.yaml not found'
   export GPG_KEY_ID CENTRAL_TOKEN
   make deploy
+)
+
+# Lua - publish split repository and upload to LuaRocks
+do-release-lua() (
+  echo 'Publishing Lua rock to LuaRocks...'
+  LUAROCKS_API_KEY=${LUAROCKS_API_KEY:-}
+  if [[ -z $LUAROCKS_API_KEY && -f ~/.yamlstar-secrets.yaml ]]; then
+    LUAROCKS_API_KEY=$(ys -e '(.lua.token || .luarocks.token):say' ~/.yamlstar-secrets.yaml)
+  fi
+  [[ $LUAROCKS_API_KEY ]] ||
+    die 'ERROR: LUAROCKS_API_KEY not set and ~/.yamlstar-secrets.yaml not found'
+
+  make "yamlstar-$VERSION-1.rockspec"
+  ../util/release-lua
+  luarocks upload --api-key "$LUAROCKS_API_KEY" "yamlstar-$VERSION-1.rockspec"
+)
+
+# PHP - publish split repository and notify Packagist
+do-release-php() (
+  echo 'Publishing PHP package repo and notifying Packagist...'
+  ../util/release-php
+  PACKAGIST_USER=${PACKAGIST_USER:-}
+  PACKAGIST_TOKEN=${PACKAGIST_TOKEN:-}
+  if [[ -z $PACKAGIST_USER && -f ~/.yamlstar-secrets.yaml ]]; then
+    PACKAGIST_USER=$(ys -e '(.php.user || .packagist.user):say' ~/.yamlstar-secrets.yaml)
+  fi
+  if [[ -z $PACKAGIST_TOKEN && -f ~/.yamlstar-secrets.yaml ]]; then
+    PACKAGIST_TOKEN=$(ys -e '(.php.token || .packagist.token):say' ~/.yamlstar-secrets.yaml)
+  fi
+  [[ $PACKAGIST_USER && $PACKAGIST_TOKEN ]] ||
+    die 'ERROR: PACKAGIST_USER/PACKAGIST_TOKEN not set'
+  curl -X POST \
+    -H 'content-type:application/json' \
+    "https://packagist.org/api/update-package?username=$PACKAGIST_USER&apiToken=$PACKAGIST_TOKEN" \
+    -d '{"repository":{"url":"https://github.com/yaml/yamlstar-php"}}'
 )
 
 # Go - delegate to release-go script

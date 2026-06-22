@@ -1,6 +1,6 @@
 # Language Bindings
 
-YAMLStar provides native bindings for 10 programming languages, all using the
+YAMLStar provides native bindings for 13 programming languages, all using the
 same underlying shared library.
 This ensures 100% consistent behavior across all platforms.
 
@@ -212,6 +212,79 @@ ys.Close();
 
 <div class="binding-card" markdown>
 
+### Ruby
+
+Ruby binding using Fiddle.
+
+**Install:**
+```bash
+gem install yamlstar
+```
+
+**Quick Example:**
+```ruby
+require "yamlstar"
+
+ys = YAMLStar.new
+data = ys.load("key: value")
+puts data["key"]
+ys.close
+```
+
+[Full Documentation →](https://github.com/yaml/yamlstar/tree/main/ruby)
+
+</div>
+
+<div class="binding-card" markdown>
+
+### PHP
+
+PHP binding using the FFI extension.
+
+**Install:**
+```bash
+composer require yaml/yamlstar-php
+```
+
+**Quick Example:**
+```php
+$ys = new YAMLStar\YAMLStar();
+$data = $ys->load("key: value");
+echo $data["key"];
+$ys->close();
+```
+
+[Full Documentation →](https://github.com/yaml/yamlstar/tree/main/php)
+
+</div>
+
+<div class="binding-card" markdown>
+
+### Lua
+
+Lua binding using cffi-lua or LuaJIT FFI.
+
+**Install:**
+```bash
+luarocks install yamlstar
+```
+
+**Quick Example:**
+```lua
+local yamlstar = require("yamlstar")
+
+local ys = yamlstar.new()
+local data = ys:load("key: value")
+print(data.key)
+ys:close()
+```
+
+[Full Documentation →](https://github.com/yaml/yamlstar/tree/main/lua)
+
+</div>
+
+<div class="binding-card" markdown>
+
 ### Delphi (Pascal)
 
 Free Pascal binding using native FFI.
@@ -293,6 +366,8 @@ Create a new YAMLStar instance:
 - **Go**: `yamlstar.New()`
 - **Rust**: `YAMLStar::new()`
 - **Perl**: `YAMLStar->new()`
+- **Ruby/PHP**: `YAMLStar.new` / `new YAMLStar\YAMLStar()`
+- **Lua**: `yamlstar.new()`
 - **Fortran**: `yamlstar_new()`
 
 ### Loading Single Documents
@@ -304,6 +379,8 @@ Load a single YAML document:
 - **Clojure**: `(yaml/load yaml-string)`
 - **Rust**: `ys.load(&yaml_string)`
 - **Perl**: `$ys->load($yaml_string)`
+- **Ruby/PHP**: `ys.load(yaml_string)` / `$ys->load($yaml_string)`
+- **Lua**: `ys:load(yaml_string)`
 - **Fortran**: `call ys%load(yaml_string)`
 
 ### Loading Multiple Documents
@@ -317,6 +394,9 @@ Load all documents from a multi-document YAML stream:
 - **Java/C#**: `ys.loadAll(yaml_string)`
 - **Rust**: `ys.load_all(&yaml_string)`
 - **Perl**: `$ys->load_all($yaml_string)`
+- **Ruby**: `ys.load_all(yaml_string)`
+- **PHP**: `$ys->loadAll($yaml_string)`
+- **Lua**: `ys:load_all(yaml_string)`
 - **Fortran**: `call ys%load_all(yaml_string)`
 
 ### Dumping Values
@@ -330,6 +410,9 @@ Dump JSON-compatible native values to YAML:
 - **Java/C#**: `dump(value)` / `Dump(value)` and `dumpAll(values)` / `DumpAll(values)`
 - **Rust**: `ys.dump(&value)` and `ys.dump_all(&values)`
 - **Perl**: `$ys->dump($value)` and `$ys->dump_all($values)`
+- **Ruby**: `ys.dump(value)` and `ys.dump_all(values)`
+- **PHP**: `$ys->dump($value)` and `$ys->dumpAll($values)`
+- **Lua**: `ys:dump(value)` and `ys:dump_all(values)`
 - **Fortran**: `ys%dump(json_value)` and `ys%dump_all(json_values)`
 
 For example:
@@ -368,9 +451,10 @@ For example:
 
 Close the YAMLStar instance when done:
 
-- **Python/Node.js/Java/C#/Rust/Perl**: `ys.close()`
+- **Python/Node.js/Java/C#/Rust/Perl/Ruby/PHP**: `ys.close()`
 - **Clojure**: No cleanup needed
 - **Go**: `ys.Close()`
+- **Lua**: `ys:close()`
 - **Fortran**: `call ys%close()`
 
 !!! note "Resource Management"
@@ -460,6 +544,24 @@ built using GraalVM native-image for optimal performance and small binary size.
 - Uses FFI::Platypus
 - Returns Perl hashes and arrays
 - Available on CPAN
+
+### Ruby
+
+- Requires Ruby 2.7+
+- Uses Fiddle from Ruby's standard library
+- Available on RubyGems
+
+### PHP
+
+- Requires PHP 8.0+
+- Uses the PHP FFI extension
+- Available on Packagist
+
+### Lua
+
+- Requires Lua 5.1+ with cffi-lua or LuaJIT FFI
+- Uses lua-cjson for JSON conversion
+- Available on LuaRocks
 
 ### C#
 

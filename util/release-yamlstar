@@ -41,9 +41,12 @@ bindings =::
 - delphi
 - fortran
 - java
+- lua
 - nodejs
 - perl
+- php
 - python
+- ruby
 - rust
 
 verbose =: B(ENV.YS_RELEASE_VERBOSE)

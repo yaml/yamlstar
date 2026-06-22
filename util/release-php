@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+lang=php
+tag_prefix=v
+root=$(cd "$(dirname "$0")/.." && pwd)
+
+update() (
+  rm -fr "${repo_dir:?}"/*
+
+  cp "$root/License" "$repo_dir/LICENSE"
+  cp "$from_dir/ReadMe.md" "$repo_dir/README.md"
+  cp "$from_dir/composer.json" "$repo_dir/composer.json"
+  cp -r "$from_dir/src" "$repo_dir/src"
+  cp -r "$from_dir/tests" "$repo_dir/tests"
+
+  {
+    echo '/vendor/'
+    echo 'composer.lock'
+    echo '/.phpunit.result.cache'
+  } > "$repo_dir/.gitignore"
+)
+
+source "$(dirname "$0")/release-repo.bash"
+
+main "$@"

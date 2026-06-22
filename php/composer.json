@@ -1,0 +1,30 @@
+{
+  "name": "yaml/yamlstar-php",
+  "version": "0.1.9",
+  "description": "PHP binding for YAMLStar",
+  "type": "library",
+  "license": "MIT",
+  "homepage": "https://yamlstar.org",
+  "readme": "ReadMe.md",
+  "authors": [
+    {
+      "name": "Ingy dot Net",
+      "email": "ingy@ingy.net"
+    }
+  ],
+  "support": {
+    "source": "https://github.com/yaml/yamlstar",
+    "docs": "https://yamlstar.org/bindings/",
+    "issues": "https://github.com/yaml/yamlstar/issues"
+  },
+  "require": {
+    "php": ">=8.0",
+    "ext-ffi": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "YAMLStar\\": "src/"
+    }
+  }
+}
+

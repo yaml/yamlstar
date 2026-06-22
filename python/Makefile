@@ -1,4 +1,5 @@
 include ../common/init.mk
+export UV_CACHE_DIR := $(ROOT)/.cache/uv
 include $M/python.mk
 include $(COMMON)/common.mk
 include $(COMMON)/binding.mk
@@ -25,6 +26,7 @@ RELEASE-WHEEL-DIR ?= dist/release-assets
 RELEASE-WHEEL-ARCHIVES := \
   $(wildcard $(RELEASE-WHEEL-DIR)/libyamlstar-$(RELEASE-WHEEL-VERSION)-*.tar.xz) \
   $(wildcard $(RELEASE-WHEEL-DIR)/libyamlstar-$(RELEASE-WHEEL-VERSION)-*.zip)
+PYTHON-BINDING-DEPS := $(PYTHON-VENV)/.yamlstar-binding-deps
 
 # Python uses the gloat library when YAMLSTAR_GLOJURE=1, GraalVM otherwise
 ifdef YAMLSTAR_GLOJURE
@@ -38,8 +40,8 @@ endif
 
 test: test-pytest
 
-test-pytest: $(PYTHON-SO) $(PYTHON-VENV)
-	$(VENV) && pytest test/
+test-pytest: $(PYTHON-SO) $(PYTHON-BINDING-DEPS)
+	$(VENV) && python -m pytest test/
 
 build: $(PYTHON-SO)
 
@@ -121,6 +123,10 @@ Meta: ../Meta
 	cp $< $@
 
 release-deps:: $(PYTHON-VENV)
+
+$(PYTHON-BINDING-DEPS): $(PYTHON-VENV)
+	$(UV) pip install --python $(PYTHON-VENV) pytest setuptools twine wheel
+	touch $@
 
 clean::
 	$(RM) MANIFEST.in Meta

@@ -38,9 +38,12 @@ BINDING-LANGS ?= \
   fortran \
   go \
   java \
+  lua \
   nodejs \
   perl \
+  php \
   python \
+  ruby \
   rust \
 
 # Gloat build cannot run JVM-based bindings (clojure, java)
@@ -114,7 +117,9 @@ shellcheck: $(SHELLCHECK)
 	  util/install-release-artifacts \
 	  util/release-go \
 	  util/release-fortran \
-	  util/release-delphi
+	  util/release-delphi \
+	  util/release-lua \
+	  util/release-php
 endif
 
 $(ALL-TESTS):

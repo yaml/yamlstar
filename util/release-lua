@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+lang=lua
+tag_prefix=v
+root=$(cd "$(dirname "$0")/.." && pwd)
+
+update() (
+  rm -fr "${repo_dir:?}"/*
+
+  cp "$root/License" "$repo_dir/LICENSE"
+  cp "$from_dir/ReadMe.md" "$repo_dir/README.md"
+  cp "$from_dir/yamlstar-$version-1.rockspec" "$repo_dir/yamlstar.rockspec"
+  cp -r "$from_dir/lib" "$repo_dir/lib"
+  cp -r "$from_dir/test" "$repo_dir/test"
+)
+
+source "$(dirname "$0")/release-repo.bash"
+
+main "$@"
