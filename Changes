@@ -1,3 +1,8 @@
+- version: 0.1.11
+  date:    Mon Jun 22 07:05:22 PM EDT 2026
+  changes:
+  - Fix Haskell release test ys lookup
+  - Update GitHub actions Node runtime pins
 - version: 0.1.10
   date:    Mon Jun 22 06:24:16 PM EDT 2026
   changes:

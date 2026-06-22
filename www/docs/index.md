@@ -14,7 +14,7 @@ hide:
 <pre class="home-page">
 <span class="ykey">What Is YAMLStar</span><span class="ysep">:</span>
   <span class="ykey">Description</span><span class="ysep">:</span> <span class="ystr">Pure YAML 1.2 loading and dumping with cross-language consistency</span>
-  <span class="ykey">Version</span><span class="ysep">:</span> <span class="yver">0.1.10</span>
+  <span class="ykey">Version</span><span class="ysep">:</span> <span class="yver">0.1.11</span>
   <span class="ykey">Languages</span><span class="ysep">:</span>
     - <span class="ystr">Clojure</span>
     - <span class="ystr">Crystal</span>
@@ -66,7 +66,7 @@ hide:
     ys.close();
 
   <span class="ykey">Clojure</span><span class="ysep">:</span> |
-    <span class="ycom">; lein/deps.edn: org.yamlstar/yamlstar "0.1.10"</span>
+    <span class="ycom">; lein/deps.edn: org.yamlstar/yamlstar "0.1.11"</span>
     (<span class="ykw">require</span> '[yamlstar.core <span class="ykw">:as</span> yaml])
 
     (yaml/load <span class="ystr">"key: value"</span>)

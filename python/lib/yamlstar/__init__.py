@@ -10,7 +10,7 @@ them to Python objects.
 """
 
 # Version matching the yamlstar shared library
-yamlstar_version = '0.1.10'
+yamlstar_version = '0.1.11'
 
 import os
 import sys
