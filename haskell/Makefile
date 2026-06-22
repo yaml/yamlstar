@@ -1,5 +1,6 @@
 include ../common/init.mk
 include $M/cabal.mk
+include $M/yamlscript.mk
 include $(COMMON)/common.mk
 include $(COMMON)/binding.mk
 
@@ -49,7 +50,7 @@ $(CABAL-INDEX): $(CABAL)
 	cabal update
 
 yamlstar.cabal: cabal.ys $(YS)
-	ys $< > $@
+	$(YS) $< > $@
 
 License: ../License
 	cp $< $@
