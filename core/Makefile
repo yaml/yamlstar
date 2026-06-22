@@ -38,9 +38,11 @@ test-suite-fixture:
 	  git clone --no-checkout '$(YAML-TEST-SUITE-URL)' \
 	    '$(YAML-TEST-SUITE-DIR)'; \
 	fi
+	git -C '$(YAML-TEST-SUITE-DIR)' config core.autocrlf false
+	git -C '$(YAML-TEST-SUITE-DIR)' config core.eol lf
 	git -C '$(YAML-TEST-SUITE-DIR)' fetch --depth 1 origin \
 	  '$(YAML-TEST-SUITE-COMMIT)'
-	git -C '$(YAML-TEST-SUITE-DIR)' checkout -q \
+	git -C '$(YAML-TEST-SUITE-DIR)' checkout -f -q \
 	  '$(YAML-TEST-SUITE-COMMIT)'
 
 test-suite: $(LEIN) test-suite-fixture
