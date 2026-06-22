@@ -24,6 +24,9 @@ vo =: v-old.str/replace(/\./ '\\.')
     - Meta
     - cli/src/yamlstar/cli.clj
     - clojure/ReadMe.md
+    - crystal/ReadMe.md
+    - crystal/shard.yml
+    - crystal/src/yamlstar/version.cr
     - core/src/yamlstar/core.clj
     - csharp/YAMLStar.csproj
     - doc/RELEASING.md
@@ -38,9 +41,14 @@ vo =: v-old.str/replace(/\./ '\\.')
     - example/python/ReadMe.md
     - fortran/fpm.toml
     - go/yamlstar.go
+    - haskell/ReadMe.md
+    - haskell/cabal.ys
     - java/Makefile
     - java/ReadMe.md
     - java/src/com/yaml/yamlstar.clj
+    - julia/Project.toml
+    - julia/ReadMe.md
+    - julia/src/libyamlstar.jl
     - lua/lib/yamlstar.lua
     - lua/yamlstar.rockspec
     - nodejs/lib/yamlstar/index.js
@@ -48,6 +56,9 @@ vo =: v-old.str/replace(/\./ '\\.')
     - php/composer.json
     - php/src/YAMLStar.php
     - python/lib/yamlstar/__init__.py
+    - raku/META6.json
+    - raku/README.md
+    - raku/lib/YAMLStar.rakumod
     - ruby/lib/yamlstar/version.rb
     - rust/ReadMe.md
     - rust/src/lib.rs

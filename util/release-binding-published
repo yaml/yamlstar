@@ -18,6 +18,26 @@ json-url-exists() {
   curl -A yamlstar-release -fsL "$1" >/dev/null 2>&1
 }
 
+julia-version-exists() {
+  local url
+  url='https://raw.githubusercontent.com/JuliaRegistries/General/master'
+  url="$url/Y/YAMLStar/Versions.toml"
+  curl -A yamlstar-release -fsL "$url" |
+    grep -Fq "[\"$version\"]"
+}
+
+zef-version-exists() {
+  curl -A yamlstar-release -fsL https://360.zef.pm |
+    jq -e \
+      --arg name YAMLStar \
+      --arg auth zef:ingy \
+      --arg version "$version" '
+        any(.[]; .name == $name and
+                 .auth == $auth and
+                 .version == $version)
+      ' >/dev/null
+}
+
 git-tag-exists() {
   git ls-remote --exit-code --tags "$1" "refs/tags/$2" \
     >/dev/null 2>&1
@@ -62,12 +82,23 @@ perl-cpan-version() {
   '
 }
 
+haskell-version() {
+  case $version in
+    *.*.*.*) printf '%s\n' "$version" ;;
+    *) printf '%s.0\n' "$version" ;;
+  esac
+}
+
 published=false
 
 case $binding in
   clojure)
     url='https://repo.clojars.org/org/yamlstar/yamlstar'
     url-exists "$url/$version/yamlstar-$version.jar" &&
+      published=true
+    ;;
+  crystal)
+    git-tag-exists "https://github.com/yaml/yamlstar-crystal" "v$version" &&
       published=true
     ;;
   csharp)
@@ -84,9 +115,18 @@ case $binding in
     git-tag-exists https://github.com/yaml/yamlstar-go "v$version" &&
       published=true
     ;;
+  haskell)
+    hversion=$(haskell-version)
+    url-exists "https://hackage.haskell.org/package/yamlstar-$hversion" &&
+      published=true
+    ;;
   java)
     url='https://repo1.maven.org/maven2/com/yaml/yamlstar'
     url-exists "$url/$version/yamlstar-$version.jar" &&
+      published=true
+    ;;
+  julia)
+    julia-version-exists &&
       published=true
     ;;
   lua)
@@ -111,6 +151,10 @@ case $binding in
     ;;
   python)
     json-url-exists "https://pypi.org/pypi/yamlstar/$version/json" &&
+      published=true
+    ;;
+  raku)
+    zef-version-exists &&
       published=true
     ;;
   ruby)

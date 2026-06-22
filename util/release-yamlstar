@@ -36,16 +36,20 @@ version-file =: '.version.ys'
 
 bindings =::
 - clojure
+- crystal
 - csharp
 - go
 - delphi
 - fortran
+- haskell
 - java
+- julia
 - lua
 - nodejs
 - perl
 - php
 - python
+- raku
 - ruby
 - rust
 

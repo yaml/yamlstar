@@ -1,0 +1,17 @@
+name = "YAMLStar"
+uuid = "4dd3d208-18db-460a-a0b1-fbfd847e97b6"
+authors = ["Ingy dot Net <ingy@ingy.net>"]
+version = "0.1.9"
+
+[deps]
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+
+[compat]
+julia = "1"
+JSON = "0.21.4"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]

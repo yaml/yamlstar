@@ -1,0 +1,17 @@
+#!/usr/bin/env raku
+
+use Test;
+use YAMLStar;
+
+plan 6;
+
+my YAMLStar $ys .= new;
+
+is-deeply $ys.load('key: value'), {key => 'value'}, 'load mapping';
+is-deeply $ys.load("- a\n- b\n"), ['a', 'b'], 'load sequence';
+is-deeply $ys.load-all("---\ndoc1\n---\na: 1\n"), ['doc1', {a => 1}], 'load all';
+is $ys.dump({key => 'value'}), "key: value\n", 'dump mapping';
+is $ys.dump-all(['doc1', {a => 1}]), "---\ndoc1\n---\na: 1\n", 'dump all';
+ok $ys.version ~~ /^ \d+ '.' \d+ '.' \d+ /, 'version';
+
+$ys.close;

@@ -1,0 +1,12 @@
+name: yamlstar
+version: 0.1.9
+
+authors:
+  - Ingy dot Net <ingy@ingy.net>
+
+description: |
+  Crystal binding for the YAMLStar shared library.
+
+crystal: ">= 1.0.0"
+
+license: MIT

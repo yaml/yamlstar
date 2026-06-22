@@ -33,16 +33,20 @@ MAKES-DISTCLEAN += \
 
 BINDING-LANGS ?= \
   clojure \
+  crystal \
   csharp \
   delphi \
   fortran \
   go \
+  haskell \
   java \
+  julia \
   lua \
   nodejs \
   perl \
   php \
   python \
+  raku \
   ruby \
   rust \
 
@@ -118,6 +122,7 @@ shellcheck: $(SHELLCHECK)
 	  util/release-go \
 	  util/release-fortran \
 	  util/release-delphi \
+	  util/release-crystal \
 	  util/release-lua \
 	  util/release-php
 endif
