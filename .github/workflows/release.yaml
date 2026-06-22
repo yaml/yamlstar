@@ -56,7 +56,7 @@ jobs:
       contents: read
     steps:
     - name: Checkout tag
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         ref: ${{ inputs.version }}
         fetch-depth: 0
@@ -98,7 +98,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout tag
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         ref: ${{ inputs.version }}
 
@@ -117,7 +117,7 @@ jobs:
         make -C python wheel VERSION="$VERSION"
 
     - name: Upload Linux artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: linux-x64
         path: |
@@ -133,7 +133,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - name: Checkout tag
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         ref: ${{ inputs.version }}
 
@@ -152,7 +152,7 @@ jobs:
         make -C python wheel VERSION="$VERSION"
 
     - name: Upload macOS artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: macos-arm64
         path: |
@@ -168,7 +168,7 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout tag
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         ref: ${{ inputs.version }}
 
@@ -208,7 +208,7 @@ jobs:
         make -C python wheel VERSION="$VERSION"
 
     - name: Upload Windows artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: windows-x64
         path: |
@@ -224,12 +224,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout tag
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         ref: ${{ inputs.version }}
 
     - name: Download Linux artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v7
       with:
         name: linux-x64
         path: release-artifacts
@@ -252,12 +252,12 @@ jobs:
     runs-on: macos-latest
     steps:
     - name: Checkout tag
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         ref: ${{ inputs.version }}
 
     - name: Download macOS artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v7
       with:
         name: macos-arm64
         path: release-artifacts
@@ -280,12 +280,12 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout tag
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         ref: ${{ inputs.version }}
 
     - name: Download Windows artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v7
       with:
         name: windows-x64
         path: release-artifacts
@@ -320,7 +320,7 @@ jobs:
       contents: write
     steps:
     - name: Checkout tag
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         ref: ${{ inputs.version }}
 
@@ -358,12 +358,12 @@ jobs:
       contents: write
     steps:
     - name: Checkout tag
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         ref: ${{ inputs.version }}
 
     - name: Download release artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v7
 
     - name: Prepare release assets
       run: |
@@ -397,7 +397,7 @@ jobs:
       YAMLSTAR_HOMEBREW_TAP_SSH_KEY: ${{ secrets.YAMLSTAR_HOMEBREW_TAP_SSH_KEY }}
     steps:
     - name: Checkout tag
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         ref: >-
           ${{
@@ -461,7 +461,7 @@ jobs:
       YAMLSTAR_BINDING_REPO_SSH_KEY: ${{ secrets.YAMLSTAR_BINDING_REPO_SSH_KEY }}
     steps:
     - name: Checkout tag
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         ref: >-
           ${{
@@ -529,7 +529,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.YAMLSTAR_RELEASE_TOKEN }}
     steps:
     - name: Checkout tag
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         ref: ${{ inputs.version }}
         fetch-depth: 0
