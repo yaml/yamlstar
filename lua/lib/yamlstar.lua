@@ -14,7 +14,7 @@ if not ffi then
 end
 
 local json = require("cjson")
-local yamlstar_version = "0.1.9"
+local yamlstar_version = "0.1.10"
 
 local function platform_extension()
   if ffi.os == "Linux" then

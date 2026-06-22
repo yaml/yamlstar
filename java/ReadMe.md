@@ -12,7 +12,7 @@ Add to your `pom.xml`:
 <dependency>
   <groupId>com.yaml</groupId>
   <artifactId>yamlstar</artifactId>
-  <version>0.1.9</version>
+  <version>0.1.10</version>
 </dependency>
 ```
 
@@ -22,7 +22,7 @@ Add to your `build.gradle`:
 
 ```gradle
 dependencies {
-    implementation 'com.yaml:yamlstar:0.1.9'
+    implementation 'com.yaml:yamlstar:0.1.10'
 }
 ```
 

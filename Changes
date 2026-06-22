@@ -1,3 +1,9 @@
+- version: 0.1.10
+  date:    Mon Jun 22 06:24:16 PM EDT 2026
+  changes:
+  - Add Ruby PHP and Lua bindings
+  - Add Crystal Haskell Julia and Raku bindings
+  - Document new language bindings
 - version: 0.1.9
   date:    Mon Jun 22 09:30:53 AM EDT 2026
   changes:

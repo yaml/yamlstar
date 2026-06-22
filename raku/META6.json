@@ -1,6 +1,6 @@
 { "api": 0
 , "name": "YAMLStar"
-, "version": "0.1.9"
+, "version": "0.1.10"
 , "description": "Pure YAML 1.2 loader"
 , "auth": "zef:ingy"
 , "provides":
