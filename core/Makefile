@@ -15,6 +15,16 @@ YAML-TEST-SUITE-NS := yamlstar.yaml-test-suite-test
 YAML-TEST-SUITE-LOAD := $(YAML-TEST-SUITE-NS)/yaml-test-suite-loader-conformance
 YAML-TEST-SUITE-ROUNDTRIP := $(YAML-TEST-SUITE-NS)/yaml-test-suite-roundtrip-conformance
 YAML-TEST-SUITE-EMIT := $(YAML-TEST-SUITE-NS)/yaml-test-suite-emit-conformance
+YAML-TEST-SUITE-ENV := YAMLSTAR_TEST_SUITE_DIR='$(YAML-TEST-SUITE-DIR)'
+ifdef t
+YAML-TEST-SUITE-ENV += YAMLSTAR_TEST_SUITE_CASES='$t'
+endif
+ifdef a
+YAML-TEST-SUITE-ENV += YAMLSTAR_TEST_SUITE_SHOW_FAILURES='$a'
+endif
+ifdef v
+YAML-TEST-SUITE-ENV += YAMLSTAR_TEST_SUITE_VERBOSE='$v'
+endif
 
 
 build:
@@ -34,22 +44,23 @@ test-suite-fixture:
 	  '$(YAML-TEST-SUITE-COMMIT)'
 
 test-suite: $(LEIN) test-suite-fixture
-	YAMLSTAR_TEST_SUITE_DIR='$(YAML-TEST-SUITE-DIR)' \
+	$(YAML-TEST-SUITE-ENV) \
 	  lein with-profile +test-suite test $(YAML-TEST-SUITE-NS)
 
 test-suite-load: $(LEIN) test-suite-fixture
-	YAMLSTAR_TEST_SUITE_DIR='$(YAML-TEST-SUITE-DIR)' \
+	$(YAML-TEST-SUITE-ENV) \
 	  lein with-profile +test-suite test :only $(YAML-TEST-SUITE-LOAD)
 
 test-suite-roundtrip: $(LEIN) test-suite-fixture
-	YAMLSTAR_TEST_SUITE_DIR='$(YAML-TEST-SUITE-DIR)' \
+	$(YAML-TEST-SUITE-ENV) \
 	  lein with-profile +test-suite test :only $(YAML-TEST-SUITE-ROUNDTRIP)
 
 test-suite-emit: $(LEIN) test-suite-fixture
-	YAMLSTAR_TEST_SUITE_DIR='$(YAML-TEST-SUITE-DIR)' \
+	$(YAML-TEST-SUITE-ENV) \
 	  lein with-profile +test-suite test :only $(YAML-TEST-SUITE-EMIT)
 
 install: $(LEIN)
 	lein with-profile +uberjar $@
 
-.PHONY: test-suite test-suite-fixture test-suite-load test-suite-roundtrip test-suite-emit
+.PHONY: test-suite test-suite-fixture \
+  test-suite-load test-suite-roundtrip test-suite-emit

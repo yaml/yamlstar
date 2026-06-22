@@ -16,13 +16,23 @@
 (def emit-expected-failures-resource
   "expected-fails/emit.yaml")
 
+(defn show-expected-failures? []
+  (boolean (some-> (System/getenv "YAMLSTAR_TEST_SUITE_SHOW_FAILURES")
+                   (not= ""))))
+
+(defn verbose? []
+  (boolean (some-> (System/getenv "YAMLSTAR_TEST_SUITE_VERBOSE")
+                   (not= ""))))
+
 (defn read-expected-failures [resource-name]
-  (if-let [resource (io/resource resource-name)]
-    (->> (yaml/load (slurp resource))
-         (map (fn [[id reason]]
-                [id (keyword reason)]))
-         (into {}))
-    {}))
+  (if (show-expected-failures?)
+    {}
+    (if-let [resource (io/resource resource-name)]
+      (->> (yaml/load (slurp resource))
+           (map (fn [[id reason]]
+                  [id (keyword reason)]))
+           (into {}))
+      {})))
 
 (defn suite-root []
   (io/file (or (System/getenv "YAMLSTAR_TEST_SUITE_DIR")
@@ -237,6 +247,14 @@
        ": " reason
        (when message (str " - " message))))
 
+(defn format-verbose-result [label expected-failures {:keys [id status reason]}]
+  (let [status-text (cond
+                      (= :pass status) "pass"
+                      (= :skip status) (str "skip " reason)
+                      (contains? expected-failures id) (str "expected-fail " reason)
+                      :else (str "fail " reason))]
+    (str "yaml-test-suite " label " " id ": " status-text)))
+
 (defn result-for-case [root run-fn case-dir]
   (let [id (relative-case-id root case-dir)
         expected (expected-result case-dir)]
@@ -260,6 +278,9 @@
           (is (seq results)
               (str "No yaml-test-suite cases matched "
                    (or selected "the suite"))))
+        (when (verbose?)
+          (doseq [result results]
+            (println (format-verbose-result label expected-failures result))))
         (testing (str label " summary")
           (println (str "yaml-test-suite " label ":")
                    (:total summary) "cases,"
