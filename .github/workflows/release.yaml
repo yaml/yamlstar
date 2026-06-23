@@ -459,6 +459,7 @@ jobs:
       FEZ_USER: ${{ secrets.FEZ_USER }}
       FEZ_TOKEN: ${{ secrets.FEZ_TOKEN }}
       PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+      RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
       CRATES_TOKEN: ${{ secrets.CRATES_TOKEN }}
       YAMLSTAR_BINDING_REPO_SSH_KEY: ${{ secrets.YAMLSTAR_BINDING_REPO_SSH_KEY }}
     steps:
