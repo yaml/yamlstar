@@ -16,23 +16,23 @@ hide:
   <span class="ykey">Description</span><span class="ysep">:</span> <span class="ystr">Pure YAML 1.2 loading and dumping with cross-language consistency</span>
   <span class="ykey">Version</span><span class="ysep">:</span> <span class="yver">0.1.11</span>
   <span class="ykey">Languages</span><span class="ysep">:</span>
-    - <span class="ystr">Clojure</span>
-    - <span class="ystr">Crystal</span>
-    - <span class="ystr">C#</span>
-    - <span class="ystr">Delphi</span>
-    - <span class="ystr">Fortran</span>
-    - <span class="ystr">Go</span>
-    - <span class="ystr">Haskell</span>
-    - <span class="ystr">Java</span>
-    - <span class="ystr">Julia</span>
-    - <span class="ystr">Lua</span>
-    - <span class="ystr">Node.js</span>
-    - <span class="ystr">Perl</span>
-    - <span class="ystr">PHP</span>
-    - <span class="ystr">Python</span>
-    - <span class="ystr">Raku</span>
-    - <span class="ystr">Ruby</span>
-    - <span class="ystr">Rust</span>
+    - <a href="https://clojars.org/org.yamlstar/yamlstar"><span class="ystr">Clojure</span></a>
+    - <a href="https://shardbox.org/shards/yamlstar"><span class="ystr">Crystal</span></a>
+    - <a href="https://www.nuget.org/packages/YAMLStar/"><span class="ystr">C#</span></a>
+    - <a href="https://github.com/yaml/yamlstar-delphi"><span class="ystr">Delphi</span></a>
+    - <a href="https://github.com/yaml/yamlstar-fortran"><span class="ystr">Fortran</span></a>
+    - <a href="https://github.com/yaml/yamlstar-go"><span class="ystr">Go</span></a>
+    - <a href="https://hackage.haskell.org/package/yamlstar"><span class="ystr">Haskell</span></a>
+    - <a href="https://central.sonatype.com/artifact/com.yaml/yamlstar"><span class="ystr">Java</span></a>
+    - <a href="https://juliahub.com/ui/Packages/General/YAMLStar"><span class="ystr">Julia</span></a>
+    - <a href="https://luarocks.org/modules/ingy/yamlstar"><span class="ystr">Lua</span></a>
+    - <a href="https://www.npmjs.com/package/yamlstar"><span class="ystr">Node.js</span></a>
+    - <a href="https://metacpan.org/pod/YAMLStar"><span class="ystr">Perl</span></a>
+    - <a href="https://packagist.org/packages/yaml/yamlstar-php"><span class="ystr">PHP</span></a>
+    - <a href="https://pypi.org/project/yamlstar/"><span class="ystr">Python</span></a>
+    - <a href="https://raku.land/zef:ingy/YAMLStar"><span class="ystr">Raku</span></a>
+    - <a href="https://rubygems.org/gems/yamlstar"><span class="ystr">Ruby</span></a>
+    - <a href="https://crates.io/crates/yamlstar"><span class="ystr">Rust</span></a>
   <span class="ykey">Features</span><span class="ysep">:</span>
     <span class="ykey">Spec Compliant</span><span class="ysep">:</span> <span class="ybool">true</span>   <span class="ycom"># 100% YAML 1.2 specification</span>
     <span class="ykey">Pure Clojure</span><span class="ysep">:</span> <span class="ybool">true</span>    <span class="ycom"># No SnakeYAML dependencies</span>

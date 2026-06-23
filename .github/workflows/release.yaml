@@ -463,6 +463,8 @@ jobs:
       PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
       RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
       CRATES_TOKEN: ${{ secrets.CRATES_TOKEN }}
+      PACKAGIST_USER: ${{ secrets.PACKAGIST_USER }}
+      PACKAGIST_TOKEN: ${{ secrets.PACKAGIST_TOKEN }}
       YAMLSTAR_BINDING_REPO_SSH_KEY: ${{ secrets.YAMLSTAR_BINDING_REPO_SSH_KEY }}
     steps:
     - name: Checkout tag

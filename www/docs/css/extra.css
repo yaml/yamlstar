@@ -85,6 +85,11 @@
 .ykw { color: #d73a49; font-weight: 600; }
 .yver { color: var(--ys-gold-dark); font-weight: 700; }
 
+.home-page a .ystr {
+  color: #008000;
+  text-decoration: underline;
+}
+
 [data-md-color-scheme="slate"] .ykey { color: #6eb4ff; }
 [data-md-color-scheme="slate"] .ystr { color: #7ec699; }
 [data-md-color-scheme="slate"] .ynum { color: #e5c07b; }
@@ -93,6 +98,7 @@
 [data-md-color-scheme="slate"] .yurl { color: #6eb4ff; }
 [data-md-color-scheme="slate"] .ykw { color: #e06c75; }
 [data-md-color-scheme="slate"] .yver { color: var(--ys-gold-warm); }
+[data-md-color-scheme="slate"] .home-page a .ystr { color: #7ec699; }
 
 /* Call-to-Action Buttons */
 .home-cta {
