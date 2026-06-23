@@ -455,6 +455,7 @@ jobs:
       HACKAGE_TOKEN: ${{ secrets.HACKAGE_TOKEN }}
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
       PAUSE_USER: ${{ secrets.PAUSE_USER }}
       PAUSE_PASS: ${{ secrets.PAUSE_PASS }}
       FEZ_USER: ${{ secrets.FEZ_USER }}
