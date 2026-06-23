@@ -75,6 +75,7 @@ ALL-TESTS := \
   test-cli \
   test-libyamlstar \
   $(BINDING-TESTS)
+TEST-TIME ?=
 
 build install::
 	$(MAKE) -C libyamlstar $@
@@ -131,7 +132,7 @@ $(ALL-TESTS):
 	@echo '--------------------------------------------------'
 	@echo '   $@'
 	@echo '--------------------------------------------------'
-	$(MAKE) -C $(@:test-%=%) test v=$v
+	$(TEST-TIME) $(MAKE) -C $(@:test-%=%) test v=$v
 
 core:
 	$(MAKE) -C core install
