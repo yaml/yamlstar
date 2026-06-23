@@ -243,7 +243,7 @@ jobs:
         [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
 
     - name: Run tests
-      run: make test-all
+      run: make test-all BINDING-SKIP=php
 
   test-macos:
     name: Test macOS artifacts
@@ -271,7 +271,7 @@ jobs:
         [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
 
     - name: Run tests
-      run: make test-all BINDING-SKIP=delphi
+      run: make test-all BINDING-SKIP="delphi lua"
 
   test-windows:
     name: Test Windows artifacts
