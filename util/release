@@ -665,10 +665,22 @@ do-release-php() (
   fi
   [[ $PACKAGIST_USER && $PACKAGIST_TOKEN ]] ||
     die 'ERROR: PACKAGIST_USER/PACKAGIST_TOKEN not set'
-  curl -X POST \
-    -H 'content-type:application/json' \
-    "https://packagist.org/api/update-package?username=$PACKAGIST_USER&apiToken=$PACKAGIST_TOKEN" \
-    -d '{"repository":{"url":"https://github.com/yaml/yamlstar-php"}}'
+
+  repo_url='https://github.com/yaml/yamlstar-php'
+  response=$(
+    curl -fsS -X POST \
+      -H 'content-type: application/json' \
+      -H "Authorization: Bearer $PACKAGIST_USER:$PACKAGIST_TOKEN" \
+      'https://packagist.org/api/update-package' \
+      -d "{\"repository\":\"$repo_url\"}"
+  ) || die 'ERROR: Packagist update request failed'
+
+  [[ $response == *'"status":"success"'* ||
+     $response == *'"status": "success"'* ]] || {
+    printf '%s\n' "$response" >&2
+    die 'ERROR: Packagist update failed'
+  }
+  printf '%s\n' "$response"
 )
 
 # Go - delegate to release-go script
