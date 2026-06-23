@@ -53,7 +53,8 @@
       subtests)))
 
 (defn relative-case-id [^java.io.File root ^java.io.File case-dir]
-  (subs (.getPath case-dir) (inc (count (.getPath root)))))
+  (-> (subs (.getPath case-dir) (inc (count (.getPath root))))
+      (str/replace java.io.File/separatorChar \/)))
 
 (defn selected-case-ids []
   (when-let [raw (System/getenv "YAMLSTAR_TEST_SUITE_CASES")]
