@@ -1,0 +1,131 @@
+#!/usr/bin/env bash
+
+[ -z "$BASH" ] && {
+  echo "This script must be run with 'bash' instead of '$0'." >&2
+  exit 1
+}
+
+[[ ${DEBUG-} == 1 ]] && set -x
+
+set -euo pipefail
+
+YAMLSTAR_VERSION=0.1.11
+VERSION=${VERSION:-$YAMLSTAR_VERSION}
+export VERSION
+
+main() (
+  setup
+
+  if [[ ${BIN-} && ${LIB-} ]]; then
+    install yamlstar
+    install libyamlstar
+  elif [[ ${BIN-} ]]; then
+    install yamlstar
+  elif [[ ${LIB-} ]]; then
+    install libyamlstar
+  else
+    install yamlstar
+    install libyamlstar
+  fi
+)
+
+install() (
+  name=$1
+  file=$name-$vers-$os-$arch.tar.xz
+  url=$releases_url/$vers/$file
+
+  curl -fsS -L -o "$dir/$file" "$url"
+
+  release_dir=$dir/$name
+  mkdir -- "$release_dir"
+  tar -xf "$dir/$file" -C "$release_dir"
+
+  (
+    CDPATH='' cd -- "$release_dir" || exit
+    make -s --no-print-directory -C "$name"-* install
+  )
+
+  if [[ ! ${QUIET-} &&
+        $name == yamlstar &&
+        $PATH != *"$PREFIX"/bin*
+     ]]; then
+    echo "
+  *** WARNING: '$PREFIX/bin' is not in your PATH yet ***
+
+  You can add it by running:
+    export PATH=$PREFIX/bin:\$PATH
+
+  Make it permanent by adding the above line to your shell profile.
+
+  For full details: https://yamlstar.org/installation/
+"
+  fi
+
+  if [[ ! ${QUIET-} &&
+        $name == libyamlstar &&
+        $PREFIX != "$HOME/.local" &&
+        $PREFIX != /usr/local
+     ]]; then
+    echo
+    if [[ $os == macos ]]; then
+      echo "  *** WARNING: '$PREFIX/lib' may need to be in DYLD_LIBRARY_PATH ***"
+    else
+      echo "  *** WARNING: '$PREFIX/lib' may need to be in LD_LIBRARY_PATH ***"
+    fi
+    echo
+  fi
+)
+
+setup() {
+  vers=${VERSION:-$YAMLSTAR_VERSION}
+
+  if [[ ! ${PREFIX-} ]]; then
+    if [[ $(id -u) == 0 ]]; then
+      PREFIX=/usr/local
+    else
+      PREFIX=$HOME/.local
+    fi
+  fi
+  export PREFIX
+
+  if [[ $OSTYPE == *darwin* ]]; then
+    os=macos
+  elif [[ $OSTYPE == *linux* ]]; then
+    os=linux
+  else
+    die "Unknown/unsupported OS type: '$OSTYPE'"
+  fi
+
+  if [[ $MACHTYPE == *x86_64* ]]; then
+    arch=x64
+  elif [[ $MACHTYPE == *arm64* || $MACHTYPE == *aarch64* ]]; then
+    arch=arm64
+  else
+    die "Unknown machine/unsupported type: '$MACHTYPE'"
+  fi
+
+  if [[ $os == macos && $arch != arm64 ]]; then
+    die "YAMLStar is not available for macOS '$arch' yet"
+  fi
+
+  if [[ $os == linux && $arch != x64 ]]; then
+    die "YAMLStar is not available for Linux '$arch' yet"
+  fi
+
+  releases_url=https://github.com/yaml/yamlstar/releases/download
+
+  if [[ ${PREFIX-} && $PREFIX != /* ]]; then
+    export PREFIX=$PWD/$PREFIX
+  fi
+
+  unset -v dir
+  trap '[[ ${dir-} ]] && rm -fr -- "$dir"' EXIT
+  dir=$(mktemp -d)
+}
+
+die() {
+  printf '%s\n' "$@" >&2
+  exit 1
+}
+
+main "$@"
