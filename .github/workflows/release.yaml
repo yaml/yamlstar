@@ -456,6 +456,8 @@ jobs:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       PAUSE_USER: ${{ secrets.PAUSE_USER }}
       PAUSE_PASS: ${{ secrets.PAUSE_PASS }}
+      FEZ_USER: ${{ secrets.FEZ_USER }}
+      FEZ_TOKEN: ${{ secrets.FEZ_TOKEN }}
       PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
       CRATES_TOKEN: ${{ secrets.CRATES_TOKEN }}
       YAMLSTAR_BINDING_REPO_SSH_KEY: ${{ secrets.YAMLSTAR_BINDING_REPO_SSH_KEY }}

@@ -632,12 +632,23 @@ do-release-raku() (
   elif [[ -f ~/.yamlstar-secrets.yaml ]]; then
     FEZ_USER=$(ys -e '(.raku.user || .fez.user):say' ~/.yamlstar-secrets.yaml 2>/dev/null || true)
     FEZ_TOKEN=$(ys -e '(.raku.token || .fez.token):say' ~/.yamlstar-secrets.yaml 2>/dev/null || true)
-    if [[ $FEZ_USER && $FEZ_TOKEN ]]; then
-      printf '{"un":"%s","key":"%s"}\n' "$FEZ_USER" "$FEZ_TOKEN" > "$HOME/.fez-config.json"
-    fi
   fi
 
-  fez upload
+  [[ -n ${FEZ_USER:-} ]] ||
+    die 'ERROR: FEZ_USER not set'
+  [[ ${#FEZ_USER} -gt 3 ]] ||
+    die 'ERROR: FEZ_USER must be longer than 3 chars'
+  [[ -n ${FEZ_TOKEN:-} ]] ||
+    die 'ERROR: FEZ_TOKEN not set'
+
+  mkdir -p "$HOME"
+  printf '{"un":"%s","key":"%s"}\n' "$FEZ_USER" "$FEZ_TOKEN" > "$HOME/.fez-config.json"
+
+  if [[ -n ${YS_RELEASE_CI:-} ]]; then
+    timeout 60s fez upload --unattended --force
+  else
+    fez upload
+  fi
 )
 
 # PHP - publish split repository and notify Packagist
