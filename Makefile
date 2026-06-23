@@ -13,6 +13,7 @@ include $M/bpan.mk
 include $M/shellcheck.mk
 include $M/zig.mk
 include $M/shell.mk
+include common/backend.mk
 
 # Extract version from Meta file
 VERSION := $(shell grep '^version:' Meta | cut -d' ' -f2)
@@ -21,6 +22,11 @@ RELEASE-SECRETS := \
   $(wildcard $(HOME)/.yamlstar-secrets.yaml) \
   $(wildcard $(HOME)/.yamlscript-secrets.yaml)
 RELEASE-AUTH := $(strip $(GH_TOKEN)$(GITHUB_TOKEN)$(RELEASE-SECRETS))
+RAPIDYAML := rapidyaml
+RAPIDYAML-REPO := https://github.com/biojppm/rapidyaml
+RAPIDYAML-VERSION ?= v0.16.0
+RAPIDYAML-CFG ?= Release
+RAPIDYAML-CMAKE-ARGS ?=
 
 CLI-LOCAL-SIBLING-DIR := $(abspath $(GIT-REPO-DIR)/..)
 CLI-LOCAL-CACHE := $(ROOT)/.cache/cli-local
@@ -40,11 +46,14 @@ MAKES-REALCLEAN := \
   .cache/cli-local/ \
   bench/gloat-*/ \
   bench/graalvm/ \
+  rapidyaml/ \
   python/.eggs/ \
   util/__pycache__/ \
   www/site/ \
   www/venv/ \
   yaml-test-suite/ \
+  .clj-kondo/ \
+  .lsp/ \
 
 MAKES-DISTCLEAN += \
   $(INGY-LOCAL-DIR) \
@@ -115,14 +124,16 @@ ALL-TESTS := \
   $(BINDING-TESTS)
 TEST-TIME ?=
 
-build install::
+build: validate-backend libyamlstar
+
+install:: validate-backend
 	$(MAKE) -C libyamlstar $@
 
 test ?= test/*.t
 
 unexport PERL5OPT PERL5LIB
 
-test: test-unit test-core test-suite
+test: validate-backend test-unit test-core test-suite
 
 test-parser:
 	$(MAKE) -C core smoke-parser
@@ -149,17 +160,17 @@ test-unit: $(TEST-UNIT-DEPS)
 	perl -x "$$(command -v prove)"$(if $(v), -v,) $(test)
 endif
 
-ifdef YAMLSTAR_GLOJURE
-test-suite test-suite-load test-suite-roundtrip test-suite-emit:
-	$(MAKE) -C python $@ YAMLSTAR_GLOJURE=1
+ifneq ($(YAMLSTAR-BACKEND),jvm)
+test-suite test-suite-load test-suite-roundtrip test-suite-emit: validate-backend
+	$(MAKE) -C python $@
 else
-test-suite test-suite-load test-suite-roundtrip test-suite-emit:
+test-suite test-suite-load test-suite-roundtrip test-suite-emit: validate-backend
 	$(MAKE) -C core $@
 endif
 
-test-all: $(ALL-TESTS)
+test-all: validate-backend $(ALL-TESTS)
 
-test-bindings: $(BINDING-TESTS)
+test-bindings: validate-backend $(BINDING-TESTS)
 
 test-examples:
 	$(MAKE) --no-pr -C example test
@@ -172,6 +183,25 @@ go-generate-check: go-generate
 
 go-test: $(GO)
 	go test ./...
+
+rapidyaml:
+	if [ ! -d '$(RAPIDYAML)/.git' ]; then \
+	  git clone --recursive --branch '$(RAPIDYAML-VERSION)' \
+	    '$(RAPIDYAML-REPO)' '$(RAPIDYAML)'; \
+	else \
+	  if ! git -C '$(RAPIDYAML)' rev-parse --verify --quiet \
+	      'refs/tags/$(RAPIDYAML-VERSION)^{commit}' >/dev/null; then \
+	    git -C '$(RAPIDYAML)' fetch --depth 1 '$(RAPIDYAML-REPO)' \
+	      'refs/tags/$(RAPIDYAML-VERSION):refs/tags/$(RAPIDYAML-VERSION)'; \
+	  fi; \
+	  git -C '$(RAPIDYAML)' checkout --detach '$(RAPIDYAML-VERSION)'; \
+	  git -C '$(RAPIDYAML)' submodule update --init --recursive; \
+	fi
+	touch '$(RAPIDYAML)/.yamlstar-$(RAPIDYAML-VERSION)'
+	cd '$(RAPIDYAML)/samples/ints_only' && \
+	  cfg='$(RAPIDYAML-CFG)' && \
+	  cmake -S . -B ./build/$$cfg -DCMAKE_BUILD_TYPE=$$cfg $(RAPIDYAML-CMAKE-ARGS) && \
+	  cmake --build ./build/$$cfg --config $$cfg --target run --parallel
 
 ifeq ($(OS-NAME),windows)
 shellcheck:
@@ -202,7 +232,7 @@ $(ALL-TESTS):
 core:
 	$(MAKE) -C core install
 
-cli:
+cli: validate-backend
 	$(MAKE) -C cli build
 
 cli-graalvm:
@@ -240,7 +270,7 @@ cli-local-lgvm:
 cli-local-lglvm:
 	$(call CLI-LOCAL-BUILD,lglvm,let-go)
 
-libyamlstar:
+libyamlstar: validate-backend
 	$(MAKE) -C libyamlstar build
 
 serve:
@@ -564,4 +594,4 @@ endif
 	$(MAKE) -C python wheels-from-release n=$(v)
 	$(MAKE) -C python publish-wheels
 
-.PHONY: cli core libyamlstar test
+.PHONY: cli core libyamlstar rapidyaml test

@@ -1,5 +1,6 @@
 /.cache/
 /yaml-test-suite/
+/rapidyaml/
 /note/
 /worktree/
 /homebrew-yamlstar/

@@ -1,10 +1,9 @@
 include ../common/init.mk
-
-YAMLSTAR_GLOJURE ?= 1
+include ../common/backend.mk
 
 # Load platform tools before common.mk (which includes shell.mk last)
 # Avoids graalvm.mk/java.mk conflict when both platforms are present
-ifdef YAMLSTAR_GLOJURE
+ifdef YAMLSTAR-BACKEND-IS-GLOAT
 include $M/gloat.mk
 else
 include $M/graalvm.mk
@@ -14,7 +13,7 @@ endif
 
 include ../common/common.mk
 
-ifndef YAMLSTAR_GLOJURE
+ifndef YAMLSTAR-BACKEND-IS-GLOAT
 include ../common/native.mk
 endif
 
@@ -33,8 +32,30 @@ SO ?= so
 LIB-DIR := lib
 LIB-NAME := libyamlstar
 LIB-NAME-GLOAT ?= libyamlstar
-LIB-SO-GLOAT := $(LIB-DIR)/$(LIB-NAME-GLOAT).$(SO)
+LIB-NAME-JVM := libyamlstar-jvm
+LIB-NAME-GLJ := libyamlstar-glj
+LIB-NAME-CPP := libyamlstar-cpp
+LIB-SO-JVM := $(LIB-DIR)/$(LIB-NAME-JVM).$(SO)
+LIB-SO-GLJ := $(LIB-DIR)/$(LIB-NAME-GLJ).$(SO)
+LIB-SO-CPP := $(LIB-DIR)/$(LIB-NAME-CPP).$(SO)
 LIB-SO := $(LIB-DIR)/$(LIB-NAME).$(SO)
+LIB-SO-VERSION := $(LIB-SO).$(VERSION)
+LIB-HEADER := $(LIB-DIR)/$(LIB-NAME).h
+LIB-HEADER-JVM := $(LIB-DIR)/$(LIB-NAME-JVM).h
+LIB-HEADER-GLJ := $(LIB-DIR)/$(LIB-NAME-GLJ).h
+LIB-HEADER-CPP := $(LIB-DIR)/$(LIB-NAME-CPP).h
+ifeq ($(YAMLSTAR-BACKEND),jvm)
+SELECTED-LIB-SO := $(LIB-SO-JVM)
+SELECTED-LIB-HEADER := $(LIB-HEADER-JVM)
+endif
+ifeq ($(YAMLSTAR-BACKEND),glj)
+SELECTED-LIB-SO := $(LIB-SO-GLJ)
+SELECTED-LIB-HEADER := $(LIB-HEADER-GLJ)
+endif
+ifeq ($(YAMLSTAR-BACKEND),cpp)
+SELECTED-LIB-SO := $(LIB-SO-CPP)
+SELECTED-LIB-HEADER := $(LIB-HEADER-CPP)
+endif
 GLOAT-PLATFORM-OPT := \
   $(if $(GLOAT_PLATFORM),--platform=$(GLOAT_PLATFORM))
 GLOAT-WINDOWS-TARGET := $(filter windows/%,$(GLOAT_PLATFORM))
@@ -57,6 +78,17 @@ GO-GENERATED-DIR := $(abspath ../internal/glojure)
 GO-GENERATED-MODULE := github.com/yaml/yamlstar/internal/glojure
 
 CORE-YAMLSTAR := ../core/src/yamlstar
+RAPIDYAML-DIR := ../rapidyaml
+RAPIDYAML-STAMP := $(RAPIDYAML-DIR)/.yamlstar-v0.16.0
+RYMLSHIM-MODULE := yamlstar.local/rymlshim
+RYMLSHIM-DIR := $(abspath gloat/rymlshim)
+RYMLSHIM-SRCS := \
+  gloat/rymlshim/go.mod \
+  gloat/rymlshim/go.sum \
+  gloat/rymlshim/rymlshim.go \
+  gloat/rymlshim/rymlshim_test.go \
+  gloat/rymlshim/rymlshim.h \
+  gloat/rymlshim/rymlshim.cpp \
 
 # Gloat compiles Clojure sources directly, so use the sources shipped in the
 # exact yaml-parser artifact consumed by the JVM build.
@@ -215,42 +247,47 @@ _twg-build: $(GLOAT-RUN-DEPS) | $(GLOAT-DIR)
 	@echo "Building glj from $(TEST-WITH-GLOJURE)..."
 	env -u GOROOT $(GLOAT-GLOJURE-ENV) \
 	  $(GLOAT-RUN) --glj-build
-
-$(LIB-SO-GLOAT): _twg-build
-
 endif
 # --- end TEST-WITH-GLOJURE ---
 
 
-ifdef YAMLSTAR_GLOJURE
-build: build-gloat
-else
-build: build-graalvm
-endif
+build: validate-backend build-$(YAMLSTAR-BACKEND) select-backend
 
-LIB-HEADER := $(LIB-DIR)/$(LIB-NAME).h
-LIB-HEADER-GLOAT := $(LIB-DIR)/$(LIB-NAME-GLOAT).h
-
-build-gloat: $(LIB-SO-GLOAT)
-	cp $(GLOAT-LIB-HEADER) $(LIB-HEADER)
+build-glj: $(LIB-SO-GLJ)
+	cp $(GLOAT-LIB-HEADER) $(LIB-HEADER-GLJ)
 	cp $(GLOAT-ISOLATE-HEADER) $(LIB-DIR)/graal_isolate.h
 ifneq ($(OS-NAME),windows)
 ifeq (,$(GLOAT-WINDOWS-TARGET))
-	ln -sf $(notdir $(LIB-SO-GLOAT)) \
-	  $(LIB-DIR)/$(LIB-NAME-GLOAT).$(SO).$(VERSION)
+	ln -sf $(notdir $(LIB-SO-GLJ)) $(LIB-SO-GLJ).$(VERSION)
 endif
 endif
 
-build-graalvm: $(LIB-SO)
+build-cpp: $(LIB-SO-CPP)
+	cp $(GLOAT-LIB-HEADER) $(LIB-HEADER-CPP)
+	cp $(GLOAT-ISOLATE-HEADER) $(LIB-DIR)/graal_isolate.h
 ifneq ($(OS-NAME),windows)
-	ln -sf $(notdir $(LIB-SO)) $(LIB-DIR)/$(LIB-NAME).$(SO).$(VERSION)
+ifeq (,$(GLOAT-WINDOWS-TARGET))
+	ln -sf $(notdir $(LIB-SO-CPP)) $(LIB-SO-CPP).$(VERSION)
 endif
+endif
+
+build-jvm: $(LIB-SO-JVM)
+ifneq ($(OS-NAME),windows)
+	ln -sf $(notdir $(LIB-SO-JVM)) $(LIB-SO-JVM).$(VERSION)
+endif
+
+# Compatibility entry points retained for benchmark and external callers.
+build-gloat:
+	YAMLSTAR_GLJ=1 $(MAKE) build-glj LIB-NAME-GLJ=$(LIB-NAME-GLOAT)
+
+build-graalvm:
+	YAMLSTAR_JVM=1 $(MAKE) build-jvm LIB-NAME-JVM=$(LIB-NAME)
 
 # Build both: each requires separate make invocations (tool includes conflict)
 build-all:
-	YAMLSTAR_GLOJURE=1 $(MAKE) build-gloat
-	env -u YAMLSTAR_GLOJURE $(MAKE) build-graalvm \
-	  LIB-NAME=libyamlstar-graalvm
+	YAMLSTAR_GLJ=1 $(MAKE) build-glj
+	YAMLSTAR_CPP=1 $(MAKE) build-cpp
+	YAMLSTAR_JVM=1 $(MAKE) build-jvm
 
 test:
 
@@ -260,17 +297,55 @@ install: build
 	mkdir -p $(PREFIX)/lib/
 	install -m 644 $(INSTALL-LIB) $(PREFIX)/lib/
 
-ifdef YAMLSTAR_GLOJURE
-$(LIB-SO-GLOAT): $(GLOAT-SRCS) $(GLOAT-LINKS) $(GLOAT-RUN-DEPS) | $(GLOAT-DIR)
+$(RAPIDYAML-STAMP):
+	$(MAKE) -C .. rapidyaml
+
+_gloat-template-base: | $(GLOAT-DIR)
+	@perl -0pi -e 's/\n\tyamlstar_ryml "$(subst /,\/,$(RYMLSHIM-MODULE))"//g; s/\n\tyamlstar_ryml\.Install\(\)\n//g' \
+	  '$(GLOAT-DIR)/template/lib-main.go'
+	@perl -0pi -e 's|replace github\.com/gloathub/gloat/ys/pkg => [^\n]*|replace github.com/gloathub/gloat/ys/pkg => GLOAT-ROOT/ys/pkg\n|; s|replace $(subst /,\/,$(RYMLSHIM-MODULE)) => [^\n]*||g; s/\nrequire $(subst /,\/,$(RYMLSHIM-MODULE)) v0\.0\.0\n//g; s/\n\n+/\n/g' \
+	  '$(GLOAT-DIR)/template/go.mod'
+
+_gloat-cpp-template: _gloat-template-base
+	@if ! grep -q '$(RYMLSHIM-MODULE)' '$(GLOAT-DIR)/template/lib-main.go'; then \
+	  perl -0pi -e 's/import \(\n/import (\n\tyamlstar_ryml "$(subst /,\/,$(RYMLSHIM-MODULE))"\n/' \
+	    '$(GLOAT-DIR)/template/lib-main.go'; \
+	  perl -0pi -e 's/(\t\/\/ Set \*ns\* to the user'"'"'s namespace)/\tyamlstar_ryml.Install()\n\n$$1/' \
+	    '$(GLOAT-DIR)/template/lib-main.go'; \
+	fi
+	@printf '\nrequire $(RYMLSHIM-MODULE) v0.0.0\n' \
+	  >> '$(GLOAT-DIR)/template/go.mod'
+	@printf 'replace $(RYMLSHIM-MODULE) => $(RYMLSHIM-DIR)\n' \
+	  >> '$(GLOAT-DIR)/template/go.mod'
+
+$(LIB-SO-GLJ): $(GLOAT-SRCS) $(GLOAT-LINKS) $(GLOAT-RUN-DEPS) | $(GLOAT-DIR)
 	@echo "Building gloat shared library..."
 	mkdir -p $(LIB-DIR)
+ifdef TEST-WITH-GLOJURE
+	$(MAKE) _twg-build
+endif
+	$(MAKE) _gloat-template-base
 	</dev/null env -u GOROOT \
 	  $(if $(GLOAT_PATH),PATH='$(GLOAT_PATH)') \
 	  $(GLOAT-GLOJURE-ENV) \
 	  $(GLOAT-RUN) --force $(GLOAT-PLATFORM-OPT) \
 	  $(GLOAT-SRCS) -o $@
 	@echo "Gloat shared library created at: $@"
+
+$(LIB-SO-CPP): $(GLOAT-SRCS) $(GLOAT-LINKS) $(GLOAT-RUN-DEPS) \
+  $(RYMLSHIM-SRCS) $(RAPIDYAML-STAMP) | $(GLOAT-DIR)
+	@echo "Building rapidyaml Gloat shared library..."
+	mkdir -p $(LIB-DIR)
+ifdef TEST-WITH-GLOJURE
+	$(MAKE) _twg-build
 endif
+	$(MAKE) _gloat-cpp-template
+	</dev/null env -u GOROOT \
+	  $(if $(GLOAT_PATH),PATH='$(GLOAT_PATH)') \
+	  $(GLOAT-GLOJURE-ENV) \
+	  $(GLOAT-RUN) --force $(GLOAT-PLATFORM-OPT) \
+	  $(GLOAT-SRCS) -o $@
+	@echo "Rapidyaml Gloat shared library created at: $@"
 
 ifndef YAML-PARSER-DIR
 $(CORE-JAR):
@@ -280,19 +355,29 @@ endif
 $(LIB-JAR): $(CORE-JAR) $(LEIN)
 	cd graalvm && $(LEIN) $(LEIN-YAML-PARSER) uberjar
 
-ifndef YAMLSTAR_GLOJURE
-$(LIB-SO): $(LIB-JAR) $(REFLECTION-JSON) $(GRAALVM)
+$(LIB-SO-JVM): $(LIB-JAR) $(REFLECTION-JSON) $(GRAALVM)
 	@echo "Building GraalVM shared library..."
 	mkdir -p $(LIB-DIR)
 	$(NATIVE-IMAGE) \
 	  $(NATIVE-OPTS) \
 	  --shared \
 	  -jar $< \
-	  -o $(LIB-DIR)/$(LIB-NAME)
+	  -o $(LIB-DIR)/$(LIB-NAME-JVM)
 	test -f $@
 	@echo "GraalVM shared library created at: $@"
-	@echo "Header: $(LIB-HEADER)"
+	@echo "Header: $(LIB-HEADER-JVM)"
 
 # graal_isolate.h is a side effect of building the GraalVM SO
-$(LIB-DIR)/graal_isolate.h: $(LIB-SO)
+$(LIB-DIR)/graal_isolate.h: $(LIB-SO-JVM)
+
+select-backend: validate-backend $(SELECTED-LIB-SO)
+	mkdir -p $(LIB-DIR)
+ifeq ($(OS-NAME),windows)
+	cp -f $(SELECTED-LIB-SO) $(LIB-SO)
+	cp -f $(SELECTED-LIB-HEADER) $(LIB-HEADER)
+else
+	ln -sf $(notdir $(SELECTED-LIB-SO)) $(LIB-SO)
+	ln -sf $(notdir $(SELECTED-LIB-SO)) $(LIB-SO-VERSION)
+	ln -sf $(notdir $(SELECTED-LIB-SO)) $(LIB-SO).0
+	ln -sf $(notdir $(SELECTED-LIB-HEADER)) $(LIB-HEADER)
 endif

@@ -2,6 +2,10 @@
   "Gloat-compatible YAMLStar command-line interface."
   (:require [clojure.string :as str]
             [yamlstar.api :as yaml]
+            [yamlstar.composer :as composer]
+            [yamlstar.constructor :as constructor]
+            [yamlstar.parser :as parser]
+            [yamlstar.resolver :as resolver]
             [ys.json :as json]))
 
 (def usage-text
@@ -16,14 +20,22 @@ Options:
   -Y, --yaml         Output YAML
   -o, --output FILE  Write output to FILE
   -s, --stream       Load all YAML documents
+  -d, --debug        Debug and time all loader stages
+  -D, --debug-stage STAGE
+                      Debug and time one loader stage
   -v, --version      Print version
   -h, --help         Print help")
 
 (defn die [message]
-  (binding [*out* *err*]
-    (println (str "Error: " message)))
-  #?(:glj (os.Exit 1)
-     :lg (System/exit 1)))
+  #?(:glj
+     (do
+       (fmt.Fprintln os.Stderr (fmt.Sprintf "Error: %v" message))
+       (os.Exit 1))
+     :lg
+     (do
+       (binding [*out* *err*]
+         (println (str "Error: " message)))
+       (System/exit 1))))
 
 (defn parse-args [argv]
   (loop [args argv
@@ -48,6 +60,16 @@ Options:
 
           (or (= arg "-s") (= arg "--stream"))
           (recur more (assoc opts :stream true) positional)
+
+          (or (= arg "-d") (= arg "--debug"))
+          (recur more (assoc opts :debug true) positional)
+
+          (or (= arg "-D") (= arg "--debug-stage"))
+          (if (empty? more)
+            (die (str arg " requires a stage"))
+            (recur (rest more)
+                   (assoc opts :debug-stage (first more))
+                   positional))
 
           (or (= arg "-f") (= arg "--file"))
           (if (empty? more)
@@ -152,12 +174,63 @@ Options:
     (spit (:output opts) output)
     (println output)))
 
+(defmacro with-timing [stage & body]
+  `(let [start# (System/nanoTime)
+         result# (do ~@body)
+         elapsed# (/ (- (System/nanoTime) start#) 1000000.0)]
+     (println (format "*** %-9s *** %.6f ms" ~stage elapsed#))
+     (println)
+     result#))
+
+(defn parse-events [source]
+  (vec (parser/parse source)))
+
+(defn debug-stage [source stage]
+  (case stage
+    "parse"
+    (doseq [event (with-timing "parse" (parse-events source))]
+      (prn event))
+
+    "compose"
+    (prn (with-timing "compose"
+           (composer/compose (parse-events source))))
+
+    "resolve"
+    (prn (with-timing "resolve"
+           (resolver/resolve
+             (composer/compose (parse-events source)))))
+
+    "construct"
+    (prn (with-timing "construct"
+           (constructor/construct
+             (resolver/resolve
+               (composer/compose (parse-events source))))))
+
+    (throw (Exception. (str "Unknown debug stage: " stage)))))
+
+(defn debug-all [source]
+  (let [events (with-timing "parse" (parse-events source))]
+    (doseq [event events] (prn event))
+    (println)
+    (let [node (with-timing "compose" (composer/compose events))]
+      (prn node)
+      (println)
+      (let [resolved (with-timing "resolve" (resolver/resolve node))]
+        (prn resolved)
+        (println)
+        (prn (with-timing "construct"
+               (constructor/construct resolved)))))))
+
 (defn run [opts]
-  (let [source (read-input opts)
-        data (if (:stream opts)
-               (yaml/load-all source)
-               (yaml/load source))]
-    (write-output (format-output data opts) opts)))
+  (let [source (read-input opts)]
+    (cond
+      (:debug opts) (debug-all source)
+      (:debug-stage opts) (debug-stage source (:debug-stage opts))
+      :else
+      (let [data (if (:stream opts)
+                   (yaml/load-all source)
+                   (yaml/load source))]
+        (write-output (format-output data opts) opts)))))
 
 (defn -main [& argv]
   (let [opts (parse-args argv)]
@@ -168,4 +241,4 @@ Options:
       (try
         (run opts)
         (catch #?(:glj go/any :lg Exception) error
-          (die (str error)))))))
+          (die error))))))
