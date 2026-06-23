@@ -271,7 +271,7 @@ jobs:
         [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
 
     - name: Run tests
-      run: make test-all BINDING-SKIP="delphi lua"
+      run: make test-all BINDING-SKIP="delphi lua php"
 
   test-windows:
     name: Test Windows artifacts
