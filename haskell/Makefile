@@ -1,13 +1,33 @@
 include ../common/init.mk
+ifneq (,$(wildcard /.dockerenv))
+HASKELL-DOCKER-INNER := true
+else
 include $M/cabal.mk
+endif
 include $M/yamlscript.mk
 include $(COMMON)/common.mk
 include $(COMMON)/binding.mk
 
 CABAL-INDEX := $(CABAL_DIR)/packages/hackage.haskell.org/01-index.tar.gz
+HASKELL-IMAGE ?= ghcr.io/yaml/yamlstar-haskell-test
 LIBYAMLSTAR-TMP := /tmp/libyamlstar
+LIBYAMLSTAR-COPY := $(LIBYAMLSTAR-TMP)/lib/$(notdir $(LIBYAMLSTAR-SO-VERSION))
 HASKELL-DIST := dist-newstyle/sdist/yamlstar-$(VERSION).0.tar.gz
-HASKELL-DEPS := $(GHC) $(CABAL) $(CABAL-INDEX) yamlstar.cabal License $(LIBYAMLSTAR-TMP)
+
+ifdef HASKELL-DOCKER-INNER
+HASKELL-DEPS := \
+  yamlstar.cabal \
+  License \
+
+else
+HASKELL-DEPS := \
+  $(GHC) \
+  $(CABAL) \
+  $(CABAL-INDEX) \
+  yamlstar.cabal \
+  License \
+
+endif
 
 HACKAGE-TOKEN ?= $(HACKAGE_TOKEN)
 ifeq (,$(HACKAGE-TOKEN))
@@ -19,13 +39,38 @@ build:: build-doc
 
 build-doc:: ReadMe.md
 
-test:: test-cabal test-ffi
+# Run the tests in the prebaked container when docker is available
+# (locally and on CI Linux runners); dependencies never compile:
+ifneq (,$(and $(if $(HASKELL-DOCKER-INNER),,x),$(shell command -v docker)))
+test:: $(LIBYAMLSTAR-SO-VERSION) yamlstar.cabal License docker-image
+	docker run --rm \
+	  --user $(USER-UID):$(USER-GID) \
+	  --env HOME=/tmp/home \
+	  --env CABAL_DIR=/opt/cabal \
+	  --volume $(ROOT):$(ROOT) \
+	  --workdir $(CURDIR) \
+	  $(HASKELL-IMAGE) \
+	  make test
 
-test-cabal: $(HASKELL-DEPS)
+docker-image: yamlstar.cabal
+	docker image inspect $(HASKELL-IMAGE) > /dev/null 2>&1 || \
+	docker pull $(HASKELL-IMAGE) 2> /dev/null || \
+	docker build -f test.dockerfile -t $(HASKELL-IMAGE) .
+
+docker-image-build: yamlstar.cabal
+	docker build -f test.dockerfile -t $(HASKELL-IMAGE) .
+
+docker-image-push: docker-image-build
+	docker push $(HASKELL-IMAGE)
+else
+test:: test-cabal test-ffi
+endif
+
+test-cabal: $(HASKELL-DEPS) $(LIBYAMLSTAR-COPY)
 	cabal test --test-show-details=direct
 
-test-ffi: $(HASKELL-DEPS)
-	cabal run yamlstar-test -- 'key: value'
+test-ffi: $(HASKELL-DEPS) $(LIBYAMLSTAR-COPY)
+	cabal run -v0 yamlstar-test -- 'key: value' | grep -q '"key": "value"'
 
 pkg-test: $(HASKELL-DEPS)
 	$(MAKE) clean
@@ -55,6 +100,7 @@ yamlstar.cabal: cabal.ys $(YS)
 License: ../License
 	cp $< $@
 
-$(LIBYAMLSTAR-TMP): $(LIBYAMLSTAR-SO-FQNP)
+$(LIBYAMLSTAR-COPY): $(LIBYAMLSTAR-SO-VERSION)
 	mkdir -p $(LIBYAMLSTAR-TMP)
+	$(RM) -r $(LIBYAMLSTAR-TMP)/lib
 	cp -r ../libyamlstar/lib $(LIBYAMLSTAR-TMP)/

@@ -25,7 +25,7 @@ build-doc:: ReadMe.md
 
 # Run the tests in the prebaked container when docker is available
 # (locally and on CI Linux runners); erlang never compiles:
-ifneq (,$(and $(if $(ELIXIR-DOCKER-INNER),,x),$(shell docker buildx inspect >/dev/null 2>&1 && echo docker)))
+ifneq (,$(and $(if $(ELIXIR-DOCKER-INNER),,x),$(shell command -v docker)))
 test:: $(LIBYAMLSTAR-SO-VERSION) docker-image
 	docker run --rm \
 	  --user $(USER-UID):$(USER-GID) \
