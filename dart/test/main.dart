@@ -30,7 +30,7 @@ void main() {
 
   var threw = false;
   try {
-    yaml.load(':');
+    yaml.load('key: "unclosed');
   } on YAMLStarError {
     threw = true;
   }
