@@ -4,15 +4,14 @@
 // Kotlin binding/API for the libyamlstar shared library.
 //
 // This is a thin idiomatic Kotlin layer over the Java binding (the
-// org.yamlstar:yamlstar artifact), which wraps libyamlstar with JNA.
+// com.yaml:yamlstar artifact.
 //
 // The current user facing API is the YS object, whose load() function
 // takes a YAML string as input and returns the value that YAMLStar loads.
 
 package org.yamlstar.yamlstar
 
-import org.json.JSONArray
-import org.json.JSONObject
+import com.yaml.YAMLStar
 
 object YS {
     // This value is automatically updated by 'make bump'.
@@ -20,27 +19,28 @@ object YS {
 
     /** Load a YAML string and return the result. */
     fun load(input: String): Any? {
-        val resp = YAMLStar.loadJSON(input)
-        return if (resp.isNull("data")) null else resp.get("data")
+        return YAMLStar.load(input)
     }
 
     /** Load a YAML string that loads to a mapping. */
-    fun loadObject(input: String): JSONObject =
-        YAMLStar.loadObject(input)
+    @Suppress("UNCHECKED_CAST")
+    fun loadObject(input: String): Map<String, Any?> =
+        YAMLStar.load(input) as Map<String, Any?>
 
     /** Load a YAML string that loads to a sequence. */
-    fun loadArray(input: String): JSONArray =
-        YAMLStar.loadArray(input)
+    @Suppress("UNCHECKED_CAST")
+    fun loadArray(input: String): List<Any?> =
+        YAMLStar.load(input) as List<Any?>
 
     /** Load a YAML string that loads to a string. */
     fun loadString(input: String): String =
-        YAMLStar.loadJSON(input).getString("data")
+        YAMLStar.load(input) as String
 
     /** Load a YAML string that loads to an integer. */
     fun loadInt(input: String): Int =
-        YAMLStar.loadInt(input)
+        (YAMLStar.load(input) as Number).toInt()
 
     /** Load a YAML string that loads to a boolean. */
     fun loadBoolean(input: String): Boolean =
-        YAMLStar.loadBoolean(input)
+        YAMLStar.load(input) as Boolean
 }

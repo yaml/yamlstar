@@ -22,7 +22,7 @@ final class YAMLStarTests: XCTestCase {
 
     func testLoadError() throws {
         let yaml = try YAMLStar()
-        XCTAssertThrowsError(try yaml.load(":"))
+        XCTAssertThrowsError(try yaml.load("key: \"unclosed"))
         XCTAssertNotNil(yaml.error)
     }
 

@@ -271,7 +271,10 @@ test "load error" {
     var yaml = try YAMLStar.init(std.testing.allocator);
     defer yaml.deinit();
 
-    try std.testing.expectError(Error.YAMLStarError, yaml.load(":"));
+    try std.testing.expectError(
+        Error.YAMLStarError,
+        yaml.load("key: \"unclosed"),
+    );
     try std.testing.expect(yaml.error_cause != null);
 }
 

@@ -50,7 +50,7 @@
       <version>${kotlin.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.yamlstar</groupId>
+      <groupId>com.yaml</groupId>
       <artifactId>yamlstar</artifactId>
       <version>0.1.11</version>
     </dependency>

@@ -17,13 +17,13 @@ build:: build-doc
 build-doc:: ReadMe.md
 
 $(MVN-COMMANDS):: $(MAVEN) $(LIBYAMLSTAR-SO-VERSION)
-	$(MVN) $@
+	$(MAVEN) $@
 
 # The Kotlin wrapper depends on the Java binding artifact, so install
 # that into the local Maven repository first:
 test:: $(MAVEN) $(LIBYAMLSTAR-SO-VERSION)
 	$(MAKE) -C $(ROOT)/java install
-	$(MVN) test
+	$(MAVEN) test
 
 release-deps:: $(MAVEN)
 

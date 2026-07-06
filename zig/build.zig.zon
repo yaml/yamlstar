@@ -1,7 +1,7 @@
 .{
     .name = .yamlstar,
     .version = "0.1.11",
-    .fingerprint = 0x875e6a1200a6c02,
+    .fingerprint = 0xfbcb1143e3c1178f,
     .minimum_zig_version = "0.15.2",
     .paths = .{
         "build.zig",

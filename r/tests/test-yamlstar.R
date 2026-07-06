@@ -28,7 +28,7 @@ check(data$foo == "bar", "load plain yaml")
 # Load invalid input raises:
 threw <- tryCatch(
   {
-    yamlstar_load(":")
+    yamlstar_load("key: \"unclosed")
     FALSE
   },
   error = function(e) TRUE

@@ -14,13 +14,13 @@ defmodule YAMLStarTest do
   end
 
   test "load error returns cause" do
-    assert {:error, cause} = YAMLStar.load(":")
+    assert {:error, cause} = YAMLStar.load("key: \"unclosed")
     assert is_binary(cause)
   end
 
   test "load! raises" do
     assert_raise YAMLStar.Error, fn ->
-      YAMLStar.load!(":")
+      YAMLStar.load!("key: \"unclosed")
     end
   end
 

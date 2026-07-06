@@ -11,19 +11,19 @@ class YSTest {
     @Test
     fun loadMapping() {
         val data = YS.loadObject("test: 42")
-        assertEquals(42, data.getInt("test"))
+        assertEquals(42L, data["test"])
     }
 
     @Test
     fun loadPlainYaml() {
         val data = YS.loadObject("foo: bar")
-        assertEquals("bar", data.getString("foo"))
+        assertEquals("bar", data["foo"])
     }
 
     @Test
     fun loadErrorThrows() {
         assertFailsWith<RuntimeException> {
-            YS.load(":")
+            YS.load("key: \"unclosed")
         }
     }
 
@@ -31,7 +31,7 @@ class YSTest {
     fun loadMultipleTimes() {
         repeat(2) {
             val data = YS.loadObject("test: 42")
-            assertEquals(42, data.getInt("test"))
+            assertEquals(42L, data["test"])
         }
     }
 }
