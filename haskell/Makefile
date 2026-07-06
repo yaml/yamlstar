@@ -9,7 +9,9 @@ include $(COMMON)/common.mk
 include $(COMMON)/binding.mk
 
 CABAL-INDEX := $(CABAL_DIR)/packages/hackage.haskell.org/01-index.tar.gz
-HASKELL-IMAGE ?= ghcr.io/yaml/yamlstar-haskell-test
+HASKELL-IMAGE ?= ghcr.io/yaml/yamlscript-haskell-test
+GIT-COMMON-DIR := $(shell git rev-parse --git-common-dir 2>/dev/null)
+GIT-DOCKER-VOLUME := $(if $(GIT-COMMON-DIR),--volume $(GIT-COMMON-DIR):$(GIT-COMMON-DIR):ro,)
 LIBYAMLSTAR-TMP := /tmp/libyamlstar
 LIBYAMLSTAR-COPY := $(LIBYAMLSTAR-TMP)/lib/$(notdir $(LIBYAMLSTAR-SO-VERSION))
 HASKELL-DIST := dist-newstyle/sdist/yamlstar-$(VERSION).0.tar.gz
@@ -48,17 +50,17 @@ test:: $(LIBYAMLSTAR-SO-VERSION) yamlstar.cabal License docker-image
 	  --env HOME=/tmp/home \
 	  --env CABAL_DIR=/opt/cabal \
 	  --volume $(ROOT):$(ROOT) \
+	  $(GIT-DOCKER-VOLUME) \
 	  --workdir $(CURDIR) \
 	  $(HASKELL-IMAGE) \
 	  make test
 
 docker-image: yamlstar.cabal
 	docker image inspect $(HASKELL-IMAGE) > /dev/null 2>&1 || \
-	docker pull $(HASKELL-IMAGE) 2> /dev/null || \
-	docker build -f test.dockerfile -t $(HASKELL-IMAGE) .
+	docker pull $(HASKELL-IMAGE)
 
 docker-image-build: yamlstar.cabal
-	docker build -f test.dockerfile -t $(HASKELL-IMAGE) .
+	$(error Haskell tests use the published $(HASKELL-IMAGE) image)
 
 docker-image-push: docker-image-build
 	docker push $(HASKELL-IMAGE)

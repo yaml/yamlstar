@@ -4,6 +4,8 @@ INGY-LOCAL-DIR := /tmp/yamlstar-local
 export MAKES_LOCAL_DIR := $(INGY-LOCAL-DIR)
 endif
 
+COMMON-INIT-DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
+
 M ?= ../.cache/makes
 $(shell [ -d $M ] || git clone -q https://github.com/makeplus/makes $M)
 include $M/init.mk
@@ -13,10 +15,13 @@ include $M/init.mk
 override PATH := $(MAKES)/util:/usr/local/bin:/usr/bin:/bin:$(PATH)
 export PATH
 
+ifneq (,$(shell command -v git))
 include $M/git.mk
+ROOT := $(shell git rev-parse --show-toplevel)
+else
+ROOT := $(abspath $(COMMON-INIT-DIR)/..)
+endif
 include $M/clean.mk
 
-# Use --show-toplevel so worktrees resolve to their own path (not the main repo)
-ROOT := $(shell git rev-parse --show-toplevel)
-COMMON := ../common
-LIBYS := ../libyamlstar
+COMMON := $(COMMON-INIT-DIR)
+LIBYS := $(ROOT)/libyamlstar

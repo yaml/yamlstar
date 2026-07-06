@@ -1,7 +1,6 @@
 include ../common/init.mk
 
-# Inside the test container (see test.dockerfile) erlang, elixir and
-# hex come from the image:
+# Inside the test container erlang, elixir and hex come from the image:
 ifneq (,$(wildcard /.dockerenv))
 ELIXIR-DOCKER-INNER := true
 export MIX_HOME := /opt/mix
@@ -15,7 +14,9 @@ endif
 include $(COMMON)/common.mk
 include $(COMMON)/binding.mk
 
-ELIXIR-IMAGE ?= ghcr.io/yaml/yamlstar-elixir-test
+ELIXIR-IMAGE ?= ghcr.io/yaml/yamlscript-elixir-test
+GIT-COMMON-DIR := $(shell git rev-parse --git-common-dir 2>/dev/null)
+GIT-DOCKER-VOLUME := $(if $(GIT-COMMON-DIR),--volume $(GIT-COMMON-DIR):$(GIT-COMMON-DIR):ro,)
 
 
 #------------------------------------------------------------------------------
@@ -31,17 +32,17 @@ test:: $(LIBYAMLSTAR-SO-VERSION) docker-image
 	  --user $(USER-UID):$(USER-GID) \
 	  --env HOME=/tmp/home \
 	  --volume $(ROOT):$(ROOT) \
+	  $(GIT-DOCKER-VOLUME) \
 	  --workdir $(CURDIR) \
 	  $(ELIXIR-IMAGE) \
 	  make test
 
 docker-image:
 	docker image inspect $(ELIXIR-IMAGE) > /dev/null 2>&1 || \
-	docker pull $(ELIXIR-IMAGE) 2> /dev/null || \
-	docker build -f test.dockerfile -t $(ELIXIR-IMAGE) .
+	docker pull $(ELIXIR-IMAGE)
 
 docker-image-build:
-	docker build -f test.dockerfile -t $(ELIXIR-IMAGE) .
+	$(error Elixir tests use the published $(ELIXIR-IMAGE) image)
 
 docker-image-push: docker-image-build
 	docker push $(ELIXIR-IMAGE)
