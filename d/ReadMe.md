@@ -1,0 +1,17 @@
+# YAMLStar D Binding
+
+D binding for the YAMLStar shared library.
+
+```d
+import yamlstar;
+
+auto yaml = new YAMLStar();
+auto data = yaml.load("key: value");
+yaml.close();
+```
+
+Install the matching `libyamlstar` release before using this package:
+
+```bash
+curl -sSL https://yamlstar.org/install | LIB=1 bash
+```

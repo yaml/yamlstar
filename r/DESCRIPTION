@@ -1,0 +1,14 @@
+Package: yamlstar
+Type: Package
+Title: YAMLStar YAML 1.2 Loader Binding
+Version: 0.1.11
+Author: Ingy dot Net
+Maintainer: Ingy dot Net <ingy@ingy.net>
+Description: R binding for YAMLStar, a YAML 1.2 loader backed by the
+    libyamlstar shared library.
+License: MIT + file LICENSE
+Imports: jsonlite
+NeedsCompilation: yes
+Encoding: UTF-8
+URL: https://yamlstar.org
+BugReports: https://github.com/yaml/yamlstar/issues

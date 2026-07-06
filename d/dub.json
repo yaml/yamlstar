@@ -1,0 +1,8 @@
+{
+  "name": "yamlstar",
+  "description": "D binding for YAMLStar, a YAML 1.2 loader backed by libyamlstar",
+  "authors": ["Ingy dot Net"],
+  "license": "MIT",
+  "copyright": "Copyright 2023-2026 Ingy dot Net",
+  "homepage": "https://yamlstar.org"
+}

@@ -1,0 +1,4 @@
+useDynLib(yamlstar, C_yamlstar_load)
+export(yamlstar_load)
+export(YAMLSTAR_VERSION)
+importFrom(jsonlite, fromJSON)

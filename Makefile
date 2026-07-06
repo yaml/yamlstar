@@ -35,20 +35,28 @@ BINDING-LANGS ?= \
   clojure \
   crystal \
   csharp \
+  d \
+  dart \
   delphi \
+  elixir \
   fortran \
   go \
   haskell \
   java \
   julia \
+  kotlin \
   lua \
+  nim \
   nodejs \
   perl \
   php \
   python \
+  r \
   raku \
   ruby \
   rust \
+  swift \
+  zig \
 
 # Gloat build cannot run JVM-based bindings (clojure, java)
 ifdef YAMLSTAR_GLOJURE

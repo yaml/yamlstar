@@ -1,0 +1,48 @@
+defmodule YAMLStar.MixProject do
+  use Mix.Project
+
+  # This value is automatically updated by 'make bump':
+  @version "0.1.11"
+
+  def project do
+    [
+      app: :yamlstar,
+      version: @version,
+      elixir: "~> 1.18",
+      compilers: [:elixir_make] ++ Mix.compilers(),
+      make_makefile: "Makefile.nif",
+      deps: deps(),
+      description:
+        "Elixir binding for YAMLStar, a YAML 1.2 loader backed by libyamlstar",
+      package: package(),
+      source_url: "https://github.com/yaml/yamlstar",
+      # Keep generated docs out of doc/, which holds the tracked
+      # readme fragments:
+      docs: [main: "YAMLStar", output: ".docs"]
+    ]
+  end
+
+  def application do
+    [extra_applications: []]
+  end
+
+  defp deps do
+    [
+      {:elixir_make, "~> 0.8", runtime: false},
+      {:ex_doc, "~> 0.34", only: :dev, runtime: false}
+    ]
+  end
+
+  defp package do
+    [
+      licenses: ["MIT"],
+      links: %{
+        "Website" => "https://yamlstar.org",
+        "GitHub" => "https://github.com/yaml/yamlstar"
+      },
+      files: ~w(
+        lib c_src Makefile.nif mix.exs README.md LICENSE
+      )
+    ]
+  end
+end
