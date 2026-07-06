@@ -230,7 +230,7 @@ unittest
   // Load invalid input throws and sets error:
   bool threw = false;
   try
-    yaml.load(":");
+    yaml.load(`key: "unclosed`);
   catch (YAMLStarException)
     threw = true;
   assert(threw);
