@@ -113,12 +113,19 @@ jobs:
     - name: Use GitHub Leiningen mirror
       run: |
         make --no-print-directory -n default >/dev/null
-        sed -i.bak \
-          's|https://codeberg.org/leiningen/leiningen/raw/tag|https://raw.githubusercontent.com/technomancy/leiningen|' \
-          .cache/makes/lein.mk
-        sed -i.bak '/curl+ $(LEIN-DOWN) > $$@/a\
-	$Q sed -i.bak '''s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|''' $$@' \
-          .cache/makes/lein.mk
+        python - <<'PY'
+        from pathlib import Path
+        p = Path('.cache/makes/lein.mk')
+        text = p.read_text()
+        text = text.replace(
+          'https://codeberg.org/leiningen/leiningen/raw/tag',
+          'https://raw.githubusercontent.com/technomancy/leiningen')
+        text = text.replace(
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n',
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|\' $@\n')
+        p.write_text(text)
+        PY
 
     - name: Build release archives and Python wheel
       run: |
@@ -158,12 +165,19 @@ jobs:
     - name: Use GitHub Leiningen mirror
       run: |
         make --no-print-directory -n default >/dev/null
-        sed -i.bak \
-          's|https://codeberg.org/leiningen/leiningen/raw/tag|https://raw.githubusercontent.com/technomancy/leiningen|' \
-          .cache/makes/lein.mk
-        sed -i.bak '/curl+ $(LEIN-DOWN) > $$@/a\
-	$Q sed -i.bak '''s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|''' $$@' \
-          .cache/makes/lein.mk
+        python - <<'PY'
+        from pathlib import Path
+        p = Path('.cache/makes/lein.mk')
+        text = p.read_text()
+        text = text.replace(
+          'https://codeberg.org/leiningen/leiningen/raw/tag',
+          'https://raw.githubusercontent.com/technomancy/leiningen')
+        text = text.replace(
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n',
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|\' $@\n')
+        p.write_text(text)
+        PY
 
     - name: Build release archives and Python wheel
       run: |
@@ -224,12 +238,19 @@ jobs:
     - name: Use GitHub Leiningen mirror
       run: |
         make --no-print-directory -n default >/dev/null
-        sed -i.bak \
-          's|https://codeberg.org/leiningen/leiningen/raw/tag|https://raw.githubusercontent.com/technomancy/leiningen|' \
-          .cache/makes/lein.mk
-        sed -i.bak '/curl+ $(LEIN-DOWN) > $$@/a\
-	$Q sed -i.bak '''s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|''' $$@' \
-          .cache/makes/lein.mk
+        python - <<'PY'
+        from pathlib import Path
+        p = Path('.cache/makes/lein.mk')
+        text = p.read_text()
+        text = text.replace(
+          'https://codeberg.org/leiningen/leiningen/raw/tag',
+          'https://raw.githubusercontent.com/technomancy/leiningen')
+        text = text.replace(
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n',
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|\' $@\n')
+        p.write_text(text)
+        PY
 
     - name: Build release archives and Python wheel
       run: |
@@ -275,12 +296,19 @@ jobs:
     - name: Use GitHub Leiningen mirror
       run: |
         make --no-print-directory -n default >/dev/null
-        sed -i.bak \
-          's|https://codeberg.org/leiningen/leiningen/raw/tag|https://raw.githubusercontent.com/technomancy/leiningen|' \
-          .cache/makes/lein.mk
-        sed -i.bak '/curl+ $(LEIN-DOWN) > $$@/a\
-	$Q sed -i.bak '''s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|''' $$@' \
-          .cache/makes/lein.mk
+        python - <<'PY'
+        from pathlib import Path
+        p = Path('.cache/makes/lein.mk')
+        text = p.read_text()
+        text = text.replace(
+          'https://codeberg.org/leiningen/leiningen/raw/tag',
+          'https://raw.githubusercontent.com/technomancy/leiningen')
+        text = text.replace(
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n',
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|\' $@\n')
+        p.write_text(text)
+        PY
 
     - name: Run tests
       run: make test-all TEST-TIME='date; time' BINDING-SKIP=php
@@ -313,12 +341,19 @@ jobs:
     - name: Use GitHub Leiningen mirror
       run: |
         make --no-print-directory -n default >/dev/null
-        sed -i.bak \
-          's|https://codeberg.org/leiningen/leiningen/raw/tag|https://raw.githubusercontent.com/technomancy/leiningen|' \
-          .cache/makes/lein.mk
-        sed -i.bak '/curl+ $(LEIN-DOWN) > $$@/a\
-	$Q sed -i.bak '''s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|''' $$@' \
-          .cache/makes/lein.mk
+        python - <<'PY'
+        from pathlib import Path
+        p = Path('.cache/makes/lein.mk')
+        text = p.read_text()
+        text = text.replace(
+          'https://codeberg.org/leiningen/leiningen/raw/tag',
+          'https://raw.githubusercontent.com/technomancy/leiningen')
+        text = text.replace(
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n',
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|\' $@\n')
+        p.write_text(text)
+        PY
 
     - name: Run tests
       run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi lua php"
