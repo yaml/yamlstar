@@ -116,6 +116,9 @@ jobs:
         sed -i.bak \
           's|https://codeberg.org/leiningen/leiningen/raw/tag|https://raw.githubusercontent.com/technomancy/leiningen|' \
           .cache/makes/lein.mk
+        sed -i.bak '/curl+ $(LEIN-DOWN) > $$@/a\
+	$Q sed -i.bak '''s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|''' $$@' \
+          .cache/makes/lein.mk
 
     - name: Build release archives and Python wheel
       run: |
@@ -157,6 +160,9 @@ jobs:
         make --no-print-directory -n default >/dev/null
         sed -i.bak \
           's|https://codeberg.org/leiningen/leiningen/raw/tag|https://raw.githubusercontent.com/technomancy/leiningen|' \
+          .cache/makes/lein.mk
+        sed -i.bak '/curl+ $(LEIN-DOWN) > $$@/a\
+	$Q sed -i.bak '''s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|''' $$@' \
           .cache/makes/lein.mk
 
     - name: Build release archives and Python wheel
@@ -221,6 +227,9 @@ jobs:
         sed -i.bak \
           's|https://codeberg.org/leiningen/leiningen/raw/tag|https://raw.githubusercontent.com/technomancy/leiningen|' \
           .cache/makes/lein.mk
+        sed -i.bak '/curl+ $(LEIN-DOWN) > $$@/a\
+	$Q sed -i.bak '''s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|''' $$@' \
+          .cache/makes/lein.mk
 
     - name: Build release archives and Python wheel
       run: |
@@ -269,6 +278,9 @@ jobs:
         sed -i.bak \
           's|https://codeberg.org/leiningen/leiningen/raw/tag|https://raw.githubusercontent.com/technomancy/leiningen|' \
           .cache/makes/lein.mk
+        sed -i.bak '/curl+ $(LEIN-DOWN) > $$@/a\
+	$Q sed -i.bak '''s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|''' $$@' \
+          .cache/makes/lein.mk
 
     - name: Run tests
       run: make test-all TEST-TIME='date; time' BINDING-SKIP=php
@@ -303,6 +315,9 @@ jobs:
         make --no-print-directory -n default >/dev/null
         sed -i.bak \
           's|https://codeberg.org/leiningen/leiningen/raw/tag|https://raw.githubusercontent.com/technomancy/leiningen|' \
+          .cache/makes/lein.mk
+        sed -i.bak '/curl+ $(LEIN-DOWN) > $$@/a\
+	$Q sed -i.bak '''s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|''' $$@' \
           .cache/makes/lein.mk
 
     - name: Run tests
