@@ -22,7 +22,7 @@
 
 // This value is automatically updated by 'make bump'.
 // We currently only support binding to an exact version of libyamlstar:
-#define YAMLSTAR_VERSION "0.1.11"
+#define YAMLSTAR_VERSION "0.1.12"
 
 #ifdef _WIN32
 #define LIBYAMLSTAR_NAME "libyamlstar.dll"

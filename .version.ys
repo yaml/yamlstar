@@ -29,8 +29,14 @@ vo =: v-old.str/replace(/\./ '\\.')
     - crystal/src/yamlstar/version.cr
     - core/src/yamlstar/core.clj
     - csharp/YAMLStar.csproj
+    - d/source/yamlstar.d
+    - dart/lib/yamlstar.dart
+    - dart/pubspec.yaml
     - doc/RELEASING.md
     - delphi/src/yamlstar.pas
+    - elixir/c_src/yamlstar_nif.c
+    - elixir/doc/readme.md
+    - elixir/mix.exs
     - example/delphi/Makefile
     - example/go/Makefile
     - example/python/Makefile
@@ -49,13 +55,22 @@ vo =: v-old.str/replace(/\./ '\\.')
     - julia/Project.toml
     - julia/ReadMe.md
     - julia/src/libyamlstar.jl
+    - kotlin/Makefile
+    - kotlin/doc/readme.md
+    - kotlin/pom.xml
+    - kotlin/src/main/kotlin/org/yamlstar/yamlstar/YS.kt
     - lua/lib/yamlstar.lua
     - lua/yamlstar.rockspec
+    - nim/src/yamlstar.nim
+    - nim/yamlstar.nimble
     - nodejs/lib/yamlstar/index.js
     - perl/lib/YAMLStar.pm
     - php/composer.json
     - php/src/YAMLStar.php
     - python/lib/yamlstar/__init__.py
+    - r/DESCRIPTION
+    - r/R/yamlstar.R
+    - r/src/yamlstar.c
     - raku/META6.json
     - raku/README.md
     - raku/lib/YAMLStar.rakumod
@@ -63,11 +78,15 @@ vo =: v-old.str/replace(/\./ '\\.')
     - rust/ReadMe.md
     - rust/src/lib.rs
     - rust/tests/load.rs
+    - swift/Sources/YAMLStar/YAMLStar.swift
+    - swift/doc/readme.md
     - util/yamlj
     - www/docs/cli.md
     - www/docs/install
     - www/docs/installation.md
     - www/docs/index.md
+    - zig/build.zig.zon
+    - zig/src/yamlstar.zig
 
 #------------------------------------------------------------------------------
 # These changes are very specific to not accidentally bump something wrongly.

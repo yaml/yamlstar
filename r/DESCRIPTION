@@ -1,7 +1,7 @@
 Package: yamlstar
 Type: Package
 Title: YAMLStar YAML 1.2 Loader Binding
-Version: 0.1.11
+Version: 0.1.12
 Author: Ingy dot Net
 Maintainer: Ingy dot Net <ingy@ingy.net>
 Description: R binding for YAMLStar, a YAML 1.2 loader backed by the

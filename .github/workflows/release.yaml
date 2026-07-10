@@ -110,6 +110,14 @@ jobs:
         github-token: ${{ github.token }}
         native-image-job-reports: 'true'
 
+    - name: Preinstall Leiningen
+      run: |
+        mkdir -p .cache/local/lein-2.13.0/bin
+        curl -fsSL \
+          https://raw.githubusercontent.com/technomancy/leiningen/2.13.0/bin/lein \
+          > .cache/local/lein-2.13.0/bin/lein
+        chmod +x .cache/local/lein-2.13.0/bin/lein
+
     - name: Build release archives and Python wheel
       run: |
         make release-lib VERSION="$VERSION"
@@ -144,6 +152,14 @@ jobs:
         distribution: graalvm
         github-token: ${{ github.token }}
         native-image-job-reports: 'true'
+
+    - name: Preinstall Leiningen
+      run: |
+        mkdir -p .cache/local/lein-2.13.0/bin
+        curl -fsSL \
+          https://raw.githubusercontent.com/technomancy/leiningen/2.13.0/bin/lein \
+          > .cache/local/lein-2.13.0/bin/lein
+        chmod +x .cache/local/lein-2.13.0/bin/lein
 
     - name: Build release archives and Python wheel
       run: |
@@ -201,6 +217,14 @@ jobs:
         chmod +x "$RUNNER_TEMP/bin/shasum"
         echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
 
+    - name: Preinstall Leiningen
+      run: |
+        mkdir -p .cache/local/lein-2.13.0/bin
+        curl -fsSL \
+          https://raw.githubusercontent.com/technomancy/leiningen/2.13.0/bin/lein \
+          > .cache/local/lein-2.13.0/bin/lein
+        chmod +x .cache/local/lein-2.13.0/bin/lein
+
     - name: Build release archives and Python wheel
       run: |
         make release-lib VERSION="$VERSION"
@@ -242,6 +266,14 @@ jobs:
         cli/bin/yaml --version
         [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
 
+    - name: Preinstall Leiningen
+      run: |
+        mkdir -p .cache/local/lein-2.13.0/bin
+        curl -fsSL \
+          https://raw.githubusercontent.com/technomancy/leiningen/2.13.0/bin/lein \
+          > .cache/local/lein-2.13.0/bin/lein
+        chmod +x .cache/local/lein-2.13.0/bin/lein
+
     - name: Run tests
       run: make test-all TEST-TIME='date; time' BINDING-SKIP=php
 
@@ -269,6 +301,14 @@ jobs:
       run: |
         cli/bin/yaml --version
         [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
+
+    - name: Preinstall Leiningen
+      run: |
+        mkdir -p .cache/local/lein-2.13.0/bin
+        curl -fsSL \
+          https://raw.githubusercontent.com/technomancy/leiningen/2.13.0/bin/lein \
+          > .cache/local/lein-2.13.0/bin/lein
+        chmod +x .cache/local/lein-2.13.0/bin/lein
 
     - name: Run tests
       run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi lua php"
