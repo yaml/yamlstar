@@ -25,6 +25,19 @@ on:
         default: false
         required: false
         type: boolean
+      tests_only:
+        description: >-
+          Only test these platforms (space-separated subset of:
+          linux macos windows); skips release and publish jobs
+        default: ''
+        required: false
+        type: string
+      test_artifacts_run_id:
+        description: >-
+          Prior release workflow run ID to take build artifacts from
+          instead of building (use together with tests_only)
+        required: false
+        type: string
       force_bindings:
         description: 'Publish bindings even when the version already exists'
         default: false
@@ -50,7 +63,7 @@ env:
 jobs:
   verify-release:
     name: Verify release
-    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -93,7 +106,7 @@ jobs:
 
   build-linux-x64:
     name: Build Linux x64
-    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
     needs: verify-release
     runs-on: ubuntu-latest
     steps:
@@ -146,7 +159,7 @@ jobs:
 
   build-macos-arm64:
     name: Build macOS ARM64
-    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
     needs: verify-release
     runs-on: macos-latest
     steps:
@@ -199,7 +212,7 @@ jobs:
 
   build-windows-x64:
     name: Build Windows x64
-    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
     needs: verify-release
     runs-on: windows-latest
     steps:
@@ -273,7 +286,7 @@ jobs:
 
   test-linux:
     name: Test Linux artifacts
-    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
     needs: build-linux-x64
     runs-on: ubuntu-latest
     steps:
@@ -319,7 +332,7 @@ jobs:
 
   test-macos:
     name: Test macOS artifacts
-    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
     needs: build-macos-arm64
     runs-on: macos-latest
     steps:
@@ -365,7 +378,7 @@ jobs:
 
   test-windows:
     name: Test Windows artifacts
-    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
     needs: build-windows-x64
     runs-on: windows-latest
     steps:
@@ -460,9 +473,228 @@ jobs:
           TEST-TIME='date; time' \
           BINDING-SKIP="delphi elixir haskell lua php swift $YS_RELEASE_BINDINGS_SKIP"
 
+  test-linux-retry:
+    name: Test Linux artifacts (retry)
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        !inputs.publish_homebrew_only &&
+        contains(inputs.tests_only, 'linux') &&
+        inputs.test_artifacts_run_id != ''
+      }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+    - name: Checkout ref
+      uses: actions/checkout@v5
+
+    - name: Download Linux artifacts
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh run download "${{ inputs.test_artifacts_run_id }}" \
+          --repo "${{ github.repository }}" \
+          --name linux-x64 \
+          --dir release-artifacts
+
+    - name: Install release artifacts
+      run: util/install-release-artifacts release-artifacts
+
+    - name: Smoke test CLI
+      run: |
+        cli/bin/yaml --version
+        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
+
+    - name: Use GitHub Leiningen mirror
+      run: |
+        make --no-print-directory -n default >/dev/null
+        python - <<'PY'
+        from pathlib import Path
+        p = Path('.cache/makes/lein.mk')
+        text = p.read_text()
+        text = text.replace(
+          'https://codeberg.org/leiningen/leiningen/raw/tag',
+          'https://raw.githubusercontent.com/technomancy/leiningen')
+        text = text.replace(
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n',
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|\' $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_CHECKSUM=.*|export LEIN_CHECKSUM="5f5231f06c3c7924e3241e3dfa52885577fb44ddf8a9ea373d2c5e2f27217565"|\' $@\n')
+        p.write_text(text)
+        PY
+
+    - name: Run tests
+      run: make test-all TEST-TIME='date; time' BINDING-SKIP="php $YS_RELEASE_BINDINGS_SKIP"
+
+  test-macos-retry:
+    name: Test macOS artifacts (retry)
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        !inputs.publish_homebrew_only &&
+        contains(inputs.tests_only, 'macos') &&
+        inputs.test_artifacts_run_id != ''
+      }}
+    runs-on: macos-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+    - name: Checkout ref
+      uses: actions/checkout@v5
+
+    - name: Download macOS artifacts
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh run download "${{ inputs.test_artifacts_run_id }}" \
+          --repo "${{ github.repository }}" \
+          --name macos-arm64 \
+          --dir release-artifacts
+
+    - name: Install release artifacts
+      run: util/install-release-artifacts release-artifacts
+
+    - name: Smoke test CLI
+      run: |
+        cli/bin/yaml --version
+        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
+
+    - name: Use GitHub Leiningen mirror
+      run: |
+        make --no-print-directory -n default >/dev/null
+        python - <<'PY'
+        from pathlib import Path
+        p = Path('.cache/makes/lein.mk')
+        text = p.read_text()
+        text = text.replace(
+          'https://codeberg.org/leiningen/leiningen/raw/tag',
+          'https://raw.githubusercontent.com/technomancy/leiningen')
+        text = text.replace(
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n',
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|\' $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_CHECKSUM=.*|export LEIN_CHECKSUM="5f5231f06c3c7924e3241e3dfa52885577fb44ddf8a9ea373d2c5e2f27217565"|\' $@\n')
+        p.write_text(text)
+        PY
+
+    - name: Run tests
+      run: |
+        make test-all \
+          TEST-TIME='date; time' \
+          BINDING-SKIP="delphi haskell lua php r $YS_RELEASE_BINDINGS_SKIP"
+
+  test-windows-retry:
+    name: Test Windows artifacts (retry)
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        !inputs.publish_homebrew_only &&
+        contains(inputs.tests_only, 'windows') &&
+        inputs.test_artifacts_run_id != ''
+      }}
+    runs-on: windows-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+    - name: Checkout ref
+      uses: actions/checkout@v5
+
+    - name: Download Windows artifacts
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh run download "${{ inputs.test_artifacts_run_id }}" \
+          --repo "${{ github.repository }}" \
+          --name windows-x64 \
+          --dir release-artifacts
+
+    - name: Install shasum shim
+      run: |
+        mkdir -p "$RUNNER_TEMP/bin"
+        {
+          echo '#!/usr/bin/env bash'
+          echo 'if [[ ${1:-} == -a && ${2:-} == 256 && ${3:-} == -c ]]; then'
+          echo '  sha256sum -c'
+          echo 'else'
+          echo '  echo "Unsupported shasum arguments: $*" >&2'
+          echo '  exit 2'
+          echo 'fi'
+        } > "$RUNNER_TEMP/bin/shasum"
+        chmod +x "$RUNNER_TEMP/bin/shasum"
+        echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
+    - name: Configure archive tools
+      run: |
+        echo 'TAR_OPTIONS=--force-local' >> "$GITHUB_ENV"
+        echo 'UNZIP=-o' >> "$GITHUB_ENV"
+
+    - name: Configure Strawberry Perl toolchain
+      run: |
+        echo 'C:\Strawberry\perl\bin' >> "$GITHUB_PATH"
+        echo 'C:\Strawberry\c\bin' >> "$GITHUB_PATH"
+
+    - name: Install Crystal link dependencies
+      uses: msys2/setup-msys2@v2
+      with:
+        release: false
+        msystem: MINGW64
+        update: true
+        install: >-
+          mingw-w64-x86_64-gc
+          mingw-w64-x86_64-pcre2
+
+    - name: Configure Crystal link dependencies
+      run: |
+        echo 'C:\msys64\mingw64\bin' >> "$GITHUB_PATH"
+        echo 'CC=gcc' >> "$GITHUB_ENV"
+        echo 'CRYSTAL_MINGW_LIB=/c/msys64/mingw64/lib' >> "$GITHUB_ENV"
+
+    - name: Install release artifacts
+      run: util/install-release-artifacts release-artifacts
+
+    - name: Smoke test CLI
+      run: |
+        cli/bin/yaml.exe --version
+        [[ $(printf 'a: 1\n' | cli/bin/yaml.exe) == '{"a":1}' ]]
+
+    - name: Smoke test Python wheel
+      run: |
+        wheel=$(find release-artifacts -type f -name '*.whl' | head -n1)
+        test -n "$wheel"
+        python -m pip install --force-reinstall "$wheel"
+        python -c "import yamlstar; print(yamlstar.YAMLStar().load('a: 1'))"
+
+    - name: Use GitHub Leiningen mirror
+      run: |
+        make --no-print-directory -n default >/dev/null
+        python - <<'PY'
+        from pathlib import Path
+        p = Path('.cache/makes/lein.mk')
+        text = p.read_text()
+        text = text.replace(
+          'https://codeberg.org/leiningen/leiningen/raw/tag',
+          'https://raw.githubusercontent.com/technomancy/leiningen')
+        text = text.replace(
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n',
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|\' $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_CHECKSUM=.*|export LEIN_CHECKSUM="5f5231f06c3c7924e3241e3dfa52885577fb44ddf8a9ea373d2c5e2f27217565"|\' $@\n')
+        p.write_text(text)
+        PY
+
+    - name: Run tests
+      run: |
+        make -k test-all \
+          TEST-TIME='date; time' \
+          BINDING-SKIP="delphi elixir haskell lua php swift $YS_RELEASE_BINDINGS_SKIP"
+
   create-release:
     name: Create GitHub release
-    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
     needs:
     - test-linux
     - test-macos
@@ -506,7 +738,7 @@ jobs:
 
   upload-assets:
     name: Upload release assets
-    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
     needs: create-release
     runs-on: ubuntu-latest
     permissions:
@@ -541,6 +773,7 @@ jobs:
       ${{
         always() &&
         !cancelled() &&
+        !inputs.tests_only &&
         (
           inputs.publish_homebrew_only ||
           needs.upload-assets.result == 'success'
@@ -586,6 +819,7 @@ jobs:
       ${{
         always() &&
         !cancelled() &&
+        !inputs.tests_only &&
         !inputs.publish_homebrew_only &&
         (
           inputs.publish_bindings_only ||
@@ -679,7 +913,7 @@ jobs:
 
   publish-website:
     name: Publish website
-    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
     needs:
     - publish-bindings
     - publish-homebrew

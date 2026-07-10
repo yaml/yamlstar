@@ -320,6 +320,44 @@ ifndef n
 endif
 	$(YS) $(ROOT)/util/release-yamlstar build-github $(n)
 
+# The t= platform list accepts spaces or commas:
+#   t='macos linux'  or  t=macos,linux
+comma := ,
+
+# Rerun tests for the platforms in t= using build artifacts from a
+# prior run (r=RUN_ID, default: the latest release workflow run on
+# the current branch). Example:
+#   make release-tests-retry n=0.1.12 t=macos r=12345678
+release-tests-retry: t ?= linux macos windows
+release-tests-retry: $(GH)
+ifndef n
+	$(error 'make release-tests-retry' requires n=NEW_VERSION)
+endif
+	@set -e; \
+	  branch=$$(git branch --show-current); \
+	  artifact_run_id='$(r)'; \
+	  if [[ -z "$$artifact_run_id" ]]; then \
+	    artifact_run_id=$$(gh run list --workflow=release.yaml \
+	      --repo yaml/yamlstar --branch $$branch --limit=1 \
+	      --json databaseId --jq '.[0].databaseId'); \
+	  fi; \
+	  test -n "$$artifact_run_id"; \
+	  gh run view $$artifact_run_id --repo yaml/yamlstar \
+	    --json databaseId --jq .databaseId > /dev/null || { \
+	    echo "ERROR: run id '$$artifact_run_id' not found"; exit 1; }; \
+	  echo "Using build artifacts from run $$artifact_run_id"; \
+	  git push origin HEAD:$$branch; \
+	  gh workflow run release.yaml \
+	    --repo yaml/yamlstar --ref $$branch -f version=$(n) \
+	    -f tests_only='$(subst $(comma), ,$(t))' \
+	    -f test_artifacts_run_id=$$artifact_run_id; \
+	  sleep 5; \
+	  run_id=$$(gh run list --workflow=release.yaml \
+	    --repo yaml/yamlstar --branch $$branch --limit=1 \
+	    --json databaseId --jq '.[0].databaseId'); \
+	  gh run watch $$run_id --repo yaml/yamlstar \
+	    --exit-status --interval=10
+
 release-retry: $(YS) $(GH)
 ifndef n
 	$(error 'make release-retry' requires n=NEW_VERSION)
