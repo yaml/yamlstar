@@ -374,7 +374,7 @@ jobs:
         PY
 
     - name: Run tests
-      run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi haskell lua php r"
+      run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi haskell lua php r zig"
 
   test-windows:
     name: Test Windows artifacts
@@ -471,7 +471,7 @@ jobs:
       run: |
         make -k test-all \
           TEST-TIME='date; time' \
-          BINDING-SKIP="delphi elixir haskell lua php swift $YS_RELEASE_BINDINGS_SKIP"
+          BINDING-SKIP="crystal delphi elixir haskell lua php r raku swift $YS_RELEASE_BINDINGS_SKIP"
 
   test-linux-retry:
     name: Test Linux artifacts (retry)
@@ -584,7 +584,7 @@ jobs:
       run: |
         make test-all \
           TEST-TIME='date; time' \
-          BINDING-SKIP="delphi haskell lua php r $YS_RELEASE_BINDINGS_SKIP"
+          BINDING-SKIP="delphi haskell lua php r zig $YS_RELEASE_BINDINGS_SKIP"
 
   test-windows-retry:
     name: Test Windows artifacts (retry)
@@ -690,7 +690,7 @@ jobs:
       run: |
         make -k test-all \
           TEST-TIME='date; time' \
-          BINDING-SKIP="delphi elixir haskell lua php swift $YS_RELEASE_BINDINGS_SKIP"
+          BINDING-SKIP="crystal delphi elixir haskell lua php r raku swift $YS_RELEASE_BINDINGS_SKIP"
 
   create-release:
     name: Create GitHub release
