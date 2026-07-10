@@ -7,13 +7,13 @@ A pure YAML 1.2 loader for Clojure.
 ### Leiningen/Boot
 
 ```clojure
-[org.yamlstar/yamlstar "0.1.11"]
+[org.yamlstar/yamlstar "0.1.12"]
 ```
 
 ### Clojure CLI (deps.edn)
 
 ```clojure
-org.yamlstar/yamlstar {:mvn/version "0.1.11"}
+org.yamlstar/yamlstar {:mvn/version "0.1.12"}
 ```
 
 ## Usage

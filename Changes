@@ -1,3 +1,16 @@
+- version: 0.1.12
+  date:    Fri Jul 10 01:44:20 PM EDT 2026
+  changes:
+  - Add D support
+  - Add Dart support
+  - Add Elixir support
+  - Add Kotlin support
+  - Add Nim support
+  - Add R support
+  - Add Swift support
+  - Add Zig support
+  - Use published Docker images for slow binding tests
+  - Add Clojure JSON to YAML example
 - version: 0.1.11
   date:    Mon Jun 22 07:05:22 PM EDT 2026
   changes:
