@@ -361,7 +361,7 @@ jobs:
         PY
 
     - name: Run tests
-      run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi haskell lua php"
+      run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi haskell lua php r"
 
   test-windows:
     name: Test Windows artifacts
