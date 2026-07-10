@@ -380,6 +380,47 @@ jobs:
         name: windows-x64
         path: release-artifacts
 
+    - name: Install shasum shim
+      run: |
+        mkdir -p "$RUNNER_TEMP/bin"
+        {
+          echo '#!/usr/bin/env bash'
+          echo 'if [[ ${1:-} == -a && ${2:-} == 256 && ${3:-} == -c ]]; then'
+          echo '  sha256sum -c'
+          echo 'else'
+          echo '  echo "Unsupported shasum arguments: $*" >&2'
+          echo '  exit 2'
+          echo 'fi'
+        } > "$RUNNER_TEMP/bin/shasum"
+        chmod +x "$RUNNER_TEMP/bin/shasum"
+        echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
+    - name: Configure archive tools
+      run: |
+        echo 'TAR_OPTIONS=--force-local' >> "$GITHUB_ENV"
+        echo 'UNZIP=-o' >> "$GITHUB_ENV"
+
+    - name: Configure Strawberry Perl toolchain
+      run: |
+        echo 'C:\Strawberry\perl\bin' >> "$GITHUB_PATH"
+        echo 'C:\Strawberry\c\bin' >> "$GITHUB_PATH"
+
+    - name: Install Crystal link dependencies
+      uses: msys2/setup-msys2@v2
+      with:
+        release: false
+        msystem: MINGW64
+        update: true
+        install: >-
+          mingw-w64-x86_64-gc
+          mingw-w64-x86_64-pcre2
+
+    - name: Configure Crystal link dependencies
+      run: |
+        echo 'C:\msys64\mingw64\bin' >> "$GITHUB_PATH"
+        echo 'CC=gcc' >> "$GITHUB_ENV"
+        echo 'CRYSTAL_MINGW_LIB=/c/msys64/mingw64/lib' >> "$GITHUB_ENV"
+
     - name: Install release artifacts
       run: util/install-release-artifacts release-artifacts
 
@@ -394,6 +435,30 @@ jobs:
         test -n "$wheel"
         python -m pip install --force-reinstall "$wheel"
         python -c "import yamlstar; print(yamlstar.YAMLStar().load('a: 1'))"
+
+    - name: Use GitHub Leiningen mirror
+      run: |
+        make --no-print-directory -n default >/dev/null
+        python - <<'PY'
+        from pathlib import Path
+        p = Path('.cache/makes/lein.mk')
+        text = p.read_text()
+        text = text.replace(
+          'https://codeberg.org/leiningen/leiningen/raw/tag',
+          'https://raw.githubusercontent.com/technomancy/leiningen')
+        text = text.replace(
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n',
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|\' $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_CHECKSUM=.*|export LEIN_CHECKSUM="5f5231f06c3c7924e3241e3dfa52885577fb44ddf8a9ea373d2c5e2f27217565"|\' $@\n')
+        p.write_text(text)
+        PY
+
+    - name: Run tests
+      run: |
+        make -k test-all \
+          TEST-TIME='date; time' \
+          BINDING-SKIP="delphi elixir haskell lua php swift $YS_RELEASE_BINDINGS_SKIP"
 
   create-release:
     name: Create GitHub release
