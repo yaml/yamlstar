@@ -15,7 +15,7 @@ include $(COMMON)/common.mk
 include $(COMMON)/binding.mk
 
 ELIXIR-IMAGE ?= ghcr.io/yaml/yamlscript-elixir-test
-GIT-COMMON-DIR := $(shell git rev-parse --git-common-dir 2>/dev/null)
+GIT-COMMON-DIR := $(shell git rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
 GIT-DOCKER-VOLUME := $(if $(GIT-COMMON-DIR),--volume $(GIT-COMMON-DIR):$(GIT-COMMON-DIR):ro,)
 
 

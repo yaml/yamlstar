@@ -10,7 +10,7 @@ include $(COMMON)/binding.mk
 
 CABAL-INDEX := $(CABAL_DIR)/packages/hackage.haskell.org/01-index.tar.gz
 HASKELL-IMAGE ?= ghcr.io/yaml/yamlscript-haskell-test
-GIT-COMMON-DIR := $(shell git rev-parse --git-common-dir 2>/dev/null)
+GIT-COMMON-DIR := $(shell git rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
 GIT-DOCKER-VOLUME := $(if $(GIT-COMMON-DIR),--volume $(GIT-COMMON-DIR):$(GIT-COMMON-DIR):ro,)
 LIBYAMLSTAR-TMP := /tmp/libyamlstar
 LIBYAMLSTAR-COPY := $(LIBYAMLSTAR-TMP)/lib/$(notdir $(LIBYAMLSTAR-SO-VERSION))

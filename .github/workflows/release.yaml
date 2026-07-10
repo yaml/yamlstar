@@ -110,13 +110,12 @@ jobs:
         github-token: ${{ github.token }}
         native-image-job-reports: 'true'
 
-    - name: Preinstall Leiningen
+    - name: Use GitHub Leiningen mirror
       run: |
-        mkdir -p .cache/local/lein-2.13.0/bin
-        curl -fsSL \
-          https://raw.githubusercontent.com/technomancy/leiningen/2.13.0/bin/lein \
-          > .cache/local/lein-2.13.0/bin/lein
-        chmod +x .cache/local/lein-2.13.0/bin/lein
+        make --no-print-directory -n default >/dev/null
+        sed -i.bak \
+          's|https://codeberg.org/leiningen/leiningen/raw/tag|https://raw.githubusercontent.com/technomancy/leiningen|' \
+          .cache/makes/lein.mk
 
     - name: Build release archives and Python wheel
       run: |
@@ -153,13 +152,12 @@ jobs:
         github-token: ${{ github.token }}
         native-image-job-reports: 'true'
 
-    - name: Preinstall Leiningen
+    - name: Use GitHub Leiningen mirror
       run: |
-        mkdir -p .cache/local/lein-2.13.0/bin
-        curl -fsSL \
-          https://raw.githubusercontent.com/technomancy/leiningen/2.13.0/bin/lein \
-          > .cache/local/lein-2.13.0/bin/lein
-        chmod +x .cache/local/lein-2.13.0/bin/lein
+        make --no-print-directory -n default >/dev/null
+        sed -i.bak \
+          's|https://codeberg.org/leiningen/leiningen/raw/tag|https://raw.githubusercontent.com/technomancy/leiningen|' \
+          .cache/makes/lein.mk
 
     - name: Build release archives and Python wheel
       run: |
@@ -217,13 +215,12 @@ jobs:
         chmod +x "$RUNNER_TEMP/bin/shasum"
         echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
 
-    - name: Preinstall Leiningen
+    - name: Use GitHub Leiningen mirror
       run: |
-        mkdir -p .cache/local/lein-2.13.0/bin
-        curl -fsSL \
-          https://raw.githubusercontent.com/technomancy/leiningen/2.13.0/bin/lein \
-          > .cache/local/lein-2.13.0/bin/lein
-        chmod +x .cache/local/lein-2.13.0/bin/lein
+        make --no-print-directory -n default >/dev/null
+        sed -i.bak \
+          's|https://codeberg.org/leiningen/leiningen/raw/tag|https://raw.githubusercontent.com/technomancy/leiningen|' \
+          .cache/makes/lein.mk
 
     - name: Build release archives and Python wheel
       run: |
@@ -266,13 +263,12 @@ jobs:
         cli/bin/yaml --version
         [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
 
-    - name: Preinstall Leiningen
+    - name: Use GitHub Leiningen mirror
       run: |
-        mkdir -p .cache/local/lein-2.13.0/bin
-        curl -fsSL \
-          https://raw.githubusercontent.com/technomancy/leiningen/2.13.0/bin/lein \
-          > .cache/local/lein-2.13.0/bin/lein
-        chmod +x .cache/local/lein-2.13.0/bin/lein
+        make --no-print-directory -n default >/dev/null
+        sed -i.bak \
+          's|https://codeberg.org/leiningen/leiningen/raw/tag|https://raw.githubusercontent.com/technomancy/leiningen|' \
+          .cache/makes/lein.mk
 
     - name: Run tests
       run: make test-all TEST-TIME='date; time' BINDING-SKIP=php
@@ -302,13 +298,12 @@ jobs:
         cli/bin/yaml --version
         [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
 
-    - name: Preinstall Leiningen
+    - name: Use GitHub Leiningen mirror
       run: |
-        mkdir -p .cache/local/lein-2.13.0/bin
-        curl -fsSL \
-          https://raw.githubusercontent.com/technomancy/leiningen/2.13.0/bin/lein \
-          > .cache/local/lein-2.13.0/bin/lein
-        chmod +x .cache/local/lein-2.13.0/bin/lein
+        make --no-print-directory -n default >/dev/null
+        sed -i.bak \
+          's|https://codeberg.org/leiningen/leiningen/raw/tag|https://raw.githubusercontent.com/technomancy/leiningen|' \
+          .cache/makes/lein.mk
 
     - name: Run tests
       run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi lua php"
