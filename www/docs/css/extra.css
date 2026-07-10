@@ -85,9 +85,12 @@
 .ykw { color: #d73a49; font-weight: 600; }
 .yver { color: var(--ys-gold-dark); font-weight: 700; }
 
+.home-page a {
+  text-decoration: underline;
+}
+
 .home-page a .ystr {
   color: #008000;
-  text-decoration: underline;
 }
 
 [data-md-color-scheme="slate"] .ykey { color: #6eb4ff; }
