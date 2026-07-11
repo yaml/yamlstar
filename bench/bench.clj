@@ -1,5 +1,5 @@
 (ns bench2
-  (:require [yamlstar.core :as yaml]))
+  (:require [yamlstar.api :as yaml]))
 
 (def inputs
   [["scalar"  "hello"]

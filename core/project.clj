@@ -18,4 +18,4 @@
                        :jvm-opts ["-Dclojure.compiler.direct-linking=true"
                                   "-Dclojure.spec.skip-macros=true"]}}
 
-  :repl-options {:init-ns yamlstar.core})
+  :repl-options {:init-ns yamlstar.api})

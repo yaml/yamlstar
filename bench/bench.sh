@@ -53,7 +53,7 @@ SRCS=(
   $ROOT/core/src/yamlstar/composer.clj
   $ROOT/core/src/yamlstar/resolver.clj
   $ROOT/core/src/yamlstar/constructor.clj
-  $ROOT/core/src/yamlstar/core.clj
+  $ROOT/core/src/yamlstar/api.clj
   $ROOT/bench/bench2.clj
 )
 

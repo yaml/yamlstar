@@ -4,7 +4,7 @@
             [clojure.data.json :as json]
             [clojure.pprint :as pp]
             [clojure.string :as str]
-            [yamlstar.core :as yaml]
+            [yamlstar.api :as yaml]
             [yamlstar.parser :as parser]
             [yamlstar.composer :as composer]
             [yamlstar.resolver :as resolver]

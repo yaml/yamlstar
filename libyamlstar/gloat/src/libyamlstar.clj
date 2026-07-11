@@ -1,7 +1,7 @@
 (ns libyamlstar
   "Shared library bridge - Gloat EXPORT-based C API for YAMLStar"
   (:require [clojure.string :as str]
-            [yamlstar.core :as yaml]
+            [yamlstar.api :as yaml]
             [ys.json :as json]))
 
 (def EXPORT

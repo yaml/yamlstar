@@ -3,7 +3,7 @@
             [clojure.java.io :as io]
             [clojure.string :as str]
             [clojure.test :refer [deftest is testing]]
-            [yamlstar.core :as yaml]))
+            [yamlstar.api :as yaml]))
 
 (def default-suite-dir "../yaml-test-suite")
 

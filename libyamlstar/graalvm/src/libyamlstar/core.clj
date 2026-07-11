@@ -1,7 +1,7 @@
 (ns libyamlstar.core
   "Shared library core - bridges Clojure to C API"
   (:require [clojure.data.json :as json]
-            [yamlstar.core :as yaml])
+            [yamlstar.api :as yaml])
   (:gen-class
    :methods [^:static [loadYaml [String] String]
              ^:static [loadYamlAll [String] String]

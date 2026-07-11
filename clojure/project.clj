@@ -16,8 +16,8 @@
   [[org.clojure/clojure "1.12.0"]
    [org.clojure/data.json "2.5.0"]]
 
-  :source-paths ["../core/src"]
-  :test-paths ["../core/test"]
+  :source-paths ["src" "../core/src"]
+  :test-paths ["test" "../core/test"]
 
   :deploy-repositories
   [["releases"

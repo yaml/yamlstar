@@ -1,7 +1,7 @@
 (ns yamlstar.core-test
   (:require [clojure.test :refer :all]
             [clojure.data.json :as json]
-            [yamlstar.core :as yaml]
+            [yamlstar.api :as yaml]
             [yamlstar.emitter :as emitter]
             [yamlstar.serializer :as serializer]))
 

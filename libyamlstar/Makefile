@@ -99,7 +99,7 @@ GLOAT-SRCS := \
   $(GLOAT-LINK-DIR)/desolver.clj \
   $(GLOAT-LINK-DIR)/serializer.clj \
   $(GLOAT-LINK-DIR)/emitter.clj \
-  $(CORE-YAMLSTAR)/core.clj \
+  $(CORE-YAMLSTAR)/api.clj \
   gloat/src/libyamlstar.clj \
 
 # GraalVM build
