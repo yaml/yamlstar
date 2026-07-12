@@ -333,7 +333,7 @@ comma := ,
 # Rerun tests for the platforms in t= using build artifacts from a
 # prior run (r=RUN_ID, default: the latest release workflow run on
 # the current branch). Example:
-#   make release-tests-retry n=0.1.12 t=macos r=12345678
+#   make release-tests-retry n=0.1.14 t=macos r=12345678
 release-tests-retry: t ?= linux macos windows
 release-tests-retry: $(GH)
 ifndef n

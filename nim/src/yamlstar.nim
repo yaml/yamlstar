@@ -17,7 +17,7 @@ import std/[dynlib, json, os, strutils]
 # This value is automatically updated by 'make bump'.
 # The version number is used to find the correct shared library file.
 # We currently only support binding to an exact version of libyamlstar.
-const yamlstarVersion* = "0.1.12"
+const yamlstarVersion* = "0.1.14"
 
 # We currently only support platforms that GraalVM supports.
 # Windows uses an unversioned file name, matching the Python binding:
