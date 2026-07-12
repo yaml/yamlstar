@@ -20,14 +20,13 @@ vo =: v-old.str/replace(/\./ '\\.')
   bump:
   - regx:: "()${vp}()"
     file:
-    - ReadMe.md
+    - Makefile
     - Meta
     - cli/src/yamlstar/cli.clj
     - clojure/ReadMe.md
-    - crystal/ReadMe.md
     - crystal/shard.yml
     - crystal/src/yamlstar/version.cr
-    - core/src/yamlstar/core.clj
+    - core/src/yamlstar/api.clj
     - csharp/YAMLStar.csproj
     - d/source/yamlstar.d
     - dart/lib/yamlstar.dart
@@ -47,13 +46,10 @@ vo =: v-old.str/replace(/\./ '\\.')
     - example/python/ReadMe.md
     - fortran/fpm.toml
     - go/yamlstar.go
-    - haskell/ReadMe.md
-    - haskell/cabal.ys
     - java/Makefile
     - java/ReadMe.md
     - java/src/com/yaml/yamlstar.clj
     - julia/Project.toml
-    - julia/ReadMe.md
     - julia/src/libyamlstar.jl
     - kotlin/Makefile
     - kotlin/doc/readme.md
@@ -72,7 +68,6 @@ vo =: v-old.str/replace(/\./ '\\.')
     - r/R/yamlstar.R
     - r/src/yamlstar.c
     - raku/META6.json
-    - raku/README.md
     - raku/lib/YAMLStar.rakumod
     - ruby/lib/yamlstar/version.rb
     - rust/ReadMe.md
@@ -81,7 +76,6 @@ vo =: v-old.str/replace(/\./ '\\.')
     - swift/Sources/YAMLStar/YAMLStar.swift
     - swift/doc/readme.md
     - util/yamlj
-    - www/docs/cli.md
     - www/docs/install
     - www/docs/installation.md
     - www/docs/index.md
