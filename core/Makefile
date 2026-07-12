@@ -1,5 +1,7 @@
 include ../common/init.mk
+include $M/clojure.mk
 include $M/lein.mk
+include $M/babashka.mk
 include $M/shell.mk
 
 MAKES-CLEAN := \
@@ -31,6 +33,9 @@ build:
 
 test jar: $(LEIN)
 	lein $@
+
+smoke-parser: $(BB) $(LEIN)
+	$(BB) --classpath "$$(lein classpath)" ../test-parser.clj
 
 test-suite-fixture:
 	@if [ ! -d '$(YAML-TEST-SUITE-DIR)/.git' ]; then \
@@ -64,5 +69,5 @@ test-suite-emit: $(LEIN) test-suite-fixture
 install: $(LEIN)
 	lein with-profile +uberjar $@
 
-.PHONY: test-suite test-suite-fixture \
+.PHONY: smoke-parser test-suite test-suite-fixture \
   test-suite-load test-suite-roundtrip test-suite-emit

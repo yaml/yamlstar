@@ -4,19 +4,14 @@
 
 A **pure YAML 1.2 loader and dumper** with a clean load stack, a matching dump
 stack, zero dependencies (except Clojure), and 100% spec compliance via your
-pure Clojure YAML reference parser.
+pure Clojure YAML reference parser dependency.
 
 ### Complete Implementation
 
 #### 1. Parser Integration ✅
-- Copied and adapted pure Clojure YAML parser from yaml-reference-parser
-- Updated all namespaces to `yamlstar.parser.*`
-- 5 modules integrated:
-  - **core.clj** - Entry point
-  - **parser.clj** - PEG parsing engine (18KB)
-  - **receiver.clj** - Event handler (17KB)
-  - **grammar.clj** - Full YAML 1.2 spec (92KB, 211 rules!)
-  - **prelude.clj** - Utilities (2KB)
+- Uses the published `org.yamlstar/yaml-parser` Clojars dependency
+- Keeps `yamlstar.parser/parse` as the YAMLStar compatibility facade
+- Parser internals live in the dependency's `yaml-parser.*` namespaces
 
 #### 2. Composer Layer ✅
 - **Stack-based event-to-node algorithm**

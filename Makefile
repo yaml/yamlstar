@@ -3,6 +3,9 @@ include common/init.mk
 include $M/gh.mk
 include $M/gloat.mk
 include $M/yamlscript.mk
+include $M/clojure.mk
+include $M/lein.mk
+include $M/babashka.mk
 include $M/clean.mk
 include $M/perl.mk
 include $M/bpan.mk
@@ -93,6 +96,9 @@ test ?= test/*.t
 unexport PERL5OPT PERL5LIB
 
 test: test-unit test-core test-suite
+
+test-parser:
+	$(MAKE) -C core smoke-parser
 
 TEST-UNIT-DEPS := $(PERL) $(BPAN)
 ifneq ($(OS-NAME),windows)

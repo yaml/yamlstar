@@ -21,7 +21,8 @@
     [:url "https://github.com/ingydotnet"]]]
 
   :dependencies
-  [[org.clojure/clojure "1.12.0"]]
+  [[org.clojure/clojure "1.12.0"]
+   [org.yamlstar/yaml-parser "0.2.0"]]
 
   :source-paths ["src" "../core/src"]
   :test-paths ["test"]

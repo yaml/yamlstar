@@ -22,7 +22,7 @@ tests are passing.
    functions:
    - `yamlstar.resolver/resolve` shadows `clojure.core/resolve`
    - `yamlstar.core/load` shadows `clojure.core/load`
-   - `yamlstar.parser.grammar/empty` shadows `clojure.core/empty`
+   - `yaml-parser.grammar/empty` shadows `clojure.core/empty`
 
    **Note**: These are intentional and use `:refer-clojure :exclude` to avoid
    conflicts.

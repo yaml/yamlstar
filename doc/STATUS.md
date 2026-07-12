@@ -10,14 +10,9 @@
 - Added `.gitignore` and `README.md`
 
 ### Parser Integration
-- Copied pure Clojure YAML parser from yaml-reference-parser
-- Updated all namespaces from `yaml-parser.*` to `yamlstar.parser.*`
-- Integrated parser modules:
-  - `yamlstar.parser.core` - Main entry point
-  - `yamlstar.parser.parser` - PEG parser engine
-  - `yamlstar.parser.receiver` - Event handler
-  - `yamlstar.parser.grammar` - Full YAML 1.2 grammar (211 rules)
-  - `yamlstar.parser.prelude` - Utilities
+- Uses the published `org.yamlstar/yaml-parser` Clojars dependency
+- Keeps `yamlstar.parser/parse` as a YAMLStar compatibility facade
+- Parser internals are provided by the external `yaml-parser.*` namespaces
 
 ### Composer Layer
 - Implemented stack-based event-to-node composer

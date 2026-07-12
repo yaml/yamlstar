@@ -6,6 +6,7 @@ ifdef YAMLSTAR_GLOJURE
 include $M/gloat.mk
 else
 include $M/graalvm.mk
+include $M/clojure.mk
 include $M/lein.mk
 endif
 
@@ -37,18 +38,6 @@ CORE-YAMLSTAR := ../core/src/yamlstar
 # .cljc source files that need .clj symlinks for gloat
 GLOAT-LINK-DIR := cache/gloat-srcs
 
-$(GLOAT-LINK-DIR)/parser/prelude.clj: $(CORE-YAMLSTAR)/parser/prelude.cljc
-	@mkdir -p $(dir $@)
-	ln -sf $(abspath $<) $@
-
-$(GLOAT-LINK-DIR)/parser/parser.clj: $(CORE-YAMLSTAR)/parser/parser.cljc
-	@mkdir -p $(dir $@)
-	ln -sf $(abspath $<) $@
-
-$(GLOAT-LINK-DIR)/parser/receiver.clj: $(CORE-YAMLSTAR)/parser/receiver.cljc
-	@mkdir -p $(dir $@)
-	ln -sf $(abspath $<) $@
-
 $(GLOAT-LINK-DIR)/constructor.clj: $(CORE-YAMLSTAR)/constructor.cljc
 	@mkdir -p $(dir $@)
 	ln -sf $(abspath $<) $@
@@ -74,9 +63,6 @@ $(GLOAT-LINK-DIR)/emitter.clj: $(CORE-YAMLSTAR)/emitter.cljc
 	ln -sf $(abspath $<) $@
 
 GLOAT-LINKS := \
-  $(GLOAT-LINK-DIR)/parser/prelude.clj \
-  $(GLOAT-LINK-DIR)/parser/parser.clj \
-  $(GLOAT-LINK-DIR)/parser/receiver.clj \
   $(GLOAT-LINK-DIR)/constructor.clj \
   $(GLOAT-LINK-DIR)/numbers.clj \
   $(GLOAT-LINK-DIR)/representer.clj \
@@ -86,10 +72,6 @@ GLOAT-LINKS := \
 
 # Clojure source files compiled by gloat (order matters for namespaces)
 GLOAT-SRCS := \
-  $(GLOAT-LINK-DIR)/parser/prelude.clj \
-  $(GLOAT-LINK-DIR)/parser/parser.clj \
-  $(GLOAT-LINK-DIR)/parser/receiver.clj \
-  $(CORE-YAMLSTAR)/parser/grammar.clj \
   $(CORE-YAMLSTAR)/parser.clj \
   $(CORE-YAMLSTAR)/composer.clj \
   $(CORE-YAMLSTAR)/resolver.clj \
@@ -134,7 +116,8 @@ endif
 
 
 ifdef YAMLSTAR_GLOJURE
-build: build-gloat
+build:
+	$(error YAMLSTAR_GLOJURE build is unsupported while yaml-parser is provided as a Maven dependency)
 else
 build: build-graalvm
 endif
@@ -142,7 +125,8 @@ endif
 LIB-HEADER := $(LIB-DIR)/$(LIB-NAME).h
 LIB-HEADER-GLOAT := $(LIB-DIR)/$(LIB-NAME-GLOAT).h
 
-build-gloat: $(LIB-SO-GLOAT)
+build-gloat:
+	$(error YAMLSTAR_GLOJURE build is unsupported while yaml-parser is provided as a Maven dependency)
 ifneq ($(OS-NAME),windows)
 	ln -sf $(notdir $(LIB-SO-GLOAT)) $(LIB-DIR)/$(LIB-NAME-GLOAT).$(SO).$(VERSION)
 endif
@@ -154,7 +138,6 @@ endif
 
 # Build both: each requires separate make invocations (tool includes conflict)
 build-all:
-	YAMLSTAR_GLOJURE=1 $(MAKE) build-gloat
 	env -u YAMLSTAR_GLOJURE $(MAKE) build-graalvm
 
 test:
