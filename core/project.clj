@@ -5,7 +5,7 @@
             :url "https://opensource.org/licenses/MIT"}
 
   :dependencies [[org.clojure/clojure "1.12.0"]
-                 [org.yamlstar/yaml-parser "0.2.0"]
+                 [org.yamlstar/yaml-parser "0.2.1"]
                  [org.clojure/data.json "2.5.0"]]
 
   :source-paths ["src"]

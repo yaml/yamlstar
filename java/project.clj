@@ -22,7 +22,7 @@
 
   :dependencies
   [[org.clojure/clojure "1.12.0"]
-   [org.yamlstar/yaml-parser "0.2.0"]]
+   [org.yamlstar/yaml-parser "0.2.1"]]
 
   :source-paths ["src" "../core/src"]
   :test-paths ["test"]

@@ -1,6 +1,6 @@
 {:paths ["src" "test"]
  :deps {org.clojure/clojure {:mvn/version "1.12.0"}
-        org.yamlstar/yaml-parser {:mvn/version "0.2.0"}
+        org.yamlstar/yaml-parser {:mvn/version "0.2.1"}
         org.clojure/data.json {:mvn/version "2.5.0"}}
  :aliases
  {:test {:extra-paths ["test"]
