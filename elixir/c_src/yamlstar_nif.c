@@ -22,7 +22,7 @@
 
 // This value is automatically updated by 'make bump'.
 // We currently only support binding to an exact version of libyamlstar:
-#define YAMLSTAR_VERSION "0.1.14"
+#define YAMLSTAR_VERSION "0.1.15"
 
 #ifdef __APPLE__
 #define LIBYAMLSTAR_NAME "libyamlstar.dylib." YAMLSTAR_VERSION

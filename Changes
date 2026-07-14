@@ -1,3 +1,7 @@
+- version: 0.1.15
+  date:    Tue Jul 14 09:27:01 AM EDT 2026
+  changes:
+  - Bump yaml-parser to 0.2.1
 - version: 0.1.14
   date:    Sun Jul 12 11:47:16 AM EDT 2026
   changes:

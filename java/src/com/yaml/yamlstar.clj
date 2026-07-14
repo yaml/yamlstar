@@ -87,4 +87,4 @@
 (defn -version
   "Return the YAMLStar version string."
   []
-  "0.1.14")
+  "0.1.15")

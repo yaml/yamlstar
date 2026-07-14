@@ -2,7 +2,7 @@ module libyamlstar
 
 import Base.Libc: Libdl
 
-const YAMLSTAR_VERSION = "0.1.14"
+const YAMLSTAR_VERSION = "0.1.15"
 const libhandle = Ref{Ptr{Cvoid}}()
 const graal_create_isolate_fptr = Ref{Ptr{Cvoid}}()
 const graal_tear_down_isolate_fptr = Ref{Ptr{Cvoid}}()

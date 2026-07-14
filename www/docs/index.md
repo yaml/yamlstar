@@ -13,7 +13,7 @@ hide:
 
 <pre class="home-page">
 <span class="ykey">YAMLStar</span><span class="ysep">:</span>
-  <span class="ykey">Version</span><span class="ysep">:</span> <span class="yver">0.1.14</span>
+  <span class="ykey">Version</span><span class="ysep">:</span> <span class="yver">0.1.15</span>
   <span class="ykey">Description</span><span class="ysep">:</span>
     <span class="ystr">A pure YAML 1.2 loading and dumping</span>
     <span class="ystr">with cross-language consistency</span>
@@ -77,7 +77,7 @@ hide:
     // - - bar</span>
 
   <span class="ykey">Clojure</span><span class="ysep">:</span> |
-    <span class="ycom">; lein/deps.edn: org.yamlstar/yamlstar "0.1.14"</span>
+    <span class="ycom">; lein/deps.edn: org.yamlstar/yamlstar "0.1.15"</span>
     (<span class="ykw">require</span> '[yamlstar.core <span class="ykw">:as</span> yaml])
 
     (yaml/load <span class="ystr">"key: value"</span>)

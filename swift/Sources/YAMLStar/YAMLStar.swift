@@ -23,7 +23,7 @@ import Foundation
 // This value is automatically updated by 'make bump'.
 // The version number is used to find the correct shared library file.
 // We currently only support binding to an exact version of libyamlstar.
-public let yamlstarVersion = "0.1.14"
+public let yamlstarVersion = "0.1.15"
 
 #if os(Linux)
     let libyamlstarName = "libyamlstar.so.\(yamlstarVersion)"

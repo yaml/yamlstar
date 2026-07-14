@@ -12,7 +12,7 @@
 # the R object that YAMLStar loads.
 
 # This value is automatically updated by 'make bump':
-YAMLSTAR_VERSION <- "0.1.14"
+YAMLSTAR_VERSION <- "0.1.15"
 
 # Load a YAML string and return the result:
 yamlstar_load <- function(input) {

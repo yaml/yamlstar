@@ -1,6 +1,6 @@
 .{
     .name = .yamlstar,
-    .version = "0.1.14",
+    .version = "0.1.15",
     .fingerprint = 0xfbcb1143e3c1178f,
     .minimum_zig_version = "0.15.2",
     .paths = .{

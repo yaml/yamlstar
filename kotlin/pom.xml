@@ -12,7 +12,7 @@
 
   <artifactId>kotlin-yamlstar</artifactId>
 
-  <version>0.1.14</version>
+  <version>0.1.15</version>
 
   <name>kotlin-yamlstar</name>
 
@@ -52,7 +52,7 @@
     <dependency>
       <groupId>com.yaml</groupId>
       <artifactId>yamlstar</artifactId>
-      <version>0.1.14</version>
+      <version>0.1.15</version>
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
