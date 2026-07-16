@@ -335,13 +335,14 @@ endif
 
 # The t= platform list accepts spaces or commas:
 #   t='macos linux'  or  t=macos,linux
+#   t=aarch64
 comma := ,
 
 # Rerun tests for the platforms in t= using build artifacts from a
 # prior run (r=RUN_ID, default: the latest release workflow run on
 # the current branch). Example:
-#   make release-tests-retry n=0.1.15 t=macos r=12345678
-release-tests-retry: t ?= linux macos windows
+#   make release-tests-retry n=0.1.16 t=macos r=12345678
+release-tests-retry: t ?= linux aarch64 macos windows
 release-tests-retry: $(GH)
 ifndef n
 	$(error 'make release-tests-retry' requires n=NEW_VERSION)

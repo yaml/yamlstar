@@ -92,17 +92,21 @@ defn sha256(file):
 
 defn release-files(version): +
   [
+    "yamlstar-${version}-linux-aarch64.tar.xz"
     "yamlstar-${version}-linux-x64.tar.xz"
     "yamlstar-${version}-macos-arm64.tar.xz"
+    "libyamlstar-${version}-linux-aarch64.tar.xz"
     "libyamlstar-${version}-linux-x64.tar.xz"
     "libyamlstar-${version}-macos-arm64.tar.xz"
   ]
 
 
 defn yamlstar-formula(version class shas):
-  lin-file =: "yamlstar-${version}-linux-x64.tar.xz"
+  lin-arm-file =: "yamlstar-${version}-linux-aarch64.tar.xz"
+  lin-int-file =: "yamlstar-${version}-linux-x64.tar.xz"
   mac-file =: "yamlstar-${version}-macos-arm64.tar.xz"
-  lin =: shas.$lin-file
+  lin-arm =: shas.$lin-arm-file
+  lin-int =: shas.$lin-int-file
   mac =: shas.$mac-file
   formula =:: |
     class CLASS < Formula
@@ -115,7 +119,11 @@ defn yamlstar-formula(version class shas):
         if Hardware::CPU.intel?
           url "https://github.com/yaml/yamlstar/releases/download/" \
             "#{version}/yamlstar-#{version}-linux-x64.tar.xz"
-          sha256 "LINUX_SHA"
+          sha256 "LINUX_INTEL_SHA"
+        elsif Hardware::CPU.arm?
+          url "https://github.com/yaml/yamlstar/releases/download/" \
+            "#{version}/yamlstar-#{version}-linux-aarch64.tar.xz"
+          sha256 "LINUX_ARM_SHA"
         else
           odie "YAMLStar is not available for this Linux architecture"
         end
@@ -143,14 +151,17 @@ defn yamlstar-formula(version class shas):
   formula:
     .replace('CLASS' class)
     .replace('VERSION' version)
-    .replace('LINUX_SHA' lin)
+    .replace('LINUX_ARM_SHA' lin-arm)
+    .replace('LINUX_INTEL_SHA' lin-int)
     .replace('MACOS_SHA' mac)
 
 
 defn libyamlstar-formula(version class shas):
-  lin-file =: "libyamlstar-${version}-linux-x64.tar.xz"
+  lin-arm-file =: "libyamlstar-${version}-linux-aarch64.tar.xz"
+  lin-int-file =: "libyamlstar-${version}-linux-x64.tar.xz"
   mac-file =: "libyamlstar-${version}-macos-arm64.tar.xz"
-  lin =: shas.$lin-file
+  lin-arm =: shas.$lin-arm-file
+  lin-int =: shas.$lin-int-file
   mac =: shas.$mac-file
   formula =:: |
     class CLASS < Formula
@@ -163,7 +174,11 @@ defn libyamlstar-formula(version class shas):
         if Hardware::CPU.intel?
           url "https://github.com/yaml/yamlstar/releases/download/" \
             "#{version}/libyamlstar-#{version}-linux-x64.tar.xz"
-          sha256 "LINUX_SHA"
+          sha256 "LINUX_INTEL_SHA"
+        elsif Hardware::CPU.arm?
+          url "https://github.com/yaml/yamlstar/releases/download/" \
+            "#{version}/libyamlstar-#{version}-linux-aarch64.tar.xz"
+          sha256 "LINUX_ARM_SHA"
         else
           odie "libyamlstar is not available for this Linux architecture"
         end
@@ -196,7 +211,8 @@ defn libyamlstar-formula(version class shas):
   formula:
     .replace('CLASS' class)
     .replace('VERSION' version)
-    .replace('LINUX_SHA' lin)
+    .replace('LINUX_ARM_SHA' lin-arm)
+    .replace('LINUX_INTEL_SHA' lin-int)
     .replace('MACOS_SHA' mac)
 
 

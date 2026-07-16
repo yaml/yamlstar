@@ -5,33 +5,58 @@ set -euo pipefail
 artifact_dir=${1:-.}
 version=$(sed -n 's/^version: //p' Meta)
 
-cli_tar=$(
-  find "$artifact_dir" -maxdepth 2 -type f \
-    -name "yamlstar-$version-*.tar.xz" |
+case "$(uname -s)" in
+  Linux*) os=linux ;;
+  Darwin*) os=macos ;;
+  MINGW*|MSYS*|CYGWIN*) os=windows ;;
+  *) os=unknown ;;
+esac
+
+case "$(uname -m)" in
+  x86_64|amd64) arch=x64 ;;
+  aarch64|arm64) arch=arm64 ;;
+  *) arch=unknown ;;
+esac
+
+if [[ $os == linux && $arch == arm64 ]]; then
+  arch=aarch64
+fi
+
+platform=$os-$arch
+
+find_artifact() {
+  local pattern=$1
+
+  find "$artifact_dir" -maxdepth 2 -type f -name "$pattern" |
     LC_ALL=C sort |
     head -n1
+}
+
+cli_tar=$(
+  find_artifact "yamlstar-$version-$platform.tar.xz"
 )
 
 cli_zip=$(
-  find "$artifact_dir" -maxdepth 2 -type f \
-    -name "yamlstar-$version-*.zip" |
-    LC_ALL=C sort |
-    head -n1
+  find_artifact "yamlstar-$version-$platform.zip"
 )
 
 lib_tar=$(
-  find "$artifact_dir" -maxdepth 2 -type f \
-    -name "libyamlstar-$version-*.tar.xz" |
-    LC_ALL=C sort |
-    head -n1
+  find_artifact "libyamlstar-$version-$platform.tar.xz"
 )
 
 lib_zip=$(
-  find "$artifact_dir" -maxdepth 2 -type f \
-    -name "libyamlstar-$version-*.zip" |
-    LC_ALL=C sort |
-    head -n1
+  find_artifact "libyamlstar-$version-$platform.zip"
 )
+
+if [[ -z "$cli_tar" && -z "$cli_zip" ]]; then
+  cli_tar=$(find_artifact "yamlstar-$version-*.tar.xz")
+  cli_zip=$(find_artifact "yamlstar-$version-*.zip")
+fi
+
+if [[ -z "$lib_tar" && -z "$lib_zip" ]]; then
+  lib_tar=$(find_artifact "libyamlstar-$version-*.tar.xz")
+  lib_zip=$(find_artifact "libyamlstar-$version-*.zip")
+fi
 
 if [[ -z "$lib_tar" && -z "$lib_zip" ]]; then
   echo "ERROR: No libyamlstar release artifact found in $artifact_dir" >&2

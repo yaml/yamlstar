@@ -21,7 +21,7 @@ import 'package:ffi/ffi.dart';
 // This value is automatically updated by 'make bump'.
 // The version number is used to find the correct shared library file.
 // We currently only support binding to an exact version of libyamlstar.
-const String yamlstarVersion = '0.1.15';
+const String yamlstarVersion = '0.1.16';
 
 typedef _CreateIsolateC = Int32 Function(
   Pointer<Void>,

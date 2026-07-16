@@ -3,7 +3,7 @@ include $M/maven.mk
 include $(COMMON)/common.mk
 include $(COMMON)/binding.mk
 
-KOTLIN-YAMLSTAR-JAR := target/kotlin-yamlstar-0.1.15.jar
+KOTLIN-YAMLSTAR-JAR := target/kotlin-yamlstar-0.1.16.jar
 
 MVN-COMMANDS := \
   compile \

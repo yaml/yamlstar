@@ -30,6 +30,7 @@ detect-platform() {
   esac
 
   if [[ $OS_NAME == linux ]]; then
+    [[ $ARCH == arm64 ]] && ARCH=aarch64
     PLATFORM=linux-$ARCH
     EXT=so
     ARCHIVE_CMD='tar -cJf'
@@ -422,9 +423,11 @@ do-check-release() (
   echo 'Checking for required assets...'
   assets=$(gh release view "$VERSION" --json assets --jq '.assets[].name')
   for asset in \
+    "yamlstar-$VERSION-linux-aarch64.tar.xz" \
     "yamlstar-$VERSION-linux-x64.tar.xz" \
     "yamlstar-$VERSION-macos-arm64.tar.xz" \
     "yamlstar-$VERSION-windows-x64.zip" \
+    "libyamlstar-$VERSION-linux-aarch64.tar.xz" \
     "libyamlstar-$VERSION-linux-x64.tar.xz" \
     "libyamlstar-$VERSION-macos-arm64.tar.xz" \
     "libyamlstar-$VERSION-windows-x64.zip"

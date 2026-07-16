@@ -25,7 +25,7 @@ ERLANG-INCLUDE := $(ERLANG-LOCAL)/lib/erlang/usr/include
 NIF-CFLAGS := -DLIBYAMLSTAR_VERSION=\"$(LIBYAMLSTAR-VERSION)\"
 
 ifeq ($(OS-NAME),macos)
-NIF-LDFLAGS := -dynamiclib
+NIF-LDFLAGS := -bundle -undefined dynamic_lookup
 else
 NIF-LDFLAGS := -shared
 endif

@@ -1,9 +1,7 @@
 include ../common/init.mk
 include $M/clean.mk
 include $M/dotnet.mk
-ifneq (,$(wildcard $M/powershell.mk))
 include $M/powershell.mk
-endif
 include $(COMMON)/common.mk
 
 export DOTNET_CLI_HOME := $(ROOT)/.cache/dotnet
@@ -27,12 +25,12 @@ build:: build-doc
 
 build-doc:: ReadMe.md
 
-test:: $(LIBYAMLSTAR-SO-VERSION)
+test:: $(LIBYAMLSTAR-SO-VERSION) $(PWSH)
 	@command -v $(PWSH) >/dev/null || \
 	  { echo "'$(PWSH)' is required to test the PowerShell binding" >&2; exit 2; }
 	$(PWSH) -NoLogo -NoProfile -File test/test-yamlstar.ps1
 
-release:: $(DOTNET) build-doc
+release:: $(PWSH) $(DOTNET) build-doc
 ifndef PSGALLERY-API-KEY
 	$(error Can't determine PowerShell Gallery API key)
 endif

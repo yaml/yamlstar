@@ -1,6 +1,6 @@
 {
   "name": "yaml/yamlstar-php",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "PHP binding for YAMLStar",
   "type": "library",
   "license": "MIT",

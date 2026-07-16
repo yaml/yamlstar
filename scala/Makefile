@@ -1,6 +1,7 @@
 include ../common/init.mk
 include $M/clean.mk
 include $M/maven.mk
+include $M/scala.mk
 include $(COMMON)/common.mk
 
 export COURSIER_CACHE := $(ROOT)/.cache/coursier
@@ -22,7 +23,7 @@ build:: build-doc
 
 build-doc:: ReadMe.md
 
-test:: $(LIBYAMLSTAR-SO-VERSION)
+test:: $(LIBYAMLSTAR-SO-VERSION) $(SCALA-CLI)
 	@command -v $(SCALA-CLI) >/dev/null || \
 	  { echo "'$(SCALA-CLI)' is required to test the Scala binding" >&2; exit 2; }
 	mkdir -p $(ROOT)/.cache/jna

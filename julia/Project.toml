@@ -1,7 +1,7 @@
 name = "YAMLStar"
 uuid = "4dd3d208-18db-460a-a0b1-fbfd847e97b6"
 authors = ["Ingy dot Net <ingy@ingy.net>"]
-version = "0.1.15"
+version = "0.1.16"
 
 [deps]
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"

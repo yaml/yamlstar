@@ -46,7 +46,7 @@ YAMLStar Example - Loading ../sample.yaml and outputting JSON
 
 Input YAML:
 name: YAMLStar Example
-version: 0.1.15
+version: 0.1.16
 ...
 
 ---
@@ -54,7 +54,7 @@ version: 0.1.15
 Output JSON:
 {
   "name": "YAMLStar Example",
-  "version": "0.1.15",
+  "version": "0.1.16",
   ...
 }
 
@@ -85,7 +85,7 @@ To use YAMLStar in your own project, add to your `pom.xml`:
 <dependency>
   <groupId>com.yaml</groupId>
   <artifactId>yamlstar</artifactId>
-  <version>0.1.15</version>
+  <version>0.1.16</version>
 </dependency>
 ```
 
