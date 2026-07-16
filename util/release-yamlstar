@@ -35,9 +35,12 @@
 version-file =: '.version.ys'
 
 bindings =::
+- ada
 - clojure
 - crystal
 - csharp
+- erlang
+- fsharp
 - go
 - delphi
 - fortran
@@ -48,10 +51,12 @@ bindings =::
 - nodejs
 - perl
 - php
+- powershell
 - python
 - raku
 - ruby
 - rust
+- scala
 
 verbose =: B(ENV.YS_RELEASE_VERBOSE)
 dryrun =: boolean(ENV.YS_RELEASE_DRYRUN)
@@ -612,7 +617,10 @@ defn github-env():
   =>: env
 
 defn legacy-github-token():
-  secrets =: "$(ENV.HOME)/.yamlstar-secrets.yaml"
+  secrets =:
+    if bash("test -f '$(ENV.HOME)/.yamlstar-secrets.yaml'"):ok:
+      then: "$(ENV.HOME)/.yamlstar-secrets.yaml"
+      else: "$(ENV.HOME)/.yamlscript-secrets.yaml"
   token =:
     if bash("test -f '$secrets'"):ok:
       sh-out: "ys -l $secrets -e '.github.token:say'"

@@ -88,7 +88,7 @@ Phase 1 has been successfully completed with:
 - ✅ Complete 4-stage pipeline tested
 - ✅ Core test suite passing
 - ✅ GraalVM native-image shared library built
-- ✅ 17 language bindings working (Clojure, Crystal, C#, Delphi, Fortran, Go, Haskell, Java, Julia, Lua, Node.js, Perl, PHP, Python, Raku, Ruby, Rust)
+- ✅ 30 language bindings working (Ada, Clojure, Crystal, C#, D, Dart, Delphi, Elixir, Erlang, F#, Fortran, Go, Haskell, Java, Julia, Kotlin, Lua, Nim, Node.js, Perl, PHP, PowerShell, Python, R, Raku, Ruby, Rust, Scala, Swift, Zig)
 
 ---
 
@@ -116,7 +116,7 @@ Phase 1 has been successfully completed with:
 - **Lines of Code**: ~500 (excluding grammar.clj which is 4,247 lines)
 - **YAML Spec Compliance**: 100% (via reference parser)
 - **Supported Platforms**: Linux and macOS for binding tests; Windows shared-library artifacts are built, with binding support varying by language
-- **Language Bindings**: 17 (Clojure, Crystal, C#, Delphi, Fortran, Go, Haskell, Java, Julia, Lua, Node.js, Perl, PHP, Python, Raku, Ruby, Rust)
+- **Language Bindings**: 30 (Ada, Clojure, Crystal, C#, D, Dart, Delphi, Elixir, Erlang, F#, Fortran, Go, Haskell, Java, Julia, Kotlin, Lua, Nim, Node.js, Perl, PHP, PowerShell, Python, R, Raku, Ruby, Rust, Scala, Swift, Zig)
 
 ---
 
@@ -166,7 +166,7 @@ Composer, Resolver, and Constructor.
 - [x] Support multi-document streams
 - [x] Pass basic YAML test suite cases
 - [x] Create shared library with FFI (`libyamlstar`)
-- [x] Create at least one language binding (17 bindings created!)
+- [x] Create at least one language binding (30 bindings created!)
 
 ---
 

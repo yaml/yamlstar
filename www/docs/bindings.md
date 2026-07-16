@@ -1,6 +1,6 @@
 # Language Bindings
 
-YAMLStar provides native bindings for 17 programming languages, all using the
+YAMLStar provides native bindings for 30 programming languages, all using the
 same underlying shared library.
 This ensures consistent YAML behavior across supported binding platforms.
 
@@ -429,6 +429,115 @@ end.
 
 <div class="binding-card" markdown>
 
+### Ada
+
+Ada binding using native FFI.
+
+**Install:**
+```bash
+alr with yamlstar
+curl -sSL https://yamlstar.org/install | LIB=1 bash
+```
+
+**Quick Example:**
+```ada
+with YAMLStar;
+
+JSON : constant String := YAMLStar.Load_JSON ("key: value");
+```
+
+[Full Documentation →](https://github.com/yaml/yamlstar/tree/main/ada)
+
+</div>
+
+<div class="binding-card" markdown>
+
+### Erlang
+
+Erlang binding using a NIF.
+
+**Install:**
+```erlang
+{deps, [yamlstar]}.
+```
+
+**Quick Example:**
+```erlang
+{ok, Data} = yamlstar:load(<<"key: value">>).
+```
+
+[Full Documentation →](https://github.com/yaml/yamlstar/tree/main/erlang)
+
+</div>
+
+<div class="binding-card" markdown>
+
+### F#
+
+F# binding using P/Invoke.
+
+**Install:**
+```bash
+dotnet add package YAMLStar.FSharp
+```
+
+**Quick Example:**
+```fsharp
+open YAMLStar
+
+use ys = new YAMLStar()
+let data = ys.Load("key: value")
+```
+
+[Full Documentation →](https://github.com/yaml/yamlstar/tree/main/fsharp)
+
+</div>
+
+<div class="binding-card" markdown>
+
+### PowerShell
+
+PowerShell module using .NET native interop.
+
+**Install:**
+```powershell
+Install-Module YAMLStar
+```
+
+**Quick Example:**
+```powershell
+Import-Module YAMLStar
+$data = Invoke-YAMLStar "key: value"
+```
+
+[Full Documentation →](https://github.com/yaml/yamlstar/tree/main/powershell)
+
+</div>
+
+<div class="binding-card" markdown>
+
+### Scala
+
+Scala binding using JNA.
+
+**Install:**
+```scala
+libraryDependencies += "org.yamlstar" % "scala-yamlstar" % "0.1.15"
+```
+
+**Quick Example:**
+```scala
+import org.yamlstar.YAMLStar
+
+val data = YAMLStar.load("key: value")
+```
+
+[Full Documentation →](https://github.com/yaml/yamlstar/tree/main/scala)
+
+</div>
+
+<div class="binding-card" markdown>
+
 ### Fortran
 
 Modern Fortran binding using iso_c_binding.
@@ -474,6 +583,11 @@ Create a new YAMLStar instance:
 - **Raku**: `YAMLStar.new`
 - **Lua**: `yamlstar.new()`
 - **Fortran**: `yamlstar_new()`
+- **Ada**: no instance needed
+- **Erlang**: no instance needed
+- **F#**: `new YAMLStar()`
+- **PowerShell**: no instance needed
+- **Scala**: no instance needed
 
 ### Loading Single Documents
 
@@ -491,6 +605,11 @@ Load a single YAML document:
 - **Raku**: `$ys.load($yaml-string)`
 - **Lua**: `ys:load(yaml_string)`
 - **Fortran**: `call ys%load(yaml_string)`
+- **Ada**: `YAMLStar.Load_JSON(yaml_string)`
+- **Erlang**: `yamlstar:load(YamlBinary)`
+- **F#**: `ys.Load(yaml_string)`
+- **PowerShell**: `Invoke-YAMLStar $yamlString`
+- **Scala**: `YAMLStar.load(yaml_string)`
 
 ### Loading Multiple Documents
 
@@ -511,6 +630,7 @@ Load all documents from a multi-document YAML stream:
 - **Raku**: `$ys.load-all($yaml-string)`
 - **Lua**: `ys:load_all(yaml_string)`
 - **Fortran**: `call ys%load_all(yaml_string)`
+- **Ada/Erlang/F#/PowerShell/Scala**: initial bindings expose single-document load APIs
 
 ### Dumping Values
 
@@ -531,6 +651,7 @@ Dump JSON-compatible native values to YAML:
 - **Raku**: `$ys.dump($value)` and `$ys.dump-all($values)`
 - **Lua**: `ys:dump(value)` and `ys:dump_all(values)`
 - **Fortran**: `ys%dump(json_value)` and `ys%dump_all(json_values)`
+- **Ada/Erlang/F#/PowerShell/Scala**: load-only in the initial binding release
 
 For example:
 
@@ -577,6 +698,8 @@ Close the YAMLStar instance when done:
 - **Raku**: `$ys.close`
 - **Lua**: `ys:close()`
 - **Fortran**: `call ys%close()`
+- **Ada/Erlang/PowerShell/Scala**: No cleanup needed
+- **F#**: dispose the `YAMLStar` instance, typically with `use`
 
 !!! note "Resource Management"
     The YAMLStar instance uses native resources (shared library handles).
@@ -616,9 +739,10 @@ YAMLStar bindings are tested on:
 The shared library (`libyamlstar.so`, `libyamlstar.dylib`, `yamlstar.dll`) is
 built using GraalVM native-image for optimal performance and small binary size.
 
-The Crystal, Haskell, Julia, and Raku bindings are currently tested on the
-Linux/macOS shared-library path. Native Windows support for these bindings is
-not claimed until their build and library lookup paths are verified there.
+Ada, Crystal, Erlang, F#, Haskell, Julia, PowerShell, Raku, and Scala are
+currently tested on the Linux/macOS shared-library path. Native Windows support
+for these bindings is not claimed until their build and library lookup paths
+are verified there.
 
 ## Language-Specific Notes
 
@@ -737,6 +861,39 @@ not claimed until their build and library lookup paths are verified there.
 - Uses iso_c_binding
 - Modern Fortran 2018 features
 - Available via FPM (Fortran Package Manager)
+
+### Ada
+
+- Requires GNAT
+- Uses native FFI
+- Published through Alire
+- Initial API returns the JSON envelope from `yamlstar_load`
+
+### Erlang
+
+- Requires Erlang/OTP
+- Uses a dirty CPU NIF around `libyamlstar`
+- Published on Hex as `yamlstar_erlang`
+
+### F#
+
+- Requires .NET 8+
+- Uses P/Invoke
+- Returns `System.Text.Json.JsonElement`
+- Available on NuGet as `YAMLStar.FSharp`
+
+### PowerShell
+
+- Requires PowerShell 7+
+- Uses .NET native interop
+- Available through PowerShell Gallery as `YAMLStar`
+
+### Scala
+
+- Requires Java 17+ and Scala 3
+- Uses JNA
+- Returns uPickle/uJSON values
+- Available on Maven Central as `org.yamlstar:scala-yamlstar`
 
 ## Contributing a New Binding
 

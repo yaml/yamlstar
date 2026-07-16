@@ -63,13 +63,13 @@ features:
 - **YAML 1.2 Spec Compliance**: 100% compliant with the YAML 1.2 specification
 - **Pure Clojure Parser**: No dependencies on SnakeYAML or other external parsers
 - **Dump Stack**: Convert JSON-compatible native values back to YAML
-- **Cross-Language Consistency**: Identical behavior in 17 languages via shared library
+- **Cross-Language Consistency**: Identical behavior in 30 languages via shared library
 - **Highly Configurable**: Plugin system for extensibility (coming in Phase 3)
 - **Lightweight**: Minimal dependencies, fast startup, small binaries
 
 ## Project Status
 
-✅ **Phase 1 Complete** - Ready for production use with 17 language bindings!
+✅ **Phase 1 Complete** - Ready for production use with 30 language bindings!
 
 ### Roadmap
 
@@ -79,7 +79,7 @@ features:
   - Event-based parser integration
   - Clojure data structure output
   - GraalVM native-image shared library
-  - Language bindings (Clojure, Crystal, C#, Delphi, Fortran, Go, Haskell, Java, Julia, Lua, Node.js, Perl, PHP, Python, Raku, Ruby, Rust)
+  - Language bindings (Ada, Clojure, Crystal, C#, D, Dart, Delphi, Elixir, Erlang, F#, Fortran, Go, Haskell, Java, Julia, Kotlin, Lua, Nim, Node.js, Perl, PHP, PowerShell, Python, R, Raku, Ruby, Rust, Scala, Swift, Zig)
 
 - **Phase 2: Glojure Migration**
   - Port to Glojure (Clojure on Go)
@@ -132,7 +132,7 @@ YAML Output
 - Complete test suite covering all major features
 - Zero external dependencies (except Clojure + data.json)
 - GraalVM native-image shared library (`libyamlstar.so`)
-- **17 language bindings**: Clojure, Crystal, C#, Delphi, Fortran, Go, Haskell, Java, Julia, Lua, Node.js, Perl, PHP, Python, Raku, Ruby, Rust
+- **30 language bindings**: Ada, Clojure, Crystal, C#, D, Dart, Delphi, Elixir, Erlang, F#, Fortran, Go, Haskell, Java, Julia, Kotlin, Lua, Nim, Node.js, Perl, PHP, PowerShell, Python, R, Raku, Ruby, Rust, Scala, Swift, Zig
 
 **Ready for testing!** Run `make test` in the `core/` directory, or try any of the language bindings.
 
@@ -195,14 +195,18 @@ YAMLStar provides bindings for multiple programming languages via a shared Graal
 
 For language bindings that use FFI, install the matching `libyamlstar`
 release with the install script or Homebrew before loading YAML.
-Native Windows support varies by binding. The Crystal, Haskell, Julia, and Raku
-bindings are currently verified on Linux/macOS shared-library paths.
+Native Windows support varies by binding. Ada, Crystal, Erlang, F#, Haskell,
+Julia, PowerShell, Raku, and Scala are currently verified on Linux/macOS
+shared-library paths.
 
 | Language | Directory | Test Command |
 |----------|-----------|--------------|
+| **Ada** | [ada/](ada/) | `make test` (auto-installs GNAT) |
 | **Clojure** | [clojure/](clojure/) | `make test` (auto-installs lein) |
 | **Crystal** | [crystal/](crystal/) | `make test` (auto-installs crystal) |
 | **C#** | [csharp/](csharp/) | `make test` (auto-installs dotnet) |
+| **Erlang** | [erlang/](erlang/) | `make test` (auto-installs Erlang) |
+| **F#** | [fsharp/](fsharp/) | `make test` (auto-installs dotnet) |
 | **Fortran** | [fortran/](fortran/) | `make test` (auto-installs gfortran, FPM) |
 | **Go** | [go/](go/) | `make test` (auto-installs go) |
 | **Haskell** | [haskell/](haskell/) | `make test` (auto-installs GHC, Cabal) |
@@ -212,10 +216,12 @@ bindings are currently verified on Linux/macOS shared-library paths.
 | **Node.js** | [nodejs/](nodejs/) | `make test` (auto-installs node, npm) |
 | **Perl** | [perl/](perl/) | `make test` (auto-installs perl, cpanm) |
 | **PHP** | [php/](php/) | `make test` |
+| **PowerShell** | [powershell/](powershell/) | `make test` (requires or auto-installs pwsh when supported) |
 | **Python** | [python/](python/) | `make test` (auto-installs python, pip) |
 | **Raku** | [raku/](raku/) | `make test` (auto-installs raku) |
 | **Ruby** | [ruby/](ruby/) | `make test` (auto-installs ruby) |
 | **Rust** | [rust/](rust/) | `make test` (auto-installs cargo) |
+| **Scala** | [scala/](scala/) | `make test` (requires scala-cli) |
 
 ### Quick Example (Node.js)
 

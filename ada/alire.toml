@@ -1,0 +1,13 @@
+name = "yamlstar"
+description = "YAMLStar language binding for Ada"
+version = "0.1.15"
+licenses = "MIT"
+authors = ["YAMLStar Contributors"]
+maintainers = ["YAMLStar Contributors <ingy@ingy.net>"]
+maintainers-logins = ["ingydotnet"]
+project-files = ["ada/yamlstar.gpr"]
+tags = ["yaml", "yamlstar", "loader"]
+website = "https://yamlstar.org"
+
+[[depends-on]]
+gnat = ">=16"

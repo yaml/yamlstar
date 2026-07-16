@@ -1,0 +1,14 @@
+{application, yamlstar, [
+  {description, "YAMLStar language binding for Erlang"},
+  {vsn, "0.1.15"},
+  {pkg_name, yamlstar_erlang},
+  {licenses, ["MIT"]},
+  {links, [
+    {"GitHub", "https://github.com/yaml/yamlstar"},
+    {"Website", "https://yamlstar.org"}
+  ]},
+  {registered, []},
+  {modules, [yamlstar]},
+  {applications, [kernel, stdlib]},
+  {env, []}
+]}.

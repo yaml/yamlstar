@@ -20,6 +20,8 @@ vo =: v-old.str/replace(/\./ '\\.')
   bump:
   - regx:: "()${vp}()"
     file:
+    - ada/alire.toml
+    - ada/alire/releases/yamlstar-0.1.15.toml
     - Makefile
     - Meta
     - cli/src/yamlstar/cli.clj
@@ -36,6 +38,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - elixir/c_src/yamlstar_nif.c
     - elixir/doc/readme.md
     - elixir/mix.exs
+    - erlang/src/yamlstar.app.src
     - example/delphi/Makefile
     - example/go/Makefile
     - example/python/Makefile
@@ -45,6 +48,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - example/java/ReadMe.md
     - example/python/ReadMe.md
     - fortran/fpm.toml
+    - fsharp/YAMLStar.fsproj
     - go/yamlstar.go
     - java/Makefile
     - java/ReadMe.md
@@ -63,6 +67,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - perl/lib/YAMLStar.pm
     - php/composer.json
     - php/src/YAMLStar.php
+    - powershell/YAMLStar.psd1
     - python/lib/yamlstar/__init__.py
     - r/DESCRIPTION
     - r/R/yamlstar.R
@@ -73,6 +78,8 @@ vo =: v-old.str/replace(/\./ '\\.')
     - rust/ReadMe.md
     - rust/src/lib.rs
     - rust/tests/load.rs
+    - scala/pom.xml
+    - scala/src/YAMLStar.scala
     - swift/Sources/YAMLStar/YAMLStar.swift
     - swift/doc/readme.md
     - util/yamlj

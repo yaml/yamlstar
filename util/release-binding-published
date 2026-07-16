@@ -89,9 +89,22 @@ haskell-version() {
   esac
 }
 
+alire-crate-exists() {
+  local name=$1
+  local prefix=${name:0:2}
+  local file="$name-$version.toml"
+  local url='https://raw.githubusercontent.com/alire-project/alire-index'
+  url="$url/stable-1.2/index/$prefix/$name/$file"
+  url-exists "$url"
+}
+
 published=false
 
 case $binding in
+  ada)
+    alire-crate-exists yamlstar &&
+      published=true
+    ;;
   clojure)
     url='https://repo.clojars.org/org/yamlstar/yamlstar'
     url-exists "$url/$version/yamlstar-$version.jar" &&
@@ -109,6 +122,17 @@ case $binding in
     ;;
   delphi|fortran)
     git-tag-exists "https://github.com/yaml/yamlstar-$binding" "$version" &&
+      published=true
+    ;;
+  erlang)
+    json-url-exists \
+      "https://hex.pm/api/packages/yamlstar_erlang/releases/$version" &&
+      published=true
+    ;;
+  fsharp)
+    lower_version=$(printf '%s' "$version" | tr '[:upper:]' '[:lower:]')
+    url='https://api.nuget.org/v3-flatcontainer/yamlstar.fsharp'
+    url-exists "$url/$lower_version/yamlstar.fsharp.$lower_version.nupkg" &&
       published=true
     ;;
   go)
@@ -149,6 +173,12 @@ case $binding in
     git-tag-exists "https://github.com/yaml/yamlstar-php" "v$version" &&
       published=true
     ;;
+  powershell)
+    url='https://www.powershellgallery.com/packages/YAMLStar'
+    url="$url/$version"
+    url-exists "$url" &&
+      published=true
+    ;;
   python)
     json-url-exists "https://pypi.org/pypi/yamlstar/$version/json" &&
       published=true
@@ -164,6 +194,11 @@ case $binding in
     ;;
   rust)
     json-url-exists "https://crates.io/api/v1/crates/yamlstar/$version" &&
+      published=true
+    ;;
+  scala)
+    url='https://repo1.maven.org/maven2/org/yamlstar/scala-yamlstar'
+    url-exists "$url/$version/scala-yamlstar-$version.jar" &&
       published=true
     ;;
   *)

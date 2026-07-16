@@ -15,7 +15,9 @@ include $M/shell.mk
 # Extract version from Meta file
 VERSION := $(shell grep '^version:' Meta | cut -d' ' -f2)
 RELEASE-LOG := release-$n.log
-RELEASE-SECRETS := $(wildcard $(HOME)/.yamlstar-secrets.yaml)
+RELEASE-SECRETS := \
+  $(wildcard $(HOME)/.yamlstar-secrets.yaml) \
+  $(wildcard $(HOME)/.yamlscript-secrets.yaml)
 RELEASE-AUTH := $(strip $(GH_TOKEN)$(GITHUB_TOKEN)$(RELEASE-SECRETS))
 
 MAKES-CLEAN := \
@@ -35,6 +37,7 @@ MAKES-DISTCLEAN += \
   $(INGY-LOCAL-DIR) \
 
 BINDING-LANGS ?= \
+  ada \
   clojure \
   crystal \
   csharp \
@@ -42,6 +45,8 @@ BINDING-LANGS ?= \
   dart \
   delphi \
   elixir \
+  erlang \
+  fsharp \
   fortran \
   go \
   haskell \
@@ -53,11 +58,13 @@ BINDING-LANGS ?= \
   nodejs \
   perl \
   php \
+  powershell \
   python \
   r \
   raku \
   ruby \
   rust \
+  scala \
   swift \
   zig \
 
@@ -236,7 +243,7 @@ endif
 endif
 ifndef d
 ifeq (,$(RELEASE-AUTH))
-	$(error YAMLStar release requires GH_TOKEN, GITHUB_TOKEN, or ~/.yamlstar-secrets.yaml)
+	$(error YAMLStar release requires GH_TOKEN, GITHUB_TOKEN, ~/.yamlstar-secrets.yaml, or ~/.yamlscript-secrets.yaml)
 endif
 endif
 endif
