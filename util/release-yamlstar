@@ -39,6 +39,7 @@ bindings =::
 - clojure
 - crystal
 - csharp
+- dyalog
 - erlang
 - fsharp
 - go
@@ -48,6 +49,7 @@ bindings =::
 - java
 - julia
 - lua
+- moonbit
 - nodejs
 - perl
 - php

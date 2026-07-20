@@ -63,13 +63,13 @@ features:
 - **YAML 1.2 Spec Compliance**: 100% compliant with the YAML 1.2 specification
 - **Pure Clojure Parser**: No dependencies on SnakeYAML or other external parsers
 - **Dump Stack**: Convert JSON-compatible native values back to YAML
-- **Cross-Language Consistency**: Identical behavior in 30 languages via shared library
+- **Cross-Language Consistency**: Identical behavior in 32 languages via shared library
 - **Highly Configurable**: Plugin system for extensibility (coming in Phase 3)
 - **Lightweight**: Minimal dependencies, fast startup, small binaries
 
 ## Project Status
 
-✅ **Phase 1 Complete** - Ready for production use with 30 language bindings!
+✅ **Phase 1 Complete** - Ready for production use with 32 language bindings!
 
 ### Roadmap
 
@@ -79,7 +79,7 @@ features:
   - Event-based parser integration
   - Clojure data structure output
   - GraalVM native-image shared library
-  - Language bindings (Ada, Clojure, Crystal, C#, D, Dart, Delphi, Elixir, Erlang, F#, Fortran, Go, Haskell, Java, Julia, Kotlin, Lua, Nim, Node.js, Perl, PHP, PowerShell, Python, R, Raku, Ruby, Rust, Scala, Swift, Zig)
+  - Language bindings (Ada, Clojure, Crystal, C#, D, Dart, Delphi, Dyalog APL, Elixir, Erlang, F#, Fortran, Go, Haskell, Java, Julia, Kotlin, Lua, MoonBit, Nim, Node.js, Perl, PHP, PowerShell, Python, R, Raku, Ruby, Rust, Scala, Swift, Zig)
 
 - **Phase 2: Glojure Migration**
   - Port to Glojure (Clojure on Go)
@@ -132,7 +132,7 @@ YAML Output
 - Complete test suite covering all major features
 - Zero external dependencies (except Clojure + data.json)
 - GraalVM native-image shared library (`libyamlstar.so`)
-- **30 language bindings**: Ada, Clojure, Crystal, C#, D, Dart, Delphi, Elixir, Erlang, F#, Fortran, Go, Haskell, Java, Julia, Kotlin, Lua, Nim, Node.js, Perl, PHP, PowerShell, Python, R, Raku, Ruby, Rust, Scala, Swift, Zig
+- **32 language bindings**: Ada, Clojure, Crystal, C#, D, Dart, Delphi, Dyalog APL, Elixir, Erlang, F#, Fortran, Go, Haskell, Java, Julia, Kotlin, Lua, MoonBit, Nim, Node.js, Perl, PHP, PowerShell, Python, R, Raku, Ruby, Rust, Scala, Swift, Zig
 
 **Ready for testing!** Run `make test` in the `core/` directory, or try any of the language bindings.
 

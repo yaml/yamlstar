@@ -44,6 +44,7 @@ BINDING-LANGS ?= \
   d \
   dart \
   delphi \
+  dyalog \
   elixir \
   erlang \
   fsharp \
@@ -54,6 +55,7 @@ BINDING-LANGS ?= \
   julia \
   kotlin \
   lua \
+  moonbit \
   nim \
   nodejs \
   perl \
@@ -88,6 +90,11 @@ ALL-REALCLEAN := $(ALL-DIRS:%=realclean-%)
 ALL-SHELL := $(BINDING-LANGS:%=shell-%)
 
 BINDING-TESTS := $(BINDING-LANGS:%=test-%)
+
+# Dyalog's Docker image is only available for Linux/x86-64.
+ifneq (linux-int64,$(OS-ARCH))
+BINDING-TESTS := $(filter-out test-dyalog,$(BINDING-TESTS))
+endif
 ALL-TESTS := \
   test-core \
   test-cli \

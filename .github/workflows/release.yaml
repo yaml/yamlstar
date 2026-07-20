@@ -1025,6 +1025,10 @@ jobs:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
+      MOONCAKES_USERNAME: ${{ secrets.MOONCAKES_USERNAME }}
+      MOONCAKES_TOKEN: ${{ secrets.MOONCAKES_TOKEN }}
+      TATIN_USER: ${{ secrets.TATIN_USER }}
+      TATIN_TOKEN: ${{ secrets.TATIN_TOKEN }}
       PAUSE_USER: ${{ secrets.PAUSE_USER }}
       PAUSE_PASS: ${{ secrets.PAUSE_PASS }}
       FEZ_USER: ${{ secrets.FEZ_USER }}

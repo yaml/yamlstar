@@ -1,0 +1,174 @@
+SHELL := bash
+.SHELLFLAGS := -e -o pipefail -c
+
+YAMLSTAR_VERSION := 0.1.16
+DYALOG-RELEASE-VERSION := $(or $(YS_RELEASE_VERSION_NEW),$n)
+IMAGE := yamlstar-dyalog
+DOCKER_CONFIG := $(CURDIR)/.cache/docker
+DOCKER := DOCKER_CONFIG=$(DOCKER_CONFIG) docker
+YS ?= ys
+RUN := $(DOCKER) run --rm \
+  -v $(CURDIR):/work \
+  -w /work \
+  -e LD_LIBRARY_PATH=/work/lib \
+  --entrypoint sh \
+  $(IMAGE) \
+  -lc
+
+LIBYS-ARCHIVE := libyamlstar-$(YAMLSTAR_VERSION)-linux-x64.tar.xz
+LIBYS-URL := https://github.com/yaml/yamlstar/releases/download
+LIBYS-URL := $(LIBYS-URL)/$(YAMLSTAR_VERSION)/$(LIBYS-ARCHIVE)
+LIBYS := lib/libyamlstar.so.$(YAMLSTAR_VERSION)
+SHIM := lib/yamlstar_dyalog.so
+TATIN-BUILD-DIR := .cache/tatin/build
+TATIN-CLIENT := .cache/tatin/tatin-client.json
+TATIN-TOKEN-FILE := .cache/tatin/token
+TATIN-ZIP := $(TATIN-BUILD-DIR)/yaml-yamlstar-$(DYALOG-RELEASE-VERSION).zip
+TATIN-UPLOAD-ID := yaml-yamlstar-$(DYALOG-RELEASE-VERSION)
+TATIN-UPLOAD-URL := https://tatin.dev/$(TATIN-UPLOAD-ID)
+TATIN-SOURCES := apl-package.json LICENSE src/YAMLStar.apln
+TATIN-SOURCES += tools/tatin-release.apls
+TATIN-RUN := $(DOCKER) run --rm \
+  -v $(CURDIR):/work \
+  -v $(CURDIR)/$(TATIN-CLIENT):/home/dyalog/Tatin/tatin-client.json:ro \
+  -w /work \
+  -e LD_LIBRARY_PATH=/work/lib \
+  -e TATIN_BUILD_DIR=/work/$(TATIN-BUILD-DIR) \
+  -e TATIN_REGISTRY='[tatin]' \
+  -e TATIN_RELEASE_VERSION=$(DYALOG-RELEASE-VERSION) \
+  --entrypoint sh \
+  $(IMAGE) \
+  -lc
+
+.PHONY: FORCE
+
+#------------------------------------------------------------------------------
+default:: test
+
+build:: $(SHIM)
+
+build-doc::
+
+test:: build
+	$(RUN) 'dyalogscript test/test.apls'
+
+package:: $(TATIN-ZIP)
+
+release: test $(TATIN-ZIP)
+ifeq (,$(DYALOG-RELEASE-VERSION))
+	@echo "Error: release version not set"
+	@exit 1
+endif
+	curl --fail-with-body -sS -X PUT \
+	  -H "api-key: $$(cat $(TATIN-TOKEN-FILE))" \
+	  -H "Content-Type: application/octet-stream" \
+	  --data-binary @$(TATIN-ZIP) \
+	  $(TATIN-UPLOAD-URL)
+
+shell:: build
+	$(DOCKER) run --rm -it \
+	  -v $(CURDIR):/work \
+	  -w /work \
+	  -e LD_LIBRARY_PATH=/work/lib \
+	  --entrypoint bash \
+	  $(IMAGE)
+
+clean::
+	$(RM) -r lib .cache
+
+realclean:: clean
+
+distclean:: realclean
+
+FORCE::
+
+$(TATIN-ZIP): FORCE $(TATIN-SOURCES) $(TATIN-CLIENT) | .cache/image
+ifeq (,$(DYALOG-RELEASE-VERSION))
+	@echo "Error: release version not set"
+	@exit 1
+endif
+	mkdir -p $(TATIN-BUILD-DIR)
+	chmod a+w $(TATIN-BUILD-DIR)
+	$(TATIN-RUN) 'dyalogscript tools/tatin-release.apls'
+
+$(TATIN-CLIENT): FORCE
+	@set -e; \
+	mkdir -p "$(@D)"; \
+	user="$${TATIN_USER:-$(TATIN_USER)}"; \
+	token="$${TATIN_TOKEN:-$(TATIN_TOKEN)}"; \
+	user="$${user:-yaml}"; \
+	secrets="$${YS_SECRETS_FILE:-}"; \
+	if [[ -z "$$secrets" && -r "$$HOME/.yamlstar-secrets" ]]; then \
+	  secrets="$$HOME/.yamlstar-secrets"; \
+	fi; \
+	secrets="$${secrets:-$$HOME/.yamlstar-secrets.yaml}"; \
+	if [[ -r "$$secrets" ]]; then \
+	  user="$${user:-$$($(YS) -l "$$secrets" -e '.dyalog.user:say')}"; \
+	  token="$${token:-$$($(YS) -l "$$secrets" -e '.dyalog.token:say')}"; \
+	fi; \
+	test "$$user" = yaml || { \
+	  echo "Error: Tatin user/group must be yaml"; exit 1; }; \
+	test -n "$$token" || { \
+	  echo "Error: TATIN_TOKEN not set"; exit 1; }; \
+	umask 077; \
+	printf '%s\n' "$$token" > $(TATIN-TOKEN-FILE); \
+	{ \
+	  printf '%s\n' '{'; \
+	  printf '%s\n' '  caching: 1,'; \
+	  printf '%s\n' '  license: "",'; \
+	  printf '%s\n' '  path2cache: "",'; \
+	  printf '%s\n' '  registries: ['; \
+	  printf '%s\n' '    {'; \
+	  printf '%s\n' '      alias: "tatin",'; \
+	  printf '      api_key: "%s",\n' "$$token"; \
+	  printf '%s\n' '      id: "8e1422b7-deb4-4c51-b65d-45dba54233c3",'; \
+	  printf '%s\n' '      noCaching: 0,'; \
+	  printf '%s\n' '      port: 0,'; \
+	  printf '%s\n' '      priority: 100,'; \
+	  printf '%s\n' '      proxy: "",'; \
+	  printf '%s\n' '      uri: "https://tatin.dev/",'; \
+	  printf '%s\n' '    },'; \
+	  printf '%s\n' '    {'; \
+	  printf '%s\n' '      alias: "tatin-test",'; \
+	  printf '%s\n' '      api_key: "Tatin-Test-API-Key",'; \
+	  printf '%s\n' '      id: "c9c0db79-88ba-47c0-ac73-7f7c284d2a9d",'; \
+	  printf '%s\n' '      noCaching: 0,'; \
+	  printf '%s\n' '      port: 0,'; \
+	  printf '%s\n' '      priority: 0,'; \
+	  printf '%s\n' '      proxy: "",'; \
+	  printf '%s\n' '      uri: "https://test.tatin.dev/",'; \
+	  printf '%s\n' '    },'; \
+	  printf '%s\n' '  ],'; \
+	  printf '%s\n' '  source: "",'; \
+	  printf '%s\n' '}'; \
+	} > $@
+
+# The container user's uid may differ from the host owner of the
+# bind mounted /work (it does on CI runners), so host created dirs
+# the container writes into must be world writable:
+$(SHIM): src/yamlstar_dyalog.c $(LIBYS) | .cache/image
+	chmod a+w lib
+	$(RUN) 'gcc -shared -fPIC -Wall -Wextra -o $@ $< -ldl'
+
+# Use the locally built or CI installed libyamlstar when present (a release
+# test runs before the version's release assets exist); otherwise
+# download the released archive. Both run on the host: the container
+# user cannot write to the bind mounted .cache/:
+LIBYS-LOCAL := ../libyamlstar/lib/libyamlstar.so.$(YAMLSTAR_VERSION)
+
+$(LIBYS):
+	mkdir -p lib
+	if [[ -e $(LIBYS-LOCAL) ]]; then \
+	  cp -pP ../libyamlstar/lib/libyamlstar.so* lib/; \
+	else \
+	  mkdir -p .cache/libyamlstar && \
+	  curl -fsSL $(LIBYS-URL) -o .cache/$(LIBYS-ARCHIVE) && \
+	  tar -C .cache/libyamlstar --strip-components=1 \
+	    -xf .cache/$(LIBYS-ARCHIVE) && \
+	  cp -pP .cache/libyamlstar/libyamlstar.so* lib/; \
+	fi
+
+.cache/image: dyalog.dockerfile
+	mkdir -p $(DOCKER_CONFIG) $(@D)
+	$(DOCKER) build -t $(IMAGE) -f $< .
+	touch $@

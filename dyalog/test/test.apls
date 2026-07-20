@@ -1,0 +1,22 @@
+#!/usr/bin/env dyalogscript
+
+⎕IO←0
+⎕FIX⊃⎕NGET 'src/YAMLStar.apln' 1
+
+Assert←{
+  ⍵:1
+  ⎕SIGNAL 11
+}
+
+source←'answer: 42'
+data←YAMLStar.Load source
+Assert data.answer=42
+
+plainSource←'foo: bar'
+plain←YAMLStar.Load plainSource
+Assert 'bar'≡plain.foo
+
+fromFile←YAMLStar.LoadFile 'test/test.ys'
+Assert fromFile.answer=42
+
+⎕←'ok'

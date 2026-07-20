@@ -35,6 +35,9 @@ vo =: v-old.str/replace(/\./ '\\.')
     - dart/pubspec.yaml
     - doc/RELEASING.md
     - delphi/src/yamlstar.pas
+    - dyalog/Makefile
+    - dyalog/apl-package.json
+    - dyalog/src/YAMLStar.apln
     - elixir/c_src/yamlstar_nif.c
     - elixir/doc/readme.md
     - elixir/mix.exs
@@ -61,6 +64,10 @@ vo =: v-old.str/replace(/\./ '\\.')
     - kotlin/src/main/kotlin/org/yamlstar/yamlstar/YS.kt
     - lua/lib/yamlstar.lua
     - lua/yamlstar.rockspec
+    - moonbit/moon.mod
+    - moonbit/pkg.generated.mbti
+    - moonbit/yamlstar.c
+    - moonbit/yamlstar.mbt
     - nim/src/yamlstar.nim
     - nim/yamlstar.nimble
     - nodejs/lib/yamlstar/index.js

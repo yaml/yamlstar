@@ -2,6 +2,7 @@
   date:    Wed Jul 15 10:38:46 PM EDT 2026
   changes:
   - bindings: add Ada Erlang F# PowerShell Scala
+  - bindings: add Dyalog APL and MoonBit
 - version: 0.1.15
   date:    Tue Jul 14 09:27:01 AM EDT 2026
   changes:

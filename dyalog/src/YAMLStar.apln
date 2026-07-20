@@ -1,0 +1,31 @@
+:Namespace YAMLStar
+
+⎕IO←0
+Version←'0.1.16'
+BufferSize←1048576
+Library←'./lib/yamlstar_dyalog.so'
+'yamlstar_load_json'⎕NA'I4 ',Library,'|yamlstar_load_json <0UTF8 >0UTF8 I4'
+
+∇ data←Load source;result;code;json;response
+  result←yamlstar_load_json(⊂source),BufferSize BufferSize
+  code←⊃result
+  json←1⊃result
+  :If code<0
+      ⎕SIGNAL 11
+  :EndIf
+  response←⎕JSON json
+  :If 0≠response.⎕NC'error'
+      :If ~(⊂'null')≡response.error
+          ⎕SIGNAL 11
+      :EndIf
+  :EndIf
+  data←response.data
+∇
+
+∇ data←LoadFile path;lines;source
+  lines←⊃⎕NGET path 1
+  source←∊lines,¨⊂⎕UCS 10
+  data←Load source
+∇
+
+:EndNamespace

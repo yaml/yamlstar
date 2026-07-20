@@ -8,7 +8,7 @@ features:
 - **YAML 1.2 Spec Compliance**: 100% compliant with the YAML 1.2 specification
 - **Pure Clojure Parser**: No dependencies on SnakeYAML or other external parsers
 - **Dump Stack**: Convert JSON-compatible native values back to readable YAML
-- **Cross-Language Consistency**: Identical behavior in 30 languages via shared
+- **Cross-Language Consistency**: Identical behavior in 32 languages via shared
   library
 - **Highly Configurable**: Plugin system for extensibility (coming in Phase 3)
 - **Lightweight**: Minimal dependencies, fast startup, small binaries
@@ -205,8 +205,9 @@ YAMLStar supports YAML streams with multiple documents separated by `---`:
 - **Grammar Rules**: 211 (YAML 1.2 spec)
 - **Test Coverage**: 23+ comprehensive tests
 - **Dependencies**: 2 (Clojure + data.json for FFI)
-- **Language Bindings**: 30 (Ada, Clojure, Crystal, C#, D, Dart, Delphi,
-  Elixir, Erlang, F#, Fortran, Go, Haskell, Java, Julia, Kotlin, Lua, Nim,
+- **Language Bindings**: 32 (Ada, Clojure, Crystal, C#, D, Dart, Delphi,
+  Dyalog APL, Elixir, Erlang, F#, Fortran, Go, Haskell, Java, Julia, Kotlin,
+  Lua, MoonBit, Nim,
   Node.js, Perl, PHP, PowerShell, Python, R, Raku, Ruby, Rust, Scala, Swift,
   Zig)
 

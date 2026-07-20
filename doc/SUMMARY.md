@@ -139,9 +139,10 @@ YAML String (input)
 ✅ **Simple Pipeline** - 4 stages vs YAMLScript's 7 stages (~80% lighter)
 ✅ **Well-Tested** - Core tests covering major features
 ✅ **Well-Documented** - Complete dev guide and examples
-✅ **Language Bindings** - 30 bindings for Ada, Clojure, Crystal, C#, D,
-   Dart, Delphi, Elixir, Erlang, F#, Fortran, Go, Haskell, Java, Julia,
-   Kotlin, Lua, Nim, Node.js, Perl, PHP, PowerShell, Python, R, Raku, Ruby,
+✅ **Language Bindings** - 32 bindings for Ada, Clojure, Crystal, C#, D,
+   Dart, Delphi, Dyalog APL, Elixir, Erlang, F#, Fortran, Go, Haskell, Java,
+   Julia, Kotlin, Lua, MoonBit, Nim, Node.js, Perl, PHP, PowerShell, Python,
+   R, Raku, Ruby,
    Rust, Scala, Swift, Zig
 
 ### Project Structure
@@ -202,7 +203,7 @@ yamlstar/
 - **Test Coverage**: Core unit tests
 - **Dependencies**: 2 (Clojure + data.json)
 - **Grammar Rules**: 211 (YAML 1.2 spec)
-- **Language Bindings**: 30 (Ada, Clojure, Crystal, C#, D, Dart, Delphi, Elixir, Erlang, F#, Fortran, Go, Haskell, Java, Julia, Kotlin, Lua, Nim, Node.js, Perl, PHP, PowerShell, Python, R, Raku, Ruby, Rust, Scala, Swift, Zig)
+- **Language Bindings**: 32 (Ada, Clojure, Crystal, C#, D, Dart, Delphi, Dyalog APL, Elixir, Erlang, F#, Fortran, Go, Haskell, Java, Julia, Kotlin, Lua, MoonBit, Nim, Node.js, Perl, PHP, PowerShell, Python, R, Raku, Ruby, Rust, Scala, Swift, Zig)
 
 ## Next Steps (Phase 1B - Testing)
 
@@ -304,7 +305,7 @@ YAMLStar builds on:
 🟢 **Core Implementation** - DONE
 🟢 **Testing & Validation** - DONE (core tests passing)
 🟢 **FFI Interface** - DONE (libyamlstar)
-🟢 **Language Bindings** - DONE (30 bindings)
+🟢 **Language Bindings** - DONE (32 bindings)
 ⚪ **Glojure Migration** - TODO (Phase 2)
 ⚪ **Plugin System** - TODO (Phase 3)
 

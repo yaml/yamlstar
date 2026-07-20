@@ -1,6 +1,6 @@
 # Language Bindings
 
-YAMLStar provides native bindings for 30 programming languages, all using the
+YAMLStar provides native bindings for 32 programming languages, all using the
 same underlying shared library.
 This ensures consistent YAML behavior across supported binding platforms.
 
@@ -429,6 +429,27 @@ end.
 
 <div class="binding-card" markdown>
 
+### Dyalog APL
+
+Dyalog APL binding using a small native shim.
+
+**Install:**
+```apl
+]Tatin.InstallPackages yaml-yamlstar
+```
+
+**Quick Example:**
+```apl
+data←YAMLStar.Load 'key: value'
+⎕←data.key
+```
+
+[Full Documentation →](https://github.com/yaml/yamlstar/tree/main/dyalog)
+
+</div>
+
+<div class="binding-card" markdown>
+
 ### Ada
 
 Ada binding using native FFI.
@@ -538,6 +559,28 @@ val data = YAMLStar.load("key: value")
 
 <div class="binding-card" markdown>
 
+### MoonBit
+
+MoonBit binding using its native C interoperability.
+
+**Install:**
+```bash
+moon add ingydotnet/yamlstar
+curl -sSL https://yamlstar.org/install | LIB=1 bash
+```
+
+**Quick Example:**
+```moonbit
+let data = @yamlstar.load("key: value")
+println(data)
+```
+
+[Full Documentation →](https://github.com/yaml/yamlstar/tree/main/moonbit)
+
+</div>
+
+<div class="binding-card" markdown>
+
 ### Fortran
 
 Modern Fortran binding using iso_c_binding.
@@ -630,7 +673,7 @@ Load all documents from a multi-document YAML stream:
 - **Raku**: `$ys.load-all($yaml-string)`
 - **Lua**: `ys:load_all(yaml_string)`
 - **Fortran**: `call ys%load_all(yaml_string)`
-- **Ada/Erlang/F#/PowerShell/Scala**: initial bindings expose single-document load APIs
+- **Ada/Dyalog/Erlang/F#/MoonBit/PowerShell/Scala**: initial bindings expose single-document load APIs
 
 ### Dumping Values
 
@@ -651,7 +694,7 @@ Dump JSON-compatible native values to YAML:
 - **Raku**: `$ys.dump($value)` and `$ys.dump-all($values)`
 - **Lua**: `ys:dump(value)` and `ys:dump_all(values)`
 - **Fortran**: `ys%dump(json_value)` and `ys%dump_all(json_values)`
-- **Ada/Erlang/F#/PowerShell/Scala**: load-only in the initial binding release
+- **Ada/Dyalog/Erlang/F#/MoonBit/PowerShell/Scala**: load-only in the initial binding release
 
 For example:
 
@@ -698,7 +741,7 @@ Close the YAMLStar instance when done:
 - **Raku**: `$ys.close`
 - **Lua**: `ys:close()`
 - **Fortran**: `call ys%close()`
-- **Ada/Erlang/PowerShell/Scala**: No cleanup needed
+- **Ada/Dyalog/Erlang/MoonBit/PowerShell/Scala**: No cleanup needed
 - **F#**: dispose the `YAMLStar` instance, typically with `use`
 
 !!! note "Resource Management"
@@ -743,6 +786,9 @@ Ada, Crystal, Erlang, F#, Haskell, Julia, PowerShell, Raku, and Scala are
 currently tested on the Linux/macOS shared-library path. Native Windows support
 for these bindings is not claimed until their build and library lookup paths
 are verified there.
+
+Dyalog tests run only on Linux x86_64 because its Docker image is available
+only for that platform. MoonBit uses its native target on supported runners.
 
 ## Language-Specific Notes
 
@@ -861,6 +907,18 @@ are verified there.
 - Uses iso_c_binding
 - Modern Fortran 2018 features
 - Available via FPM (Fortran Package Manager)
+
+### Dyalog APL
+
+- Requires Dyalog APL 18.2+ and Docker for repository tests
+- Uses a native C shim around `libyamlstar`
+- Published through Tatin as `yaml-yamlstar`
+
+### MoonBit
+
+- Requires MoonBit with native target support
+- Uses MoonBit's native C interoperability
+- Published on Mooncakes as `ingydotnet/yamlstar`
 
 ### Ada
 
