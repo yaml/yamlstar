@@ -6,7 +6,8 @@
 
   :dependencies [[org.clojure/clojure "1.12.0"]
                  [org.yamlstar/yaml-parser "0.2.3"]
-                 [org.clojure/data.json "2.5.0"]]
+                 [org.clojure/data.json "2.5.0"]
+                 [org.snakeyaml/snakeyaml-engine "2.7"]]
 
   :source-paths ["src"]
   :test-paths ["test"]

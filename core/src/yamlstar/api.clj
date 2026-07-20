@@ -30,19 +30,22 @@
 
   Args:
     yaml-str: A string containing YAML content
+    opts: (optional) Options map; {:plugin {:parser {:use \"name\"}}}
+          selects a parser plugin
 
   Returns:
     A Clojure data structure representing the YAML document
 
   Throws:
     Exception if the YAML is malformed"
-  [yaml-str]
-  (when yaml-str
-    (-> yaml-str
-        parser/parse
-        composer/compose
-        resolver/resolve
-        constructor/construct)))
+  ([yaml-str]
+   (load yaml-str nil))
+  ([yaml-str opts]
+   (when yaml-str
+     (-> (parser/parse yaml-str opts)
+         composer/compose
+         resolver/resolve
+         constructor/construct))))
 
 (defn load-all
   "Parse a multi-document YAML string and return a sequence of documents.
@@ -52,19 +55,22 @@
 
   Args:
     yaml-str: A string containing one or more YAML documents
+    opts: (optional) Options map; {:plugin {:parser {:use \"name\"}}}
+          selects a parser plugin
 
   Returns:
     A sequence of Clojure data structures, one per YAML document
 
   Throws:
     Exception if the YAML is malformed"
-  [yaml-str]
-  (when yaml-str
-    (-> yaml-str
-        parser/parse
-        composer/compose-all
-        resolver/resolve-all
-        constructor/construct-all)))
+  ([yaml-str]
+   (load-all yaml-str nil))
+  ([yaml-str opts]
+   (when yaml-str
+     (-> (parser/parse yaml-str opts)
+         composer/compose-all
+         resolver/resolve-all
+         constructor/construct-all))))
 
 (defn dump
   "Dump a JSON-compatible Clojure value to a YAML string."

@@ -30,6 +30,7 @@ import (
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/emitter"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/numbers"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/parser"
+	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/representer"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/resolver"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/serializer"
@@ -64,6 +65,38 @@ type response struct {
 	Error *YAMLError `json:"error"`
 }
 
+type options struct {
+	parser string
+}
+
+// Option configures a YAML load or dump operation.
+type Option func(*options)
+
+// WithParser selects the parser plugin used for loading.
+func WithParser(name string) Option {
+	return func(o *options) {
+		o.parser = name
+	}
+}
+
+func optsJSON(opts []Option) (string, error) {
+	var o options
+	for _, opt := range opts {
+		opt(&o)
+	}
+	cfg := map[string]any{}
+	if o.parser != "" {
+		cfg["plugin"] = map[string]any{
+			"parser": map[string]any{"use": o.parser},
+		}
+	}
+	data, err := json.Marshal(cfg)
+	if err != nil {
+		return "", fmt.Errorf("yamlstar: failed to encode options: %w", err)
+	}
+	return string(data), nil
+}
+
 var (
 	initializeOnce sync.Once
 	initializeErr  error
@@ -79,6 +112,7 @@ var namespaces = []string{
 	"yamlstar.api",
 	"yamlstar.desolver",
 	"libyamlstar",
+	"yamlstar.plugin",
 	"yaml-parser.parser",
 	"yamlstar.composer",
 	"yamlstar.parser",
@@ -101,6 +135,7 @@ func initialize() error {
 		for _, namespace := range namespaces {
 			require.Invoke(lang.NewSymbol(namespace))
 		}
+		glj.Var("yamlstar.parser", "register-reference-parser!").Invoke()
 	})
 	return initializeErr
 }
@@ -127,8 +162,13 @@ func panicError(operation string, value any) error {
 	return fmt.Errorf("yamlstar: %s: %v", operation, value)
 }
 
-func call(name string, input string) (*response, error) {
-	value, err := invoke(name, int64(0), input)
+func call(name string, input string, opts []Option) (*response, error) {
+	optsStr, err := optsJSON(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	value, err := invoke(name, int64(0), input, optsStr)
 	if err != nil {
 		return nil, err
 	}
@@ -156,8 +196,8 @@ func call(name string, input string) (*response, error) {
 //
 // Values are represented as nil, bool, float64, string, []any, and
 // map[string]any.
-func Load(input string) (any, error) {
-	resp, err := call("yamlstar-load", input)
+func Load(input string, opts ...Option) (any, error) {
+	resp, err := call("yamlstar-load", input, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -165,8 +205,8 @@ func Load(input string) (any, error) {
 }
 
 // LoadAll parses a YAML stream and returns all its documents.
-func LoadAll(input string) ([]any, error) {
-	resp, err := call("yamlstar-load-all", input)
+func LoadAll(input string, opts ...Option) ([]any, error) {
+	resp, err := call("yamlstar-load-all", input, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -187,7 +227,7 @@ func Dump(value any) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("yamlstar: failed to encode dump input: %w", err)
 	}
-	return dumpJSON(data, false)
+	return dumpJSON(data, false, nil)
 }
 
 // DumpAll serializes JSON-compatible Go values as a YAML stream.
@@ -197,15 +237,15 @@ func DumpAll(values []any) (string, error) {
 		return "", fmt.Errorf(
 			"yamlstar: failed to encode dump-all input: %w", err)
 	}
-	return dumpJSON(data, true)
+	return dumpJSON(data, true, nil)
 }
 
-func dumpJSON(data []byte, all bool) (string, error) {
+func dumpJSON(data []byte, all bool, opts []Option) (string, error) {
 	name := "yamlstar-dump"
 	if all {
 		name = "yamlstar-dump-all"
 	}
-	resp, err := call(name, string(data))
+	resp, err := call(name, string(data), opts)
 	if err != nil {
 		return "", err
 	}

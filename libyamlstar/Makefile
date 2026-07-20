@@ -152,6 +152,7 @@ GLOAT-SRCS := \
   $(GLOAT-LINK-DIR)/yaml_parser/receiver.clj \
   $(GLOAT-LINK-DIR)/yaml_parser/grammar.clj \
   $(GLOAT-LINK-DIR)/yaml_parser/core.clj \
+  $(CORE-YAMLSTAR)/plugin.clj \
   $(CORE-YAMLSTAR)/parser.clj \
   $(CORE-YAMLSTAR)/composer.clj \
   $(CORE-YAMLSTAR)/resolver.clj \

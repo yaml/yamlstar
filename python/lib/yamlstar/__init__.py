@@ -76,24 +76,45 @@ libyamlstar = ctypes.CDLL(_libyamlstar_path)
 # not need a runtime isolate, so its compatibility implementation accepts a
 # null thread handle.
 yamlstar_load_fn = libyamlstar.yamlstar_load
-yamlstar_load_fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+yamlstar_load_fn.argtypes = \
+  [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
 yamlstar_load_fn.restype = ctypes.c_char_p
 
 yamlstar_load_all_fn = libyamlstar.yamlstar_load_all
-yamlstar_load_all_fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+yamlstar_load_all_fn.argtypes = \
+  [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
 yamlstar_load_all_fn.restype = ctypes.c_char_p
 
 yamlstar_dump_fn = libyamlstar.yamlstar_dump
-yamlstar_dump_fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+yamlstar_dump_fn.argtypes = \
+  [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
 yamlstar_dump_fn.restype = ctypes.c_char_p
 
 yamlstar_dump_all_fn = libyamlstar.yamlstar_dump_all
-yamlstar_dump_all_fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+yamlstar_dump_all_fn.argtypes = \
+  [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
 yamlstar_dump_all_fn.restype = ctypes.c_char_p
 
 yamlstar_version_fn = libyamlstar.yamlstar_version
 yamlstar_version_fn.argtypes = [ctypes.c_void_p]
 yamlstar_version_fn.restype = ctypes.c_char_p
+
+
+def _opts_bytes(options=None, parser=None):
+  """Build the options JSON bytes for an FFI call.
+
+  The parser argument is shorthand that expands to
+  {"plugin": {"parser": {"use": parser}}} without mutating the
+  caller's options dict.
+  """
+  opts = dict(options) if options else {}
+  if parser is not None:
+    plugin = dict(opts.get('plugin') or {})
+    parser_cfg = dict(plugin.get('parser') or {})
+    parser_cfg['use'] = parser
+    plugin['parser'] = parser_cfg
+    opts['plugin'] = plugin
+  return ctypes.c_char_p(bytes(json.dumps(opts), "utf8"))
 
 
 # The YAMLStar class is the main user facing API for this module.
@@ -109,6 +130,11 @@ class YAMLStar():
 
     docs = ys.load_all("---\\ndoc1\\n---\\ndoc2")
     # Returns: ['doc1', 'doc2']
+
+    # Select a parser plugin:
+    data = ys.load("key: value", parser='snakeyaml')
+    data = ys.load("key: value",
+                   options={'plugin': {'parser': {'use': 'snakeyaml'}}})
   """
 
   def __init__(self):
@@ -123,13 +149,29 @@ class YAMLStar():
     if rc != 0:
       raise Exception("Failed to initialize libyamlstar")
 
+  def _call(self, function, input_bytes, opts_bytes):
+    """Call a library function and unwrap the JSON response envelope."""
+    self.error = None
+    data_json = function(self._isolatethread, input_bytes, opts_bytes).decode()
+
+    resp = json.loads(data_json)
+    self.error = resp.get('error')
+    if self.error:
+      raise Exception(self.error['cause'])
+    if 'data' not in resp:
+      raise Exception("Unexpected response from 'libyamlstar'")
+    return resp.get('data')
+
   # Load a single YAML document and return the result:
-  def load(self, yaml_input):
+  def load(self, yaml_input, options=None, parser=None):
     """
     Load a single YAML document.
 
     Args:
       yaml_input: String containing YAML content
+      options: Optional dict of load options, e.g.
+        {'plugin': {'parser': {'use': 'snakeyaml'}}}
+      parser: Optional parser plugin name (shorthand for the above)
 
     Returns:
       Python object representing the YAML document
@@ -137,26 +179,20 @@ class YAMLStar():
     Raises:
       Exception if the YAML is malformed
     """
-    self.error = None
-    yaml_bytes = ctypes.c_char_p(bytes(yaml_input, "utf8"))
-
-    data_json = yamlstar_load_fn(self._isolatethread, yaml_bytes).decode()
-
-    resp = json.loads(data_json)
-    self.error = resp.get('error')
-    if self.error:
-      raise Exception(self.error['cause'])
-    if 'data' not in resp:
-      raise Exception("Unexpected response from 'libyamlstar'")
-    return resp.get('data')
+    return self._call(
+      yamlstar_load_fn,
+      ctypes.c_char_p(bytes(yaml_input, "utf8")),
+      _opts_bytes(options, parser))
 
   # Load all YAML documents and return the results:
-  def load_all(self, yaml_input):
+  def load_all(self, yaml_input, options=None, parser=None):
     """
     Load all YAML documents from a multi-document string.
 
     Args:
       yaml_input: String containing one or more YAML documents
+      options: Optional dict of load options
+      parser: Optional parser plugin name
 
     Returns:
       List of Python objects, one per YAML document
@@ -164,54 +200,32 @@ class YAMLStar():
     Raises:
       Exception if the YAML is malformed
     """
-    self.error = None
-    yaml_bytes = ctypes.c_char_p(bytes(yaml_input, "utf8"))
+    return self._call(
+      yamlstar_load_all_fn,
+      ctypes.c_char_p(bytes(yaml_input, "utf8")),
+      _opts_bytes(options, parser))
 
-    data_json = \
-      yamlstar_load_all_fn(self._isolatethread, yaml_bytes).decode()
-
-    resp = json.loads(data_json)
-    self.error = resp.get('error')
-    if self.error:
-      raise Exception(self.error['cause'])
-    if 'data' not in resp:
-      raise Exception("Unexpected response from 'libyamlstar'")
-    return resp.get('data')
-
-  def dump(self, value):
+  def dump(self, value, options=None):
     """
     Dump a Python JSON-compatible value to YAML.
+
+    The options argument is reserved for future dump options.
     """
-    self.error = None
-    data_bytes = ctypes.c_char_p(bytes(json.dumps(value), "utf8"))
+    return self._call(
+      yamlstar_dump_fn,
+      ctypes.c_char_p(bytes(json.dumps(value), "utf8")),
+      _opts_bytes(options))
 
-    data_json = yamlstar_dump_fn(self._isolatethread, data_bytes).decode()
-
-    resp = json.loads(data_json)
-    self.error = resp.get('error')
-    if self.error:
-      raise Exception(self.error['cause'])
-    if 'data' not in resp:
-      raise Exception("Unexpected response from 'libyamlstar'")
-    return resp.get('data')
-
-  def dump_all(self, values):
+  def dump_all(self, values, options=None):
     """
     Dump Python JSON-compatible values to a multi-document YAML stream.
+
+    The options argument is reserved for future dump options.
     """
-    self.error = None
-    data_bytes = ctypes.c_char_p(bytes(json.dumps(values), "utf8"))
-
-    data_json = \
-      yamlstar_dump_all_fn(self._isolatethread, data_bytes).decode()
-
-    resp = json.loads(data_json)
-    self.error = resp.get('error')
-    if self.error:
-      raise Exception(self.error['cause'])
-    if 'data' not in resp:
-      raise Exception("Unexpected response from 'libyamlstar'")
-    return resp.get('data')
+    return self._call(
+      yamlstar_dump_all_fn,
+      ctypes.c_char_p(bytes(json.dumps(values), "utf8")),
+      _opts_bytes(options))
 
   # Get the YAMLStar version:
   def version(self):

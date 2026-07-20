@@ -256,3 +256,17 @@ func TestQuotedStrings(t *testing.T) {
 func TestPackageVersion(t *testing.T) {
 	assert.NotEmpty(t, yamlstar.Version)
 }
+
+func TestLoadWithReferenceParser(t *testing.T) {
+	data, err := yamlstar.Load(
+		"key: value", yamlstar.WithParser("reference"))
+	require.NoError(t, err)
+	assert.Equal(t, map[string]any{"key": "value"}, data)
+}
+
+func TestLoadWithUnknownParser(t *testing.T) {
+	_, err := yamlstar.Load(
+		"key: value", yamlstar.WithParser("no-such-parser"))
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "Unknown YAML parser plugin")
+}

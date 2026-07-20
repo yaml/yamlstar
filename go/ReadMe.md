@@ -146,23 +146,25 @@ fmt.Printf("Go binding version: %s\n", yamlstar.Version)
 
 ### Functions
 
-#### `Load(input string) (any, error)`
+#### `Load(input string, opts ...Option) (any, error)`
 
 Load a single YAML document.
 
 **Parameters:**
 - `input`: String containing YAML content
+- `opts`: Optional functional options (see Options below)
 
 **Returns:**
 - Go value representing the YAML document (nil, bool, float64, string, []any, or map[string]any)
 - Error if the YAML is malformed or library not initialized
 
-#### `LoadAll(input string) ([]any, error)`
+#### `LoadAll(input string, opts ...Option) ([]any, error)`
 
 Load all YAML documents from a multi-document string.
 
 **Parameters:**
 - `input`: String containing one or more YAML documents
+- `opts`: Optional functional options (see Options below)
 
 **Returns:**
 - Slice of Go values, one per YAML document
@@ -175,6 +177,19 @@ Serialize one JSON-compatible Go value as YAML.
 #### `DumpAll(values []any) (string, error)`
 
 Serialize JSON-compatible Go values as a multi-document YAML stream.
+
+### Options
+
+#### `WithParser(name string) Option`
+
+Select the parser plugin used for loading
+(see https://yamlstar.org/plugins/):
+
+```go
+data, err := yamlstar.Load("key: value", yamlstar.WithParser("snakeyaml"))
+```
+
+Available parsers: `reference` (default) and `snakeyaml`.
 
 #### `LibVersion() (string, error)`
 

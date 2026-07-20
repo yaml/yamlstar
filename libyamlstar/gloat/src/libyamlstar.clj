@@ -41,11 +41,33 @@
     (sequential? x) (map nil-keys->string x)
     :else x))
 
+(defn normalize-keys
+  "Keywordize map keys recursively, converting snake_case to kebab-case.
+
+  Only keys are rewritten; values are never touched."
+  [x]
+  (cond
+    (map? x) (into {}
+                   (map (fn [[k v]]
+                          [(keyword (str/replace (name k) "_" "-"))
+                           (normalize-keys v)]))
+                   x)
+    (vector? x) (mapv normalize-keys x)
+    :else x))
+
+(defn parse-opts
+  "Parse a JSON options string into a normalized opts map.
+
+  Returns nil for nil/blank/empty opts (the fast path)."
+  [opts-json]
+  (when-not (or (nil? opts-json) (str/blank? opts-json))
+    (not-empty (normalize-keys (json/load opts-json)))))
+
 (defn yamlstar-load
   "Load YAML string, return JSON string with {:data ...} or {:error ...}"
-  [_thread yaml-str]
+  [_thread yaml-str opts-json]
   (try
-    (let [result (yaml/load yaml-str)]
+    (let [result (yaml/load yaml-str (parse-opts opts-json))]
       (json/dump {:data (nil-keys->string result)}))
     (catch #?(:glj go/any :lg Exception) e
       (json/dump
@@ -57,9 +79,9 @@
 
 (defn yamlstar-load-all
   "Load all YAML documents, return JSON string with {:data [...]} or {:error ...}"
-  [_thread yaml-str]
+  [_thread yaml-str opts-json]
   (try
-    (let [result (yaml/load-all yaml-str)]
+    (let [result (yaml/load-all yaml-str (parse-opts opts-json))]
       (json/dump {:data (nil-keys->string result)}))
     (catch #?(:glj go/any :lg Exception) e
       (json/dump {:error {:cause (str e)
@@ -68,9 +90,10 @@
 
 (defn yamlstar-dump
   "Dump one JSON-encoded value to YAML, return JSON string with {:data ...} or {:error ...}"
-  [_thread data-json]
+  [_thread data-json opts-json]
   (try
-    (let [result (yaml/dump (json/load data-json))]
+    (let [_ (parse-opts opts-json)
+          result (yaml/dump (json/load data-json))]
       (json/dump {:data result}))
     (catch #?(:glj go/any :lg Exception) e
       (json/dump
@@ -82,9 +105,10 @@
 
 (defn yamlstar-dump-all
   "Dump JSON-encoded documents to YAML, return JSON string with {:data ...} or {:error ...}"
-  [_thread data-json]
+  [_thread data-json opts-json]
   (try
-    (let [result (yaml/dump-all (json/load data-json))]
+    (let [_ (parse-opts opts-json)
+          result (yaml/dump-all (json/load data-json))]
       (json/dump {:data result}))
     (catch #?(:glj go/any :lg Exception) e
       (json/dump {:error {:cause (str e)

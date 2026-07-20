@@ -1856,6 +1856,9 @@ func LoadNS() {
 	{ // refer vars from clojure.core
 		srcNS := lang.FindOrCreateNamespace(sym_clojure_DOT_core)
 		ns.ReferAllSnapshot(srcNS, []string{
+			"*loaded-libs*",
+			"*loading-verbosely*",
+			"*pending-paths*",
 			"-protocols",
 			">0?",
 			">1?",
@@ -4305,7 +4308,7 @@ func LoadNS() {
 		closed787 = lang.NewVector(int64(48), int64(57), int64(65), int64(70), int64(97), int64(102))
 	}
 	{
-		closed788 = lang.NewChar(239)
+		closed788 = lang.NewChar(65279)
 	}
 	{
 		closed789 = lang.NewVector(int64(45), int64(45), int64(48), int64(57), int64(65), int64(90), int64(97), int64(122))

@@ -7,14 +7,30 @@
 
 (def default-suite-dir "../yaml-test-suite")
 
+(def parser-name
+  "The parser plugin under test, per the YAMLSTAR_PARSER env var."
+  (or (System/getenv "YAMLSTAR_PARSER") "reference"))
+
+(defn expected-failures-resource
+  "Resource path for a kind's expected failures manifest.
+
+  A non-default parser uses expected-fails/<kind>-<parser>.yaml when
+  that resource exists, else falls back to the shared manifest."
+  [kind]
+  (let [variant (str "expected-fails/" kind "-" parser-name ".yaml")]
+    (if (and (not= parser-name "reference")
+             (io/resource variant))
+      variant
+      (str "expected-fails/" kind ".yaml"))))
+
 (def loader-expected-failures-resource
-  "expected-fails/load.yaml")
+  (expected-failures-resource "load"))
 
 (def roundtrip-expected-failures-resource
-  "expected-fails/roundtrip.yaml")
+  (expected-failures-resource "roundtrip"))
 
 (def emit-expected-failures-resource
-  "expected-fails/emit.yaml")
+  (expected-failures-resource "emit"))
 
 (defn show-expected-failures? []
   (boolean (some-> (System/getenv "YAMLSTAR_TEST_SUITE_SHOW_FAILURES")

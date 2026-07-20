@@ -427,6 +427,9 @@ func LoadNS() {
 	{ // refer vars from clojure.core
 		srcNS := lang.FindOrCreateNamespace(sym_clojure_DOT_core)
 		ns.ReferAllSnapshot(srcNS, []string{
+			"*loaded-libs*",
+			"*loading-verbosely*",
+			"*pending-paths*",
 			"-protocols",
 			">0?",
 			">1?",
@@ -619,10 +622,10 @@ func LoadNS() {
 				} else {
 					var tmp13 any
 					{ // let
-						// let binding "vec__111"
+						// let binding "vec__118"
 						var tmp14 any
 						{ // let
-							// let binding "G__117"
+							// let binding "G__124"
 							var v15 any = v6
 							_ = v15
 							// case
@@ -666,7 +669,7 @@ func LoadNS() {
 						tmp18 := runtime.RT.NthDefault(v15, lang.IntCast(int64(1)), nil)
 						var v19 any = tmp18
 						_ = v19
-						// let binding "vec__114"
+						// let binding "vec__121"
 						var tmp20 any
 						{ // let
 							// let binding "remaining"
@@ -807,7 +810,7 @@ func LoadNS() {
 							_ = v11
 							var tmp12 any
 							{ // let
-								// let binding "G__134"
+								// let binding "G__141"
 								tmp13 := kw_event.Invoke1(v11)
 								var v14 any = tmp13
 								_ = v14
@@ -1077,7 +1080,7 @@ func LoadNS() {
 			_ = v4
 			var tmp5 any
 			{ // let
-				// let binding "G__133"
+				// let binding "G__140"
 				tmp6 := lang.First(v2)
 				tmp7 := kw_event.Invoke1(tmp6)
 				var v8 any = tmp7
@@ -1532,7 +1535,7 @@ func LoadNS() {
 			_ = v4
 			var tmp5 any
 			{ // let
-				// let binding "G__109"
+				// let binding "G__116"
 				var v6 any = v2
 				_ = v6
 				// case
@@ -1616,7 +1619,7 @@ func LoadNS() {
 					} else {
 						var tmp9 any
 						{ // let
-							// let binding "vec__121"
+							// let binding "vec__128"
 							tmp10 := aotDirectFn3(v4)
 							var v11 any = tmp10
 							_ = v11
@@ -1628,7 +1631,7 @@ func LoadNS() {
 							tmp14 := runtime.RT.NthDefault(v11, lang.IntCast(int64(1)), nil)
 							var v15 any = tmp14
 							_ = v15
-							// let binding "vec__124"
+							// let binding "vec__131"
 							tmp16 := aotDirectFn3(v15)
 							var v17 any = tmp16
 							_ = v17
@@ -1944,7 +1947,7 @@ func LoadNS() {
 				_ = v5
 				var tmp6 any
 				{ // let
-					// let binding "G__110"
+					// let binding "G__117"
 					tmp7 := aotDirectFn26(v2)
 					var v8 any = tmp7
 					_ = v8
@@ -2034,7 +2037,7 @@ func LoadNS() {
 					} else {
 						var tmp9 any
 						{ // let
-							// let binding "vec__118"
+							// let binding "vec__125"
 							tmp10 := aotDirectFn3(v4)
 							var v11 any = tmp10
 							_ = v11
@@ -2334,22 +2337,22 @@ func LoadNS() {
 								} else {
 									var tmp37 any
 									{ // let
-										// let binding "vec__127"
+										// let binding "vec__134"
 										var v38 any = v29
 										_ = v38
-										// let binding "seq__128"
+										// let binding "seq__135"
 										tmp39 := lang.Seq(v38)
 										var v40 any = tmp39
 										_ = v40
-										// let binding "first__129"
+										// let binding "first__136"
 										tmp41 := lang.First(v40)
 										var v42 any = tmp41
 										_ = v42
-										// let binding "seq__128"
+										// let binding "seq__135"
 										tmp43 := lang.Next(v40)
 										var v44 any = tmp43
 										_ = v44
-										// let binding "vec__130"
+										// let binding "vec__137"
 										var v45 any = v42
 										_ = v45
 										// let binding "key-events"

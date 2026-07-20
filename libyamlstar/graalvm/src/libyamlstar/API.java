@@ -15,19 +15,26 @@ public final class API {
      *
      * @param isolateId The GraalVM isolate thread context
      * @param yamlStr The YAML string to parse
+     * @param optsJson JSON options string (e.g.
+     *     {"plugin": {"parser": {"use": "snakeyaml"}}}); NULL or "{}" for
+     *     defaults
      * @return JSON string: {"data": ...} on success, {"error": {...}} on failure
      */
     @CEntryPoint(name = "yamlstar_load")
     public static @CConst CCharPointer load(
         @CEntryPoint.IsolateThreadContext long isolateId,
-        @CConst CCharPointer yamlStr
+        @CConst CCharPointer yamlStr,
+        @CConst CCharPointer optsJson
     ) {
         debug("API - called yamlstar_load");
 
         String yaml = CTypeConversion.toJavaString(yamlStr);
+        String opts = optsJson.isNull()
+            ? "{}" : CTypeConversion.toJavaString(optsJson);
         debug("API - java input string: " + yaml);
+        debug("API - java options string: " + opts);
 
-        String json = libyamlstar.core.loadYaml(yaml);
+        String json = libyamlstar.core.loadYaml(yaml, opts);
         debug("API - java response string: " + json);
 
         try (CTypeConversion.CCharPointerHolder holder =
@@ -41,19 +48,24 @@ public final class API {
      *
      * @param isolateId The GraalVM isolate thread context
      * @param yamlStr The YAML string containing one or more documents
+     * @param optsJson JSON options string; NULL or "{}" for defaults
      * @return JSON string: {"data": [...]} on success, {"error": {...}} on failure
      */
     @CEntryPoint(name = "yamlstar_load_all")
     public static @CConst CCharPointer loadAll(
         @CEntryPoint.IsolateThreadContext long isolateId,
-        @CConst CCharPointer yamlStr
+        @CConst CCharPointer yamlStr,
+        @CConst CCharPointer optsJson
     ) {
         debug("API - called yamlstar_load_all");
 
         String yaml = CTypeConversion.toJavaString(yamlStr);
+        String opts = optsJson.isNull()
+            ? "{}" : CTypeConversion.toJavaString(optsJson);
         debug("API - java input string: " + yaml);
+        debug("API - java options string: " + opts);
 
-        String json = libyamlstar.core.loadYamlAll(yaml);
+        String json = libyamlstar.core.loadYamlAll(yaml, opts);
         debug("API - java response string: " + json);
 
         try (CTypeConversion.CCharPointerHolder holder =
@@ -67,19 +79,25 @@ public final class API {
      *
      * @param isolateId The GraalVM isolate thread context
      * @param dataJson The JSON value to dump
+     * @param optsJson JSON options string (reserved); NULL or "{}" for
+     *     defaults
      * @return JSON string: {"data": "..."} on success, {"error": {...}} on failure
      */
     @CEntryPoint(name = "yamlstar_dump")
     public static @CConst CCharPointer dump(
         @CEntryPoint.IsolateThreadContext long isolateId,
-        @CConst CCharPointer dataJson
+        @CConst CCharPointer dataJson,
+        @CConst CCharPointer optsJson
     ) {
         debug("API - called yamlstar_dump");
 
         String data = CTypeConversion.toJavaString(dataJson);
+        String opts = optsJson.isNull()
+            ? "{}" : CTypeConversion.toJavaString(optsJson);
         debug("API - java input string: " + data);
+        debug("API - java options string: " + opts);
 
-        String json = libyamlstar.core.dumpYaml(data);
+        String json = libyamlstar.core.dumpYaml(data, opts);
         debug("API - java response string: " + json);
 
         try (CTypeConversion.CCharPointerHolder holder =
@@ -93,19 +111,25 @@ public final class API {
      *
      * @param isolateId The GraalVM isolate thread context
      * @param dataJson The JSON array of documents to dump
+     * @param optsJson JSON options string (reserved); NULL or "{}" for
+     *     defaults
      * @return JSON string: {"data": "..."} on success, {"error": {...}} on failure
      */
     @CEntryPoint(name = "yamlstar_dump_all")
     public static @CConst CCharPointer dumpAll(
         @CEntryPoint.IsolateThreadContext long isolateId,
-        @CConst CCharPointer dataJson
+        @CConst CCharPointer dataJson,
+        @CConst CCharPointer optsJson
     ) {
         debug("API - called yamlstar_dump_all");
 
         String data = CTypeConversion.toJavaString(dataJson);
+        String opts = optsJson.isNull()
+            ? "{}" : CTypeConversion.toJavaString(optsJson);
         debug("API - java input string: " + data);
+        debug("API - java options string: " + opts);
 
-        String json = libyamlstar.core.dumpYamlAll(data);
+        String json = libyamlstar.core.dumpYamlAll(data, opts);
         debug("API - java response string: " + json);
 
         try (CTypeConversion.CCharPointerHolder holder =

@@ -40,81 +40,82 @@ var aotDirectFn19 lang.FnFunc3
 var aotDirectFn20 lang.FnFunc2
 var aotDirectFn21 lang.FnFunc6
 var aotDirectFn22 lang.FnFunc2
-var aotDirectFn23 lang.FnFunc5
-var aotDirectFn24 lang.FnFunc1
-var aotDirectFn25 lang.ArityFn
-var aotDirectFn25Arity1 lang.FnFunc1
-var aotDirectFn25Arity2 lang.FnFunc2
-var aotDirectFn25Arity3 lang.FnFunc3
-var aotDirectFn26 lang.FnFunc1
+var aotDirectFn23 lang.FnFunc2
+var aotDirectFn24 lang.FnFunc5
+var aotDirectFn25 lang.FnFunc1
+var aotDirectFn26 lang.ArityFn
+var aotDirectFn26Arity1 lang.FnFunc1
+var aotDirectFn26Arity2 lang.FnFunc2
+var aotDirectFn26Arity3 lang.FnFunc3
 var aotDirectFn27 lang.FnFunc1
-var aotDirectFn28 lang.ArityFn
-var aotDirectFn28Arity1 lang.FnFunc1
-var aotDirectFn28Arity2 lang.FnFunc2
-var aotDirectFn28Arity3 lang.FnFunc3
-var aotDirectFn29 lang.FnFunc2
-var aotDirectFn30 lang.FnFunc3
+var aotDirectFn28 lang.FnFunc1
+var aotDirectFn29 lang.ArityFn
+var aotDirectFn29Arity1 lang.FnFunc1
+var aotDirectFn29Arity2 lang.FnFunc2
+var aotDirectFn29Arity3 lang.FnFunc3
+var aotDirectFn30 lang.FnFunc2
 var aotDirectFn31 lang.FnFunc3
 var aotDirectFn32 lang.FnFunc3
 var aotDirectFn33 lang.FnFunc3
-var aotDirectFn34 lang.FnFunc2
-var aotDirectFn35 lang.FnFunc3
-var aotDirectFn36 lang.FnFunc1
-var aotDirectFn37 lang.FnFunc2
-var aotDirectFn38 lang.FnFunc3
-var aotDirectFn39 lang.FnFunc1
-var aotDirectFn40 lang.ArityFn
-var aotDirectFn40Arity1 lang.FnFunc1
-var aotDirectFn40Arity2 lang.FnFunc2
-var aotDirectFn40Arity3 lang.FnFunc3
-var aotDirectFn41 lang.FnFunc1
+var aotDirectFn34 lang.FnFunc3
+var aotDirectFn35 lang.FnFunc2
+var aotDirectFn36 lang.FnFunc3
+var aotDirectFn37 lang.FnFunc1
+var aotDirectFn38 lang.FnFunc2
+var aotDirectFn39 lang.FnFunc3
+var aotDirectFn40 lang.FnFunc1
+var aotDirectFn41 lang.ArityFn
+var aotDirectFn41Arity1 lang.FnFunc1
+var aotDirectFn41Arity2 lang.FnFunc2
+var aotDirectFn41Arity3 lang.FnFunc3
 var aotDirectFn42 lang.FnFunc1
-var aotDirectFn43 lang.ArityFn
-var aotDirectFn43Arity1 lang.FnFunc1
-var aotDirectFn43Arity2 lang.FnFunc2
-var aotDirectFn43Arity3 lang.FnFunc3
-var aotDirectFn44 lang.FnFunc2
+var aotDirectFn43 lang.FnFunc1
+var aotDirectFn44 lang.ArityFn
+var aotDirectFn44Arity1 lang.FnFunc1
+var aotDirectFn44Arity2 lang.FnFunc2
+var aotDirectFn44Arity3 lang.FnFunc3
 var aotDirectFn45 lang.FnFunc2
-var aotDirectFn46 lang.FnFunc3
-var aotDirectFn47 lang.FnFunc2
-var aotDirectFn48 lang.FnFunc4
-var aotDirectFn49 lang.FnFunc2
-var aotDirectFn50 lang.FnFunc1
-var aotDirectFn51 lang.FnFunc2
+var aotDirectFn46 lang.FnFunc2
+var aotDirectFn47 lang.FnFunc3
+var aotDirectFn48 lang.FnFunc2
+var aotDirectFn49 lang.FnFunc4
+var aotDirectFn50 lang.FnFunc2
+var aotDirectFn51 lang.FnFunc1
 var aotDirectFn52 lang.FnFunc2
-var aotDirectFn53 lang.FnFunc3
-var aotDirectFn54 lang.FnFunc6
-var aotDirectFn55 lang.FnFunc4
+var aotDirectFn53 lang.FnFunc2
+var aotDirectFn54 lang.FnFunc3
+var aotDirectFn55 lang.FnFunc6
 var aotDirectFn56 lang.FnFunc4
 var aotDirectFn57 lang.FnFunc4
-var aotDirectFn58 lang.FnFunc3
+var aotDirectFn58 lang.FnFunc4
 var aotDirectFn59 lang.FnFunc3
-var aotDirectFn60 lang.FnFunc1
-var aotDirectFn61 lang.FnFunc3
+var aotDirectFn60 lang.FnFunc3
+var aotDirectFn61 lang.FnFunc1
 var aotDirectFn62 lang.FnFunc3
 var aotDirectFn63 lang.FnFunc3
-var aotDirectFn64 lang.FnFunc1
+var aotDirectFn64 lang.FnFunc3
 var aotDirectFn65 lang.FnFunc1
-var aotDirectFn66 lang.ArityFn
-var aotDirectFn66Arity1 lang.FnFunc1
-var aotDirectFn66Arity2 lang.FnFunc2
-var aotDirectFn66Arity3 lang.FnFunc3
-var aotDirectFn67 lang.FnFunc1
+var aotDirectFn66 lang.FnFunc1
+var aotDirectFn67 lang.ArityFn
+var aotDirectFn67Arity1 lang.FnFunc1
+var aotDirectFn67Arity2 lang.FnFunc2
+var aotDirectFn67Arity3 lang.FnFunc3
 var aotDirectFn68 lang.FnFunc1
 var aotDirectFn69 lang.FnFunc1
-var aotDirectFn70 lang.ArityFn
-var aotDirectFn70Arity2 lang.FnFunc2
-var aotDirectFn70Arity4 lang.FnFunc4
-var aotDirectFn71 lang.FnFunc3
-var aotDirectFn72 lang.FnFunc1
-var aotDirectFn73 lang.ArityFn
-var aotDirectFn73Arity1 lang.FnFunc1
-var aotDirectFn73Arity2 lang.FnFunc2
-var aotDirectFn73Arity3 lang.FnFunc3
-var aotDirectFn74 lang.FnFunc1
+var aotDirectFn70 lang.FnFunc1
+var aotDirectFn71 lang.ArityFn
+var aotDirectFn71Arity2 lang.FnFunc2
+var aotDirectFn71Arity4 lang.FnFunc4
+var aotDirectFn72 lang.FnFunc3
+var aotDirectFn73 lang.FnFunc1
+var aotDirectFn74 lang.ArityFn
+var aotDirectFn74Arity1 lang.FnFunc1
+var aotDirectFn74Arity2 lang.FnFunc2
+var aotDirectFn74Arity3 lang.FnFunc3
 var aotDirectFn75 lang.FnFunc1
 var aotDirectFn76 lang.FnFunc1
-var aotInt64Fn36 func(int64) (int64, bool)
+var aotDirectFn77 lang.FnFunc1
+var aotInt64Fn37 func(int64) (int64, bool)
 
 var aotKeywordMapShape0 = lang.NewKeywordMapShape("name", "node", "doc", "lvl", "beg", "end", "m", "t", "full")
 
@@ -329,6 +330,7 @@ func LoadNS() {
 	sym_die := lang.NewSymbolUnchecked("die")
 	sym_do_DASH_if_DASH_true := lang.NewSymbolUnchecked("do-if-true")
 	sym_doc := lang.NewSymbolUnchecked("doc")
+	sym_doc_DASH_end_DASH_marker_QMARK_ := lang.NewSymbolUnchecked("doc-end-marker?")
 	sym_dorun := lang.NewSymbolUnchecked("dorun")
 	sym_dquo_DASH_scan := lang.NewSymbolUnchecked("dquo-scan")
 	sym_empty_DASH_rule := lang.NewSymbolUnchecked("empty-rule")
@@ -685,6 +687,8 @@ func LoadNS() {
 	var_yaml_DASH_parser_DOT_parser_comments_STAR_ := lang.InternVarName(sym_yaml_DASH_parser_DOT_parser, sym_comments_STAR_)
 	// var yaml-parser.parser/default-state
 	var_yaml_DASH_parser_DOT_parser_default_DASH_state := lang.InternVarName(sym_yaml_DASH_parser_DOT_parser, sym_default_DASH_state)
+	// var yaml-parser.parser/doc-end-marker?
+	var_yaml_DASH_parser_DOT_parser_doc_DASH_end_DASH_marker_QMARK_ := lang.InternVarName(sym_yaml_DASH_parser_DOT_parser, sym_doc_DASH_end_DASH_marker_QMARK_)
 	// var yaml-parser.parser/dquo-scan
 	var_yaml_DASH_parser_DOT_parser_dquo_DASH_scan := lang.InternVarName(sym_yaml_DASH_parser_DOT_parser, sym_dquo_DASH_scan)
 	// var yaml-parser.parser/empty-rule
@@ -892,6 +896,9 @@ func LoadNS() {
 	{ // refer vars from clojure.core
 		srcNS := lang.FindOrCreateNamespace(sym_clojure_DOT_core)
 		ns.ReferAllSnapshot(srcNS, []string{
+			"*loaded-libs*",
+			"*loading-verbosely*",
+			"*pending-paths*",
 			"-protocols",
 			">0?",
 			">1?",
@@ -1010,7 +1017,7 @@ func LoadNS() {
 			tmp0 = lang.FnFunc1(func(p0 any) any {
 				v2 := p0
 				_ = v2
-				tmp3 := aotDirectFn67(v2)
+				tmp3 := aotDirectFn68(v2)
 				tmp4 := kw_m.Invoke1(tmp3)
 				return tmp4
 			})
@@ -1153,7 +1160,7 @@ func LoadNS() {
 		tmp0 = lang.FnFunc1(func(p0 any) any {
 			v1 := p0
 			_ = v1
-			tmp2 := aotDirectFn65(v1)
+			tmp2 := aotDirectFn66(v1)
 			return tmp2
 		})
 		closed18 = tmp0
@@ -1171,7 +1178,7 @@ func LoadNS() {
 			tmp0 = lang.FnFunc1(func(p0 any) any {
 				v2 := p0
 				_ = v2
-				tmp3 := aotDirectFn67(v2)
+				tmp3 := aotDirectFn68(v2)
 				tmp4 := kw_t.Invoke1(tmp3)
 				return tmp4
 			})
@@ -1212,7 +1219,7 @@ func LoadNS() {
 		tmp0 = lang.FnFunc1(func(p0 any) any {
 			v1 := p0
 			_ = v1
-			tmp2 := aotDirectFn27(v1)
+			tmp2 := aotDirectFn28(v1)
 			return tmp2
 		})
 		closed8 = tmp0
@@ -1455,7 +1462,7 @@ func LoadNS() {
 													} else {
 														tmp41 := runtime.RT.Nth(v9, lang.IntCast(v31))
 														tmp42 := runtime.RT.IntCast(tmp41)
-														tmp43 := aotDirectFn33(tmp42, v3, v19)
+														tmp43 := aotDirectFn34(tmp42, v3, v19)
 														tmp37 = tmp43
 													}
 													tmp34 = tmp37
@@ -1633,7 +1640,7 @@ func LoadNS() {
 										} else {
 											tmp35 := runtime.RT.Nth(v9, lang.IntCast(v20))
 											tmp36 := runtime.RT.IntCast(tmp35)
-											tmp37 := aotDirectFn33(tmp36, v3, v15)
+											tmp37 := aotDirectFn34(tmp36, v3, v15)
 											tmp30 = tmp37
 										}
 										tmp26 = tmp30
@@ -1673,7 +1680,7 @@ func LoadNS() {
 			tmp5 := checkDerefVar(var_yaml_DASH_parser_DOT_parser_GATE)
 			if lang.IsTruthy(tmp5) {
 				var tmp6 any
-				tmp7 := aotDirectFn74(v2)
+				tmp7 := aotDirectFn75(v2)
 				if lang.IsTruthy(tmp7) {
 				} else {
 					var tmp8 any
@@ -1920,7 +1927,7 @@ func LoadNS() {
 					v5 := p0
 					_ = v5
 					var tmp6 any
-					tmp7 := aotDirectFn74(v5)
+					tmp7 := aotDirectFn75(v5)
 					if lang.IsTruthy(tmp7) {
 					} else {
 						var tmp8 any
@@ -1946,7 +1953,7 @@ func LoadNS() {
 								var tmp23 any
 								{ // let
 									// let binding "and__0__auto__"
-									tmp24 := aotDirectFn74(v5)
+									tmp24 := aotDirectFn75(v5)
 									tmp25 := aotExternalFn15(tmp24)
 									var v26 any = tmp25
 									_ = v26
@@ -2000,7 +2007,7 @@ func LoadNS() {
 				_ = v4
 			}
 			tmp4 := aotExternalFn2("brk", tmp3, "brk")
-			tmp5 := aotDirectFn36(tmp4)
+			tmp5 := aotDirectFn37(tmp4)
 			return tmp5
 		})
 		aotDirectFn9 = tmp1
@@ -2031,7 +2038,7 @@ func LoadNS() {
 						v6 := p0
 						_ = v6
 						var tmp7 any
-						tmp8 := aotDirectFn74(v6)
+						tmp8 := aotDirectFn75(v6)
 						if lang.IsTruthy(tmp8) {
 						} else {
 							var tmp9 any
@@ -2187,7 +2194,7 @@ func LoadNS() {
 		tmp0 := sym_callback_DASH_rules
 		var_yaml_DASH_parser_DOT_parser_callback_DASH_rules = ns.InternWithValue(tmp0, lang.NewSet("s_white", "c_document_end", "ns_l_block_map_implicit_entry", "c_double_quoted", "ns_yaml_version", "c_l_folded", "c_ns_alias_node", "ns_flow_pair", "ns_l_compact_mapping", "c_directives_end", "e_scalar", "ns_l_compact_sequence", "s_nb_spaced_text", "l_block_mapping", "c_flow_mapping", "c_single_quoted", "ns_char", "ns_plain", "l_nb_literal_text", "l_yaml_stream", "c_l_block_map_explicit_entry", "c_tag_handle", "c_flow_sequence", "c_ns_anchor_property", "s_l_block_collection", "l_block_sequence", "c_ns_flow_map_empty_key_entry", "ns_tag_prefix", "s_nb_folded_text", "c_l_literal", "c_ns_tag_property", "l_empty"), true)
 		var_yaml_DASH_parser_DOT_parser_callback_DASH_rules.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMap(kw_private, true, kw_file, "yaml_parser/parser.glj", kw_line, int(147), kw_column, int(6), kw_end_DASH_line, int(147), kw_end_DASH_column, int(29), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
+			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(147), kw_column, int(6), kw_end_DASH_line, int(147), kw_end_DASH_column, int(29), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
 		})
 	}
 	// case-at
@@ -2294,7 +2301,7 @@ func LoadNS() {
 		tmp0 := sym_cb_DASH_dispatch_DASH_cache
 		var_yaml_DASH_parser_DOT_parser_cb_DASH_dispatch_DASH_cache = ns.InternWithValue(tmp0, lang.NewVolatile(lang.NewMap()), true)
 		var_yaml_DASH_parser_DOT_parser_cb_DASH_dispatch_DASH_cache.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMap(kw_private, true, kw_file, "yaml_parser/parser.glj", kw_line, int(1745), kw_column, int(6), kw_end_DASH_line, int(1745), kw_end_DASH_column, int(32), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
+			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1745), kw_column, int(6), kw_end_DASH_line, int(1745), kw_end_DASH_column, int(32), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
 		})
 	}
 	// chars
@@ -2319,7 +2326,7 @@ func LoadNS() {
 						v9 := p0
 						_ = v9
 						var tmp10 any
-						tmp11 := aotDirectFn74(v9)
+						tmp11 := aotDirectFn75(v9)
 						if lang.IsTruthy(tmp11) {
 						} else {
 							var tmp12 any
@@ -2390,7 +2397,7 @@ func LoadNS() {
 					_ = v8
 				}
 				tmp8 := aotExternalFn2("chars", tmp7, "chars")
-				tmp9 := aotDirectFn36(tmp8)
+				tmp9 := aotDirectFn37(tmp8)
 				tmp4 = tmp9
 			} // end let
 			return tmp4
@@ -2460,7 +2467,7 @@ func LoadNS() {
 							var v24 any = tmp23
 							_ = v24
 							// let binding "doc"
-							tmp25 := aotDirectFn67(v12)
+							tmp25 := aotDirectFn68(v12)
 							tmp26 := kw_doc.Invoke1(tmp25)
 							var v27 any = tmp26
 							_ = v27
@@ -2679,7 +2686,7 @@ func LoadNS() {
 					_ = v11
 				}
 				tmp11 := aotExternalFn2(v6, tmp10, v6)
-				tmp12 := aotDirectFn36(tmp11)
+				tmp12 := aotDirectFn37(tmp11)
 				tmp7 = tmp12
 			} // end let
 			return tmp7
@@ -2790,7 +2797,7 @@ func LoadNS() {
 		tmp0 := sym_chr_DASH_cache
 		var_yaml_DASH_parser_DOT_parser_chr_DASH_cache = ns.InternWithValue(tmp0, lang.NewVolatile(lang.NewMap()), true)
 		var_yaml_DASH_parser_DOT_parser_chr_DASH_cache.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMap(kw_private, true, kw_file, "yaml_parser/parser.glj", kw_line, int(1185), kw_column, int(6), kw_end_DASH_line, int(1185), kw_end_DASH_column, int(24), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
+			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1185), kw_column, int(6), kw_end_DASH_line, int(1185), kw_end_DASH_column, int(24), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
 		})
 	}
 	// comments-scan
@@ -2821,7 +2828,7 @@ func LoadNS() {
 							tmp12 := aotExternalFn7(tmp11)
 							tmp13 := kw_end.Invoke1(v9)
 							tmp14 := aotExternalFn7(tmp13)
-							tmp15 := aotDirectFn67(v9)
+							tmp15 := aotDirectFn68(v9)
 							tmp16 := kw_doc.Invoke1(tmp15)
 							tmp17 := kw_pos.Invoke1(v9)
 							tmp18 := aotExternalFn7(tmp17)
@@ -2851,7 +2858,7 @@ func LoadNS() {
 					_ = v8
 				}
 				tmp8 := aotExternalFn2("comments+", tmp7, "comments+")
-				tmp9 := aotDirectFn36(tmp8)
+				tmp9 := aotDirectFn37(tmp8)
 				tmp4 = tmp9
 			} // end let
 			return tmp4
@@ -3106,7 +3113,7 @@ func LoadNS() {
 										var v29 any = tmp28
 										_ = v29
 										var tmp30 any
-										tmp31 := aotDirectFn33(v29, v5, v6)
+										tmp31 := aotDirectFn34(v29, v5, v6)
 										if lang.IsTruthy(tmp31) {
 											tmp33 := lang.Numbers.Add(v23, int64(1))
 											var tmp32 any = tmp33
@@ -3344,6 +3351,220 @@ func LoadNS() {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(107), kw_column, int(6), kw_end_DASH_line, int(107), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
 		})
 	}
+	// doc-end-marker?
+	{
+		tmp0 := sym_doc_DASH_end_DASH_marker_QMARK_
+		var tmp1 lang.FnFunc2
+		tmp1 = lang.FnFunc2(func(p0, p1 any) any {
+			v2 := p0
+			_ = v2
+			v3 := p1
+			_ = v3
+			var tmp4 any
+			{ // let
+				// let binding "len"
+				tmp5, ok := lang.FieldOrMethod(v2, "length")
+				if !ok {
+					panic(lang.NewIllegalArgumentError(fmt.Sprintf("no such field or method on %T: %s", v2, "length")))
+				}
+				var tmp6 any
+				switch reflect.TypeOf(tmp5).Kind() {
+				case reflect.Func:
+					tmp6 = lang.Apply(tmp5, nil)
+				default:
+					tmp6 = tmp5
+				}
+				var v7 any = tmp6
+				_ = v7
+				var tmp8 any
+				{ // let
+					// let binding "and__0__auto__"
+					tmp9 := lang.Numbers.Add(v3, int64(3))
+					tmp10 := lang.Numbers.Lte(tmp9, v7)
+					var v11 any = tmp10
+					_ = v11
+					var tmp12 any
+					if lang.IsTruthy(v11) {
+						var tmp13 any
+						{ // let
+							// let binding "and__0__auto__"
+							var tmp14 any
+							{ // let
+								// let binding "c"
+								tmp15 := lang.Apply2(lang.CharAt, v2, v3)
+								var v16 any = tmp15
+								_ = v16
+								var tmp17 any
+								{ // let
+									// let binding "and__0__auto__"
+									var tmp18 any
+									{ // let
+										// let binding "or__0__auto__"
+										tmp19 := aotExternalFn10(v16, lang.NewChar(45))
+										var v20 any = tmp19
+										_ = v20
+										var tmp21 any
+										if lang.IsTruthy(v20) {
+											tmp21 = v20
+										} else {
+											tmp22 := aotExternalFn10(v16, lang.NewChar(46))
+											tmp21 = tmp22
+										}
+										tmp18 = tmp21
+									} // end let
+									var v19 any = tmp18
+									_ = v19
+									var tmp20 any
+									if lang.IsTruthy(v19) {
+										var tmp21 any
+										{ // let
+											// let binding "and__0__auto__"
+											tmp22 := lang.Numbers.Inc(v3)
+											tmp23 := lang.Apply2(lang.CharAt, v2, tmp22)
+											tmp24 := aotExternalFn10(v16, tmp23)
+											var v25 any = tmp24
+											_ = v25
+											var tmp26 any
+											if lang.IsTruthy(v25) {
+												tmp27 := lang.Numbers.Add(v3, int64(2))
+												tmp28 := lang.Apply2(lang.CharAt, v2, tmp27)
+												tmp29 := aotExternalFn10(v16, tmp28)
+												tmp26 = tmp29
+											} else {
+												tmp26 = v25
+											}
+											tmp21 = tmp26
+										} // end let
+										tmp20 = tmp21
+									} else {
+										tmp20 = v19
+									}
+									tmp17 = tmp20
+								} // end let
+								tmp14 = tmp17
+							} // end let
+							var v15 any = tmp14
+							_ = v15
+							var tmp16 any
+							if lang.IsTruthy(v15) {
+								var tmp17 any
+								{ // let
+									// let binding "or__0__auto__"
+									tmp18 := lang.Numbers.Add(v3, int64(3))
+									tmp19 := aotExternalFn10(tmp18, v7)
+									var v20 any = tmp19
+									_ = v20
+									var tmp21 any
+									if lang.IsTruthy(v20) {
+										tmp21 = v20
+									} else {
+										var tmp22 any
+										{ // let
+											// let binding "c"
+											tmp23 := lang.Numbers.Add(v3, int64(3))
+											tmp24 := lang.Apply2(lang.CharAt, v2, tmp23)
+											var v25 any = tmp24
+											_ = v25
+											var tmp26 any
+											{ // let
+												// let binding "or__0__auto__"
+												tmp27 := aotExternalFn10(v25, lang.NewChar(32))
+												var v28 any = tmp27
+												_ = v28
+												var tmp29 any
+												if lang.IsTruthy(v28) {
+													tmp29 = v28
+												} else {
+													var tmp30 any
+													{ // let
+														// let binding "or__0__auto__"
+														tmp31 := aotExternalFn10(v25, lang.NewChar(9))
+														var v32 any = tmp31
+														_ = v32
+														var tmp33 any
+														if lang.IsTruthy(v32) {
+															tmp33 = v32
+														} else {
+															var tmp34 any
+															{ // let
+																// let binding "or__0__auto__"
+																tmp35 := aotExternalFn10(v25, lang.NewChar(10))
+																var v36 any = tmp35
+																_ = v36
+																var tmp37 any
+																if lang.IsTruthy(v36) {
+																	tmp37 = v36
+																} else {
+																	var tmp38 any
+																	{ // let
+																		// let binding "or__0__auto__"
+																		tmp39 := aotExternalFn10(v25, lang.NewChar(13))
+																		var v40 any = tmp39
+																		_ = v40
+																		var tmp41 any
+																		if lang.IsTruthy(v40) {
+																			tmp41 = v40
+																		} else {
+																			var tmp42 any
+																			{ // let
+																				// let binding "or__0__auto__"
+																				tmp43 := aotExternalFn10(v25, lang.NewChar(12))
+																				var v44 any = tmp43
+																				_ = v44
+																				var tmp45 any
+																				if lang.IsTruthy(v44) {
+																					tmp45 = v44
+																				} else {
+																					tmp46 := runtime.RT.CharCast(int64(11))
+																					tmp47 := aotExternalFn10(v25, tmp46)
+																					tmp45 = tmp47
+																				}
+																				tmp42 = tmp45
+																			} // end let
+																			tmp41 = tmp42
+																		}
+																		tmp38 = tmp41
+																	} // end let
+																	tmp37 = tmp38
+																}
+																tmp34 = tmp37
+															} // end let
+															tmp33 = tmp34
+														}
+														tmp30 = tmp33
+													} // end let
+													tmp29 = tmp30
+												}
+												tmp26 = tmp29
+											} // end let
+											tmp22 = tmp26
+										} // end let
+										tmp21 = tmp22
+									}
+									tmp17 = tmp21
+								} // end let
+								tmp16 = tmp17
+							} else {
+								tmp16 = v15
+							}
+							tmp13 = tmp16
+						} // end let
+						tmp12 = tmp13
+					} else {
+						tmp12 = v11
+					}
+					tmp8 = tmp12
+				} // end let
+				tmp4 = tmp8
+			} // end let
+			return tmp4
+		})
+		aotDirectFn23 = tmp1
+		var_yaml_DASH_parser_DOT_parser_doc_DASH_end_DASH_marker_QMARK_ = ns.InternWithValue(tmp0, tmp1, true)
+		var_yaml_DASH_parser_DOT_parser_doc_DASH_end_DASH_marker_QMARK_.SetMetaLazy(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yaml_parser/parser.glj", kw_line, int(533), kw_column, int(11), kw_end_DASH_line, int(533), kw_end_DASH_column, int(25), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_input, sym_pos)), kw_doc, "True when input at pos starts with --- or ... followed by\n     whitespace or end of input. Equivalent to the regex\n     ^(?:---|\\.\\.\\.)((?=\\s)|$) without the per-call pattern\n     compile and full-suffix substring.", kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
+		})
+	}
 	// dquo-scan
 	{
 		tmp0 := sym_dquo_DASH_scan
@@ -3393,7 +3614,7 @@ func LoadNS() {
 							var v24 any = tmp23
 							_ = v24
 							// let binding "doc"
-							tmp25 := aotDirectFn67(v16)
+							tmp25 := aotDirectFn68(v16)
 							tmp26 := kw_doc.Invoke1(tmp25)
 							var v27 any = tmp26
 							_ = v27
@@ -3530,7 +3751,7 @@ func LoadNS() {
 														tmp56 = int64(0)
 													} else {
 														var tmp58 any
-														tmp59 := aotDirectFn33(v55, v4, v11)
+														tmp59 := aotDirectFn34(v55, v4, v11)
 														if lang.IsTruthy(tmp59) {
 															tmp58 = int64(2)
 														} else {
@@ -3544,7 +3765,7 @@ func LoadNS() {
 																var tmp64 any
 																if lang.IsTruthy(v63) {
 																	tmp65 := lang.Numbers.Inc(v50)
-																	tmp66 := aotDirectFn54(v20, tmp65, int64(2), v24, v5, v13)
+																	tmp66 := aotDirectFn55(v20, tmp65, int64(2), v24, v5, v13)
 																	tmp64 = tmp66
 																} else {
 																	tmp64 = v63
@@ -3564,7 +3785,7 @@ func LoadNS() {
 																	var tmp66 any
 																	if lang.IsTruthy(v65) {
 																		tmp67 := lang.Numbers.Inc(v50)
-																		tmp68 := aotDirectFn54(v20, tmp67, int64(4), v24, v5, v13)
+																		tmp68 := aotDirectFn55(v20, tmp67, int64(4), v24, v5, v13)
 																		tmp66 = tmp68
 																	} else {
 																		tmp66 = v65
@@ -3584,7 +3805,7 @@ func LoadNS() {
 																		var tmp68 any
 																		if lang.IsTruthy(v67) {
 																			tmp69 := lang.Numbers.Inc(v50)
-																			tmp70 := aotDirectFn54(v20, tmp69, int64(8), v24, v5, v13)
+																			tmp70 := aotDirectFn55(v20, tmp69, int64(8), v24, v5, v13)
 																			tmp68 = tmp70
 																		} else {
 																			tmp68 = v67
@@ -3625,7 +3846,7 @@ func LoadNS() {
 												tmp46 = tmp48
 											} else {
 												var tmp49 any
-												tmp50 := aotDirectFn33(v45, v3, v9)
+												tmp50 := aotDirectFn34(v45, v3, v9)
 												if lang.IsTruthy(tmp50) {
 													var tmp51 any
 													{ // let
@@ -3701,12 +3922,12 @@ func LoadNS() {
 					_ = v15
 				}
 				tmp15 := aotExternalFn2("dquo+", tmp14, "dquo+")
-				tmp16 := aotDirectFn36(tmp15)
+				tmp16 := aotDirectFn37(tmp15)
 				tmp7 = tmp16
 			} // end let
 			return tmp7
 		})
-		aotDirectFn23 = tmp1
+		aotDirectFn24 = tmp1
 		var_yaml_DASH_parser_DOT_parser_dquo_DASH_scan = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_dquo_DASH_scan.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(885), kw_column, int(7), kw_end_DASH_line, int(885), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_ranges, sym_esc, sym_hex, sym_keep)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -3726,7 +3947,7 @@ func LoadNS() {
 			tmp7 := lang.Numbers.Gte(tmp4, tmp6)
 			return tmp7
 		})
-		aotDirectFn27 = tmp1
+		aotDirectFn28 = tmp1
 		var_yaml_DASH_parser_DOT_parser_end_DASH_of_DASH_stream_STAR_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_end_DASH_of_DASH_stream_STAR_.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(529), kw_column, int(7), kw_end_DASH_line, int(529), kw_end_DASH_column, int(20), kw_arglists, lang.NewList(lang.NewVector(sym_parser)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -3755,7 +3976,7 @@ func LoadNS() {
 			tmp5 := aotExternalFn2("exclude", tmp4, "exclude")
 			return tmp5
 		})
-		aotDirectFn29 = tmp1
+		aotDirectFn30 = tmp1
 		var_yaml_DASH_parser_DOT_parser_exclude = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_exclude.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1517), kw_column, int(7), kw_end_DASH_line, int(1517), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_rule)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -3798,7 +4019,7 @@ func LoadNS() {
 			} // end let
 			return tmp5
 		})
-		aotDirectFn30 = tmp1
+		aotDirectFn31 = tmp1
 		var_yaml_DASH_parser_DOT_parser_flip = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_flip.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1469), kw_column, int(7), kw_end_DASH_line, int(1469), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_var, sym_map)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -3979,7 +4200,7 @@ func LoadNS() {
 			}
 			return tmp5
 		})
-		aotDirectFn31 = tmp1
+		aotDirectFn32 = tmp1
 		var_yaml_DASH_parser_DOT_parser_frame_DASH_node = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_frame_DASH_node.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yaml_parser/parser.glj", kw_line, int(230), kw_column, int(8), kw_end_DASH_line, int(230), kw_end_DASH_column, int(17), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_parent_DASH_node, sym_name)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -3990,7 +4211,7 @@ func LoadNS() {
 		tmp0 := sym_frame_DASH_required_DASH_rules
 		var_yaml_DASH_parser_DOT_parser_frame_DASH_required_DASH_rules = ns.InternWithValue(tmp0, lang.NewSet("ns_flow_yaml_content", "l_bare_document", "ns_flow_map_entry", "c_ns_flow_map_json_key_entry", "ns_flow_pair_yaml_key_entry", "c_ns_flow_pair_json_key_entry", "ns_flow_map_implicit_entry", "c_flow_json_node", "c_double_quoted", "c_ns_flow_map_adjacent_value", "ns_flow_pair", "ns_s_flow_map_entries", "ns_s_flow_seq_entries", "ns_s_implicit_yaml_key", "c_ns_flow_map_separate_value", "s_l_block_scalar", "ns_flow_pair_entry", "c_flow_mapping", "l_literal_content", "c_single_quoted", "s_l_flow_in_block", "ns_plain", "ns_flow_yaml_node", "c_flow_json_content", "l_folded_content", "c_flow_sequence", "ns_flow_content", "c_s_implicit_json_key", "ns_flow_map_yaml_key_entry", "c_ns_flow_map_empty_key_entry", "ns_flow_node", "ns_flow_map_explicit_entry", "ns_flow_seq_entry"), true)
 		var_yaml_DASH_parser_DOT_parser_frame_DASH_required_DASH_rules.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMap(kw_private, true, kw_file, "yaml_parser/parser.glj", kw_line, int(183), kw_column, int(6), kw_end_DASH_line, int(183), kw_end_DASH_column, int(35), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
+			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(183), kw_column, int(6), kw_end_DASH_line, int(183), kw_end_DASH_column, int(35), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
 		})
 	}
 	// full-frame-clears
@@ -3998,7 +4219,7 @@ func LoadNS() {
 		tmp0 := sym_full_DASH_frame_DASH_clears
 		var_yaml_DASH_parser_DOT_parser_full_DASH_frame_DASH_clears = ns.InternWithValue(tmp0, lang.NewSet("l_literal_content", "l_folded_content"), true)
 		var_yaml_DASH_parser_DOT_parser_full_DASH_frame_DASH_clears.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMap(kw_private, true, kw_file, "yaml_parser/parser.glj", kw_line, int(172), kw_column, int(6), kw_end_DASH_line, int(172), kw_end_DASH_column, int(32), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
+			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(172), kw_column, int(6), kw_end_DASH_line, int(172), kw_end_DASH_column, int(32), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
 		})
 	}
 	// full-frame-roots
@@ -4006,7 +4227,7 @@ func LoadNS() {
 		tmp0 := sym_full_DASH_frame_DASH_roots
 		var_yaml_DASH_parser_DOT_parser_full_DASH_frame_DASH_roots = ns.InternWithValue(tmp0, lang.NewSet("s_l_block_scalar"), true)
 		var_yaml_DASH_parser_DOT_parser_full_DASH_frame_DASH_roots.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMap(kw_private, true, kw_file, "yaml_parser/parser.glj", kw_line, int(167), kw_column, int(6), kw_end_DASH_line, int(167), kw_end_DASH_column, int(31), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
+			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(167), kw_column, int(6), kw_end_DASH_line, int(167), kw_end_DASH_column, int(31), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
 		})
 	}
 	// grammar-top
@@ -4020,7 +4241,7 @@ func LoadNS() {
 		})
 		var_yaml_DASH_parser_DOT_parser_grammar_DASH_top = ns.InternWithValue(tmp0, lang.NewDelay(tmp1), true)
 		var_yaml_DASH_parser_DOT_parser_grammar_DASH_top.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMap(kw_private, true, kw_file, "yaml_parser/parser.glj", kw_line, int(1769), kw_column, int(6), kw_end_DASH_line, int(1769), kw_end_DASH_column, int(26), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
+			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1769), kw_column, int(6), kw_end_DASH_line, int(1769), kw_end_DASH_column, int(26), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
 		})
 	}
 	// if*
@@ -4071,7 +4292,7 @@ func LoadNS() {
 			tmp6 := aotExternalFn2("if", tmp5, "if")
 			return tmp6
 		})
-		aotDirectFn32 = tmp1
+		aotDirectFn33 = tmp1
 		var_yaml_DASH_parser_DOT_parser_if_STAR_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_if_STAR_.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1575), kw_column, int(7), kw_end_DASH_line, int(1575), kw_end_DASH_column, int(9), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_test, sym_do_DASH_if_DASH_true)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -4134,7 +4355,7 @@ func LoadNS() {
 			} // end let
 			return tmp5
 		})
-		aotDirectFn33 = tmp1
+		aotDirectFn34 = tmp1
 		var_yaml_DASH_parser_DOT_parser_in_DASH_ranges_QMARK_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_in_DASH_ranges_QMARK_.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yaml_parser/parser.glj", kw_line, int(572), kw_column, int(8), kw_end_DASH_line, int(572), kw_end_DASH_column, int(17), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_cp, sym_ranges, sym_n)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -4222,10 +4443,10 @@ func LoadNS() {
 				_ = v5
 			}
 			tmp5 := aotExternalFn2("indent-cmp", tmp4, "indent-cmp")
-			tmp6 := aotDirectFn36(tmp5)
+			tmp6 := aotDirectFn37(tmp5)
 			return tmp6
 		})
-		aotDirectFn34 = tmp1
+		aotDirectFn35 = tmp1
 		var_yaml_DASH_parser_DOT_parser_indent_DASH_cmp = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_indent_DASH_cmp.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(959), kw_column, int(7), kw_end_DASH_line, int(959), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_consume)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -4300,7 +4521,7 @@ func LoadNS() {
 			} // end let
 			return tmp5
 		})
-		aotDirectFn35 = tmp1
+		aotDirectFn36 = tmp1
 		var_yaml_DASH_parser_DOT_parser_le = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_le.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1595), kw_column, int(7), kw_end_DASH_line, int(1595), kw_end_DASH_column, int(8), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_x, sym_y)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -4314,7 +4535,7 @@ func LoadNS() {
 		tmp2 = func(tmp3 int64) (int64, bool) {
 			return tmp3, true
 		}
-		aotInt64Fn36 = tmp2
+		aotInt64Fn37 = tmp2
 		tmp1 = lang.FnFunc1(func(p0 any) any {
 			tmp4, tmp5 := p0.(int64)
 			if tmp5 {
@@ -4326,7 +4547,7 @@ func LoadNS() {
 			_ = v8
 			return v8
 		})
-		aotDirectFn36 = tmp1
+		aotDirectFn37 = tmp1
 		var_yaml_DASH_parser_DOT_parser_leaf_STAR_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_leaf_STAR_.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(707), kw_column, int(7), kw_end_DASH_line, int(707), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_f)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -4371,7 +4592,7 @@ func LoadNS() {
 			tmp5 := aotExternalFn2("len", tmp4, "len")
 			return tmp5
 		})
-		aotDirectFn37 = tmp1
+		aotDirectFn38 = tmp1
 		var_yaml_DASH_parser_DOT_parser_len = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_len.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1561), kw_column, int(7), kw_end_DASH_line, int(1561), kw_end_DASH_column, int(9), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_str_DASH_val)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -4446,7 +4667,7 @@ func LoadNS() {
 			} // end let
 			return tmp5
 		})
-		aotDirectFn38 = tmp1
+		aotDirectFn39 = tmp1
 		var_yaml_DASH_parser_DOT_parser_lt = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_lt.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1586), kw_column, int(7), kw_end_DASH_line, int(1586), kw_end_DASH_column, int(8), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_x, sym_y)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -4498,7 +4719,7 @@ func LoadNS() {
 			} // end let
 			return tmp3
 		})
-		aotDirectFn41 = tmp1
+		aotDirectFn42 = tmp1
 		var_yaml_DASH_parser_DOT_parser_make_DASH_parser = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_make_DASH_parser.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(111), kw_column, int(7), kw_end_DASH_line, int(111), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_receiver)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -4542,7 +4763,7 @@ func LoadNS() {
 			} // end let
 			return tmp4
 		})
-		aotDirectFn44 = tmp1
+		aotDirectFn45 = tmp1
 		var_yaml_DASH_parser_DOT_parser_max_STAR_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_max_STAR_.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1511), kw_column, int(7), kw_end_DASH_line, int(1511), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_max_DASH_val)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -4573,7 +4794,7 @@ func LoadNS() {
 			tmp5 := aotExternalFn2("may", tmp4, "may")
 			return tmp5
 		})
-		aotDirectFn45 = tmp1
+		aotDirectFn46 = tmp1
 		var_yaml_DASH_parser_DOT_parser_may = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_may.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1348), kw_column, int(7), kw_end_DASH_line, int(1348), kw_end_DASH_column, int(9), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_func)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -4611,7 +4832,7 @@ func LoadNS() {
 			} // end let
 			return tmp5
 		})
-		aotDirectFn46 = tmp1
+		aotDirectFn47 = tmp1
 		var_yaml_DASH_parser_DOT_parser_memo_DASH_delta = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_memo_DASH_delta.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yaml_parser/parser.glj", kw_line, int(325), kw_column, int(8), kw_end_DASH_line, int(325), kw_end_DASH_column, int(17), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_receiver, sym_top_QMARK_, sym_base)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -4641,7 +4862,7 @@ func LoadNS() {
 			}
 			return tmp4
 		})
-		aotDirectFn47 = tmp1
+		aotDirectFn48 = tmp1
 		var_yaml_DASH_parser_DOT_parser_memo_DASH_frame_DASH_len = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_memo_DASH_frame_DASH_len.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yaml_parser/parser.glj", kw_line, int(320), kw_column, int(8), kw_end_DASH_line, int(320), kw_end_DASH_column, int(21), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_receiver, sym_top_QMARK_)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -4701,12 +4922,12 @@ func LoadNS() {
 			}
 			_ = tmp9
 			tmp25 := kw_exit_DASH_vols.Invoke1(v5)
-			tmp26 := aotDirectFn49(v3, tmp25)
+			tmp26 := aotDirectFn50(v3, tmp25)
 			_ = tmp26
 			tmp27 := kw_value.Invoke1(v5)
 			return tmp27
 		})
-		aotDirectFn48 = tmp1
+		aotDirectFn49 = tmp1
 		var_yaml_DASH_parser_DOT_parser_memo_DASH_replay_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_memo_DASH_replay_BANG_.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yaml_parser/parser.glj", kw_line, int(331), kw_column, int(8), kw_end_DASH_line, int(331), kw_end_DASH_column, int(19), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_receiver, sym_top_QMARK_, sym_hit)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -4717,7 +4938,7 @@ func LoadNS() {
 		tmp0 := sym_memo_DASH_rules
 		var_yaml_DASH_parser_DOT_parser_memo_DASH_rules = ns.InternWithValue(tmp0, lang.NewSet("ns_flow_yaml_content", "ns_flow_map_entry", "c_ns_flow_map_json_key_entry", "ns_flow_pair_yaml_key_entry", "c_ns_flow_pair_json_key_entry", "ns_flow_map_implicit_entry", "c_flow_json_node", "c_double_quoted", "c_ns_flow_map_adjacent_value", "ns_flow_pair", "ns_s_flow_map_entries", "ns_s_flow_seq_entries", "ns_s_implicit_yaml_key", "c_ns_flow_map_separate_value", "ns_flow_pair_entry", "c_flow_mapping", "c_single_quoted", "s_l_flow_in_block", "ns_plain", "ns_flow_yaml_node", "c_flow_json_content", "c_flow_sequence", "ns_flow_content", "c_s_implicit_json_key", "ns_flow_map_yaml_key_entry", "c_ns_flow_map_empty_key_entry", "ns_flow_node", "ns_flow_map_explicit_entry", "ns_flow_seq_entry"), true)
 		var_yaml_DASH_parser_DOT_parser_memo_DASH_rules.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMap(kw_private, true, kw_file, "yaml_parser/parser.glj", kw_line, int(46), kw_column, int(6), kw_end_DASH_line, int(46), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
+			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(46), kw_column, int(6), kw_end_DASH_line, int(46), kw_end_DASH_column, int(25), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
 		})
 	}
 	// memo-vol-keys
@@ -4725,7 +4946,7 @@ func LoadNS() {
 		tmp0 := sym_memo_DASH_vol_DASH_keys
 		var_yaml_DASH_parser_DOT_parser_memo_DASH_vol_DASH_keys = ns.InternWithValue(tmp0, lang.NewVector(kw_anchor, kw_tag, kw_tag_DASH_map, kw_tag_DASH_handle, kw_document_DASH_start, kw_document_DASH_end, kw_in_DASH_scalar, kw_first), true)
 		var_yaml_DASH_parser_DOT_parser_memo_DASH_vol_DASH_keys.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMap(kw_private, true, kw_file, "yaml_parser/parser.glj", kw_line, int(309), kw_column, int(6), kw_end_DASH_line, int(309), kw_end_DASH_column, int(28), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
+			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(309), kw_column, int(6), kw_end_DASH_line, int(309), kw_end_DASH_column, int(28), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
 		})
 	}
 	// memo-vols
@@ -4747,7 +4968,7 @@ func LoadNS() {
 			tmp5 := aotExternalFn30(tmp3, tmp4)
 			return tmp5
 		})
-		aotDirectFn50 = tmp1
+		aotDirectFn51 = tmp1
 		var_yaml_DASH_parser_DOT_parser_memo_DASH_vols = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_memo_DASH_vols.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yaml_parser/parser.glj", kw_line, int(313), kw_column, int(8), kw_end_DASH_line, int(313), kw_end_DASH_column, int(16), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_receiver)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -4794,7 +5015,7 @@ func LoadNS() {
 			tmp5 := aotExternalFn2("ord", tmp4, "ord")
 			return tmp5
 		})
-		aotDirectFn51 = tmp1
+		aotDirectFn52 = tmp1
 		var_yaml_DASH_parser_DOT_parser_ord = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_ord.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1568), kw_column, int(7), kw_end_DASH_line, int(1568), kw_end_DASH_column, int(9), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_str_DASH_val)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -4944,7 +5165,7 @@ func LoadNS() {
 				tmp24 := checkDerefVar(var_yaml_DASH_parser_DOT_parser_TRACE)
 				if lang.IsTruthy(tmp24) {
 					tmp25 := kw_trace_DASH_on.Invoke1(v2)
-					tmp26 := aotDirectFn76(v2)
+					tmp26 := aotDirectFn77(v2)
 					tmp27 := aotExternalFn15(tmp26)
 					tmp28 := aotExternalFn16(tmp25, tmp27)
 					tmp23 = tmp28
@@ -4965,7 +5186,7 @@ func LoadNS() {
 								if lang.CatchMatches(r, lang.Builtins["any"]) {
 									v34 := r
 									_ = v34
-									tmp35 := aotDirectFn75(v2)
+									tmp35 := aotDirectFn76(v2)
 									_ = tmp35
 									panic(v34)
 								} else {
@@ -4979,7 +5200,7 @@ func LoadNS() {
 							tmp35 := aotDirectFn12Arity2(v2, v32)
 							var v36 any = tmp35
 							_ = v36
-							tmp37 := aotDirectFn75(v2)
+							tmp37 := aotDirectFn76(v2)
 							_ = tmp37
 							var tmp38 any
 							if lang.IsTruthy(v36) {
@@ -5012,7 +5233,7 @@ func LoadNS() {
 			} // end let
 			return tmp4
 		})
-		aotDirectFn52 = tmp1
+		aotDirectFn53 = tmp1
 		var_yaml_DASH_parser_DOT_parser_parse = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_parse.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1775), kw_column, int(7), kw_end_DASH_line, int(1775), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_input)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -5059,7 +5280,7 @@ func LoadNS() {
 							var v20 any = tmp19
 							_ = v20
 							// let binding "doc"
-							tmp21 := aotDirectFn67(v12)
+							tmp21 := aotDirectFn68(v12)
 							tmp22 := kw_doc.Invoke1(tmp21)
 							var v23 any = tmp22
 							_ = v23
@@ -5201,7 +5422,7 @@ func LoadNS() {
 												var tmp39 any
 												{ // let
 													// let binding "and__0__auto__"
-													tmp40 := aotDirectFn33(v37, v3, v7)
+													tmp40 := aotDirectFn34(v37, v3, v7)
 													var v41 any = tmp40
 													_ = v41
 													var tmp42 any
@@ -5245,7 +5466,7 @@ func LoadNS() {
 																tmp47 := lang.Numbers.Dec(v31)
 																tmp48 := runtime.RT.Nth(v16, lang.IntCast(tmp47))
 																tmp49 := runtime.RT.IntCast(tmp48)
-																tmp50 := aotDirectFn33(tmp49, v4, v9)
+																tmp50 := aotDirectFn34(tmp49, v4, v9)
 																tmp46 = tmp50
 															} else {
 																tmp46 = v45
@@ -5275,7 +5496,7 @@ func LoadNS() {
 																	tmp52 := lang.Numbers.Inc(v31)
 																	tmp53 := runtime.RT.Nth(v16, lang.IntCast(tmp52))
 																	tmp54 := runtime.RT.IntCast(tmp53)
-																	tmp55 := aotDirectFn33(tmp54, v3, v7)
+																	tmp55 := aotDirectFn34(tmp54, v3, v7)
 																	tmp51 = tmp55
 																} else {
 																	tmp51 = v50
@@ -5328,12 +5549,12 @@ func LoadNS() {
 					_ = v11
 				}
 				tmp11 := aotExternalFn2("plain+", tmp10, "plain+")
-				tmp12 := aotDirectFn36(tmp11)
+				tmp12 := aotDirectFn37(tmp11)
 				tmp5 = tmp12
 			} // end let
 			return tmp5
 		})
-		aotDirectFn53 = tmp1
+		aotDirectFn54 = tmp1
 		var_yaml_DASH_parser_DOT_parser_plain_DASH_in_DASH_line = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_plain_DASH_in_DASH_line.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(730), kw_column, int(7), kw_end_DASH_line, int(730), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_safe, sym_ns_DASH_ranges)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -5384,7 +5605,7 @@ func LoadNS() {
 								if lang.IsTruthy(v18) {
 									tmp20 := runtime.RT.Nth(v2, lang.IntCast(v14))
 									tmp21 := runtime.RT.IntCast(tmp20)
-									tmp22 := aotDirectFn33(tmp21, v6, v7)
+									tmp22 := aotDirectFn34(tmp21, v6, v7)
 									tmp19 = tmp22
 								} else {
 									tmp19 = v18
@@ -5409,7 +5630,7 @@ func LoadNS() {
 			} // end let
 			return tmp8
 		})
-		aotDirectFn54 = tmp1
+		aotDirectFn55 = tmp1
 		var_yaml_DASH_parser_DOT_parser_range_DASH_run_QMARK_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_range_DASH_run_QMARK_.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yaml_parser/parser.glj", kw_line, int(856), kw_column, int(8), kw_end_DASH_line, int(856), kw_end_DASH_column, int(17), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_input, sym_from, sym_k, sym_end, sym_ranges, sym_n)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -5431,7 +5652,7 @@ func LoadNS() {
 			var tmp6 any
 			{ // let
 				// let binding "temp__0__auto__"
-				tmp7 := aotDirectFn67(v2)
+				tmp7 := aotDirectFn68(v2)
 				tmp8 := kw_node.Invoke1(tmp7)
 				tmp9 := kw_cbs.Invoke1(tmp8)
 				tmp10 := runtime.RT.Get(tmp9, v4)
@@ -5469,7 +5690,7 @@ func LoadNS() {
 							_ = v25
 							tmp26 := kw_receiver.Invoke1(v2)
 							tmp27 := aotExternalFn7(tmp26)
-							tmp28 := aotDirectFn67(v2)
+							tmp28 := aotDirectFn68(v2)
 							tmp29 := lang.NewMap(kw_text, v25, kw_state, tmp28, kw_start, v5)
 							tmp30 := lang.Apply2(v14, tmp27, tmp29)
 							tmp15 = tmp30
@@ -5483,7 +5704,7 @@ func LoadNS() {
 			} // end let
 			return tmp6
 		})
-		aotDirectFn55 = tmp1
+		aotDirectFn56 = tmp1
 		var_yaml_DASH_parser_DOT_parser_receive = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_receive.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(289), kw_column, int(7), kw_end_DASH_line, int(289), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_func, sym_type, sym_pos)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -5733,7 +5954,7 @@ func LoadNS() {
 			} // end let
 			return tmp6
 		})
-		aotDirectFn56 = tmp1
+		aotDirectFn57 = tmp1
 		var_yaml_DASH_parser_DOT_parser_rep = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_rep.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1355), kw_column, int(7), kw_end_DASH_line, int(1355), kw_end_DASH_column, int(9), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_min, sym_max, sym_func)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -5983,7 +6204,7 @@ func LoadNS() {
 			} // end let
 			return tmp6
 		})
-		aotDirectFn57 = tmp1
+		aotDirectFn58 = tmp1
 		var_yaml_DASH_parser_DOT_parser_rep2 = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_rep2.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1385), kw_column, int(7), kw_end_DASH_line, int(1385), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_min, sym_max, sym_func)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -5994,7 +6215,7 @@ func LoadNS() {
 		tmp0 := sym_rng_DASH_cache
 		var_yaml_DASH_parser_DOT_parser_rng_DASH_cache = ns.InternWithValue(tmp0, lang.NewVolatile(lang.NewMap()), true)
 		var_yaml_DASH_parser_DOT_parser_rng_DASH_cache.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMap(kw_private, true, kw_file, "yaml_parser/parser.glj", kw_line, int(1202), kw_column, int(6), kw_end_DASH_line, int(1202), kw_end_DASH_column, int(24), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
+			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1202), kw_column, int(6), kw_end_DASH_line, int(1202), kw_end_DASH_column, int(24), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
 		})
 	}
 	// scan-spaces
@@ -6046,7 +6267,7 @@ func LoadNS() {
 			} // end let
 			return tmp5
 		})
-		aotDirectFn59 = tmp1
+		aotDirectFn60 = tmp1
 		var_yaml_DASH_parser_DOT_parser_scan_DASH_spaces = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_scan_DASH_spaces.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yaml_parser/parser.glj", kw_line, int(1623), kw_column, int(8), kw_end_DASH_line, int(1623), kw_end_DASH_column, int(18), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_input, sym_pos, sym_len)), kw_doc, "Index of the first non-space char at or after pos.", kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -6186,10 +6407,10 @@ func LoadNS() {
 				_ = v4
 			}
 			tmp4 := aotExternalFn2("sep+", tmp3, "sep+")
-			tmp5 := aotDirectFn36(tmp4)
+			tmp5 := aotDirectFn37(tmp4)
 			return tmp5
 		})
-		aotDirectFn60 = tmp1
+		aotDirectFn61 = tmp1
 		var_yaml_DASH_parser_DOT_parser_sep_DASH_in_DASH_line = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_sep_DASH_in_DASH_line.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(974), kw_column, int(7), kw_end_DASH_line, int(974), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_parser)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -6313,7 +6534,7 @@ func LoadNS() {
 								var tmp28 any
 								{ // let
 									// let binding "temp__0__auto__"
-									tmp29 := aotDirectFn67(v12)
+									tmp29 := aotDirectFn68(v12)
 									tmp30 := kw_doc.Invoke1(tmp29)
 									tmp31 := aotDirectFn21(v16, v20, tmp30, v4, v7, v24)
 									var v32 any = tmp31
@@ -6451,12 +6672,12 @@ func LoadNS() {
 					_ = v11
 				}
 				tmp11 := aotExternalFn2("sep-lines", tmp10, "sep-lines")
-				tmp12 := aotDirectFn36(tmp11)
+				tmp12 := aotDirectFn37(tmp11)
 				tmp5 = tmp12
 			} // end let
 			return tmp5
 		})
-		aotDirectFn61 = tmp1
+		aotDirectFn62 = tmp1
 		var_yaml_DASH_parser_DOT_parser_sep_DASH_lines = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_sep_DASH_lines.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1119), kw_column, int(7), kw_end_DASH_line, int(1119), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_n, sym_nb_DASH_ranges)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -6642,7 +6863,7 @@ func LoadNS() {
 			} // end let
 			return tmp5
 		})
-		aotDirectFn62 = tmp1
+		aotDirectFn63 = tmp1
 		var_yaml_DASH_parser_DOT_parser_set_STAR_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_set_STAR_.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1477), kw_column, int(7), kw_end_DASH_line, int(1477), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_var, sym_expr)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -6685,7 +6906,7 @@ func LoadNS() {
 							var v18 any = tmp17
 							_ = v18
 							// let binding "doc"
-							tmp19 := aotDirectFn67(v10)
+							tmp19 := aotDirectFn68(v10)
 							tmp20 := kw_doc.Invoke1(tmp19)
 							var v21 any = tmp20
 							_ = v21
@@ -6832,7 +7053,7 @@ func LoadNS() {
 												tmp40 = tmp42
 											} else {
 												var tmp49 any
-												tmp50 := aotDirectFn33(v39, v3, v7)
+												tmp50 := aotDirectFn34(v39, v3, v7)
 												if lang.IsTruthy(tmp50) {
 													var tmp51 any
 													{ // let
@@ -6908,12 +7129,12 @@ func LoadNS() {
 					_ = v9
 				}
 				tmp9 := aotExternalFn2("squo+", tmp8, "squo+")
-				tmp10 := aotDirectFn36(tmp9)
+				tmp10 := aotDirectFn37(tmp9)
 				tmp5 = tmp10
 			} // end let
 			return tmp5
 		})
-		aotDirectFn63 = tmp1
+		aotDirectFn64 = tmp1
 		var_yaml_DASH_parser_DOT_parser_squo_DASH_scan = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_squo_DASH_scan.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(806), kw_column, int(7), kw_end_DASH_line, int(806), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_ranges, sym_keep)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -6975,7 +7196,7 @@ func LoadNS() {
 			} // end let
 			return tmp3
 		})
-		aotDirectFn65 = tmp1
+		aotDirectFn66 = tmp1
 		var_yaml_DASH_parser_DOT_parser_start_DASH_of_DASH_line_STAR_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_start_DASH_of_DASH_line_STAR_.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(522), kw_column, int(7), kw_end_DASH_line, int(522), kw_end_DASH_column, int(20), kw_arglists, lang.NewList(lang.NewVector(sym_parser)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -7008,7 +7229,7 @@ func LoadNS() {
 			} // end let
 			return tmp3
 		})
-		aotDirectFn67 = tmp1
+		aotDirectFn68 = tmp1
 		var_yaml_DASH_parser_DOT_parser_state_DASH_curr = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_state_DASH_curr.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(132), kw_column, int(7), kw_end_DASH_line, int(132), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_parser)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -7065,7 +7286,7 @@ func LoadNS() {
 			} // end let
 			return tmp3
 		})
-		aotDirectFn68 = tmp1
+		aotDirectFn69 = tmp1
 		var_yaml_DASH_parser_DOT_parser_state_DASH_pop = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_state_DASH_pop.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(276), kw_column, int(7), kw_end_DASH_line, int(276), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_parser)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -7099,7 +7320,7 @@ func LoadNS() {
 			} // end let
 			return tmp3
 		})
-		aotDirectFn69 = tmp1
+		aotDirectFn70 = tmp1
 		var_yaml_DASH_parser_DOT_parser_state_DASH_prev = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_state_DASH_prev.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(138), kw_column, int(7), kw_end_DASH_line, int(138), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_parser)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -7109,7 +7330,7 @@ func LoadNS() {
 	{
 		tmp0 := sym_state_DASH_push
 		var tmp1 lang.ArityFn
-		aotDirectFn70Arity2 = lang.FnFunc2(func(p0, p1 any) any {
+		aotDirectFn71Arity2 = lang.FnFunc2(func(p0, p1 any) any {
 			v2 := p0
 			_ = v2
 			v3 := p1
@@ -7117,17 +7338,17 @@ func LoadNS() {
 			var tmp4 any
 			{ // let
 				// let binding "curr"
-				tmp5 := aotDirectFn67(v2)
+				tmp5 := aotDirectFn68(v2)
 				var v6 any = tmp5
 				_ = v6
 				tmp7 := kw_node.Invoke1(v6)
-				tmp8 := aotDirectFn31(v2, tmp7, v3)
-				tmp9 := aotDirectFn70Arity4(v2, v3, false, tmp8)
+				tmp8 := aotDirectFn32(v2, tmp7, v3)
+				tmp9 := aotDirectFn71Arity4(v2, v3, false, tmp8)
 				tmp4 = tmp9
 			} // end let
 			return tmp4
 		})
-		aotDirectFn70Arity4 = lang.FnFunc4(func(p0, p1, p2, p3 any) any {
+		aotDirectFn71Arity4 = lang.FnFunc4(func(p0, p1, p2, p3 any) any {
 			v2 := p0
 			_ = v2
 			v3 := p1
@@ -7139,7 +7360,7 @@ func LoadNS() {
 			var tmp6 any
 			{ // let
 				// let binding "curr"
-				tmp7 := aotDirectFn67(v2)
+				tmp7 := aotDirectFn68(v2)
 				var v8 any = tmp7
 				_ = v8
 				tmp9 := kw_state.Invoke1(v2)
@@ -7185,13 +7406,13 @@ func LoadNS() {
 		tmp1 = lang.NewArityFn(
 			nil,
 			nil,
-			aotDirectFn70Arity2,
+			aotDirectFn71Arity2,
 			nil,
-			aotDirectFn70Arity4,
+			aotDirectFn71Arity4,
 			nil,
 			0,
 		)
-		aotDirectFn70 = tmp1
+		aotDirectFn71 = tmp1
 		var_yaml_DASH_parser_DOT_parser_state_DASH_push = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_state_DASH_push.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(255), kw_column, int(7), kw_end_DASH_line, int(255), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_name), lang.NewVector(sym_parser, sym_name, sym_doc, sym_node)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -7238,7 +7459,7 @@ func LoadNS() {
 			} // end let
 			return tmp5
 		})
-		aotDirectFn71 = tmp1
+		aotDirectFn72 = tmp1
 		var_yaml_DASH_parser_DOT_parser_sub = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_sub.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1532), kw_column, int(7), kw_end_DASH_line, int(1532), kw_end_DASH_column, int(9), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_x, sym_y)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -7254,7 +7475,7 @@ func LoadNS() {
 			var tmp3 any
 			{ // let
 				// let binding "or__0__auto__"
-				tmp4 := aotDirectFn27(v2)
+				tmp4 := aotDirectFn28(v2)
 				var v5 any = tmp4
 				_ = v5
 				var tmp6 any
@@ -7264,7 +7485,7 @@ func LoadNS() {
 					var tmp7 any
 					{ // let
 						// let binding "and__0__auto__"
-						tmp8 := aotDirectFn67(v2)
+						tmp8 := aotDirectFn68(v2)
 						tmp9 := kw_doc.Invoke1(tmp8)
 						var v10 any = tmp9
 						_ = v10
@@ -7273,7 +7494,7 @@ func LoadNS() {
 							var tmp12 any
 							{ // let
 								// let binding "and__0__auto__"
-								tmp13 := aotDirectFn65(v2)
+								tmp13 := aotDirectFn66(v2)
 								var v14 any = tmp13
 								_ = v14
 								var tmp15 any
@@ -7341,7 +7562,7 @@ func LoadNS() {
 			} // end let
 			return tmp3
 		})
-		aotDirectFn74 = tmp1
+		aotDirectFn75 = tmp1
 		var_yaml_DASH_parser_DOT_parser_the_DASH_end = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_the_DASH_end.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(552), kw_column, int(7), kw_end_DASH_line, int(552), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector(sym_parser)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -7356,7 +7577,7 @@ func LoadNS() {
 			_ = v2
 			return nil
 		})
-		aotDirectFn75 = tmp1
+		aotDirectFn76 = tmp1
 		var_yaml_DASH_parser_DOT_parser_trace_DASH_flush = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_trace_DASH_flush.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1814), kw_column, int(7), kw_end_DASH_line, int(1814), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_parser)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -7385,7 +7606,7 @@ func LoadNS() {
 			} // end let
 			return tmp3
 		})
-		aotDirectFn76 = tmp1
+		aotDirectFn77 = tmp1
 		var_yaml_DASH_parser_DOT_parser_trace_DASH_start = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_trace_DASH_start.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1811), kw_column, int(7), kw_end_DASH_line, int(1811), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_parser)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -7578,7 +7799,7 @@ func LoadNS() {
 								v18 := p0
 								_ = v18
 								var tmp19 any
-								tmp20 := aotDirectFn74(v18)
+								tmp20 := aotDirectFn75(v18)
 								if lang.IsTruthy(tmp20) {
 								} else {
 									var tmp21 any
@@ -7606,7 +7827,7 @@ func LoadNS() {
 							_ = v17
 						}
 						tmp17 := aotExternalFn2(v13, tmp16, v13)
-						tmp18 := aotDirectFn36(tmp17)
+						tmp18 := aotDirectFn37(tmp17)
 						var v19 any = tmp18
 						_ = v19
 						tmp20 := checkDerefVar(var_yaml_DASH_parser_DOT_parser_chr_DASH_cache)
@@ -7654,7 +7875,7 @@ func LoadNS() {
 			tmp7 := aotExternalFn52(tmp6)
 			return tmp7
 		})
-		aotDirectFn49 = tmp1
+		aotDirectFn50 = tmp1
 		var_yaml_DASH_parser_DOT_parser_memo_DASH_restore_DASH_vols_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_memo_DASH_restore_DASH_vols_BANG_.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yaml_parser/parser.glj", kw_line, int(316), kw_column, int(8), kw_end_DASH_line, int(316), kw_end_DASH_column, int(25), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_receiver, sym_vols)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -7710,7 +7931,7 @@ func LoadNS() {
 								v25 := p0
 								_ = v25
 								var tmp26 any
-								tmp27 := aotDirectFn74(v25)
+								tmp27 := aotDirectFn75(v25)
 								if lang.IsTruthy(tmp27) {
 								} else {
 									var tmp28 any
@@ -7766,7 +7987,7 @@ func LoadNS() {
 							_ = v24
 						}
 						tmp24 := aotExternalFn2(v16, tmp23, v16)
-						tmp25 := aotDirectFn36(tmp24)
+						tmp25 := aotDirectFn37(tmp24)
 						var v26 any = tmp25
 						_ = v26
 						tmp27 := checkDerefVar(var_yaml_DASH_parser_DOT_parser_rng_DASH_cache)
@@ -7785,7 +8006,7 @@ func LoadNS() {
 			} // end let
 			return tmp5
 		})
-		aotDirectFn58 = tmp1
+		aotDirectFn59 = tmp1
 		var_yaml_DASH_parser_DOT_parser_rng = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_rng.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1204), kw_column, int(7), kw_end_DASH_line, int(1204), kw_end_DASH_column, int(9), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_low, sym_high)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -7798,7 +8019,7 @@ func LoadNS() {
 		aotDirectFn7Arity1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := aotDirectFn67(v2)
+			tmp3 := aotDirectFn68(v2)
 			tmp4 := kw_m.Invoke1(tmp3)
 			tmp5 := aotDirectFn7Arity2(v2, tmp4)
 			return tmp5
@@ -7896,7 +8117,7 @@ func LoadNS() {
 							var tmp27 any
 							{ // let
 								// let binding "sp-end"
-								tmp28 := aotDirectFn59(v10, v25, v16)
+								tmp28 := aotDirectFn60(v10, v25, v16)
 								var v29 any = tmp28
 								_ = v29
 								var tmp30 any
@@ -8116,7 +8337,7 @@ func LoadNS() {
 						var tmp21 any
 						{ // let
 							// let binding "sp-end"
-							tmp22 := aotDirectFn59(v14, v20, v16)
+							tmp22 := aotDirectFn60(v14, v20, v16)
 							var v23 any = tmp22
 							_ = v23
 							// let binding "nl"
@@ -8375,12 +8596,12 @@ func LoadNS() {
 							var v24 any = tmp23
 							_ = v24
 							// let binding "curr"
-							tmp25 := aotDirectFn67(v2)
+							tmp25 := aotDirectFn68(v2)
 							var v26 any = tmp25
 							_ = v26
 							// let binding "node"
 							tmp27 := kw_node.Invoke1(v26)
-							tmp28 := aotDirectFn31(v2, tmp27, v24)
+							tmp28 := aotDirectFn32(v2, tmp27, v24)
 							var v29 any = tmp28
 							_ = v29
 							// let binding "fast"
@@ -8554,7 +8775,7 @@ func LoadNS() {
 										tmp44 = tmp46
 									} else {
 										tmp47 := aotExternalFn10(v24, "l_bare_document")
-										tmp48 := aotDirectFn70Arity4(v2, v24, tmp47, v29)
+										tmp48 := aotDirectFn71Arity4(v2, v24, tmp47, v29)
 										_ = tmp48
 										var tmp49 any
 										{ // let
@@ -8697,7 +8918,7 @@ func LoadNS() {
 											// let binding "memo-key"
 											var tmp71 any
 											if lang.IsTruthy(v65) {
-												tmp72 := aotDirectFn67(v2)
+												tmp72 := aotDirectFn68(v2)
 												tmp73 := kw_doc.Invoke1(tmp72)
 												tmp74 := runtime.RT.BooleanCast(tmp73)
 												tmp75 := lang.NewVector(v24, v58, v55, v70, tmp74)
@@ -8709,7 +8930,7 @@ func LoadNS() {
 											// let binding "entry-vols"
 											var tmp77 any
 											if lang.IsTruthy(v65) {
-												tmp78 := aotDirectFn50(v63)
+												tmp78 := aotDirectFn51(v63)
 												tmp77 = tmp78
 											} else {
 											}
@@ -8779,7 +9000,7 @@ func LoadNS() {
 											// let binding "value"
 											var tmp87 any
 											if lang.IsTruthy(v82) {
-												tmp88 := aotDirectFn48(v2, v63, v70, v82)
+												tmp88 := aotDirectFn49(v2, v63, v70, v82)
 												tmp87 = tmp88
 											} else {
 												var tmp89 any
@@ -8798,14 +9019,14 @@ func LoadNS() {
 													// let binding "base"
 													var tmp95 any
 													if lang.IsTruthy(v65) {
-														tmp96 := aotDirectFn47(v63, v70)
+														tmp96 := aotDirectFn48(v63, v70)
 														tmp95 = tmp96
 													} else {
 													}
 													var v97 any = tmp95
 													_ = v97
 													// let binding "_"
-													tmp98 := aotDirectFn55(v2, v11, kw_try, v58)
+													tmp98 := aotDirectFn56(v2, v11, kw_try, v58)
 													var v99 any = tmp98
 													_ = v99
 													// let binding "value"
@@ -8962,10 +9183,10 @@ func LoadNS() {
 													} else {
 														var tmp110 any
 														if lang.IsTruthy(v101) {
-															tmp111 := aotDirectFn55(v2, v11, kw_got, v58)
+															tmp111 := aotDirectFn56(v2, v11, kw_got, v58)
 															tmp110 = tmp111
 														} else {
-															tmp112 := aotDirectFn55(v2, v11, kw_not, v58)
+															tmp112 := aotDirectFn56(v2, v11, kw_not, v58)
 															tmp110 = tmp112
 														}
 														tmp108 = tmp110
@@ -8995,8 +9216,8 @@ func LoadNS() {
 														tmp117 := tmp116.(interface{ Deref() any }).Deref()
 														tmp118 := kw_pos.Invoke1(v2)
 														tmp119 := aotExternalFn7(tmp118)
-														tmp120 := aotDirectFn46(v63, v70, v97)
-														tmp121 := aotDirectFn50(v63)
+														tmp120 := aotDirectFn47(v63, v70, v97)
+														tmp121 := aotDirectFn51(v63)
 														tmp122 := lang.NewMap(kw_value, v101, kw_end_DASH_pos, tmp119, kw_events, tmp120, kw_entry_DASH_vols, v79, kw_exit_DASH_vols, tmp121)
 														var tmp123 any = tmp117
 														tmp123 = lang.Assoc(tmp123, v76, tmp122)
@@ -9011,7 +9232,7 @@ func LoadNS() {
 											}
 											var v90 any = tmp87
 											_ = v90
-											tmp91 := aotDirectFn68(v2)
+											tmp91 := aotDirectFn69(v2)
 											_ = tmp91
 											tmp49 = v90
 										} // end let
@@ -9222,7 +9443,7 @@ func LoadNS() {
 										tmp44 = tmp50
 									} else {
 										tmp51 := aotExternalFn10(v24, "l_bare_document")
-										tmp52 := aotDirectFn70Arity4(v2, v24, tmp51, v29)
+										tmp52 := aotDirectFn71Arity4(v2, v24, tmp51, v29)
 										_ = tmp52
 										var tmp53 any
 										{ // let
@@ -9365,7 +9586,7 @@ func LoadNS() {
 											// let binding "memo-key"
 											var tmp75 any
 											if lang.IsTruthy(v69) {
-												tmp76 := aotDirectFn67(v2)
+												tmp76 := aotDirectFn68(v2)
 												tmp77 := kw_doc.Invoke1(tmp76)
 												tmp78 := runtime.RT.BooleanCast(tmp77)
 												tmp79 := lang.NewVector(v24, v62, v59, v74, tmp78)
@@ -9377,7 +9598,7 @@ func LoadNS() {
 											// let binding "entry-vols"
 											var tmp81 any
 											if lang.IsTruthy(v69) {
-												tmp82 := aotDirectFn50(v67)
+												tmp82 := aotDirectFn51(v67)
 												tmp81 = tmp82
 											} else {
 											}
@@ -9447,7 +9668,7 @@ func LoadNS() {
 											// let binding "value"
 											var tmp91 any
 											if lang.IsTruthy(v86) {
-												tmp92 := aotDirectFn48(v2, v67, v74, v86)
+												tmp92 := aotDirectFn49(v2, v67, v74, v86)
 												tmp91 = tmp92
 											} else {
 												var tmp93 any
@@ -9466,14 +9687,14 @@ func LoadNS() {
 													// let binding "base"
 													var tmp99 any
 													if lang.IsTruthy(v69) {
-														tmp100 := aotDirectFn47(v67, v74)
+														tmp100 := aotDirectFn48(v67, v74)
 														tmp99 = tmp100
 													} else {
 													}
 													var v101 any = tmp99
 													_ = v101
 													// let binding "_"
-													tmp102 := aotDirectFn55(v2, v11, kw_try, v62)
+													tmp102 := aotDirectFn56(v2, v11, kw_try, v62)
 													var v103 any = tmp102
 													_ = v103
 													// let binding "value"
@@ -9630,10 +9851,10 @@ func LoadNS() {
 													} else {
 														var tmp114 any
 														if lang.IsTruthy(v105) {
-															tmp115 := aotDirectFn55(v2, v11, kw_got, v62)
+															tmp115 := aotDirectFn56(v2, v11, kw_got, v62)
 															tmp114 = tmp115
 														} else {
-															tmp116 := aotDirectFn55(v2, v11, kw_not, v62)
+															tmp116 := aotDirectFn56(v2, v11, kw_not, v62)
 															tmp114 = tmp116
 														}
 														tmp112 = tmp114
@@ -9663,8 +9884,8 @@ func LoadNS() {
 														tmp121 := tmp120.(interface{ Deref() any }).Deref()
 														tmp122 := kw_pos.Invoke1(v2)
 														tmp123 := aotExternalFn7(tmp122)
-														tmp124 := aotDirectFn46(v67, v74, v101)
-														tmp125 := aotDirectFn50(v67)
+														tmp124 := aotDirectFn47(v67, v74, v101)
+														tmp125 := aotDirectFn51(v67)
 														tmp126 := lang.NewMap(kw_value, v105, kw_end_DASH_pos, tmp123, kw_events, tmp124, kw_entry_DASH_vols, v83, kw_exit_DASH_vols, tmp125)
 														var tmp127 any = tmp121
 														tmp127 = lang.Assoc(tmp127, v80, tmp126)
@@ -9679,7 +9900,7 @@ func LoadNS() {
 											}
 											var v94 any = tmp91
 											_ = v94
-											tmp95 := aotDirectFn68(v2)
+											tmp95 := aotDirectFn69(v2)
 											_ = tmp95
 											tmp53 = v94
 										} // end let
@@ -9687,7 +9908,7 @@ func LoadNS() {
 									}
 								} else {
 									tmp54 := aotExternalFn10(v24, "l_bare_document")
-									tmp55 := aotDirectFn70Arity4(v2, v24, tmp54, v29)
+									tmp55 := aotDirectFn71Arity4(v2, v24, tmp54, v29)
 									_ = tmp55
 									var tmp56 any
 									{ // let
@@ -9830,7 +10051,7 @@ func LoadNS() {
 										// let binding "memo-key"
 										var tmp78 any
 										if lang.IsTruthy(v72) {
-											tmp79 := aotDirectFn67(v2)
+											tmp79 := aotDirectFn68(v2)
 											tmp80 := kw_doc.Invoke1(tmp79)
 											tmp81 := runtime.RT.BooleanCast(tmp80)
 											tmp82 := lang.NewVector(v24, v65, v62, v77, tmp81)
@@ -9842,7 +10063,7 @@ func LoadNS() {
 										// let binding "entry-vols"
 										var tmp84 any
 										if lang.IsTruthy(v72) {
-											tmp85 := aotDirectFn50(v70)
+											tmp85 := aotDirectFn51(v70)
 											tmp84 = tmp85
 										} else {
 										}
@@ -9912,7 +10133,7 @@ func LoadNS() {
 										// let binding "value"
 										var tmp94 any
 										if lang.IsTruthy(v89) {
-											tmp95 := aotDirectFn48(v2, v70, v77, v89)
+											tmp95 := aotDirectFn49(v2, v70, v77, v89)
 											tmp94 = tmp95
 										} else {
 											var tmp96 any
@@ -9931,14 +10152,14 @@ func LoadNS() {
 												// let binding "base"
 												var tmp102 any
 												if lang.IsTruthy(v72) {
-													tmp103 := aotDirectFn47(v70, v77)
+													tmp103 := aotDirectFn48(v70, v77)
 													tmp102 = tmp103
 												} else {
 												}
 												var v104 any = tmp102
 												_ = v104
 												// let binding "_"
-												tmp105 := aotDirectFn55(v2, v11, kw_try, v65)
+												tmp105 := aotDirectFn56(v2, v11, kw_try, v65)
 												var v106 any = tmp105
 												_ = v106
 												// let binding "value"
@@ -10095,10 +10316,10 @@ func LoadNS() {
 												} else {
 													var tmp117 any
 													if lang.IsTruthy(v108) {
-														tmp118 := aotDirectFn55(v2, v11, kw_got, v65)
+														tmp118 := aotDirectFn56(v2, v11, kw_got, v65)
 														tmp117 = tmp118
 													} else {
-														tmp119 := aotDirectFn55(v2, v11, kw_not, v65)
+														tmp119 := aotDirectFn56(v2, v11, kw_not, v65)
 														tmp117 = tmp119
 													}
 													tmp115 = tmp117
@@ -10128,8 +10349,8 @@ func LoadNS() {
 													tmp124 := tmp123.(interface{ Deref() any }).Deref()
 													tmp125 := kw_pos.Invoke1(v2)
 													tmp126 := aotExternalFn7(tmp125)
-													tmp127 := aotDirectFn46(v70, v77, v104)
-													tmp128 := aotDirectFn50(v70)
+													tmp127 := aotDirectFn47(v70, v77, v104)
+													tmp128 := aotDirectFn51(v70)
 													tmp129 := lang.NewMap(kw_value, v108, kw_end_DASH_pos, tmp126, kw_events, tmp127, kw_entry_DASH_vols, v86, kw_exit_DASH_vols, tmp128)
 													var tmp130 any = tmp124
 													tmp130 = lang.Assoc(tmp130, v83, tmp129)
@@ -10144,7 +10365,7 @@ func LoadNS() {
 										}
 										var v97 any = tmp94
 										_ = v97
-										tmp98 := aotDirectFn68(v2)
+										tmp98 := aotDirectFn69(v2)
 										_ = tmp98
 										tmp56 = v97
 									} // end let
@@ -10187,7 +10408,7 @@ func LoadNS() {
 			tmp3 := checkDerefVar(var_yaml_DASH_parser_DOT_parser_empty_DASH_rule_STAR_)
 			return tmp3
 		})
-		aotDirectFn24 = tmp1
+		aotDirectFn25 = tmp1
 		var_yaml_DASH_parser_DOT_parser_empty_DASH_rule = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_empty_DASH_rule.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(697), kw_column, int(7), kw_end_DASH_line, int(697), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_parser)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -10197,7 +10418,7 @@ func LoadNS() {
 	{
 		tmp0 := sym_empty_DASH_rule_STAR_
 		var tmp1 lang.ArityFn
-		aotDirectFn25Arity1 = lang.FnFunc1(func(p0 any) any {
+		aotDirectFn26Arity1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
 			var tmp3 any
@@ -10211,7 +10432,7 @@ func LoadNS() {
 			}
 			return tmp3
 		})
-		aotDirectFn25Arity2 = lang.FnFunc2(func(p0, p1 any) any {
+		aotDirectFn26Arity2 = lang.FnFunc2(func(p0, p1 any) any {
 			v2 := p0
 			_ = v2
 			v3 := p1
@@ -10219,7 +10440,7 @@ func LoadNS() {
 			tmp4 := lang.Apply2(closed6, v2, v3)
 			return tmp4
 		})
-		aotDirectFn25Arity3 = lang.FnFunc3(func(p0, p1, p2 any) any {
+		aotDirectFn26Arity3 = lang.FnFunc3(func(p0, p1, p2 any) any {
 			v2 := p0
 			_ = v2
 			v3 := p1
@@ -10231,17 +10452,17 @@ func LoadNS() {
 		})
 		tmp1 = lang.NewArityFn(
 			nil,
-			aotDirectFn25Arity1,
-			aotDirectFn25Arity2,
-			aotDirectFn25Arity3,
+			aotDirectFn26Arity1,
+			aotDirectFn26Arity2,
+			aotDirectFn26Arity3,
 			nil,
 			nil,
 			0,
 		)
-		aotDirectFn25 = tmp1
+		aotDirectFn26 = tmp1
 		var_yaml_DASH_parser_DOT_parser_empty_DASH_rule_STAR_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_empty_DASH_rule_STAR_.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMap(kw_private, true, kw_file, "yaml_parser/parser.glj", kw_line, int(692), kw_column, int(6), kw_end_DASH_line, int(692), kw_end_DASH_column, int(26), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
+			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(692), kw_column, int(6), kw_end_DASH_line, int(692), kw_end_DASH_column, int(26), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
 		})
 	}
 	// end-of-stream
@@ -10254,7 +10475,7 @@ func LoadNS() {
 			tmp3 := checkDerefVar(var_yaml_DASH_parser_DOT_parser_end_DASH_of_DASH_stream_DASH_rule)
 			return tmp3
 		})
-		aotDirectFn26 = tmp1
+		aotDirectFn27 = tmp1
 		var_yaml_DASH_parser_DOT_parser_end_DASH_of_DASH_stream = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_end_DASH_of_DASH_stream.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(689), kw_column, int(7), kw_end_DASH_line, int(689), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector(sym_parser)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -10264,7 +10485,7 @@ func LoadNS() {
 	{
 		tmp0 := sym_end_DASH_of_DASH_stream_DASH_rule
 		var tmp1 lang.ArityFn
-		aotDirectFn28Arity1 = lang.FnFunc1(func(p0 any) any {
+		aotDirectFn29Arity1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
 			var tmp3 any
@@ -10278,7 +10499,7 @@ func LoadNS() {
 			}
 			return tmp3
 		})
-		aotDirectFn28Arity2 = lang.FnFunc2(func(p0, p1 any) any {
+		aotDirectFn29Arity2 = lang.FnFunc2(func(p0, p1 any) any {
 			v2 := p0
 			_ = v2
 			v3 := p1
@@ -10286,7 +10507,7 @@ func LoadNS() {
 			tmp4 := lang.Apply2(closed8, v2, v3)
 			return tmp4
 		})
-		aotDirectFn28Arity3 = lang.FnFunc3(func(p0, p1, p2 any) any {
+		aotDirectFn29Arity3 = lang.FnFunc3(func(p0, p1, p2 any) any {
 			v2 := p0
 			_ = v2
 			v3 := p1
@@ -10298,17 +10519,17 @@ func LoadNS() {
 		})
 		tmp1 = lang.NewArityFn(
 			nil,
-			aotDirectFn28Arity1,
-			aotDirectFn28Arity2,
-			aotDirectFn28Arity3,
+			aotDirectFn29Arity1,
+			aotDirectFn29Arity2,
+			aotDirectFn29Arity3,
 			nil,
 			nil,
 			0,
 		)
-		aotDirectFn28 = tmp1
+		aotDirectFn29 = tmp1
 		var_yaml_DASH_parser_DOT_parser_end_DASH_of_DASH_stream_DASH_rule = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_end_DASH_of_DASH_stream_DASH_rule.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMap(kw_private, true, kw_file, "yaml_parser/parser.glj", kw_line, int(684), kw_column, int(6), kw_end_DASH_line, int(684), kw_end_DASH_column, int(33), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
+			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(684), kw_column, int(6), kw_end_DASH_line, int(684), kw_end_DASH_column, int(33), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
 		})
 	}
 	// m
@@ -10321,7 +10542,7 @@ func LoadNS() {
 			tmp3 := checkDerefVar(var_yaml_DASH_parser_DOT_parser_m_DASH_rule)
 			return tmp3
 		})
-		aotDirectFn39 = tmp1
+		aotDirectFn40 = tmp1
 		var_yaml_DASH_parser_DOT_parser_m = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_m.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1610), kw_column, int(7), kw_end_DASH_line, int(1610), kw_end_DASH_column, int(7), kw_arglists, lang.NewList(lang.NewVector(sym_parser)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -10331,7 +10552,7 @@ func LoadNS() {
 	{
 		tmp0 := sym_m_DASH_rule
 		var tmp1 lang.ArityFn
-		aotDirectFn40Arity1 = lang.FnFunc1(func(p0 any) any {
+		aotDirectFn41Arity1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
 			var tmp3 any
@@ -10345,7 +10566,7 @@ func LoadNS() {
 			}
 			return tmp3
 		})
-		aotDirectFn40Arity2 = lang.FnFunc2(func(p0, p1 any) any {
+		aotDirectFn41Arity2 = lang.FnFunc2(func(p0, p1 any) any {
 			v2 := p0
 			_ = v2
 			v3 := p1
@@ -10353,7 +10574,7 @@ func LoadNS() {
 			tmp4 := lang.Apply2(closed12, v2, v3)
 			return tmp4
 		})
-		aotDirectFn40Arity3 = lang.FnFunc3(func(p0, p1, p2 any) any {
+		aotDirectFn41Arity3 = lang.FnFunc3(func(p0, p1, p2 any) any {
 			v2 := p0
 			_ = v2
 			v3 := p1
@@ -10365,17 +10586,17 @@ func LoadNS() {
 		})
 		tmp1 = lang.NewArityFn(
 			nil,
-			aotDirectFn40Arity1,
-			aotDirectFn40Arity2,
-			aotDirectFn40Arity3,
+			aotDirectFn41Arity1,
+			aotDirectFn41Arity2,
+			aotDirectFn41Arity3,
 			nil,
 			nil,
 			0,
 		)
-		aotDirectFn40 = tmp1
+		aotDirectFn41 = tmp1
 		var_yaml_DASH_parser_DOT_parser_m_DASH_rule = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_m_DASH_rule.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMap(kw_private, true, kw_file, "yaml_parser/parser.glj", kw_line, int(1604), kw_column, int(6), kw_end_DASH_line, int(1604), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
+			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1604), kw_column, int(6), kw_end_DASH_line, int(1604), kw_end_DASH_column, int(21), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
 		})
 	}
 	// match
@@ -10388,7 +10609,7 @@ func LoadNS() {
 			tmp3 := checkDerefVar(var_yaml_DASH_parser_DOT_parser_match_DASH_rule)
 			return tmp3
 		})
-		aotDirectFn42 = tmp1
+		aotDirectFn43 = tmp1
 		var_yaml_DASH_parser_DOT_parser_match = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_match.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1558), kw_column, int(7), kw_end_DASH_line, int(1558), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_parser)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -10398,7 +10619,7 @@ func LoadNS() {
 	{
 		tmp0 := sym_match_DASH_rule
 		var tmp1 lang.ArityFn
-		aotDirectFn43Arity1 = lang.FnFunc1(func(p0 any) any {
+		aotDirectFn44Arity1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
 			var tmp3 any
@@ -10412,7 +10633,7 @@ func LoadNS() {
 			}
 			return tmp3
 		})
-		aotDirectFn43Arity2 = lang.FnFunc2(func(p0, p1 any) any {
+		aotDirectFn44Arity2 = lang.FnFunc2(func(p0, p1 any) any {
 			v2 := p0
 			_ = v2
 			v3 := p1
@@ -10420,7 +10641,7 @@ func LoadNS() {
 			tmp4 := lang.Apply2(closed14, v2, v3)
 			return tmp4
 		})
-		aotDirectFn43Arity3 = lang.FnFunc3(func(p0, p1, p2 any) any {
+		aotDirectFn44Arity3 = lang.FnFunc3(func(p0, p1, p2 any) any {
 			v2 := p0
 			_ = v2
 			v3 := p1
@@ -10432,17 +10653,17 @@ func LoadNS() {
 		})
 		tmp1 = lang.NewArityFn(
 			nil,
-			aotDirectFn43Arity1,
-			aotDirectFn43Arity2,
-			aotDirectFn43Arity3,
+			aotDirectFn44Arity1,
+			aotDirectFn44Arity2,
+			aotDirectFn44Arity3,
 			nil,
 			nil,
 			0,
 		)
-		aotDirectFn43 = tmp1
+		aotDirectFn44 = tmp1
 		var_yaml_DASH_parser_DOT_parser_match_DASH_rule = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_match_DASH_rule.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMap(kw_private, true, kw_file, "yaml_parser/parser.glj", kw_line, int(1539), kw_column, int(6), kw_end_DASH_line, int(1539), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
+			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1539), kw_column, int(6), kw_end_DASH_line, int(1539), kw_end_DASH_column, int(25), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
 		})
 	}
 	// start-of-line
@@ -10455,7 +10676,7 @@ func LoadNS() {
 			tmp3 := checkDerefVar(var_yaml_DASH_parser_DOT_parser_start_DASH_of_DASH_line_DASH_rule)
 			return tmp3
 		})
-		aotDirectFn64 = tmp1
+		aotDirectFn65 = tmp1
 		var_yaml_DASH_parser_DOT_parser_start_DASH_of_DASH_line = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_start_DASH_of_DASH_line.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(681), kw_column, int(7), kw_end_DASH_line, int(681), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector(sym_parser)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -10465,7 +10686,7 @@ func LoadNS() {
 	{
 		tmp0 := sym_start_DASH_of_DASH_line_DASH_rule
 		var tmp1 lang.ArityFn
-		aotDirectFn66Arity1 = lang.FnFunc1(func(p0 any) any {
+		aotDirectFn67Arity1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
 			var tmp3 any
@@ -10479,7 +10700,7 @@ func LoadNS() {
 			}
 			return tmp3
 		})
-		aotDirectFn66Arity2 = lang.FnFunc2(func(p0, p1 any) any {
+		aotDirectFn67Arity2 = lang.FnFunc2(func(p0, p1 any) any {
 			v2 := p0
 			_ = v2
 			v3 := p1
@@ -10487,7 +10708,7 @@ func LoadNS() {
 			tmp4 := lang.Apply2(closed18, v2, v3)
 			return tmp4
 		})
-		aotDirectFn66Arity3 = lang.FnFunc3(func(p0, p1, p2 any) any {
+		aotDirectFn67Arity3 = lang.FnFunc3(func(p0, p1, p2 any) any {
 			v2 := p0
 			_ = v2
 			v3 := p1
@@ -10499,17 +10720,17 @@ func LoadNS() {
 		})
 		tmp1 = lang.NewArityFn(
 			nil,
-			aotDirectFn66Arity1,
-			aotDirectFn66Arity2,
-			aotDirectFn66Arity3,
+			aotDirectFn67Arity1,
+			aotDirectFn67Arity2,
+			aotDirectFn67Arity3,
 			nil,
 			nil,
 			0,
 		)
-		aotDirectFn66 = tmp1
+		aotDirectFn67 = tmp1
 		var_yaml_DASH_parser_DOT_parser_start_DASH_of_DASH_line_DASH_rule = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_start_DASH_of_DASH_line_DASH_rule.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMap(kw_private, true, kw_file, "yaml_parser/parser.glj", kw_line, int(676), kw_column, int(6), kw_end_DASH_line, int(676), kw_end_DASH_column, int(33), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
+			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(676), kw_column, int(6), kw_end_DASH_line, int(676), kw_end_DASH_column, int(33), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
 		})
 	}
 	// t
@@ -10522,7 +10743,7 @@ func LoadNS() {
 			tmp3 := checkDerefVar(var_yaml_DASH_parser_DOT_parser_t_DASH_rule)
 			return tmp3
 		})
-		aotDirectFn72 = tmp1
+		aotDirectFn73 = tmp1
 		var_yaml_DASH_parser_DOT_parser_t = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_t.SetMetaLazy(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1619), kw_column, int(7), kw_end_DASH_line, int(1619), kw_end_DASH_column, int(7), kw_arglists, lang.NewList(lang.NewVector(sym_parser)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
@@ -10532,7 +10753,7 @@ func LoadNS() {
 	{
 		tmp0 := sym_t_DASH_rule
 		var tmp1 lang.ArityFn
-		aotDirectFn73Arity1 = lang.FnFunc1(func(p0 any) any {
+		aotDirectFn74Arity1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
 			var tmp3 any
@@ -10546,7 +10767,7 @@ func LoadNS() {
 			}
 			return tmp3
 		})
-		aotDirectFn73Arity2 = lang.FnFunc2(func(p0, p1 any) any {
+		aotDirectFn74Arity2 = lang.FnFunc2(func(p0, p1 any) any {
 			v2 := p0
 			_ = v2
 			v3 := p1
@@ -10554,7 +10775,7 @@ func LoadNS() {
 			tmp4 := lang.Apply2(closed20, v2, v3)
 			return tmp4
 		})
-		aotDirectFn73Arity3 = lang.FnFunc3(func(p0, p1, p2 any) any {
+		aotDirectFn74Arity3 = lang.FnFunc3(func(p0, p1, p2 any) any {
 			v2 := p0
 			_ = v2
 			v3 := p1
@@ -10566,17 +10787,17 @@ func LoadNS() {
 		})
 		tmp1 = lang.NewArityFn(
 			nil,
-			aotDirectFn73Arity1,
-			aotDirectFn73Arity2,
-			aotDirectFn73Arity3,
+			aotDirectFn74Arity1,
+			aotDirectFn74Arity2,
+			aotDirectFn74Arity3,
 			nil,
 			nil,
 			0,
 		)
-		aotDirectFn73 = tmp1
+		aotDirectFn74 = tmp1
 		var_yaml_DASH_parser_DOT_parser_t_DASH_rule = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_parser_t_DASH_rule.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMap(kw_private, true, kw_file, "yaml_parser/parser.glj", kw_line, int(1613), kw_column, int(6), kw_end_DASH_line, int(1613), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
+			return lang.NewMap(kw_file, "yaml_parser/parser.glj", kw_line, int(1613), kw_column, int(6), kw_end_DASH_line, int(1613), kw_end_DASH_column, int(21), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_parser))
 		})
 	}
 }

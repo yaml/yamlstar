@@ -78,4 +78,5 @@ nav:
   - CLI: cli.md
   - Getting Started: getting-started.md
   - Language Bindings: bindings.md
+  - Plugins: plugins.md
   - Roadmap: roadmap.md

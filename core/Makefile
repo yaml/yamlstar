@@ -34,6 +34,9 @@ build:
 test jar: $(LEIN)
 	lein $@
 
+test-snakeyaml: $(LEIN)
+	YAMLSTAR_PARSER=snakeyaml lein test
+
 smoke-parser: $(BB) $(LEIN)
 	$(BB) --classpath "$$(lein classpath)" ../test-parser.clj
 
@@ -54,6 +57,10 @@ test-suite: $(LEIN) test-suite-fixture
 	$(YAML-TEST-SUITE-ENV) \
 	  lein with-profile +test-suite test $(YAML-TEST-SUITE-NS)
 
+test-suite-snakeyaml: $(LEIN) test-suite-fixture
+	YAMLSTAR_PARSER=snakeyaml $(YAML-TEST-SUITE-ENV) \
+	  lein with-profile +test-suite test $(YAML-TEST-SUITE-NS)
+
 test-suite-load: $(LEIN) test-suite-fixture
 	$(YAML-TEST-SUITE-ENV) \
 	  lein with-profile +test-suite test :only $(YAML-TEST-SUITE-LOAD)
@@ -69,5 +76,6 @@ test-suite-emit: $(LEIN) test-suite-fixture
 install: $(LEIN)
 	lein with-profile +uberjar $@
 
-.PHONY: smoke-parser test-suite test-suite-fixture \
-  test-suite-load test-suite-roundtrip test-suite-emit
+.PHONY: smoke-parser test-snakeyaml test-suite test-suite-fixture \
+  test-suite-load test-suite-roundtrip test-suite-emit \
+  test-suite-snakeyaml

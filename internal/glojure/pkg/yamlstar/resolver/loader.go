@@ -151,6 +151,9 @@ func LoadNS() {
 	{ // refer vars from clojure.core
 		srcNS := lang.FindOrCreateNamespace(sym_clojure_DOT_core)
 		ns.ReferAllSnapshot(srcNS, []string{
+			"*loaded-libs*",
+			"*loading-verbosely*",
+			"*pending-paths*",
 			"-protocols",
 			">0?",
 			">1?",
@@ -358,7 +361,7 @@ func LoadNS() {
 			if lang.IsTruthy(v2) {
 				var tmp4 any
 				{ // let
-					// let binding "G__73"
+					// let binding "G__80"
 					tmp5 := kw_kind.Invoke1(v2)
 					var v6 any = tmp5
 					_ = v6
@@ -455,7 +458,7 @@ func LoadNS() {
 									_ = v19
 									var tmp20 any
 									{ // let
-										// let binding "vec__75"
+										// let binding "vec__82"
 										var v21 any = v19
 										_ = v21
 										// let binding "k"

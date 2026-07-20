@@ -28,6 +28,10 @@ org.yamlstar/yamlstar {:mvn/version "0.1.18"}
 ;; Load multiple documents
 (yaml/load-all "---\ndoc1\n---\ndoc2")
 ;=> ["doc1" "doc2"]
+
+;; Load with a parser plugin (see https://yamlstar.org/plugins/)
+(yaml/load "key: value" {:plugin {:parser {:use "snakeyaml"}}})
+;=> {"key" "value"}
 ```
 
 ## Publishing to Clojars

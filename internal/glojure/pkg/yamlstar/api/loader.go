@@ -12,8 +12,12 @@ import (
 
 var aotDirectFn0 lang.FnFunc1
 var aotDirectFn1 lang.FnFunc1
-var aotDirectFn2 lang.FnFunc1
-var aotDirectFn3 lang.FnFunc1
+var aotDirectFn2 lang.ArityFn
+var aotDirectFn2Arity1 lang.FnFunc1
+var aotDirectFn2Arity2 lang.FnFunc2
+var aotDirectFn3 lang.ArityFn
+var aotDirectFn3Arity1 lang.FnFunc1
+var aotDirectFn3Arity2 lang.FnFunc2
 var aotDirectFn4 lang.FnFunc0
 
 func aotLinkFn1(vr *lang.Var) lang.FnFunc1 {
@@ -110,6 +114,7 @@ func LoadNS() {
 	sym_load := lang.NewSymbolUnchecked("load")
 	sym_load_DASH_all := lang.NewSymbolUnchecked("load-all")
 	sym_mapv := lang.NewSymbolUnchecked("mapv")
+	sym_opts := lang.NewSymbolUnchecked("opts")
 	sym_parse := lang.NewSymbolUnchecked("parse")
 	sym_parser := lang.NewSymbolUnchecked("parser")
 	sym_represent := lang.NewSymbolUnchecked("represent")
@@ -182,7 +187,7 @@ func LoadNS() {
 	aotExternalFn0 := aotLinkFn1(var_yamlstar_DOT_emitter_emit)
 	aotExternalFn1 := aotLinkFn1(var_yamlstar_DOT_serializer_serialize)
 	aotExternalFn10 := aotLinkFn1(var_yamlstar_DOT_composer_compose)
-	aotExternalFn11 := aotLinkFn1(var_yamlstar_DOT_parser_parse)
+	aotExternalFn11 := aotLinkFn2(var_yamlstar_DOT_parser_parse)
 	aotExternalFn12 := aotLinkFn1(var_yamlstar_DOT_constructor_construct_DASH_all)
 	aotExternalFn13 := aotLinkFn1(var_yamlstar_DOT_resolver_resolve_DASH_all)
 	aotExternalFn14 := aotLinkFn1(var_yamlstar_DOT_composer_compose_DASH_all)
@@ -203,6 +208,9 @@ func LoadNS() {
 	{ // refer vars from clojure.core
 		srcNS := lang.FindOrCreateNamespace(sym_clojure_DOT_core)
 		ns.ReferAllSnapshot(srcNS, []string{
+			"*loaded-libs*",
+			"*loading-verbosely*",
+			"*pending-paths*",
 			"-protocols",
 			">0?",
 			">1?",
@@ -298,55 +306,89 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_api_dump = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_api_dump.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(69), kw_column, int(7), kw_end_DASH_line, int(69), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_doc, "Dump a JSON-compatible Clojure value to a YAML string.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(75), kw_column, int(7), kw_end_DASH_line, int(75), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_doc, "Dump a JSON-compatible Clojure value to a YAML string.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
 		})
 	}
 	// load
 	{
 		tmp0 := sym_load
-		var tmp1 lang.FnFunc1
-		tmp1 = lang.FnFunc1(func(p0 any) any {
+		var tmp1 lang.ArityFn
+		aotDirectFn2Arity1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			var tmp3 any
-			if lang.IsTruthy(v2) {
-				tmp4 := aotExternalFn11(v2)
-				tmp5 := aotExternalFn10(tmp4)
-				tmp6 := aotExternalFn9(tmp5)
-				tmp7 := aotExternalFn8(tmp6)
-				tmp3 = tmp7
-			} else {
-			}
+			tmp3 := aotDirectFn2Arity2(v2, nil)
 			return tmp3
 		})
+		aotDirectFn2Arity2 = lang.FnFunc2(func(p0, p1 any) any {
+			v2 := p0
+			_ = v2
+			v3 := p1
+			_ = v3
+			var tmp4 any
+			if lang.IsTruthy(v2) {
+				tmp5 := aotExternalFn11(v2, v3)
+				tmp6 := aotExternalFn10(tmp5)
+				tmp7 := aotExternalFn9(tmp6)
+				tmp8 := aotExternalFn8(tmp7)
+				tmp4 = tmp8
+			} else {
+			}
+			return tmp4
+		})
+		tmp1 = lang.NewArityFn(
+			nil,
+			aotDirectFn2Arity1,
+			aotDirectFn2Arity2,
+			nil,
+			nil,
+			nil,
+			0,
+		)
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_api_load = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_api_load.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(23), kw_column, int(7), kw_end_DASH_line, int(23), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str)), kw_doc, "Parse a YAML string and return a Clojure data structure.\n\n  Supports YAML 1.2 core schema with standard types:\n  - Scalars: strings, integers, floats, booleans, null\n  - Collections: maps (mappings) and vectors (sequences)\n  - Anchors and aliases\n\n  Args:\n    yaml-str: A string containing YAML content\n\n  Returns:\n    A Clojure data structure representing the YAML document\n\n  Throws:\n    Exception if the YAML is malformed", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(23), kw_column, int(7), kw_end_DASH_line, int(23), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str), lang.NewVector(sym_yaml_DASH_str, sym_opts)), kw_doc, "Parse a YAML string and return a Clojure data structure.\n\n  Supports YAML 1.2 core schema with standard types:\n  - Scalars: strings, integers, floats, booleans, null\n  - Collections: maps (mappings) and vectors (sequences)\n  - Anchors and aliases\n\n  Args:\n    yaml-str: A string containing YAML content\n    opts: (optional) Options map; {:plugin {:parser {:use \"name\"}}}\n          selects a parser plugin\n\n  Returns:\n    A Clojure data structure representing the YAML document\n\n  Throws:\n    Exception if the YAML is malformed", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
 		})
 	}
 	// load-all
 	{
 		tmp0 := sym_load_DASH_all
-		var tmp1 lang.FnFunc1
-		tmp1 = lang.FnFunc1(func(p0 any) any {
+		var tmp1 lang.ArityFn
+		aotDirectFn3Arity1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			var tmp3 any
-			if lang.IsTruthy(v2) {
-				tmp4 := aotExternalFn11(v2)
-				tmp5 := aotExternalFn14(tmp4)
-				tmp6 := aotExternalFn13(tmp5)
-				tmp7 := aotExternalFn12(tmp6)
-				tmp3 = tmp7
-			} else {
-			}
+			tmp3 := aotDirectFn3Arity2(v2, nil)
 			return tmp3
 		})
+		aotDirectFn3Arity2 = lang.FnFunc2(func(p0, p1 any) any {
+			v2 := p0
+			_ = v2
+			v3 := p1
+			_ = v3
+			var tmp4 any
+			if lang.IsTruthy(v2) {
+				tmp5 := aotExternalFn11(v2, v3)
+				tmp6 := aotExternalFn14(tmp5)
+				tmp7 := aotExternalFn13(tmp6)
+				tmp8 := aotExternalFn12(tmp7)
+				tmp4 = tmp8
+			} else {
+			}
+			return tmp4
+		})
+		tmp1 = lang.NewArityFn(
+			nil,
+			aotDirectFn3Arity1,
+			aotDirectFn3Arity2,
+			nil,
+			nil,
+			nil,
+			0,
+		)
 		aotDirectFn3 = tmp1
 		var_yamlstar_DOT_api_load_DASH_all = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_api_load_DASH_all.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(47), kw_column, int(7), kw_end_DASH_line, int(47), kw_end_DASH_column, int(14), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str)), kw_doc, "Parse a multi-document YAML string and return a sequence of documents.\n\n  YAML files can contain multiple documents separated by '---'.\n  This function returns all documents as a sequence.\n\n  Args:\n    yaml-str: A string containing one or more YAML documents\n\n  Returns:\n    A sequence of Clojure data structures, one per YAML document\n\n  Throws:\n    Exception if the YAML is malformed", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(50), kw_column, int(7), kw_end_DASH_line, int(50), kw_end_DASH_column, int(14), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str), lang.NewVector(sym_yaml_DASH_str, sym_opts)), kw_doc, "Parse a multi-document YAML string and return a sequence of documents.\n\n  YAML files can contain multiple documents separated by '---'.\n  This function returns all documents as a sequence.\n\n  Args:\n    yaml-str: A string containing one or more YAML documents\n    opts: (optional) Options map; {:plugin {:parser {:use \"name\"}}}\n          selects a parser plugin\n\n  Returns:\n    A sequence of Clojure data structures, one per YAML document\n\n  Throws:\n    Exception if the YAML is malformed", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
 		})
 	}
 	// version
@@ -359,7 +401,7 @@ func LoadNS() {
 		aotDirectFn4 = tmp1
 		var_yamlstar_DOT_api_version = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_api_version.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(86), kw_column, int(7), kw_end_DASH_line, int(86), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Return the YAMLStar version string", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(92), kw_column, int(7), kw_end_DASH_line, int(92), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Return the YAMLStar version string", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
 		})
 	}
 	// dump-all
@@ -379,7 +421,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_api_dump_DASH_all = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_api_dump_DASH_all.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(78), kw_column, int(7), kw_end_DASH_line, int(78), kw_end_DASH_column, int(14), kw_arglists, lang.NewList(lang.NewVector(sym_values)), kw_doc, "Dump a sequence of JSON-compatible Clojure values to a YAML stream.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(84), kw_column, int(7), kw_end_DASH_line, int(84), kw_end_DASH_column, int(14), kw_arglists, lang.NewList(lang.NewVector(sym_values)), kw_doc, "Dump a sequence of JSON-compatible Clojure values to a YAML stream.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
 		})
 	}
 }

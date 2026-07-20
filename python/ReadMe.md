@@ -53,6 +53,9 @@ ys = yamlstar.YAMLStar()
 # Load a simple YAML string
 data = ys.load("key: value")
 print(data)  # {'key': 'value'}
+
+# Load with a parser plugin (see https://yamlstar.org/plugins/)
+data = ys.load("key: value", parser='snakeyaml')
 ```
 
 ## Usage Examples

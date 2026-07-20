@@ -4,14 +4,24 @@
   (:require [yamlstar.api :as api]))
 
 (defn load
-  "Parse a YAML string and return a Clojure data structure."
-  [yaml-str]
-  (api/load yaml-str))
+  "Parse a YAML string and return a Clojure data structure.
+
+  An optional opts map can select a parser plugin:
+    (load yaml {:plugin {:parser {:use \"snakeyaml\"}}})"
+  ([yaml-str]
+   (api/load yaml-str))
+  ([yaml-str opts]
+   (api/load yaml-str opts)))
 
 (defn load-all
-  "Parse a multi-document YAML string and return a sequence of documents."
-  [yaml-str]
-  (api/load-all yaml-str))
+  "Parse a multi-document YAML string and return a sequence of documents.
+
+  An optional opts map can select a parser plugin:
+    (load-all yaml {:plugin {:parser {:use \"snakeyaml\"}}})"
+  ([yaml-str]
+   (api/load-all yaml-str))
+  ([yaml-str opts]
+   (api/load-all yaml-str opts)))
 
 (defn dump
   "Dump a JSON-compatible Clojure value to a YAML string."

@@ -19,14 +19,20 @@ var ErrNullResponse = core.ErrNullResponse
 // YAMLError represents an error returned by YAMLStar.
 type YAMLError = core.YAMLError
 
+// Option configures a YAML load or dump operation.
+type Option = core.Option
+
+// WithParser selects the parser plugin used for loading.
+var WithParser = core.WithParser
+
 // Load parses a YAML string and returns its first document as a Go value.
-func Load(input string) (any, error) {
-	return core.Load(input)
+func Load(input string, opts ...Option) (any, error) {
+	return core.Load(input, opts...)
 }
 
 // LoadAll parses a YAML stream and returns all its documents.
-func LoadAll(input string) ([]any, error) {
-	return core.LoadAll(input)
+func LoadAll(input string, opts ...Option) ([]any, error) {
+	return core.LoadAll(input, opts...)
 }
 
 // Dump serializes a JSON-compatible Go value as YAML.

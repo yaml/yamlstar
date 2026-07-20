@@ -282,6 +282,20 @@ ys.close()
 
 Each binding directory contains its own `ReadMe.md` with detailed installation and usage instructions.
 
+## Plugins
+
+YAMLStar has a plugin system that can swap internal processing
+components per load operation.
+The first plugin type is the parser plugin; the pure Clojure reference
+parser is the default and a SnakeYAML based parser is included:
+
+```python
+data = ys.load('key: value', parser='snakeyaml')
+```
+
+See [Plugins](https://yamlstar.org/plugins/) for the full options
+format, all bindings, and how to write a parser plugin.
+
 ## Comparison to YAMLScript
 
 YAMLStar is derived from YAMLScript but with a different focus:
