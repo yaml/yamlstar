@@ -491,7 +491,7 @@ jobs:
         PY
 
     - name: Run tests
-      run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php r zig $YS_RELEASE_BINDINGS_SKIP"
+      run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
 
   test-windows:
     name: Test Windows artifacts
@@ -760,7 +760,7 @@ jobs:
       run: |
         make test-all \
           TEST-TIME='date; time' \
-          BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php r zig $YS_RELEASE_BINDINGS_SKIP"
+          BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
 
   test-windows-retry:
     name: Test Windows artifacts (retry)

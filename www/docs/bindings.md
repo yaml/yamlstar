@@ -782,7 +782,7 @@ YAMLStar bindings are tested on:
 The shared library (`libyamlstar.so`, `libyamlstar.dylib`, `yamlstar.dll`) is
 built using GraalVM native-image for optimal performance and small binary size.
 
-Ada, Crystal, Erlang, F#, Haskell, Julia, PowerShell, Raku, and Scala are
+Ada, Crystal, Erlang, F#, Haskell, Julia, Raku, and Scala are
 currently tested on the Linux/macOS shared-library path. Native Windows support
 for these bindings is not claimed until their build and library lookup paths
 are verified there.
