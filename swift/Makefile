@@ -18,3 +18,4 @@ release-deps:: $(SWIFT)
 
 clean::
 	$(RM) -r .build
+	$(RM) $(ROOT)/.swift-version
