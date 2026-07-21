@@ -5,6 +5,14 @@ include $(COMMON)/common.mk
 
 MOONBIT-RELEASE-VERSION := $(or $(YS_RELEASE_VERSION_NEW),$n)
 
+ifeq ($(OS-NAME),windows)
+override export PATH := $(ROOT)/libyamlstar/lib:$(PATH)
+endif
+
+ifeq ($(OS-NAME),macos)
+export DYLD_LIBRARY_PATH := $(ROOT)/libyamlstar/lib:$(DYLD_LIBRARY_PATH)
+endif
+
 
 #------------------------------------------------------------------------------
 build:: build-doc
