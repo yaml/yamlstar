@@ -245,7 +245,7 @@ release-check:
 ifndef YS_RELEASE_NO_CHECK
 ifneq (,$(filter-out main release-automation,$(shell git rev-parse --abbrev-ref HEAD)))
 ifndef YS_RELEASE_ALLOW_BRANCH
-	$(error Must be on branch 'main' to release)
+	$(error Must be on branch 'main' to release. YS_RELEASE_ALLOW_BRANCH=1 to override.)
 endif
 endif
 ifndef d
