@@ -7,6 +7,10 @@ include $(COMMON)/common.mk
 export COURSIER_CACHE := $(ROOT)/.cache/coursier
 export JAVA_TOOL_OPTIONS := -Djna.tmpdir=$(ROOT)/.cache/jna
 
+ifeq ($(OS-NAME),macos)
+export DYLD_LIBRARY_PATH := $(ROOT)/libyamlstar/lib:$(DYLD_LIBRARY_PATH)
+endif
+
 SCALA-CLI ?= scala-cli
 SCALA-YAMLSTAR-JAR := target/scala-yamlstar-$(VERSION).jar
 MAVEN-CENTRAL-ARTIFACT := scala-yamlstar
