@@ -58,7 +58,7 @@ make native
 **Option 2: Install to system**
 ```bash
 # Copy to system library directory
-sudo cp libyamlstar/lib/libyamlstar.so.0.1.16 /usr/local/lib/
+sudo cp libyamlstar/lib/libyamlstar.so.0.1.17 /usr/local/lib/
 ```
 
 **Option 3: Use LD_LIBRARY_PATH**

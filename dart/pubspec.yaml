@@ -1,6 +1,6 @@
 name: yamlstar
 description: Dart binding for YAMLStar, a YAML 1.2 loader backed by libyamlstar.
-version: 0.1.16
+version: 0.1.17
 homepage: https://yamlstar.org
 repository: https://github.com/yaml/yamlstar
 

@@ -1,7 +1,7 @@
 :Namespace YAMLStar
 
 ⎕IO←0
-Version←'0.1.16'
+Version←'0.1.17'
 BufferSize←1048576
 Library←'./lib/yamlstar_dyalog.so'
 'yamlstar_load_json'⎕NA'I4 ',Library,'|yamlstar_load_json <0UTF8 >0UTF8 I4'

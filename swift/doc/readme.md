@@ -32,7 +32,7 @@ In your `Package.swift`:
 dependencies: [
     .package(
         url: "https://github.com/yaml/yamlstar-swift",
-        from: "0.1.16"),
+        from: "0.1.17"),
 ],
 targets: [
     .executableTarget(

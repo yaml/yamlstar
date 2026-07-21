@@ -3,7 +3,7 @@ include $M/lein.mk
 include $(COMMON)/common.mk
 include $(COMMON)/binding.mk
 
-VERSION := 0.1.16
+VERSION := 0.1.17
 GROUP_PATH := com/yaml
 ARTIFACT := yamlstar
 BUNDLE_DIR := target/bundle/$(GROUP_PATH)/$(ARTIFACT)/$(VERSION)

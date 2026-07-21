@@ -1,6 +1,6 @@
 name = "yamlstar"
 description = "YAMLStar language binding for Ada"
-version = "0.1.16"
+version = "0.1.17"
 licenses = "MIT"
 authors = ["YAMLStar Contributors"]
 maintainers = ["YAMLStar Contributors <ingy@ingy.net>"]

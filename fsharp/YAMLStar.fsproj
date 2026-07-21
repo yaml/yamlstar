@@ -3,9 +3,9 @@
     <TargetFramework>net8.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>YAMLStar</RootNamespace>
-    <Version>0.1.16</Version>
+    <Version>0.1.17</Version>
     <PackageId>YAMLStar.FSharp</PackageId>
-    <PackageVersion>0.1.16</PackageVersion>
+    <PackageVersion>0.1.17</PackageVersion>
     <Authors>YAMLStar Contributors</Authors>
     <Description>YAMLStar language binding for F#</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

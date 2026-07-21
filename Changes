@@ -1,3 +1,8 @@
+- version: 0.1.17
+  date:    Tue Jul 21 10:38:59 AM EDT 2026
+  changes:
+  - Add Dyalog APL and MoonBit bindings
+  - Run Erlang tests in Elixir container
 - version: 0.1.16
   date:    Wed Jul 15 10:38:46 PM EDT 2026
   changes:

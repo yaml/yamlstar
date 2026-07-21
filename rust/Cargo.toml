@@ -1,6 +1,6 @@
 [package]
 name = "yamlstar"
-version = "0.1.16"
+version = "0.1.17"
 edition = "2021"
 description = "YAML 1.2 loader - Rust binding for libyamlstar"
 license = "MIT"

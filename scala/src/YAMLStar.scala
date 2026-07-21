@@ -23,7 +23,7 @@ trait LibYAMLStar extends Library:
   def yamlstar_load(thread: Pointer, input: String): String
 
 object YAMLStar:
-  val version = "0.1.16"
+  val version = "0.1.17"
 
   def load(input: String): ujson.Value =
     val resp = ujson.read(loadJson(input))

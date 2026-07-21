@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.yamlstar</groupId>
   <artifactId>scala-yamlstar</artifactId>
-  <version>0.1.16</version>
+  <version>0.1.17</version>
   <packaging>jar</packaging>
 
   <name>scala-yamlstar</name>
@@ -36,7 +36,7 @@
       scm:git:ssh://git@github.com/yaml/yamlstar.git
     </developerConnection>
     <url>https://github.com/yaml/yamlstar</url>
-    <tag>0.1.16</tag>
+    <tag>0.1.17</tag>
   </scm>
 
   <properties>

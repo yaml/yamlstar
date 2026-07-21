@@ -1,6 +1,6 @@
 @{
   RootModule = 'YAMLStar.psm1'
-  ModuleVersion = '0.1.16'
+  ModuleVersion = '0.1.17'
   GUID = '3169069f-8994-44b9-b086-8384419f45c4'
   Author = 'YAMLStar Contributors'
   CompanyName = 'YAMLStar'
