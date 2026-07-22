@@ -218,7 +218,7 @@ case $binding in
       published=true
     ;;
   scala)
-    url='https://repo1.maven.org/maven2/org/yamlstar/scala-yamlstar'
+    url='https://repo1.maven.org/maven2/com/yaml/scala-yamlstar'
     url-exists "$url/$version/scala-yamlstar-$version.jar" &&
       published=true
     ;;

@@ -50,7 +50,7 @@ hide:
   - <a href="https://raku.land/zef:ingy/YAMLStar"><span class="ystr">Raku</span></a>
   - <a href="https://rubygems.org/gems/yamlstar"><span class="ystr">Ruby</span></a>
   - <a href="https://crates.io/crates/yamlstar"><span class="ystr">Rust</span></a>
-  - <a href="https://central.sonatype.com/artifact/org.yamlstar/scala-yamlstar"><span class="ystr">Scala</span></a>
+  - <a href="https://central.sonatype.com/artifact/com.yaml/scala-yamlstar"><span class="ystr">Scala</span></a>
   - <a href="https://github.com/yaml/yamlstar/tree/main/swift"><span class="ystr">Swift</span></a>
   - <a href="https://github.com/yaml/yamlstar/tree/main/zig"><span class="ystr">Zig</span></a>
   <span class="ykey">Features</span><span class="ysep">:</span>

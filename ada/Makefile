@@ -6,9 +6,11 @@ endif
 include $M/gnat.mk
 include $(COMMON)/common.mk
 
-ADA-ORIGIN := https://github.com/yaml/yamlstar.git
+MAKES-CLEAN += alire
+
+ADA-ORIGIN = \
+  https://github.com/yaml/yamlstar/archive/refs/tags/$(n).tar.gz
 ADA-MANIFEST := ada/alire.toml
-ADA-RELEASE-COMMIT ?= $(shell git rev-parse HEAD)
 ADA-GITHUB-USER ?= $(or $(GITHUB_ACTOR),\
   $(shell ys -e '.github.user:say' ~/.yamlscript-secrets.yaml 2>/dev/null))
 ADA-GITHUB-TOKEN ?= $(or $(GH_TOKEN),$(GITHUB_TOKEN),\
@@ -45,8 +47,7 @@ endif
 	mkdir -p $(XDG_RUNTIME_DIR)
 	$(ALR) settings --global --set user.github_login $(ADA-GITHUB-USER)
 	@GH_TOKEN=$(ADA-GITHUB-TOKEN) \
-	  $(ALR) publish --manifest $(ADA-MANIFEST) \
-	    $(ADA-ORIGIN) $(ADA-RELEASE-COMMIT)
+	  $(ALR) publish --manifest $(ADA-MANIFEST) $(ADA-ORIGIN)
 
 obj:
 	mkdir -p $@

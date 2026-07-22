@@ -77,6 +77,19 @@ test:: $(LIBYAMLSTAR-SO-VERSION) $(ERLANG-DEPS) build
 	erl -noshell -pa ebin -eval 'yamlstar_test:run().' -s init stop
 endif
 
+ifneq (,$(ERLANG-DOCKER-OUTER))
+release: export HEX_API_KEY := $(HEX-API-KEY)
+release: docker-image
+	docker run --rm \
+	  --user $(USER-UID):$(USER-GID) \
+	  --env HOME=/tmp/home \
+	  --env HEX_API_KEY \
+	  --volume $(ROOT):$(ROOT) \
+	  $(GIT-DOCKER-VOLUME) \
+	  --workdir $(CURDIR) \
+	  $(ERLANG-IMAGE) \
+	  make release
+else
 release:: build-doc
 ifndef HEX-API-KEY
 	$(error Can't determine Hex API key)
@@ -85,6 +98,7 @@ endif
 	  { echo "'$(REBAR3)' is required to publish the Erlang binding" >&2; exit 2; }
 	HEX_API_KEY=$(HEX-API-KEY) $(REBAR3) \
 	  hex publish package --repo hexpm --yes
+endif
 
 ebin/yamlstar.beam: src/yamlstar.erl | ebin
 	erlc -o ebin $<

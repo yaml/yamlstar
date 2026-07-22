@@ -1,4 +1,4 @@
-MAVEN-CENTRAL-GROUP ?= org.yamlstar
+MAVEN-CENTRAL-GROUP ?= com.yaml
 empty :=
 space := $(empty) $(empty)
 MAVEN-CENTRAL-GROUP-PATH = $(subst .,/,$(MAVEN-CENTRAL-GROUP))

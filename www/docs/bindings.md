@@ -543,7 +543,7 @@ Scala binding using JNA.
 
 **Install:**
 ```scala
-libraryDependencies += "org.yamlstar" % "scala-yamlstar" % "0.1.15"
+libraryDependencies += "com.yaml" % "scala-yamlstar" % "0.1.17"
 ```
 
 **Quick Example:**
@@ -951,7 +951,7 @@ only for that platform. MoonBit uses its native target on supported runners.
 - Requires Java 17+ and Scala 3
 - Uses JNA
 - Returns uPickle/uJSON values
-- Available on Maven Central as `org.yamlstar:scala-yamlstar`
+- Available on Maven Central as `com.yaml:scala-yamlstar`
 
 ## Contributing a New Binding
 
