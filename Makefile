@@ -196,15 +196,12 @@ $(ALL-SHELL):
 #------------------------------------------------------------------------------
 
 export OLD_VERSION := $o
-export NEW_VERSION := $n
-ifdef v
-export YS_RELEASE_VERBOSE := 1
-endif
+export NEW_VERSION := $(or $v,$n)
 ifdef d
 export YS_RELEASE_DRYRUN := 1
 endif
-ifdef n
-export YS_RELEASE_VERSION_NEW := $n
+ifdef v
+export YS_RELEASE_VERSION_NEW := $v
 endif
 ifdef o
 export YS_RELEASE_VERSION_OLD := $o
@@ -229,15 +226,17 @@ release-tag-legacy:
 
 RELEASE-BINDINGS := $(BINDING-LANGS:%=release-%)
 
-RELEASE-CHECK-BINDINGS := \
-  ada clojure crystal csharp dyalog erlang fsharp go delphi fortran \
-  haskell java julia lua moonbit nodejs perl php powershell python \
-  raku ruby rust scala
+RELEASE-CHECK-BINDINGS := $(BINDING-LANGS)
 
-$(filter-out release-perl, $(RELEASE-BINDINGS)): $(GH)
+release-binding-version-check:
+ifndef v
+	$(error Binding release targets require v=VERSION)
+endif
+
+$(filter-out release-perl, $(RELEASE-BINDINGS)): release-binding-version-check $(GH)
 	$(MAKE) -C $(@:release-%=%) release
 
-release-perl:
+release-perl: release-binding-version-check
 	$(MAKE) -C perl release-cpan
 
 ifneq (,$(or $s,$(YS_RELEASE_ID),$(YS_RELEASE_NO_CHECK)))
@@ -264,7 +263,7 @@ ifndef YS_RELEASE_VERSION_OLD
 	$(error 'make release' needs the 'o' variable set to the old version)
 endif
 ifndef YS_RELEASE_VERSION_NEW
-	$(error 'make release' needs the 'n' variable set to the new version)
+	$(error 'make release' needs the 'v' variable set to the new version)
 endif
 endif
 
@@ -282,7 +281,7 @@ ifndef d
 endif
 
 _release-yamlstar: $(YS) $(GH)
-	($(TIME) $(YS) $(ROOT)/util/release-yamlstar release $o $n $s) 2>&1 | \
+	($(TIME) $(YS) $(ROOT)/util/release-yamlstar release $o $v $s) 2>&1 | \
 	  tee -a $(RELEASE-LOG)
 
 release-list: $(YS)
@@ -290,12 +289,12 @@ release-list: $(YS)
 
 release-sanity-check: $(YS)
 ifndef o
-	$(error 'make release-sanity-check' requires o=OLD_VERSION n=NEW_VERSION)
+	$(error 'make release-sanity-check' requires o=OLD_VERSION v=NEW_VERSION)
 endif
-ifndef n
-	$(error 'make release-sanity-check' requires o=OLD_VERSION n=NEW_VERSION)
+ifndef v
+	$(error 'make release-sanity-check' requires o=OLD_VERSION v=NEW_VERSION)
 endif
-	$(YS) $(ROOT)/util/release-yamlstar sanity-check $(o) $(n)
+	$(YS) $(ROOT)/util/release-yamlstar sanity-check $(o) $(v)
 
 release-secrets-update secrets-update: $(YS) $(GH)
 	$(YS) $(ROOT)/util/yamlstar-secrets --update=$(or $(SECRETS),all)
@@ -311,39 +310,39 @@ release-version-bump: $(YS)
 
 release-changelog: $(YS)
 ifndef o
-	$(error 'make release-changelog' requires o=OLD_VERSION n=NEW_VERSION)
+	$(error 'make release-changelog' requires o=OLD_VERSION v=NEW_VERSION)
 endif
-ifndef n
-	$(error 'make release-changelog' requires o=OLD_VERSION n=NEW_VERSION)
+ifndef v
+	$(error 'make release-changelog' requires o=OLD_VERSION v=NEW_VERSION)
 endif
-	$(YS) $(ROOT)/util/release-yamlstar changelog $(o) $(n)
+	$(YS) $(ROOT)/util/release-yamlstar changelog $(o) $(v)
 
 release-binding-changelogs: $(YS)
 	$(YS) $(ROOT)/util/release-yamlstar binding-changelogs
 
 release-commit: $(YS)
-ifndef n
-	$(error 'make release-commit' requires n=NEW_VERSION)
+ifndef v
+	$(error 'make release-commit' requires v=NEW_VERSION)
 endif
-	$(YS) $(ROOT)/util/release-yamlstar commit $(n)
+	$(YS) $(ROOT)/util/release-yamlstar commit $(v)
 
 release-tag: $(YS)
-ifndef n
-	$(error 'make release-tag' requires n=NEW_VERSION)
+ifndef v
+	$(error 'make release-tag' requires v=NEW_VERSION)
 endif
-	$(YS) $(ROOT)/util/release-yamlstar tag $(n)
+	$(YS) $(ROOT)/util/release-yamlstar tag $(v)
 
 release-push: $(YS)
-ifndef n
-	$(error 'make release-push' requires n=NEW_VERSION)
+ifndef v
+	$(error 'make release-push' requires v=NEW_VERSION)
 endif
-	$(YS) $(ROOT)/util/release-yamlstar push $(n)
+	$(YS) $(ROOT)/util/release-yamlstar push $(v)
 
 release-build-github: $(YS)
-ifndef n
-	$(error 'make release-build-github' requires n=NEW_VERSION)
+ifndef v
+	$(error 'make release-build-github' requires v=NEW_VERSION)
 endif
-	$(YS) $(ROOT)/util/release-yamlstar build-github $(n)
+	$(YS) $(ROOT)/util/release-yamlstar build-github $(v)
 
 # The t= platform list accepts spaces or commas:
 #   t='macos linux'  or  t=macos,linux
@@ -353,11 +352,11 @@ comma := ,
 # Rerun tests for the platforms in t= using build artifacts from a
 # prior run (r=RUN_ID, default: the latest release workflow run on
 # the current branch). Example:
-#   make release-tests-retry n=0.1.17 t=macos r=12345678
+#   make release-tests-retry v=0.1.17 t=macos r=12345678
 release-tests-retry: t ?= linux aarch64 macos windows
 release-tests-retry: $(GH)
-ifndef n
-	$(error 'make release-tests-retry' requires n=NEW_VERSION)
+ifndef v
+	$(error 'make release-tests-retry' requires v=NEW_VERSION)
 endif
 	@set -e; \
 	  branch=$$(git branch --show-current); \
@@ -374,7 +373,7 @@ endif
 	  echo "Using build artifacts from run $$artifact_run_id"; \
 	  git push origin HEAD:$$branch; \
 	  gh workflow run release.yaml \
-	    --repo yaml/yamlstar --ref $$branch -f version=$(n) \
+	    --repo yaml/yamlstar --ref $$branch -f version=$(v) \
 	    -f tests_only='$(subst $(comma), ,$(t))' \
 	    -f test_artifacts_run_id=$$artifact_run_id; \
 	  sleep 5; \
@@ -385,23 +384,23 @@ endif
 	    --exit-status --interval=10
 
 release-retry: $(YS) $(GH)
-ifndef n
-	$(error 'make release-retry' requires n=NEW_VERSION)
+ifndef v
+	$(error 'make release-retry' requires v=NEW_VERSION)
 endif
-	@if gh release view $(n) --repo yaml/yamlstar >/dev/null 2>&1; then \
-	  echo "Deleting existing GitHub release $(n)"; \
-	  gh release delete $(n) --repo yaml/yamlstar --yes; \
+	@if gh release view $(v) --repo yaml/yamlstar >/dev/null 2>&1; then \
+	  echo "Deleting existing GitHub release $(v)"; \
+	  gh release delete $(v) --repo yaml/yamlstar --yes; \
 	fi
 	git push origin HEAD:$$(git branch --show-current)
-	git tag -f $(n) HEAD
-	git push -f origin $(n)
-	$(MAKE) release-build-github n=$(n)
+	git tag -f $(v) HEAD
+	git push -f origin $(v)
+	$(MAKE) release-build-github v=$(v)
 
 release-bindings: $(YS)
-ifndef n
-	$(error 'make release-bindings' requires n=NEW_VERSION)
+ifndef v
+	$(error 'make release-bindings' requires v=NEW_VERSION)
 endif
-	$(YS) $(ROOT)/util/release-yamlstar bindings $(n)
+	$(YS) $(ROOT)/util/release-yamlstar bindings $(v)
 
 release-check-binding:
 ifndef b
@@ -421,23 +420,23 @@ endif
 	done
 
 release-homebrew: $(YS)
-ifndef n
-	$(error 'make release-homebrew' requires n=NEW_VERSION)
+ifndef v
+	$(error 'make release-homebrew' requires v=NEW_VERSION)
 endif
-	$(YS) $(ROOT)/util/brew-update $(n)
+	$(YS) $(ROOT)/util/brew-update $(v)
 
 release-website: $(YS)
 	$(YS) $(ROOT)/util/release-yamlstar website
 
 release-publish-homebrew: $(GH)
-ifndef n
-	$(error 'make release-publish-homebrew' requires n=NEW_VERSION)
+ifndef v
+	$(error 'make release-publish-homebrew' requires v=NEW_VERSION)
 endif
 	@set -e; \
 	  branch=$$(git branch --show-current); \
 	  git push origin HEAD:$$branch; \
 	  gh workflow run release.yaml \
-	    --repo yaml/yamlstar --ref $$branch -f version=$(n) \
+	    --repo yaml/yamlstar --ref $$branch -f version=$(v) \
 	    -f publish_homebrew_only=true; \
 	  sleep 5; \
 	  run_id=$$(gh run list --workflow=release.yaml \
@@ -447,14 +446,14 @@ endif
 	    --exit-status --interval 10
 
 release-publish-bindings: $(GH)
-ifndef n
-	$(error 'make release-publish-bindings' requires n=NEW_VERSION)
+ifndef v
+	$(error 'make release-publish-bindings' requires v=NEW_VERSION)
 endif
 	@set -e; \
 	  branch=$$(git branch --show-current); \
 	  git push origin HEAD:$$branch; \
 	  gh workflow run release.yaml \
-	    --repo yaml/yamlstar --ref $$branch -f version=$(n) \
+	    --repo yaml/yamlstar --ref $$branch -f version=$(v) \
 	    -f publish_bindings_only=true \
 	    -f force_bindings='$(if $(YS_RELEASE_FORCE_BINDINGS),true,false)' \
 	    -f bindings='$(YS_RELEASE_BINDINGS)' \
@@ -467,16 +466,16 @@ endif
 	    --exit-status --interval=10
 
 publish-python-wheels: $(GH)
-ifndef n
-	$(error 'make publish-python-wheels' requires n=VERSION)
+ifndef v
+	$(error 'make publish-python-wheels' requires v=VERSION)
 endif
 	rm -fr python/dist
 	mkdir -p python/dist/release-assets
-	gh release download $(n) \
+	gh release download $(v) \
 	  --repo yaml/yamlstar \
-	  --pattern 'libyamlstar-$(n)-*.tar.xz' \
+	  --pattern 'libyamlstar-$(v)-*.tar.xz' \
 	  --dir python/dist/release-assets
-	$(MAKE) -C python wheels-from-release n=$(n)
+	$(MAKE) -C python wheels-from-release n=$(v)
 	$(MAKE) -C python publish-wheels
 
 .PHONY: cli core libyamlstar test

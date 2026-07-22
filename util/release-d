@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+lang=d
+tag_prefix=v
+root=$(cd "$(dirname "$0")/.." && pwd)
+
+update() (
+  cp "$root/License" "$repo_dir/LICENSE"
+
+  cd "$from_dir" || exit
+  cp ReadMe.md dub.json "$repo_dir/"
+  mkdir -p "$repo_dir/source"
+  cp source/*.d "$repo_dir/source/"
+)
+
+after_release() (
+  local secret=${DUB_UPDATE_SECRET:-}
+  if [[ -z $secret && -f ~/.yamlstar-secrets.yaml ]]; then
+    local expr value
+    for expr in .d.token .dub.token .dlang.token; do
+      value=$(ys -e "$expr:say" ~/.yamlstar-secrets.yaml 2>/dev/null || true)
+      if [[ $value && $value != nil ]]; then
+        secret=$value
+        break
+      fi
+    done
+  fi
+
+  [[ $secret ]] || {
+    echo 'Error: DUB_UPDATE_SECRET or .dlang.token must be set' >&2
+    exit 1
+  }
+
+  local response
+  response=$(curl --fail-with-body -sS -X POST \
+      https://code.dlang.org/api/packages/yamlstar/update \
+      -H 'Content-Type: application/json' \
+      -d "$(jq -cn --arg secret "$secret" '{secret: $secret}')")
+  if [[ $response == *'Invalid secret'* ]]; then
+    echo 'Error: code.dlang.org rejected DUB_UPDATE_SECRET' >&2
+    return 1
+  fi
+)
+
+source "$(dirname "$0")/release-repo.bash"

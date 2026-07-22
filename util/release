@@ -112,7 +112,7 @@ do-check-tag() (
   # Tag should exist (created by `make release` locally)
   if ! git rev-parse "$VERSION" >/dev/null 2>&1; then
     die "ERROR: Tag $VERSION does not exist" \
-        "Run 'make release o=OLD n=$VERSION' first to create the tag"
+        "Run 'make release o=OLD v=$VERSION' first to create the tag"
   fi
   echo "✓ Tag $VERSION exists"
 
@@ -635,12 +635,26 @@ do-release-raku() (
   echo 'Publishing Raku package to fez...'
   make raku-install
 
-  if [[ -n ${FEZ_TOKEN:-} && -n ${FEZ_USER:-} ]]; then
-    mkdir -p "$HOME"
-    printf '{"un":"%s","key":"%s"}\n' "$FEZ_USER" "$FEZ_TOKEN" > "$HOME/.fez-config.json"
-  elif [[ -f ~/.yamlstar-secrets.yaml ]]; then
-    FEZ_USER=$(ys -e '(.raku.user || .fez.user):say' ~/.yamlstar-secrets.yaml 2>/dev/null || true)
-    FEZ_TOKEN=$(ys -e '(.raku.token || .fez.token):say' ~/.yamlstar-secrets.yaml 2>/dev/null || true)
+  if [[ -f ~/.yamlstar-secrets.yaml ]]; then
+    local value
+    if [[ -z ${FEZ_USER:-} ]]; then
+      for expr in .raku.user .fez.user; do
+        value=$(ys -e "$expr:say" ~/.yamlstar-secrets.yaml 2>/dev/null || true)
+        if [[ $value && $value != nil ]]; then
+          FEZ_USER=$value
+          break
+        fi
+      done
+    fi
+    if [[ -z ${FEZ_TOKEN:-} ]]; then
+      for expr in .raku.token .fez.token; do
+        value=$(ys -e "$expr:say" ~/.yamlstar-secrets.yaml 2>/dev/null || true)
+        if [[ $value && $value != nil ]]; then
+          FEZ_TOKEN=$value
+          break
+        fi
+      done
+    fi
   fi
 
   [[ -n ${FEZ_USER:-} ]] ||
@@ -656,7 +670,7 @@ do-release-raku() (
   if [[ -n ${YS_RELEASE_CI:-} ]]; then
     timeout 60s fez upload --unattended --force
   else
-    fez upload
+    fez upload --unattended --force
   fi
 )
 
@@ -707,6 +721,31 @@ do-release-delphi() (
   ../util/release-delphi
 )
 
+# D - publish split repository and notify code.dlang.org
+do-release-d() (
+  ../util/release-d
+)
+
+# Nim - publish split repository
+do-release-nim() (
+  ../util/release-nim
+)
+
+# R - publish split repository
+do-release-r() (
+  ../util/release-r
+)
+
+# Swift - publish split repository
+do-release-swift() (
+  ../util/release-swift
+)
+
+# Zig - publish split repository
+do-release-zig() (
+  ../util/release-zig
+)
+
 # Publish website to GitHub Pages
 do-publish-www() (
   echo 'Publishing website to GitHub Pages...'
@@ -724,37 +763,37 @@ Interactive Release Workflow Steps
 ===================================
 
 Run the full interactive workflow:
-  make release o=OLD_VERSION n=NEW_VERSION
+  make release o=OLD_VERSION v=NEW_VERSION
 
 Or run each step individually:
 
-  1. make release-sanity-check o=X n=Y
+  1. make release-sanity-check o=X v=Y
      - Verify old version matches Meta file
      - Verify working tree is clean
      - Validate new version format
 
-  2. make release-version-bump o=X n=Y
+  2. make release-version-bump o=X v=Y
      - Update version in all files (Meta, project.clj, etc.)
 
-  3. make release-changelog o=X n=Y
+  3. make release-changelog o=X v=Y
      - Generate changelog from git history (X..HEAD)
      - Open in $EDITOR for review
      - Validate YAML syntax
      - Prepend to Changes file
 
-  4. make release-commit n=Y
+  4. make release-commit v=Y
      - Show diff of changes
      - Prompt for commit message (editable)
      - Commit all changes
 
-  5. make release-tag n=Y
+  5. make release-tag v=Y
      - Create git tag for new version
      - Handle existing tag deletion if needed
 
-  6. make release-push n=Y
+  6. make release-push v=Y
      - Push commits and tags to origin
 
-  7. make release-build-github n=Y
+  7. make release-build-github v=Y
      - Trigger GitHub Actions release workflow
 
   8. make release-bindings
@@ -765,13 +804,13 @@ Or run each step individually:
      - Deploy website to GitHub Pages (yamlstar.org)
 
 Example manual workflow:
-  make release-sanity-check o=0.1.0 n=0.1.1
-  make release-version-bump o=0.1.0 n=0.1.1
-  make release-changelog o=0.1.0 n=0.1.1
-  make release-commit n=0.1.1
-  make release-tag n=0.1.1
-  make release-push n=0.1.1
-  make release-build-github n=0.1.1
+  make release-sanity-check o=0.1.0 v=0.1.1
+  make release-version-bump o=0.1.0 v=0.1.1
+  make release-changelog o=0.1.0 v=0.1.1
+  make release-commit v=0.1.1
+  make release-tag v=0.1.1
+  make release-push v=0.1.1
+  make release-build-github v=0.1.1
   make release-bindings
   make publish
 
@@ -825,7 +864,7 @@ validate_yaml() {
 # Main interactive release orchestrator
 do-release() {
   ([[ ${OLD_VERSION:-} ]] && [[ ${NEW_VERSION:-} ]]) ||
-    die 'ERROR: Usage: make release o=OLD_VERSION n=NEW_VERSION'
+    die 'ERROR: Usage: make release o=OLD_VERSION v=NEW_VERSION'
 
   echo "============================================================"
   echo "  YAMLStar Release Workflow"
@@ -905,7 +944,7 @@ do-sanity-check() {
         "  Meta file has: $meta_version" \
         "  You specified: $OLD_VERSION" \
         "" \
-        "Please use: make release o=$meta_version n=$NEW_VERSION"
+        "Please use: make release o=$meta_version v=$NEW_VERSION"
   fi
   echo "✓ Old version matches Meta file: $OLD_VERSION"
 

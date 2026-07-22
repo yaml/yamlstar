@@ -12,11 +12,16 @@ export HEX_HOME := $(ROOT)/.cache/hex
 endif
 
 include $(COMMON)/common.mk
-include $(COMMON)/binding.mk
 
 ELIXIR-IMAGE ?= ghcr.io/yaml/yamlscript-elixir-test
 GIT-COMMON-DIR := $(shell git rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
 GIT-DOCKER-VOLUME := $(if $(GIT-COMMON-DIR),--volume $(GIT-COMMON-DIR):$(GIT-COMMON-DIR):ro,)
+
+HEX-API-KEY ?= $(HEX_API_KEY)
+ifeq (,$(HEX-API-KEY))
+HEX-API-KEY := \
+  $(shell ys -e '.hex.token:say' ~/.yamlstar-secrets.yaml 2>/dev/null)
+endif
 
 
 #------------------------------------------------------------------------------
@@ -47,14 +52,34 @@ docker-image-build:
 docker-image-push: docker-image-build
 	docker push $(ELIXIR-IMAGE)
 
-release-deps:: docker-image
+release: export HEX_API_KEY := $(HEX-API-KEY)
+release: docker-image
+ifeq (,$(HEX-API-KEY))
+	$(error Can't determine Hex API key)
+endif
+	docker run --rm \
+	  --user $(USER-UID):$(USER-GID) \
+	  --env HOME=/tmp/home \
+	  --env HEX_API_KEY \
+	  --volume $(ROOT):$(ROOT) \
+	  $(GIT-DOCKER-VOLUME) \
+	  --workdir $(CURDIR) \
+	  $(ELIXIR-IMAGE) \
+	  make release
 else
 test:: $(LIBYAMLSTAR-SO-VERSION) $(ERL) $(ELIXIR)
 	mix local.hex --force --if-missing
 	mix deps.get
 	mix test
 
-release-deps:: $(ERL) $(ELIXIR)
+release: $(ERL) $(ELIXIR) README.md
+ifeq (,$(HEX-API-KEY))
+	$(error Can't determine Hex API key)
+endif
+	mix local.hex --force --if-missing
+	mix deps.get
+	HEX_API_KEY=$(HEX-API-KEY) mix hex.publish --yes
+	$(RM) README.md
 endif
 
 README.md: ReadMe.md

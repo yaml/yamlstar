@@ -1,7 +1,6 @@
 include ../common/init.mk
 include $M/dart.mk
 include $(COMMON)/common.mk
-include $(COMMON)/binding.mk
 
 export PUB_CACHE := $(ROOT)/.cache/pub
 DART-HOME := $(ROOT)/.cache/dart-home
@@ -18,6 +17,12 @@ test:: $(LIBYAMLSTAR-SO-VERSION) $(DART)
 	$(DART-ENV) dart pub get
 	$(DART-ENV) dart run test/main.dart
 
+# pub.dev requires the file names README.md and CHANGELOG.md.
+release: $(DART) README.md CHANGELOG.md
+	mkdir -p $(DART-HOME)
+	$(DART-ENV) dart pub publish --force
+	$(RM) README.md CHANGELOG.md
+
 release-deps:: $(DART)
 
 README.md: ReadMe.md
@@ -25,7 +30,7 @@ README.md: ReadMe.md
 
 CHANGELOG.md:
 	printf '## %s\n\nSee the YAMLStar change log:\n%s\n' \
-	  "$(YAMLSTAR_VERSION)" \
+	  "$(VERSION)" \
 	  "https://github.com/yaml/yamlstar/blob/main/Changes" > $@
 
 clean::

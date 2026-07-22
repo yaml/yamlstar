@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+lang=r
+tag_prefix=v
+root=$(cd "$(dirname "$0")/.." && pwd)
+
+update() (
+  cd "$from_dir" || exit
+  cp ReadMe.md DESCRIPTION LICENSE NAMESPACE "$repo_dir/"
+  rm -fr "$repo_dir/R" "$repo_dir/src" "$repo_dir/tests"
+  cp -r R src tests "$repo_dir/"
+  rm -f "$repo_dir"/src/*.o "$repo_dir"/src/*.so
+)
+
+source "$(dirname "$0")/release-repo.bash"

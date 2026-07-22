@@ -46,6 +46,9 @@ init() {
 clone() (
   rm -fr "$repo_dir"
   git clone "$repo_url" "$repo_dir"
+  if [[ ${YS_RELEASE_DRYRUN-} || ${YS_RELEASE_DRY_RUN-} ]]; then
+    mkdir -p "$repo_dir"
+  fi
 )
 
 test() (:)
@@ -62,11 +65,20 @@ release() (
   fi
 
   tag=$tag_prefix$YS_RELEASE_VERSION_NEW
-  if git rev-parse "$tag" >/dev/null 2>&1; then
-    git tag -d "$tag"
+  if git ls-remote --exit-code --tags origin "refs/tags/$tag" \
+      >/dev/null 2>&1; then
+    echo "Tag $tag already published for yamlstar-$lang"
+  else
+    if git rev-parse "$tag" >/dev/null 2>&1; then
+      git tag -d "$tag"
+    fi
+    git tag "$tag"
+    git push origin "$tag"
   fi
-  git tag "$tag"
-  git push origin "$tag"
+
+  if declare -F after_release >/dev/null; then
+    after_release
+  fi
 )
 
 main "$@"

@@ -27,7 +27,7 @@ repositories {
     maven("https://repo.clojars.org")
 }
 dependencies {
-    implementation("org.yamlstar:kotlin-yamlstar:0.1.17")
+    implementation("com.yaml:kotlin-yamlstar:0.1.17")
 }
 ```
 

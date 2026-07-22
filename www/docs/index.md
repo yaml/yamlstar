@@ -37,7 +37,7 @@ hide:
   - <a href="https://hackage.haskell.org/package/yamlstar"><span class="ystr">Haskell</span></a>
   - <a href="https://central.sonatype.com/artifact/com.yaml/yamlstar"><span class="ystr">Java</span></a>
   - <a href="https://juliahub.com/ui/Packages/General/YAMLStar"><span class="ystr">Julia</span></a>
-  - <a href="https://clojars.org/org.yamlstar/kotlin-yamlstar"><span class="ystr">Kotlin</span></a>
+  - <a href="https://central.sonatype.com/artifact/com.yaml/kotlin-yamlstar"><span class="ystr">Kotlin</span></a>
   - <a href="https://luarocks.org/modules/ingy/yamlstar"><span class="ystr">Lua</span></a>
   - <a href="https://mooncakes.io/docs/ingydotnet/yamlstar"><span class="ystr">MoonBit</span></a>
   - <a href="https://nimble.directory/pkg/yamlstar"><span class="ystr">Nim</span></a>

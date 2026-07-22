@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+lang=zig
+tag_prefix=v
+root=$(cd "$(dirname "$0")/.." && pwd)
+
+update() (
+  cp "$root/License" "$repo_dir/LICENSE"
+
+  cd "$from_dir" || exit
+  cp ReadMe.md build.zig build.zig.zon "$repo_dir/"
+  mkdir -p "$repo_dir/src"
+  cp src/*.zig "$repo_dir/src/"
+)
+
+source "$(dirname "$0")/release-repo.bash"

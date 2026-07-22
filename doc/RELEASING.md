@@ -187,7 +187,7 @@ make release-github VERSION=0.1.17
 make check-release VERSION=0.1.17
 
 # Publish Homebrew formulas
-make release-homebrew n=0.1.17
+make release-homebrew v=0.1.17
 
 # Publish Python only
 make release-python VERSION=0.1.17

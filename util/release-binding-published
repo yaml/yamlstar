@@ -134,6 +134,15 @@ case $binding in
     url-exists "$url/$lower_version/yamlstar.$lower_version.nupkg" &&
       published=true
     ;;
+  d)
+    url-exists "https://code.dlang.org/packages/yamlstar/$version" &&
+      published=true
+    ;;
+  dart)
+    json-url-exists \
+      "https://pub.dev/api/packages/yamlstar/versions/$version" &&
+      published=true
+    ;;
   delphi|fortran)
     git-tag-exists "https://github.com/yaml/yamlstar-$binding" "$version" &&
       published=true
@@ -141,6 +150,11 @@ case $binding in
   erlang)
     json-url-exists \
       "https://hex.pm/api/packages/yamlstar_erlang/releases/$version" &&
+      published=true
+    ;;
+  elixir)
+    json-url-exists \
+      "https://hex.pm/api/packages/yamlstar/releases/$version" &&
       published=true
     ;;
   dyalog)
@@ -165,6 +179,11 @@ case $binding in
   java)
     url='https://repo1.maven.org/maven2/com/yaml/yamlstar'
     url-exists "$url/$version/yamlstar-$version.jar" &&
+      published=true
+    ;;
+  kotlin)
+    url='https://repo1.maven.org/maven2/com/yaml/kotlin-yamlstar'
+    url-exists "$url/$version/kotlin-yamlstar-$version.jar" &&
       published=true
     ;;
   julia)
@@ -220,6 +239,11 @@ case $binding in
   scala)
     url='https://repo1.maven.org/maven2/com/yaml/scala-yamlstar'
     url-exists "$url/$version/scala-yamlstar-$version.jar" &&
+      published=true
+    ;;
+  nim|r|swift|zig)
+    git-tag-exists "https://github.com/yaml/yamlstar-$binding" \
+      "v$version" &&
       published=true
     ;;
   *)

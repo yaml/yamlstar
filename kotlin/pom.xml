@@ -8,7 +8,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.yamlstar</groupId>
+  <groupId>com.yaml</groupId>
 
   <artifactId>kotlin-yamlstar</artifactId>
 
@@ -25,18 +25,28 @@
   <licenses>
     <license>
       <name>MIT License</name>
-      <url>http://www.opensource.org/licenses/mit-license.php</url>
+      <url>https://opensource.org/license/mit/</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
 
-  <distributionManagement>
-    <repository>
-      <id>clojars</id>
-      <name>Clojars repository</name>
-      <url>https://clojars.org/repo</url>
-    </repository>
-  </distributionManagement>
+  <developers>
+    <developer>
+      <id>ingydotnet</id>
+      <name>Ingy dot Net</name>
+      <email>ingy@ingy.net</email>
+      <url>https://github.com/ingydotnet</url>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:https://github.com/yaml/yamlstar.git</connection>
+    <developerConnection>
+      scm:git:ssh://git@github.com/yaml/yamlstar.git
+    </developerConnection>
+    <url>https://github.com/yaml/yamlstar</url>
+    <tag>0.1.17</tag>
+  </scm>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
