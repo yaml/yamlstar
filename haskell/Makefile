@@ -2,6 +2,7 @@ include ../common/init.mk
 ifneq (,$(wildcard /.dockerenv))
 HASKELL-DOCKER-INNER := true
 else
+CABAL-VERSION := 3.14.2.0
 include $M/cabal.mk
 endif
 include $M/yamlscript.mk
@@ -34,7 +35,9 @@ endif
 HACKAGE-TOKEN ?= $(HACKAGE_TOKEN)
 ifeq (,$(HACKAGE-TOKEN))
 HACKAGE-TOKEN := \
-  $(shell ys -e '(.haskell.token || .hackage.token):say' ~/.yamlstar-secrets.yaml 2>/dev/null)
+  $(shell value=$$(ys -e '.haskell.token:say' \
+    ~/.yamlstar-secrets.yaml 2>/dev/null || true); \
+    test "$$value" = nil || printf '%s' "$$value")
 endif
 
 build:: build-doc

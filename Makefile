@@ -229,6 +229,11 @@ release-tag-legacy:
 
 RELEASE-BINDINGS := $(BINDING-LANGS:%=release-%)
 
+RELEASE-CHECK-BINDINGS := \
+  ada clojure crystal csharp dyalog erlang fsharp go delphi fortran \
+  haskell java julia lua moonbit nodejs perl php powershell python \
+  raku ruby rust scala
+
 $(filter-out release-perl, $(RELEASE-BINDINGS)): $(GH)
 	$(MAKE) -C $(@:release-%=%) release
 
@@ -397,6 +402,23 @@ ifndef n
 	$(error 'make release-bindings' requires n=NEW_VERSION)
 endif
 	$(YS) $(ROOT)/util/release-yamlstar bindings $(n)
+
+release-check-binding:
+ifndef b
+	$(error 'make release-check-binding' requires b=BINDING)
+endif
+ifndef v
+	$(error 'make release-check-binding' requires v=VERSION)
+endif
+	@util/release-binding-published $(b) $(v) || true
+
+release-check-bindings:
+ifndef v
+	$(error 'make release-check-bindings' requires v=VERSION)
+endif
+	@for binding in $(RELEASE-CHECK-BINDINGS); do \
+	  util/release-binding-published $$binding $(v) || true; \
+	done
 
 release-homebrew: $(YS)
 ifndef n

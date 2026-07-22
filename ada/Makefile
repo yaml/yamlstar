@@ -29,7 +29,7 @@ test:: $(LIBYAMLSTAR-SO-VERSION) $(GNATMAKE) | obj
 	    -largs -L$(ROOT)/libyamlstar/lib -lyamlstar
 	test/test_yamlstar
 
-release:: test build-doc
+release:: $(ALR) test build-doc
 ifndef ALR
 	$(error 'alr' is required to publish the Ada binding)
 endif

@@ -69,4 +69,4 @@ release() (
   git push origin "$tag"
 )
 
-true
+main "$@"

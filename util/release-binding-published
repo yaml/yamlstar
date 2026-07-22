@@ -181,8 +181,7 @@ case $binding in
       published=true
     ;;
   nodejs)
-    export NPM_CONFIG_CACHE="${NPM_CONFIG_CACHE:-.cache/npm}"
-    npm view "yamlstar@$version" version >/dev/null 2>&1 &&
+    json-url-exists "https://registry.npmjs.org/yamlstar/$version" &&
       published=true
     ;;
   perl)
