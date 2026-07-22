@@ -21,7 +21,6 @@ vo =: v-old.str/replace(/\./ '\\.')
   - regx:: "()${vp}()"
     file:
     - ada/alire.toml
-    - ada/alire/releases/yamlstar-0.1.15.toml
     - Makefile
     - Meta
     - cli/src/yamlstar/cli.clj
