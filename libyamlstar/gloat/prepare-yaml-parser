@@ -1,0 +1,45 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+my ($source_dir) = @ARGV;
+die "Usage: $0 SOURCE-DIR\n" unless $source_dir;
+
+sub rewrite_file {
+    my ($path, $rewrite) = @_;
+    open my $in, '<', $path or die "Can't read '$path': $!\n";
+    local $/;
+    my $text = <$in>;
+    close $in;
+
+    $rewrite->(\$text);
+
+    open my $out, '>', $path or die "Can't write '$path': $!\n";
+    print {$out} $text;
+    close $out;
+}
+
+rewrite_file "$source_dir/yaml_parser/parser.cljc", sub {
+    my ($text) = @_;
+
+    my $record = '(defrecord StateFrame [name node doc lvl beg end m t full])';
+    my $replacement = <<'CLOJURE';
+#?(:clj
+   (defrecord StateFrame [name node doc lvl beg end m t full])
+   :glj
+   (defn ->StateFrame [name node doc lvl beg end m t full]
+     {:name name
+      :node node
+      :doc doc
+      :lvl lvl
+      :beg beg
+      :end end
+      :m m
+      :t t
+      :full full}))
+CLOJURE
+    my $count = $$text =~ s/\Q$record\E/$replacement/;
+    die "Expected one StateFrame record in parser.cljc\n" unless $count == 1;
+
+};

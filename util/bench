@@ -1,0 +1,690 @@
+#!/usr/bin/env ys-0
+
+defn main(*args):
+  opts =: parse-args(args)
+  root =: repo-root()
+  config-file =: resolve-path(root opts.config)
+  config =: yaml/load(read(config-file))
+  validate-config: config
+
+  case opts.command:
+    'gather': gather(root config opts)
+    'report': report(root config opts)
+    'help'  : usage()
+    '--help': usage()
+    '-h'    : usage()
+    else    : die("Unknown command:\ $(opts.command)\n\n$(usage-text())")
+
+
+defn parse-args(args):
+  command =: args.0 || 'help'
+  opts =:
+    +{}
+      .assoc('command' command)
+      .assoc('config' 'bench/config.yaml')
+      .assoc('engines' nil)
+      .assoc('inputs' nil)
+      .assoc('warmups' nil)
+      .assoc('repetitions' nil)
+      .assoc('output' 'bench/report.md')
+
+  reduce _ opts rest(args):
+    fn(out arg):
+      cond:
+        arg.starts?('--engines='):
+          out.assoc('engines' split-csv(subs(arg 10)))
+        arg.starts?('--inputs='):
+          out.assoc('inputs' split-csv(subs(arg 9)))
+        arg.starts?('--warmups='):
+          out.assoc('warmups' I(subs(arg 10)))
+        arg.starts?('--repetitions='):
+          out.assoc('repetitions' I(subs(arg 14)))
+        arg.starts?('--config='):
+          out.assoc('config' subs(arg 9))
+        arg.starts?('--output='):
+          out.assoc('output' subs(arg 9))
+        arg.in?(['--help' '-h']):
+          out.assoc('command' 'help')
+        else:
+          die("Unknown option:\ $arg")
+
+
+defn split-csv(text):
+  values =: text.split(',').map(trim).remove(empty?)
+  when empty?(values):
+    die: 'A comma-separated selection cannot be empty'
+  V: values
+
+
+defn usage():
+  say: usage-text()
+
+
+defn usage-text():
+  =>:: |
+    YAMLStar shared-library benchmarks
+
+    Usage:
+      bench gather [OPTIONS]
+      bench report [OPTIONS]
+
+    Options:
+      --engines=NAMES       Comma-separated engine names
+      --inputs=NAMES        Comma-separated input names (gather only)
+      --warmups=N           Override configured warmup count
+      --repetitions=N       Override configured measured repetitions
+      --config=FILE         Configuration file (bench/config.yaml)
+      --output=FILE         Report output (bench/report.md)
+      -h, --help            Show this help
+
+    The executable is util/bench. The shorter name works when this
+    repository's util directory is on PATH.
+
+
+defn repo-root():
+  util-dir =: fs/dirname(fs/abs(FILE))
+  command-output: +'realpath' "$util-dir/.."
+
+
+defn resolve-path(root path):
+  path =: expand-home(path)
+  if path.starts?('/'):
+    then: path
+    else:
+      fs/abs: "$root/$path"
+
+
+defn expand-home(path):
+  if path.starts?('~/'):
+    then: "$(ENV.HOME)/$(subs(path 2))"
+    else: path
+
+
+defn validate-config(config):
+  when config.get('version') != 1:
+    die: 'bench/config.yaml must have version: 1'
+  when-not map?(config.get('engines')):
+    die: 'bench/config.yaml must define an engines mapping'
+  when-not map?(config.get('inputs')):
+    die: 'bench/config.yaml must define an inputs mapping'
+
+
+defn gather(root config opts):
+  defaults =: config.get('defaults') || {}
+  engines =: opts.engines || defaults.get('engines')
+  inputs =: opts.inputs || defaults.get('inputs')
+  warmups =: opts.warmups
+  repetitions =: opts.repetitions
+  warmups =: nil?(warmups).if(defaults.get('warmups') warmups)
+  repetitions =:
+    nil?(repetitions).if(defaults.get('repetitions') repetitions)
+  timeout =: defaults.get('timeout') || 600
+
+  validate-selection: +'engine' engines config.get('engines')
+  validate-selection: +'input' inputs config.get('inputs')
+  when warmups < 0:
+    die: 'warmups must be non-negative'
+  when repetitions < 1:
+    die: 'repetitions must be positive'
+
+  say: "Gathering: $(engines.join(', '))"
+  builds =: build-engines(root config engines)
+  cases =: load-inputs(root config inputs)
+  raw =: run-helper(root builds cases warmups repetitions timeout)
+  save-raw-results: root engines raw
+  validate-results: engines inputs raw
+  measurements =: enrich-results(raw.get('engines'))
+  run =:
+    apply make-run:
+      +[root engines inputs warmups repetitions
+        builds cases measurements]
+  append-status: root run
+  say: "Recorded run $(run.get('id')) in bench/status.yaml"
+
+
+defn validate-selection(kind names available):
+  when-not seq(names):
+    die: "No ${kind}s selected"
+  each name names:
+    when-not name.in?(available):
+      choices =: sort(keys(available)).join(', ')
+      die: "Unknown $kind '$name' (available: $choices)"
+  when count(names) != count(distinct(names)):
+    die: "Duplicate ${kind}s are not allowed"
+
+
+defn build-engines(root config names):
+  reduce _ {} names:
+    fn(out name):
+      engine =: config.get-in(['engines' name])
+      sources =: resolve-sources(root name engine.get('sources'))
+      build =: engine.get('build') || {}
+      command =: expand-command(build.get('command') sources)
+      artifact =: resolve-path(root build.get('artifact'))
+      work =: "$root/bench/$name"
+      library =: "$work/libyamlstar.so"
+      log =: "$work/build.log"
+
+      when-not engine.get('abi').in?(qw(graalvm gloat)):
+        die: "$name must set abi to graalvm or gloat"
+      when empty?(command) || empty?(build.get('artifact')):
+        die: "$name must define build.command and build.artifact"
+
+      fs/mkdir-p: work
+      when fs/e(artifact):
+        fs/rm: artifact
+
+      say: "Building $name"
+      start =: System/nanoTime()
+      result =:
+        apply shell:
+          +[{:dir root :out :string :err :string :continue true}
+            'bash' '-c' command]
+      elapsed =: System/nanoTime() - start
+      write log: (result.out || '') + (result.err || '')
+      when result.exit != 0:
+        die: "$name build failed; see $(relative(root log))"
+      when-not fs/f(artifact):
+        die: "$name did not create $(relative(root artifact))"
+
+      when fs/e(library):
+        fs/rm: library
+      fs/cp: artifact library
+
+      item =:
+        +{}
+          .assoc('abi' engine.get('abi'))
+          .assoc('sources' sources)
+          .assoc('command' command)
+          .assoc('build_ns' elapsed)
+          .assoc('size_bytes' file-size(library))
+          .assoc('library' library)
+      out: .assoc(name item)
+
+
+defn resolve-sources(root engine sources):
+  reduce-kv _ {} (sources || {}):
+    fn(out name spec):
+      out: .assoc(name resolve-source(root engine name spec))
+
+
+defn resolve-source(root engine name spec):
+  directory =: spec.get('directory')
+  git =: spec.get('git')
+  ref =: spec.get('ref')
+  if directory:
+    then:
+      when git || ref:
+        die: "$engine/$name mixes directory and Git source forms"
+      path =: resolve-path(root directory)
+      when-not fs/d(path):
+        die: "$engine/$name source directory does not exist: $path"
+      source-info: path 'directory' directory
+    else:
+      when empty?(git) || empty?(ref):
+        die: "$engine/$name must set directory or both git and ref"
+      path =: "$root/.cache/yamlstar-bench/sources/$engine/$name"
+      materialize-git-source: path git ref
+      source-info: path 'git' "$git@$ref"
+
+
+defn materialize-git-source(path repo ref):
+  fs/mkdir-p: fs/dirname(path)
+  when-not fs/d("$path/.git"):
+    result =:
+      apply shell:
+        +[{:out :string :err :string :continue true}
+          'git' 'clone' '--no-checkout' '--' repo path]
+    ensure-command: result "clone $repo"
+
+  fetched =:
+    apply shell:
+      +[{:out :string :err :string :continue true}
+        'git' '-C' path 'fetch' '--force' '--tags' 'origin' ref]
+  ensure-command: fetched "fetch $repo $ref"
+  commit =: git-output(path 'rev-parse' 'FETCH_HEAD')
+  checked =:
+    apply shell:
+      +[{:out :string :err :string :continue true}
+        'git' '-C' path 'checkout' '--detach' '--force' commit]
+  ensure-command: checked "checkout $commit"
+  cleaned =:
+    apply shell:
+      +[{:out :string :err :string :continue true}
+        'git' '-C' path 'clean' '-fdx']
+  ensure-command: cleaned "clean managed Git source $path"
+
+
+defn ensure-command(result description):
+  when result.exit != 0:
+    message =: trim((result.out || '') + (result.err || ''))
+    die: "Failed to $description:\n$message"
+
+
+defn source-info(path kind requested):
+  commit =: git-output(path 'rev-parse' 'HEAD')
+  describe =:
+    command-output('git' '-C' path 'describe' '--tags' '--always'
+                   '--dirty')
+  status =:
+    command-output('git' '-C' path 'status' '--porcelain'
+                   '--untracked-files=all')
+  diff =: command-output('git' '-C' path 'diff' '--binary' 'HEAD')
+  info =:
+    +{}
+      .assoc('kind' kind)
+      .assoc('requested' requested)
+      .assoc('path' path)
+      .assoc('commit' commit)
+      .assoc('describe' describe)
+      .assoc('dirty' boolean(not(empty?(status))))
+      .assoc('diff_sha256' sha256(status + diff))
+  =>: info
+
+
+defn git-output(path *args):
+  result =:
+    apply shell:
+      +[{:out :string :err :string :continue true}
+         'git' '-C' path] + args
+  ensure-command: result "inspect Git source $path"
+  trim: result.out
+
+
+defn command-output(*args):
+  try:
+    do:
+      result =:
+        apply shell:
+          +[{:out :string :err :string :continue true}] + args
+      value =: (result.out || '') + (result.err || '')
+      if result.exit == 0: trim(value) ''
+    catch Exception _:
+      =>: ''
+
+
+defn expand-command(command sources):
+  when-not string?(command):
+    die: 'build.command must be a string'
+  expanded =:
+    reduce-kv _ command sources:
+      fn(text name info):
+        text.replace("${source.$name}" info.get('path'))
+  when expanded =~ /\$\{source\./:
+    die: "Unresolved source placeholder in build command:\n$expanded"
+  =>: expanded
+
+
+defn file-size(path):
+  I: command-output('stat' '-c' '%s' path)
+
+
+defn relative(root path):
+  if path.starts?("$root/"): subs(path count(root).++) path
+
+
+defn load-inputs(root config names):
+  reduce _ [] names:
+    fn(out name):
+      spec =: config.get-in(['inputs' name])
+      file =: spec.get('file')
+      inline =: spec.get('yaml')
+      when boolean(file) == boolean(inline):
+        die: "$name must define exactly one of file or yaml"
+      source =:
+        if file:
+          then:
+            path =: resolve-path(root file)
+            when-not fs/f(path):
+              die: "$name input file does not exist: $path"
+            read: path
+          else: inline
+      item =:
+        +{}
+          .assoc('name' name)
+          .assoc('source' file.if("file:$file" 'inline'))
+          .assoc('bytes' utf8-size(source))
+          .assoc('sha256' sha256(source))
+          .assoc('yaml' source)
+      out: .conj(item)
+
+
+defn utf8-size(source):
+  encoded =: base64(source)
+  padding =:
+    cond:
+      encoded.ends?('=='): 2
+      encoded.ends?('=') : 1
+      else               : 0
+  total =: (count(encoded) * 3) // 4
+  total -: padding
+
+
+defn run-helper(root builds inputs warmups repetitions timeout):
+  request-file =: "$root/.cache/yamlstar-bench/request.json"
+  fs/mkdir-p: fs/dirname(request-file)
+  engine-request =:
+    mapv _ builds:
+      fn([name item]):
+        +{}
+          .assoc('name' name)
+          .assoc('abi' item.get('abi'))
+          .assoc('library' item.get('library'))
+  input-request =:
+    inputs.mapv(\({'name' _.get('name'), 'yaml' _.get('yaml')}))
+  request =:
+    +{}
+      .assoc('engines' engine-request)
+      .assoc('inputs' input-request)
+      .assoc('warmups' warmups)
+      .assoc('repetitions' repetitions)
+  write request-file: json/dump(request)
+  result =:
+    apply shell:
+      +[{:dir root :out :string :err :string :continue true}
+        'timeout' "$timeout" 'python3'
+        'util/bench-native' request-file]
+  when result.exit != 0:
+    message =: trim((result.out || '') + (result.err || ''))
+    die: "Native benchmark helper failed:\n$message"
+  json/load: result.out
+
+
+defn save-raw-results(root engines raw):
+  each engine engines:
+    file =: "$root/bench/$engine/samples.json"
+    data =: raw.get-in(['engines' engine])
+    write file: json/dump(data)
+
+
+defn validate-results(engines inputs raw):
+  baseline =: engines.0
+  each input inputs:
+    expected =:
+      raw.get-in(['engines' baseline 'cases' input 'data'])
+    each engine rest(engines):
+      actual =:
+        raw.get-in(['engines' engine 'cases' input 'data'])
+      when actual != expected:
+        die: |
+          Result mismatch for $input:
+            $baseline: $expected
+            $engine: $actual
+
+
+defn enrich-results(results):
+  reduce-kv _ {} results:
+    fn(out engine result):
+      cases =:
+        reduce-kv _ {} result.get('cases'):
+          fn(case-out name item):
+            enriched =:
+              item
+                .assoc('raw' sample-stats(item.get('raw_ns')))
+                .assoc('decoded' sample-stats(item.get('decoded_ns')))
+            case-out: .assoc(name enriched)
+      out: .assoc(engine result.assoc('cases' cases))
+
+
+defn sample-stats(samples):
+  ordered =: sort(samples)
+  size =: count(ordered)
+  middle =: size // 2
+  median =:
+    if odd?(size):
+      then: ordered.$middle
+      else: (ordered.nth(middle.--) + ordered.$middle) / 2
+  percentile-count =: ((size * 95) + 99) // 100
+  p95-index =: min(size.-- percentile-count.--)
+  result =:
+    +{}
+      .assoc('median_ns' median)
+      .assoc('p95_ns' ordered.$p95-index)
+  =>: result
+
+
+defn make-run(root engines inputs warms reps builds cases results):
+  now =: command-output('date' '-u' '+%Y-%m-%dT%H:%M:%SZ')
+  run-id =:
+    command-output('date' '-u' '+%Y%m%dT%H%M%SZ')
+  build-data =:
+    reduce-kv _ {} builds:
+      fn(out name item):
+        kept =:
+          item
+            .dissoc('library')
+            .update('sources' strip-source-paths)
+        out: .assoc(name merge(kept results.get(name)))
+  settings =:
+    +{}
+      .assoc('engines' engines)
+      .assoc('inputs' inputs)
+      .assoc('warmups' warms)
+      .assoc('repetitions' reps)
+  run =:
+    +{}
+      .assoc('id' run-id)
+      .assoc('time' now)
+      .assoc('yamlstar'
+             strip-source-path(source-info(root 'directory' root)))
+      .assoc('machine' machine-info())
+      .assoc('settings' settings)
+      .assoc('input_data' cases.mapv(\(_.dissoc('yaml'))))
+      .assoc('engines' build-data)
+  =>: run
+
+
+defn strip-source-paths(sources):
+  reduce-kv _ {} sources:
+    fn(out name info):
+      out: .assoc(name strip-source-path(info))
+
+
+defn strip-source-path(info):
+  info: .dissoc('path')
+
+
+defn machine-info():
+  cpu =:
+    apply command-output:
+      +['bash' '-c'
+        "awk -F ':\ ' '/model name/{print $2; exit}' /proc/cpuinfo"]
+  info =:
+    +{}
+      .assoc('hostname' command-output('hostname'))
+      .assoc('os' command-output('uname' '-s'))
+      .assoc('arch' command-output('uname' '-m'))
+      .assoc('cpu' cpu)
+      .assoc('python' command-output('python3' '--version'))
+      .assoc('java' command-output('java' '-version'))
+  =>: info
+
+
+defn append-status(root run):
+  file =: "$root/bench/status.yaml"
+  status =:
+    if fs/f(file):
+      then: yaml/load(read(file))
+      else: +{'version' 1, 'runs' []}
+  runs =: (status.get('runs') || []).conj(run)
+  atomic-write: file yaml/dump(status.assoc('runs' runs))
+
+
+defn atomic-write(file content):
+  temp =: "$file.tmp"
+  write temp: content
+  result =:
+    apply shell:
+      +[{:out :string :err :string :continue true}
+        'mv' '-f' '--' temp file]
+  ensure-command: result "replace $file"
+
+
+defn report(root config opts):
+  defaults =: config.get('defaults') || {}
+  engines =: opts.engines || defaults.get('engines')
+  validate-selection: +'engine' engines config.get('engines')
+  status-file =: "$root/bench/status.yaml"
+  when-not fs/f(status-file):
+    die: 'No bench/status.yaml data; run bench gather first'
+  status =: yaml/load(read(status-file))
+  run =:
+    first:
+      filter \(run-has-engines?(_ engines)):
+        reverse(status.get('runs') || [])
+  when-not run:
+    selected =: engines.join(', ')
+    die: "No common benchmark run contains: $selected"
+
+  baseline =: defaults.get('baseline')
+  when-not baseline.in?(engines):
+    baseline =: engines.0
+  markdown =: render-report(run engines baseline)
+  output =: resolve-path(root opts.output)
+  atomic-write: output markdown
+  say: "Wrote $(relative(root output)) from run $(run.get('id'))"
+
+
+defn run-has-engines?(run engines):
+  data =: run.get('engines') || {}
+  every? \(_.in?(data)): engines
+
+
+defn render-report(run engines baseline):
+  lines =: atom([])
+  append: lines '# YAMLStar Benchmark Report'
+  append: lines ''
+  append: lines "Run:\ `$(run.get('id'))`  "
+  append: lines "Time:\ `$(run.get('time'))`  "
+  append: lines "Baseline:\ `$baseline`"
+  append: lines ''
+  append: lines '## Environment'
+  append: lines ''
+  append: lines '| Host | OS | Architecture | CPU |'
+  append: lines '|---|---|---|---|'
+  machine =: run.get('machine')
+  environment =: +
+    "| $(machine.hostname) | $(machine.os) | " +
+      "$(machine.arch) | $(machine.cpu) |"
+  settings =: +
+    "Warmups:\ $(run.get-in(['settings' 'warmups'])); " +
+      "measured repetitions:\ " +
+      "$(run.get-in(['settings' 'repetitions']))."
+  append: lines environment
+  append: lines ''
+  append: lines settings
+  append: lines ''
+  append: lines '## Builds'
+  append: lines ''
+  append: lines '| Engine | Build time | Library size | Sources |'
+  append: lines '|---|---:|---:|---|'
+  each engine engines:
+    item =: run.get-in(['engines' engine])
+    sources =: source-summary(item.get('sources'))
+    row =: +
+      "| $engine | $(ms(item.build_ns)) ms | " +
+        "$(mib(item.size_bytes)) MiB | $sources |"
+    append: lines row
+
+  append: lines ''
+  append: lines '## Initialization'
+  append: lines ''
+  append: lines '| Engine | Time |'
+  append: lines '|---|---:|'
+  each engine engines:
+    ns =: run.get-in(['engines' engine 'initialize_ns'])
+    append: lines "| $engine | $(ms(ns)) ms |"
+
+  each mode qw(raw decoded):
+    title =:
+      if mode == 'raw':
+        then: 'Raw ABI load'
+        else: 'ABI load plus JSON decoding'
+    append: lines ''
+    append: lines "## $title"
+    append: lines ''
+    append: lines timing-header(engines baseline)
+    append: lines timing-divider(engines baseline)
+    inputs =: run.get-in(['settings' 'inputs'])
+    each input inputs:
+      median =:
+        timing-row(run engines baseline input mode 'median_ns'
+                   'median')
+      p95 =:
+        timing-row(run engines baseline input mode 'p95_ns' 'p95')
+      append: lines median
+      append: lines p95
+
+  note =: +
+    'Ratios are relative to the baseline within this same run. ' +
+      'Build time is not runtime execution time.'
+  append: lines ''
+  append: lines note
+  append: lines ''
+  append: lines '## Revisions'
+  append: lines ''
+  append: lines '| Component | Revision | Dirty |'
+  append: lines '|---|---|---|'
+  append: lines revision-row('yamlstar' run.get('yamlstar'))
+  each engine engines:
+    sources =: run.get-in(['engines' engine 'sources'])
+    each [name info] sources:
+      append: lines revision-row("$engine/$name" info)
+  lines.@: .conj('').join("\n")
+
+
+defn append(lines *items):
+  each item items:
+    swap lines: conj item
+
+
+defn source-summary(sources):
+  if empty?(sources):
+    then: 'repository'
+    else:
+      sources: .map(\("$(_.0) `$(_.1.describe)`")).join('<br>')
+
+
+defn ms(ns):
+  format: +'%.3f' (ns / 1000000.0)
+
+
+defn mib(bytes):
+  format: +'%.2f' (bytes / 1048576.0)
+
+
+defn timing-header(engines baseline):
+  cells =: atom(['Input/stat'])
+  each engine engines:
+    swap cells: conj "$engine ms"
+    when engine != baseline:
+      swap cells: conj "vs $baseline"
+  =>: "| $(cells.@.join(' | ')) |"
+
+
+defn timing-divider(engines baseline):
+  cells =: atom(['---'])
+  each engine engines:
+    swap cells: conj '---:'
+    when engine != baseline:
+      swap cells: conj '---:'
+  =>: "|$(cells.@.join('|'))|"
+
+
+defn timing-row(run engines baseline input mode statistic label):
+  baseline-ns =:
+    run.get-in(['engines' baseline 'cases' input mode statistic])
+  cells =: atom(["| $input/$label"])
+  each engine engines:
+    value =:
+      run.get-in(['engines' engine 'cases' input mode statistic])
+    swap cells: conj ms(value)
+    when engine != baseline:
+      ratio =: format('%.2fx' (value / baseline-ns))
+      swap cells: conj ratio
+  =>: "$(cells.@.join(' | ')) |"
+
+
+defn revision-row(name info):
+  dirty =: info.get('dirty').if('yes' 'no')
+  =>: "| $name | `$(info.get('describe'))` | $dirty |"

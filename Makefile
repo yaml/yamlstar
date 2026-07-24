@@ -23,10 +23,14 @@ RELEASE-AUTH := $(strip $(GH_TOKEN)$(GITHUB_TOKEN)$(RELEASE-SECRETS))
 MAKES-CLEAN := \
   META-INF/ \
   release-* \
+  out* \
 
 MAKES-REALCLEAN := \
   $(MAVEN-REPOSITORY) \
+  bench/gloat-*/ \
+  bench/graalvm/ \
   python/.eggs/ \
+  util/__pycache__/ \
   www/site/ \
   www/venv/ \
   yaml-test-suite/ \
@@ -114,6 +118,15 @@ test: test-unit test-core test-suite
 test-parser:
 	$(MAKE) -C core smoke-parser
 
+bench-gather: $(YS)
+	$(YS) util/bench gather \
+	  $(if $(engines),--engines=$(engines)) \
+	  $(if $(inputs),--inputs=$(inputs))
+
+bench-report: $(YS)
+	$(YS) util/bench report \
+	  $(if $(engines),--engines=$(engines))
+
 TEST-UNIT-DEPS := $(PERL) $(BPAN)
 ifneq ($(OS-NAME),windows)
 TEST-UNIT-DEPS += $(SHELLCHECK)
@@ -127,8 +140,13 @@ test-unit: $(TEST-UNIT-DEPS)
 	perl -x "$$(command -v prove)"$(if $(v), -v,) $(test)
 endif
 
+ifdef YAMLSTAR_GLOJURE
+test-suite test-suite-load test-suite-roundtrip test-suite-emit:
+	$(MAKE) -C python $@ YAMLSTAR_GLOJURE=1
+else
 test-suite test-suite-load test-suite-roundtrip test-suite-emit:
 	$(MAKE) -C core $@
+endif
 
 test-all: $(ALL-TESTS)
 

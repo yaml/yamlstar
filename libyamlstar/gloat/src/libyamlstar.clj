@@ -31,9 +31,13 @@
   (try
     (let [result (yaml/load yaml-str)]
       (json/dump {:data (nil-keys->string result)}))
-    (catch go/any e
-      (json/dump {:error {:cause (fmt.Sprintf "%v" e)
-                          :type (fmt.Sprintf "%T" e)}}))))
+    (catch #?(:glj go/any :lg Exception) e
+      (json/dump
+       {:error
+        #?(:glj {:cause (fmt.Sprintf "%v" e)
+                 :type (fmt.Sprintf "%T" e)}
+           :lg {:cause (str e)
+                :type "Exception"})}))))
 
 (defn yamlstar-load-all
   "Load all YAML documents, return JSON string with {:data [...]} or {:error ...}"
@@ -41,7 +45,7 @@
   (try
     (let [result (yaml/load-all yaml-str)]
       (json/dump {:data (nil-keys->string result)}))
-    (catch go/any e
+    (catch #?(:glj go/any :lg Exception) e
       (json/dump {:error {:cause (str e)
                           :type "Exception"
                           :message (str e)}}))))
@@ -52,9 +56,13 @@
   (try
     (let [result (yaml/dump (json/load data-json))]
       (json/dump {:data result}))
-    (catch go/any e
-      (json/dump {:error {:cause (fmt.Sprintf "%v" e)
-                          :type (fmt.Sprintf "%T" e)}}))))
+    (catch #?(:glj go/any :lg Exception) e
+      (json/dump
+       {:error
+        #?(:glj {:cause (fmt.Sprintf "%v" e)
+                 :type (fmt.Sprintf "%T" e)}
+           :lg {:cause (str e)
+                :type "Exception"})}))))
 
 (defn yamlstar-dump-all
   "Dump JSON-encoded documents to YAML, return JSON string with {:data ...} or {:error ...}"
@@ -62,7 +70,7 @@
   (try
     (let [result (yaml/dump-all (json/load data-json))]
       (json/dump {:data result}))
-    (catch go/any e
+    (catch #?(:glj go/any :lg Exception) e
       (json/dump {:error {:cause (str e)
                           :type "Exception"
                           :message (str e)}}))))

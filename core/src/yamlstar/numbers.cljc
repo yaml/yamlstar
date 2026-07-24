@@ -38,4 +38,8 @@
        (when err
          (throw (integer-range-error value)))
        (validate-safe-integer n)
+       n)
+     :lg
+     (let [n (read-string value)]
+       (validate-safe-integer n)
        n)))

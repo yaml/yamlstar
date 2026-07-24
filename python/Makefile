@@ -27,6 +27,20 @@ RELEASE-WHEEL-ARCHIVES := \
   $(wildcard $(RELEASE-WHEEL-DIR)/libyamlstar-$(RELEASE-WHEEL-VERSION)-*.tar.xz) \
   $(wildcard $(RELEASE-WHEEL-DIR)/libyamlstar-$(RELEASE-WHEEL-VERSION)-*.zip)
 PYTHON-BINDING-DEPS := $(PYTHON-VENV)/.yamlstar-binding-deps
+YAML-TEST-SUITE-DIR ?= ../yaml-test-suite
+YAML-TEST-SUITE-ENV := YAMLSTAR_TEST_SUITE_DIR='$(YAML-TEST-SUITE-DIR)'
+ifdef YAMLSTAR_GLOJURE
+YAML-TEST-SUITE-ENV += YAMLSTAR_TEST_SUITE_EXPECTED_FAILS_FLAVOR='glojure'
+endif
+ifdef t
+YAML-TEST-SUITE-ENV += YAMLSTAR_TEST_SUITE_CASES='$t'
+endif
+ifdef a
+YAML-TEST-SUITE-ENV += YAMLSTAR_TEST_SUITE_SHOW_FAILURES='$a'
+endif
+ifdef v
+YAML-TEST-SUITE-ENV += YAMLSTAR_TEST_SUITE_VERBOSE='$v'
+endif
 
 # Python uses the gloat library when YAMLSTAR_GLOJURE=1, GraalVM otherwise
 ifdef YAMLSTAR_GLOJURE
@@ -42,6 +56,13 @@ test: test-pytest
 
 test-pytest: $(PYTHON-SO) $(PYTHON-BINDING-DEPS)
 	$(VENV) && python -m pytest test/
+
+test-suite: test-suite-load test-suite-roundtrip test-suite-emit
+
+test-suite-load test-suite-roundtrip test-suite-emit: $(PYTHON-SO) $(PYTHON-BINDING-DEPS)
+	$(MAKE) -C ../core test-suite-fixture YAML-TEST-SUITE-DIR='$(YAML-TEST-SUITE-DIR)'
+	$(VENV) && $(YAML-TEST-SUITE-ENV) \
+	  python test/yaml_test_suite.py $(@:test-suite-%=%)
 
 build: $(PYTHON-SO)
 

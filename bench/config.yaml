@@ -1,0 +1,97 @@
+version: 1
+
+defaults:
+  engines:
+  - graalvm
+  - gloat-lgvm
+  - gloat-glj
+  inputs:
+  - scalar
+  - mapping
+  - nested
+  warmups: 3
+  repetitions: 15
+  timeout: 600
+  baseline: graalvm
+
+# A source can use a development checkout:
+#
+#   gloat:
+#     directory: ~/src/gloat
+#
+# Or an isolated Git pin:
+#
+#   gloat:
+#     git: https://github.com/gloathub/gloat
+#     ref: f25b5a2d446d7f5333430474b303f72729faf00d
+#
+# Git sources are materialized below .cache/yamlstar-bench and never change
+# the state of an existing development checkout.
+engines:
+  graalvm:
+    abi: graalvm
+    sources:
+      yaml-parser:
+        directory: ~/src/yaml-reference-parser-clj
+    build:
+      command: >-
+        env -u YAMLSTAR_GLOJURE
+        make -C libyamlstar build-graalvm
+        YAML-PARSER-DIR="${source.yaml-parser}"
+        LIB-NAME=libyamlstar-graalvm
+      artifact: libyamlstar/lib/libyamlstar-graalvm.so
+
+  gloat-lgvm:
+    abi: gloat
+    sources:
+      gloat:
+        directory: ~/src/gloat
+      let-go:
+        directory: ~/src/let-go
+      yaml-parser:
+        directory: ~/src/yaml-reference-parser-clj
+    build:
+      command: >-
+        YAMLSTAR_GLOJURE=1 GLOAT_ENGINE=lgvm
+        LET_GO_SRC="${source.let-go}"
+        make -C libyamlstar build-gloat
+        GLOAT-DIR="${source.gloat}"
+        YAML-PARSER-DIR="${source.yaml-parser}"
+        LIB-NAME-GLOAT=libyamlstar-gloat-lgvm
+      artifact: libyamlstar/lib/libyamlstar-gloat-lgvm.so
+
+  gloat-glj:
+    abi: gloat
+    sources:
+      gloat:
+        directory: ~/src/gloat
+      glojure:
+        directory: ~/src/glojure
+      yaml-parser:
+        directory: ~/src/yaml-reference-parser-clj
+    build:
+      command: >-
+        YAMLSTAR_GLOJURE=1
+        make -C libyamlstar build-gloat
+        GLOAT-DIR="${source.gloat}"
+        TEST-WITH-GLOJURE="${source.glojure}"
+        YAML-PARSER-DIR="${source.yaml-parser}"
+        LIB-NAME-GLOAT=libyamlstar-gloat-glj
+      artifact: libyamlstar/lib/libyamlstar-gloat-glj.so
+
+inputs:
+  scalar:
+    yaml: hello
+
+  mapping:
+    file: bench/inputs/mapping.yaml
+
+  nested:
+    yaml: |
+      root:
+        child1:
+          key: value
+        child2:
+        - item1
+        - item2
+        - item3

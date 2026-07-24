@@ -1,0 +1,140 @@
+#!/usr/bin/env python3
+"""Narrow ctypes timing helper for util/bench."""
+
+import argparse
+import ctypes
+import json
+from pathlib import Path
+import time
+
+
+class Backend:
+    """One loaded libyamlstar implementation."""
+
+    def __init__(self, name, abi, library):
+        self.name = name
+        self.abi = abi
+        self.path = Path(library)
+        start = time.perf_counter_ns()
+        self.library = ctypes.CDLL(str(self.path))
+        self.thread = None
+        self.load = self.library.yamlstar_load
+        self.load.restype = ctypes.c_char_p
+
+        if abi == "graalvm":
+            self.load.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+            self.thread = ctypes.c_void_p()
+            create = self.library.graal_create_isolate
+            create.argtypes = [
+                ctypes.c_void_p,
+                ctypes.c_void_p,
+                ctypes.POINTER(ctypes.c_void_p),
+            ]
+            create.restype = ctypes.c_int
+            rc = create(None, None, ctypes.byref(self.thread))
+            if rc:
+                raise RuntimeError(
+                    f"{name}: graal_create_isolate failed: {rc}"
+                )
+        elif abi == "gloat":
+            self.load.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+        else:
+            raise ValueError(f"{name}: unsupported ABI: {abi}")
+
+        self.initialize_ns = time.perf_counter_ns() - start
+
+    def raw_load(self, source):
+        data = source.encode("utf-8")
+        if self.abi == "graalvm":
+            result = self.load(self.thread, data)
+        else:
+            result = self.load(data, b"{}")
+        if result is None:
+            raise RuntimeError(f"{self.name}: yamlstar_load returned null")
+        return result
+
+    def decoded_load(self, source):
+        response = json.loads(self.raw_load(source))
+        if response.get("error"):
+            raise RuntimeError(f"{self.name}: {response['error']}")
+        if "data" not in response:
+            raise RuntimeError(
+                f"{self.name}: malformed response: {response!r}"
+            )
+        return response["data"]
+
+    def close(self):
+        if self.thread is None:
+            return
+        teardown = self.library.graal_tear_down_isolate
+        teardown.argtypes = [ctypes.c_void_p]
+        teardown.restype = ctypes.c_int
+        rc = teardown(self.thread)
+        self.thread = None
+        if rc:
+            raise RuntimeError(
+                f"{self.name}: graal_tear_down_isolate failed: {rc}"
+            )
+
+
+def measure(call, warmups, repetitions):
+    for _ in range(warmups):
+        call()
+    samples = []
+    for _ in range(repetitions):
+        start = time.perf_counter_ns()
+        call()
+        samples.append(time.perf_counter_ns() - start)
+    return samples
+
+
+def gather(request):
+    warmups = request["warmups"]
+    repetitions = request["repetitions"]
+    backends = [Backend(**item) for item in request["engines"]]
+    output = {"engines": {}}
+
+    try:
+        for backend in backends:
+            output["engines"][backend.name] = {
+                "initialize_ns": backend.initialize_ns,
+                "cases": {},
+            }
+
+        for case in request["inputs"]:
+            name = case["name"]
+            source = case["yaml"]
+            for backend in backends:
+                decoded = backend.decoded_load(source)
+                result = output["engines"][backend.name]
+                result["cases"][name] = {"data": decoded}
+
+            for mode in ("raw", "decoded"):
+                ordered = list(backends)
+                if len(ordered) > 1 and mode == "decoded":
+                    ordered.reverse()
+                for backend in ordered:
+                    if mode == "raw":
+                        call = lambda b=backend: b.raw_load(source)
+                    else:
+                        call = lambda b=backend: b.decoded_load(source)
+                    samples = measure(call, warmups, repetitions)
+                    case_result = output["engines"][backend.name]
+                    case_result["cases"][name][f"{mode}_ns"] = samples
+    finally:
+        for backend in reversed(backends):
+            backend.close()
+
+    return output
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("request", type=Path)
+    args = parser.parse_args()
+    request = json.loads(args.request.read_text())
+    print(json.dumps(gather(request), separators=(",", ":")))
+
+
+if __name__ == "__main__":
+    main()

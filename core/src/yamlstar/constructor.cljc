@@ -22,16 +22,19 @@
                        #?(:clj (if (= (first value) \-)
                                  Double/NEGATIVE_INFINITY
                                  Double/POSITIVE_INFINITY)
-                          :glj (if (= (first value) \-) (math.Inf -1) (math.Inf 1)))
+                          :glj (if (= (first value) \-) (math.Inf -1) (math.Inf 1))
+                          :lg (if (= (first value) \-) ##-Inf ##Inf))
 
                        (re-matches #"\.nan|\.NaN|\.NAN" value)
                        #?(:clj Double/NaN
-                          :glj (math.NaN))
+                          :glj (math.NaN)
+                          :lg ##NaN)
 
                        :else
                        #?(:clj (Double/parseDouble value)
                           :glj (let [[f _] (strconv.ParseFloat value 64)]
-                                 f)))))
+                                 f)
+                          :lg (read-string value)))))
         str-fn   (fn [node] (:value node))]
     {"!!null"                  null-fn
      "tag:yaml.org,2002:null"  null-fn
