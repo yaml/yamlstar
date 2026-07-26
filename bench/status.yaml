@@ -1,2 +1,503 @@
 version: 1
-runs: []
+runs:
+- id: 20260724T212809Z
+  time: '2026-07-24T21:28:09Z'
+  yamlstar:
+    kind: directory
+    requested: /home/ingy/src/yamlstar/worktree/new-gloat
+    commit: 66a8d7d2ed2ea6a92c9da1ee438c2e58b005ac26
+    describe: 0.1.17-6-g66a8d7d-dirty
+    dirty: true
+    diff_sha256: 6b3046a1840f1fd703086ea1ea2c87f985b3838f1b0c901de52020a0675db228
+  machine:
+    hostname: blacktop
+    os: Linux
+    arch: x86_64
+    cpu: 13th Gen Intel(R) Core(TM) i7-1365U
+    python: Python 3.12.3
+    java: null
+  settings:
+    engines:
+    - graalvm
+    - gloat-lgvm
+    - gloat-glj
+    inputs:
+    - scalar
+    - mapping
+    - nested
+    warmups: 3
+    repetitions: 15
+  input_data:
+  - name: scalar
+    source: inline
+    bytes: 5
+    sha256: 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824
+  - name: mapping
+    source: file:bench/inputs/mapping.yaml
+    bytes: 18
+    sha256: e25a00bb37a5278445e9b486931d7189693d78b192af329b8e7024288be9bed8
+  - name: nested
+    source: inline
+    bytes: 71
+    sha256: 890c8765805aa087c52328975d7904fbc3ae6b50c6755f821b5efc9b744f92c7
+  engines:
+    graalvm:
+      abi: graalvm
+      sources:
+        yaml-parser:
+          kind: directory
+          requested: ~/src/yaml-reference-parser-clj
+          commit: 91157fb38e510b8a714d84c5a3730fa515cd4f7b
+          describe: v0.2.2-1-g91157fb
+          dirty: false
+          diff_sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+      command: env -u YAMLSTAR_GLOJURE make -C libyamlstar build-graalvm YAML-PARSER-DIR="/home/ingy/src/yaml-reference-parser-clj" LIB-NAME=libyamlstar-graalvm
+      build_ns: 92066416287
+      size_bytes: 36374632
+      initialize_ns: 4156783
+      cases:
+        scalar:
+          data: hello
+          raw_ns:
+          - 254488
+          - 270161
+          - 253643
+          - 239751
+          - 243880
+          - 248659
+          - 238997
+          - 242825
+          - 237960
+          - 255740
+          - 240904
+          - 244094
+          - 237770
+          - 250861
+          - 246356
+          decoded_ns:
+          - 269618
+          - 328406
+          - 272759
+          - 298756
+          - 261912
+          - 263565
+          - 260510
+          - 257265
+          - 253883
+          - 251299
+          - 401509
+          - 253808
+          - 261544
+          - 250527
+          - 274024
+          raw:
+            median_ns: 244094
+            p95_ns: 270161
+          decoded:
+            median_ns: 261912
+            p95_ns: 401509
+        mapping:
+          data:
+            foo: 42
+            bar: true
+          raw_ns:
+          - 521572
+          - 774224
+          - 749851
+          - 493579
+          - 501072
+          - 511772
+          - 549150
+          - 517537
+          - 532979
+          - 503675
+          - 506746
+          - 498896
+          - 502220
+          - 493973
+          - 499316
+          decoded_ns:
+          - 696689
+          - 537404
+          - 515694
+          - 528120
+          - 516961
+          - 528289
+          - 512934
+          - 542075
+          - 557928
+          - 833108
+          - 539516
+          - 510177
+          - 516029
+          - 508206
+          - 520289
+          raw:
+            median_ns: 506746
+            p95_ns: 774224
+          decoded:
+            median_ns: 528120
+            p95_ns: 833108
+        nested:
+          data:
+            root:
+              child1:
+                key: value
+              child2:
+              - item1
+              - item2
+              - item3
+          raw_ns:
+          - 1726735
+          - 1703055
+          - 1745651
+          - 1724649
+          - 1708069
+          - 1693289
+          - 1689672
+          - 1696936
+          - 2846323
+          - 1126255
+          - 1241447
+          - 1164249
+          - 1116247
+          - 1101103
+          - 1111131
+          decoded_ns:
+          - 1198641
+          - 1163278
+          - 1149001
+          - 1291435
+          - 1185413
+          - 1155119
+          - 1182944
+          - 1217513
+          - 1151445
+          - 1144737
+          - 1200834
+          - 1194450
+          - 1160810
+          - 1156958
+          - 1146501
+          raw:
+            median_ns: 1693289
+            p95_ns: 2846323
+          decoded:
+            median_ns: 1163278
+            p95_ns: 1291435
+    gloat-lgvm:
+      abi: gloat
+      sources:
+        gloat:
+          kind: directory
+          requested: ~/src/gloat
+          commit: f25b5a2d446d7f5333430474b303f72729faf00d
+          describe: v0.1.62-5-gf25b5a2-dirty
+          dirty: true
+          diff_sha256: 6f315a3f50898199ffd72321d425088e93f3db2971cc1d0e959228ad63605c3c
+        let-go:
+          kind: directory
+          requested: ~/src/let-go
+          commit: f4ef3cbf570e397afbec9eb383d75c1619fa115b
+          describe: v1.12.2-20-gf4ef3cb
+          dirty: false
+          diff_sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+        yaml-parser:
+          kind: directory
+          requested: ~/src/yaml-reference-parser-clj
+          commit: 91157fb38e510b8a714d84c5a3730fa515cd4f7b
+          describe: v0.2.2-1-g91157fb
+          dirty: false
+          diff_sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+      command: YAMLSTAR_GLOJURE=1 GLOAT_ENGINE=lgvm LET_GO_SRC="/home/ingy/src/let-go" make -C libyamlstar build-gloat GLOAT-DIR="/home/ingy/src/gloat" YAML-PARSER-DIR="/home/ingy/src/yaml-reference-parser-clj" LIB-NAME-GLOAT=libyamlstar-gloat-lgvm
+      build_ns: 1800856506
+      size_bytes: 15419392
+      initialize_ns: 697256
+      cases:
+        scalar:
+          data: hello
+          raw_ns:
+          - 4033386
+          - 3285072
+          - 3244468
+          - 2016796
+          - 1687911
+          - 1704316
+          - 1619611
+          - 1709555
+          - 1619397
+          - 1599562
+          - 1657882
+          - 1641475
+          - 2670336
+          - 1637944
+          - 1608956
+          decoded_ns:
+          - 1676795
+          - 1643169
+          - 1656387
+          - 1640151
+          - 1585848
+          - 1771012
+          - 2686410
+          - 1650481
+          - 1613290
+          - 1639671
+          - 1670676
+          - 1690576
+          - 1636666
+          - 1590449
+          - 1598245
+          raw:
+            median_ns: 1687911
+            p95_ns: 4033386
+          decoded:
+            median_ns: 1643169
+            p95_ns: 2686410
+        mapping:
+          data:
+            foo: 42
+            bar: true
+          raw_ns:
+          - 3114143
+          - 4001457
+          - 3371372
+          - 3089488
+          - 3070034
+          - 4736938
+          - 3089148
+          - 4608800
+          - 3125383
+          - 3096003
+          - 3076860
+          - 3073261
+          - 3983807
+          - 3093508
+          - 3063997
+          decoded_ns:
+          - 4399223
+          - 3214162
+          - 3240864
+          - 3267512
+          - 3169740
+          - 4313734
+          - 3220615
+          - 3224674
+          - 3161160
+          - 3223686
+          - 3195019
+          - 4241402
+          - 3274502
+          - 3262120
+          - 3212648
+          raw:
+            median_ns: 3096003
+            p95_ns: 4736938
+          decoded:
+            median_ns: 3224674
+            p95_ns: 4399223
+        nested:
+          data:
+            root:
+              child1:
+                key: value
+              child2:
+              - item1
+              - item2
+              - item3
+          raw_ns:
+          - 9560095
+          - 7887248
+          - 9402526
+          - 7925243
+          - 9055363
+          - 8181572
+          - 8335903
+          - 8662081
+          - 7946434
+          - 8786003
+          - 7915107
+          - 8899039
+          - 7959720
+          - 8616301
+          - 7693807
+          decoded_ns:
+          - 8457836
+          - 10421369
+          - 8521019
+          - 10117752
+          - 8351799
+          - 9473873
+          - 8557915
+          - 10056195
+          - 8209573
+          - 8172395
+          - 9394416
+          - 8469932
+          - 9619320
+          - 8193582
+          - 9744919
+          raw:
+            median_ns: 8335903
+            p95_ns: 9560095
+          decoded:
+            median_ns: 8557915
+            p95_ns: 10421369
+    gloat-glj:
+      abi: gloat
+      sources:
+        gloat:
+          kind: directory
+          requested: ~/src/gloat
+          commit: f25b5a2d446d7f5333430474b303f72729faf00d
+          describe: v0.1.62-5-gf25b5a2-dirty
+          dirty: true
+          diff_sha256: 6f315a3f50898199ffd72321d425088e93f3db2971cc1d0e959228ad63605c3c
+        glojure:
+          kind: directory
+          requested: ~/src/glojure
+          commit: 99b2a88810345750750ec82a4b06b607b0a1898b
+          describe: v0.7.0-7-g99b2a88-dirty
+          dirty: true
+          diff_sha256: a531c02d6ccba1175a6ba0febbf8c82e0947a2a9457c58e00adc754d71eb806c
+        yaml-parser:
+          kind: directory
+          requested: ~/src/yaml-reference-parser-clj
+          commit: 91157fb38e510b8a714d84c5a3730fa515cd4f7b
+          describe: v0.2.2-1-g91157fb
+          dirty: false
+          diff_sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+      command: YAMLSTAR_GLOJURE=1 make -C libyamlstar build-gloat GLOAT-DIR="/home/ingy/src/gloat" TEST-WITH-GLOJURE="/home/ingy/src/glojure" YAML-PARSER-DIR="/home/ingy/src/yaml-reference-parser-clj" LIB-NAME-GLOAT=libyamlstar-gloat-glj
+      build_ns: 73840943655
+      size_bytes: 27185000
+      initialize_ns: 853421
+      cases:
+        scalar:
+          data: hello
+          raw_ns:
+          - 3697472
+          - 3576679
+          - 3420925
+          - 2936419
+          - 5713722
+          - 5374584
+          - 4819363
+          - 2878453
+          - 5961144
+          - 3718097
+          - 3214839
+          - 3118060
+          - 3577015
+          - 3917765
+          - 2676433
+          decoded_ns:
+          - 2702927
+          - 3737460
+          - 3569688
+          - 2814965
+          - 3711467
+          - 3622010
+          - 2671582
+          - 3573609
+          - 3949971
+          - 2782405
+          - 3797802
+          - 3571866
+          - 3200759
+          - 3112063
+          - 3681788
+          raw:
+            median_ns: 3577015
+            p95_ns: 5961144
+          decoded:
+            median_ns: 3571866
+            p95_ns: 3949971
+        mapping:
+          data:
+            foo: 42
+            bar: true
+          raw_ns:
+          - 8327597
+          - 7359877
+          - 8613663
+          - 7320395
+          - 7084657
+          - 9229567
+          - 7186066
+          - 9126566
+          - 7410059
+          - 8251053
+          - 7283613
+          - 8303724
+          - 7261613
+          - 8242511
+          - 7664225
+          decoded_ns:
+          - 7757265
+          - 8224986
+          - 8616440
+          - 11813684
+          - 7580305
+          - 14354592
+          - 8102083
+          - 7133325
+          - 9504087
+          - 7387755
+          - 7154647
+          - 8590223
+          - 7252866
+          - 8989401
+          - 10358190
+          raw:
+            median_ns: 7664225
+            p95_ns: 9229567
+          decoded:
+            median_ns: 8224986
+            p95_ns: 14354592
+        nested:
+          data:
+            root:
+              child1:
+                key: value
+              child2:
+              - item1
+              - item2
+              - item3
+          raw_ns:
+          - 25032773
+          - 18576297
+          - 19593754
+          - 21648687
+          - 23063219
+          - 17944869
+          - 18190921
+          - 18381720
+          - 22369109
+          - 19670403
+          - 26853081
+          - 24399602
+          - 18735907
+          - 18551183
+          - 19039931
+          decoded_ns:
+          - 20412230
+          - 20670710
+          - 20183993
+          - 19238548
+          - 20595135
+          - 19238399
+          - 18569428
+          - 19770386
+          - 21057447
+          - 18682874
+          - 19108699
+          - 19489616
+          - 19571196
+          - 19204333
+          - 22377700
+          raw:
+            median_ns: 19593754
+            p95_ns: 26853081
+          decoded:
+            median_ns: 19571196
+            p95_ns: 22377700

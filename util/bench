@@ -554,8 +554,8 @@ defn render-report(run engines baseline):
   lines =: atom([])
   append: lines '# YAMLStar Benchmark Report'
   append: lines ''
-  append: lines "Run:\ `$(run.get('id'))`  "
-  append: lines "Time:\ `$(run.get('time'))`  "
+  append: lines "Run:\ `$(run.get('id'))`"
+  append: lines "Time:\ `$(run.get('time'))`"
   append: lines "Baseline:\ `$baseline`"
   append: lines ''
   append: lines '## Environment'
