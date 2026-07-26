@@ -142,6 +142,9 @@ GLOAT-SRCS := \
   $(CORE-YAMLSTAR)/api.clj \
   gloat/src/libyamlstar.clj \
 
+.PHONY: prepare-gloat
+prepare-gloat: $(GLOAT-LINKS)
+
 # GraalVM build
 LIBYAMLSTAR-VERSION := $(VERSION)
 LIB-JAR := graalvm/target/libyamlstar-$(LIBYAMLSTAR-VERSION)-SNAPSHOT-standalone.jar

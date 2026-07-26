@@ -186,6 +186,15 @@ core:
 cli:
 	$(MAKE) -C cli build
 
+cli-gloat:
+	$(MAKE) -C cli build-gloat GLOAT_ENGINE=$(or $(GLOAT_ENGINE),glj)
+
+cli-gloat-glj:
+	$(MAKE) -C cli build-gloat-glj
+
+cli-gloat-lgvm:
+	$(MAKE) -C cli build-gloat-lgvm
+
 libyamlstar:
 	$(MAKE) -C libyamlstar build
 
