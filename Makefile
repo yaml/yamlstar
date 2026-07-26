@@ -23,7 +23,6 @@ RELEASE-AUTH := $(strip $(GH_TOKEN)$(GITHUB_TOKEN)$(RELEASE-SECRETS))
 MAKES-CLEAN := \
   META-INF/ \
   release-* \
-  out* \
 
 MAKES-REALCLEAN := \
   $(MAVEN-REPOSITORY) \
@@ -36,8 +35,6 @@ MAKES-REALCLEAN := \
   yaml-test-suite/ \
 
 MAKES-DISTCLEAN += \
-  .clj-kondo/ \
-  .lsp/ \
   $(INGY-LOCAL-DIR) \
 
 BINDING-LANGS ?= \

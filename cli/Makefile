@@ -50,6 +50,21 @@ GLOAT-CLI-SRCS := \
   $(GLOAT-CORE)/api.clj \
   gloat/src/yamlstar/cli.clj \
 
+_prepare-gloat-bin:
+	@if ! test -x "$(GLOAT)"; then \
+	  case "$(GLOAT-DIR)" in \
+	    "$(LOCAL-CACHE)"/*) \
+	      rm -rf "$(GLOAT-DIR)"; \
+	      $(MAKE) "$(GLOAT)"; \
+	      ;; \
+	    *) \
+	      echo "Gloat executable not found: $(GLOAT)" >&2; \
+	      exit 1; \
+	      ;; \
+	  esac; \
+	fi
+	@test -x "$(GLOAT)"
+
 ifdef TEST-WITH-GLOJURE
 GLOAT-GLOJURE-ENV := \
   GLOJURE_DIR=$(abspath $(TEST-WITH-GLOJURE)) \
@@ -57,7 +72,7 @@ GLOAT-GLOJURE-ENV := \
   GOMODCACHE=$(GLOAT-DIR)/.cache/local/go/pkg/mod
 
 .PHONY: _prepare-glj
-_prepare-glj: | $(GLOAT-DIR)
+_prepare-glj: _prepare-gloat-bin
 	$(GLOAT-GLOJURE-ENV) $(GLOAT-BIN)/gloat --glj-build
 
 GLOAT-CLI-GLJ-DEP := _prepare-glj
@@ -107,13 +122,13 @@ _prepare-gloat:
 	  GLOAT-DIR=$(GLOAT-DIR) \
 	  $(if $(YAML-PARSER-DIR),YAML-PARSER-DIR=$(YAML-PARSER-DIR))
 
-$(CLI-BIN-GLOAT): _prepare-gloat \
+$(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
   $(GLOAT-CLI-GLJ-DEP) \
   $(GLOAT-CORE)/parser.clj \
   $(GLOAT-CORE)/composer.clj \
   $(GLOAT-CORE)/resolver.clj \
   $(GLOAT-CORE)/api.clj \
-  gloat/src/yamlstar/cli.clj | $(GLOAT-DIR)
+  gloat/src/yamlstar/cli.clj
 	mkdir -p $(dir $@)
 	</dev/null env -u GOROOT $(GLOAT-GLOJURE-ENV) \
 	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
