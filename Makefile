@@ -186,6 +186,9 @@ core:
 cli:
 	$(MAKE) -C cli build
 
+cli-graalvm:
+	$(MAKE) -C cli build-graalvm
+
 cli-gloat:
 	$(MAKE) -C cli build-gloat GLOAT_ENGINE=$(or $(GLOAT_ENGINE),glj)
 
@@ -194,6 +197,9 @@ cli-gloat-glj:
 
 cli-gloat-lgvm:
 	$(MAKE) -C cli build-gloat-lgvm
+
+cli-gloat-lglvm:
+	$(MAKE) -C cli build-gloat-lglvm
 
 libyamlstar:
 	$(MAKE) -C libyamlstar build

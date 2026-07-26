@@ -19,12 +19,13 @@ MAKES-CLEAN := \
   .lein-* \
   bin \
 
+CLI-NAME ?= yaml
 ifeq ($(OS-NAME),windows)
-CLI-BIN := bin/yaml.exe
+CLI-BIN := bin/$(CLI-NAME).exe
 else
-CLI-BIN := bin/yaml
+CLI-BIN := bin/$(CLI-NAME)
 endif
-CLI-OUT := bin/yaml
+CLI-OUT := bin/$(CLI-NAME)
 CLI-JAR := target/cli-$(LIBYAMLSTAR-VERSION)-SNAPSHOT-standalone.jar
 
 GLOAT-ENGINE := $(or $(GLOAT_ENGINE),glj)
@@ -79,6 +80,9 @@ jar: $(CLI-JAR)
 
 install:
 
+build-graalvm:
+	$(MAKE) build CLI-NAME=yaml-graalvm YAMLSTAR_GLOJURE=
+
 build-gloat:
 	YAMLSTAR_GLOJURE=1 $(MAKE) _build-gloat \
 	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
@@ -91,6 +95,9 @@ build-gloat-glj:
 
 build-gloat-lgvm:
 	$(MAKE) build-gloat GLOAT_ENGINE=lgvm
+
+build-gloat-lglvm:
+	$(MAKE) build-gloat GLOAT_ENGINE=lglvm
 
 _build-gloat: $(CLI-BIN-GLOAT)
 

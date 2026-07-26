@@ -144,6 +144,13 @@ GLOAT-SRCS := \
 
 .PHONY: prepare-gloat
 prepare-gloat: $(GLOAT-LINKS)
+ifdef YAML-PARSER-DIR
+	ln -sf $(YAML-PARSER-SRC-DIR)/yaml_parser/prelude.cljc $(GLOAT-LINK-DIR)/yaml_parser/prelude.clj
+	ln -sf $(YAML-PARSER-SRC-DIR)/yaml_parser/parser.cljc $(GLOAT-LINK-DIR)/yaml_parser/parser.clj
+	ln -sf $(YAML-PARSER-SRC-DIR)/yaml_parser/receiver.cljc $(GLOAT-LINK-DIR)/yaml_parser/receiver.clj
+	ln -sf $(YAML-PARSER-SRC-DIR)/yaml_parser/grammar.cljc $(GLOAT-LINK-DIR)/yaml_parser/grammar.clj
+	ln -sf $(YAML-PARSER-SRC-DIR)/yaml_parser/core.clj $(GLOAT-LINK-DIR)/yaml_parser/core.clj
+endif
 
 # GraalVM build
 LIBYAMLSTAR-VERSION := $(VERSION)
