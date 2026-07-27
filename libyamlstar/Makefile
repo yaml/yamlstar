@@ -45,7 +45,7 @@ CORE-YAMLSTAR := ../core/src/yamlstar
 
 # Gloat compiles Clojure sources directly, so use the sources shipped in the
 # exact yaml-parser artifact consumed by the JVM build.
-YAML-PARSER-VERSION := 0.2.1
+YAML-PARSER-VERSION := 0.2.3
 YAML-PARSER-JAR := cache/yaml-parser-$(YAML-PARSER-VERSION).jar
 YAML-PARSER-URL := https://repo.clojars.org/org/yamlstar/yaml-parser/$(YAML-PARSER-VERSION)/yaml-parser-$(YAML-PARSER-VERSION).jar
 YAML-PARSER-GLOAT-PREPARE := gloat/prepare-yaml-parser
