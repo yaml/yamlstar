@@ -52,8 +52,8 @@ brew install yaml/yamlstar/libyamlstar
 To install a specific version:
 
 ```bash
-brew install yaml/yamlstar/yamlstar@0.1.17
-brew install yaml/yamlstar/libyamlstar@0.1.17
+brew install yaml/yamlstar/yamlstar@0.1.18
+brew install yaml/yamlstar/libyamlstar@0.1.18
 ```
 
 ## Release Archives
@@ -83,7 +83,7 @@ library.
 Each archive contains a `Makefile`, so manual installation is:
 
 ```bash
-tar -xf yamlstar-0.1.17-linux-x64.tar.xz
-cd yamlstar-0.1.17-linux-x64
+tar -xf yamlstar-0.1.18-linux-x64.tar.xz
+cd yamlstar-0.1.18-linux-x64
 make install PREFIX=$HOME/.local
 ```

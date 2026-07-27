@@ -1,3 +1,12 @@
+- version: 0.1.18
+  date:    Mon Jul 27 12:17:13 PM EDT 2026
+  changes:
+  - Ignore PowerShell release artifacts
+  - Stop tracking generated Alire releases
+  - Make Glojure the default shared library engine
+  - Add pure Go YAMLStar module
+  - Bump yaml-parser to 0.2.3
+  - Add release support for more platforms
 - version: 0.1.17
   date:    Tue Jul 21 10:38:59 AM EDT 2026
   changes:

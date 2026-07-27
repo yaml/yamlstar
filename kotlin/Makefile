@@ -2,7 +2,7 @@ include ../common/init.mk
 include $M/maven.mk
 include $(COMMON)/common.mk
 
-KOTLIN-YAMLSTAR-JAR := target/kotlin-yamlstar-0.1.17.jar
+KOTLIN-YAMLSTAR-JAR := target/kotlin-yamlstar-0.1.18.jar
 MAVEN-CENTRAL-ARTIFACT := kotlin-yamlstar
 MAVEN-CENTRAL-JAR := $(KOTLIN-YAMLSTAR-JAR)
 MAVEN-CENTRAL-SOURCE-FILES := \
