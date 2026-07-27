@@ -1052,6 +1052,16 @@ jobs:
           }}
         fetch-depth: 0
 
+    - name: Publish Go module tag
+      run: |
+        if git ls-remote --exit-code --tags origin \
+          "refs/tags/v$VERSION" >/dev/null 2>&1; then
+          echo "Go module tag v$VERSION already exists"
+        else
+          git tag "v$VERSION" "$VERSION^{commit}"
+          git push origin "v$VERSION"
+        fi
+
     - name: Download Linux release assets
       env:
         GH_TOKEN: ${{ github.token }}
@@ -1094,7 +1104,7 @@ jobs:
         git config --global user.email 'yamlstar-release@yaml.com'
 
     - name: Publish bindings
-      run: make release-bindings n="$VERSION"
+      run: make release-bindings v="$VERSION"
 
   publish-website:
     name: Publish website

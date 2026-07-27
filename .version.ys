@@ -51,7 +51,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - example/python/ReadMe.md
     - fortran/fpm.toml
     - fsharp/YAMLStar.fsproj
-    - go/yamlstar.go
+    - yamlstar.go
     - java/Makefile
     - java/ReadMe.md
     - java/src/com/yaml/yamlstar.clj

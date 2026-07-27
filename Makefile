@@ -2,6 +2,7 @@ M := .cache/makes
 include common/init.mk
 include $M/gh.mk
 include $M/gloat.mk
+include $M/go.mk
 include $M/yamlscript.mk
 include $M/clojure.mk
 include $M/lein.mk
@@ -161,6 +162,15 @@ test-bindings: $(BINDING-TESTS)
 
 test-examples:
 	$(MAKE) --no-pr -C example test
+
+go-generate: $(GLOAT)
+	$(MAKE) -C libyamlstar generate-go
+
+go-generate-check: go-generate
+	git diff --exit-code -- internal/glojure/
+
+go-test: $(GO)
+	go test ./...
 
 ifeq ($(OS-NAME),windows)
 shellcheck:
@@ -454,7 +464,8 @@ endif
 	fi
 	git push origin HEAD:$$(git branch --show-current)
 	git tag -f $(v) HEAD
-	git push -f origin $(v)
+	git tag -f v$(v) HEAD
+	git push -f origin $(v) v$(v)
 	$(MAKE) release-build-github v=$(v)
 
 release-bindings: $(YS)

@@ -18,8 +18,20 @@ update() (
 
   cp -r examples "$repo_dir/"
 
-  # Update module path from yamlstar/go to yamlstar-go
-  perl -pi -e 's{yamlstar/go}{yamlstar-go}' "$repo_dir/go.mod"
+  # The monorepo uses a local replace for development. Published yamlstar-go
+  # releases depend on the matching root YAMLStar Go module tag.
+  perl -pi -e \
+    "s{github.com/yaml/yamlstar v0\\.0\\.0}{github.com/yaml/yamlstar v$version}" \
+    "$repo_dir/go.mod"
+  perl -ni -e \
+    'print unless m{^replace github\.com/yaml/yamlstar => \.\.$}' \
+    "$repo_dir/go.mod"
+)
+
+test() (
+  cd "$repo_dir" || exit
+  go mod tidy
+  go test ./...
 )
 
 source "$(dirname "$0")/release-repo.bash"

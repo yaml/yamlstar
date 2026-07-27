@@ -37,6 +37,9 @@ LIB-SO-GLOAT := $(LIB-DIR)/$(LIB-NAME-GLOAT).$(SO)
 LIB-SO := $(LIB-DIR)/$(LIB-NAME).$(SO)
 GLOAT-LIB-HEADER := gloat/include/libyamlstar.h
 GLOAT-ISOLATE-HEADER := gloat/include/graal_isolate.h
+GO-GENERATED-WORK := $(abspath ../.cache/go-generate)
+GO-GENERATED-DIR := $(abspath ../internal/glojure)
+GO-GENERATED-MODULE := github.com/yaml/yamlstar/internal/glojure
 
 CORE-YAMLSTAR := ../core/src/yamlstar
 
@@ -155,6 +158,19 @@ ifdef YAML-PARSER-DIR
 	ln -sf $(YAML-PARSER-SRC-DIR)/yaml_parser/grammar.cljc $(GLOAT-LINK-DIR)/yaml_parser/grammar.clj
 	ln -sf $(YAML-PARSER-SRC-DIR)/yaml_parser/core.clj $(GLOAT-LINK-DIR)/yaml_parser/core.clj
 endif
+
+generate-go: prepare-gloat $(GLOAT)
+	rm -rf $(GO-GENERATED-WORK)
+	mkdir -p $(GO-GENERATED-WORK)
+	$(GLOAT) --force \
+	  --module $(GO-GENERATED-MODULE) \
+	  -o $(GO-GENERATED-WORK)/ \
+	  $(GLOAT-SRCS)
+	test -f $(GO-GENERATED-WORK)/pkg/yamlstar/api/loader.go
+	rm -rf $(GO-GENERATED-DIR)
+	mkdir -p $(GO-GENERATED-DIR)
+	cp -R $(GO-GENERATED-WORK)/pkg $(GO-GENERATED-DIR)/
+	rm -rf $(GO-GENERATED-WORK)
 
 # GraalVM build
 LIBYAMLSTAR-VERSION := $(VERSION)

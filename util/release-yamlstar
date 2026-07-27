@@ -365,22 +365,26 @@ defn do-commit(new):
 
 defn do-tag(new):
   o: "Creating git tag for version $new"
+  module-tag =: "v$new"
 
-  confirm: "Create git tag $new now?"
+  confirm: "Create git tags $new and $module-tag now?"
   run: "git tag $new"
-  say: "✓ Created tag $new"
+  run: "git tag $module-tag"
+  say: "✓ Created tags $new and $module-tag"
 
 
 defn do-push(new):
   o: 'Pushing commits and tags to remote'
 
   current-branch =: sh('git rev-parse --abbrev-ref HEAD').out:trim
+  module-tag =: "v$new"
   say: "  Branch: $current-branch"
   say: "  Tag: $new"
+  say: "  Go module tag: $module-tag"
 
-  confirm: "Push $current-branch and tag $new to origin now?"
+  confirm: "Push $current-branch and both tags to origin now?"
   run: "git push origin $current-branch"
-  run: "git push origin $new"
+  run: "git push origin $new $module-tag"
 
   say: '✓ Pushed to remote'
 

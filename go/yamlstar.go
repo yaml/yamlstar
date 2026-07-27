@@ -1,318 +1,45 @@
 // Copyright 2024 yaml.org
 // MIT License
 
-// Package yamlstar provides Go bindings for the libyamlstar shared library,
-// a pure YAML 1.2 loader implemented in Clojure.
-//
-// Basic usage:
-//
-//	data, err := yamlstar.Load("key: value")
-//	if err != nil {
-//	    log.Fatal(err)
-//	}
-//	// data is map[string]any{"key": "value"}
-//
-// Multi-document support:
-//
-//	docs, err := yamlstar.LoadAll("---\ndoc1\n---\ndoc2")
-//	if err != nil {
-//	    log.Fatal(err)
-//	}
-//	// docs is []any{"doc1", "doc2"}
+// Package yamlstar provides the compatibility import path for YAMLStar's
+// pure-Go YAML 1.2 loader and dumper.
 package yamlstar
 
-/*
-#cgo LDFLAGS: -lyamlstar
+import core "github.com/yaml/yamlstar"
 
-#include <libyamlstar.h>
-#include <graal_isolate.h>
-#include <stdlib.h>
-*/
-import "C"
+// Version is the YAMLStar module version.
+const Version = core.Version
 
-import (
-	"encoding/json"
-	"errors"
-	"fmt"
-	"runtime"
-	"unsafe"
-)
+// ErrNotInitialized is retained for compatibility with older releases.
+var ErrNotInitialized = core.ErrNotInitialized
 
-// Version is the version of the yamlstar library this binding works with.
-const Version = "0.1.17"
+// ErrNullResponse is retained for compatibility with older releases.
+var ErrNullResponse = core.ErrNullResponse
 
-// ErrNotInitialized is retained for API compatibility. Initialization
-// failures are reported directly by ensureInitialized.
-var ErrNotInitialized = errors.New("yamlstar: library not initialized")
+// YAMLError represents an error returned by YAMLStar.
+type YAMLError = core.YAMLError
 
-// ErrNullResponse is returned when the C function returns a null pointer.
-var ErrNullResponse = errors.New("yamlstar: received null response from library")
-
-// Native-library lifecycle handle, shared across all calls. It remains nil
-// with the process-wide Glojure runtime.
-var (
-	isolate *C.graal_isolate_t
-	initErr error
-)
-
-// YAMLError represents an error returned from the yamlstar library.
-type YAMLError struct {
-	Cause   string `json:"cause"`
-	Type    string `json:"type"`
-	Message string `json:"message,omitempty"`
-}
-
-func (e *YAMLError) Error() string {
-	if e.Message != "" {
-		return fmt.Sprintf("yamlstar: %s: %s", e.Type, e.Message)
-	}
-	return fmt.Sprintf("yamlstar: %s", e.Cause)
-}
-
-// response represents the JSON response from libyamlstar.
-type response struct {
-	Data  any        `json:"data"`
-	Error *YAMLError `json:"error"`
-}
-
-// init initializes the native library.
-// This is called automatically when the package is imported.
-func init() {
-	// Create the isolate without creating an initial thread
-	// We'll attach threads as needed per-call
-	rc := C.graal_create_isolate(nil, &isolate, nil)
-	if rc != 0 {
-		initErr = fmt.Errorf("yamlstar: failed to initialize native library (code %d)", int(rc))
-	}
-}
-
-// ensureInitialized checks that the library was initialized successfully.
-func ensureInitialized() error {
-	if initErr != nil {
-		return initErr
-	}
-	return nil
-}
-
-// Load parses a YAML string and returns the first document as a Go value.
-//
-// The returned value will be one of:
-//   - nil (for YAML null)
-//   - bool (for YAML boolean)
-//   - float64 (for YAML numbers - integers are also returned as float64)
-//   - string (for YAML strings)
-//   - []any (for YAML sequences)
-//   - map[string]any (for YAML mappings)
-//
-// Returns an error if the YAML is malformed or the library is not initialized.
+// Load parses a YAML string and returns its first document as a Go value.
 func Load(input string) (any, error) {
-	if err := ensureInitialized(); err != nil {
-		return nil, err
-	}
-
-	// Retain thread affinity for compatibility with the GraalVM implementation.
-	runtime.LockOSThread()
-	defer runtime.UnlockOSThread()
-
-	// Attach a thread for this call
-	var thread *C.graal_isolatethread_t
-	rc := C.graal_attach_thread(isolate, &thread)
-	if rc != 0 {
-		return nil, fmt.Errorf("yamlstar: failed to attach thread (code %d)", int(rc))
-	}
-	defer C.graal_detach_thread(thread)
-
-	// Convert Go string to C string
-	cInput := C.CString(input)
-	defer C.free(unsafe.Pointer(cInput))
-
-	// Call yamlstar_load function in libyamlstar
-	cResult := C.yamlstar_load(
-		thread,
-		cInput,
-	)
-	if cResult == nil {
-		return nil, ErrNullResponse
-	}
-
-	// Convert C string to Go string
-	jsonResult := C.GoString(cResult)
-
-	// Parse JSON response
-	var resp response
-	if err := json.Unmarshal([]byte(jsonResult), &resp); err != nil {
-		return nil, fmt.Errorf("yamlstar: failed to parse response: %w", err)
-	}
-
-	// Check for error in response
-	if resp.Error != nil {
-		return nil, resp.Error
-	}
-
-	return resp.Data, nil
+	return core.Load(input)
 }
 
-// LoadAll parses a YAML string and returns all documents as a slice of Go values.
-//
-// Each element in the returned slice follows the same type mapping as Load().
-//
-// Returns an error if the YAML is malformed or the library is not initialized.
+// LoadAll parses a YAML stream and returns all its documents.
 func LoadAll(input string) ([]any, error) {
-	if err := ensureInitialized(); err != nil {
-		return nil, err
-	}
-
-	// Retain thread affinity for compatibility with the GraalVM implementation.
-	runtime.LockOSThread()
-	defer runtime.UnlockOSThread()
-
-	// Attach a thread for this call
-	var thread *C.graal_isolatethread_t
-	rc := C.graal_attach_thread(isolate, &thread)
-	if rc != 0 {
-		return nil, fmt.Errorf("yamlstar: failed to attach thread (code %d)", int(rc))
-	}
-	defer C.graal_detach_thread(thread)
-
-	// Convert Go string to C string
-	cInput := C.CString(input)
-	defer C.free(unsafe.Pointer(cInput))
-
-	// Call yamlstar_load_all function in libyamlstar
-	cResult := C.yamlstar_load_all(
-		thread,
-		cInput,
-	)
-	if cResult == nil {
-		return nil, ErrNullResponse
-	}
-
-	// Convert C string to Go string
-	jsonResult := C.GoString(cResult)
-
-	// Parse JSON response
-	var resp response
-	if err := json.Unmarshal([]byte(jsonResult), &resp); err != nil {
-		return nil, fmt.Errorf("yamlstar: failed to parse response: %w", err)
-	}
-
-	// Check for error in response
-	if resp.Error != nil {
-		return nil, resp.Error
-	}
-
-	// Convert to []any
-	if resp.Data == nil {
-		return nil, nil
-	}
-	docs, ok := resp.Data.([]any)
-	if !ok {
-		return nil, fmt.Errorf("yamlstar: unexpected response type for load_all: %T", resp.Data)
-	}
-
-	return docs, nil
+	return core.LoadAll(input)
 }
 
-// Dump serializes a Go value to a YAML string.
-//
-// The value must be JSON-compatible: nil, bool, number, string, []any, or
-// map[string]any. Structs and other values supported by encoding/json are
-// accepted through their JSON representation.
+// Dump serializes a JSON-compatible Go value as YAML.
 func Dump(value any) (string, error) {
-	data, err := json.Marshal(value)
-	if err != nil {
-		return "", fmt.Errorf("yamlstar: failed to encode dump input: %w", err)
-	}
-	return dumpJSON(data, false)
+	return core.Dump(value)
 }
 
-// DumpAll serializes multiple Go values to a YAML stream.
+// DumpAll serializes JSON-compatible Go values as a YAML stream.
 func DumpAll(values []any) (string, error) {
-	data, err := json.Marshal(values)
-	if err != nil {
-		return "", fmt.Errorf("yamlstar: failed to encode dump_all input: %w", err)
-	}
-	return dumpJSON(data, true)
+	return core.DumpAll(values)
 }
 
-func dumpJSON(data []byte, all bool) (string, error) {
-	if err := ensureInitialized(); err != nil {
-		return "", err
-	}
-
-	runtime.LockOSThread()
-	defer runtime.UnlockOSThread()
-
-	var thread *C.graal_isolatethread_t
-	rc := C.graal_attach_thread(isolate, &thread)
-	if rc != 0 {
-		return "", fmt.Errorf("yamlstar: failed to attach thread (code %d)", int(rc))
-	}
-	defer C.graal_detach_thread(thread)
-
-	cInput := C.CString(string(data))
-	defer C.free(unsafe.Pointer(cInput))
-
-	var cResult *C.char
-	if all {
-		cResult = C.yamlstar_dump_all(
-			thread,
-			cInput,
-		)
-	} else {
-		cResult = C.yamlstar_dump(
-			thread,
-			cInput,
-		)
-	}
-	if cResult == nil {
-		return "", ErrNullResponse
-	}
-
-	jsonResult := C.GoString(cResult)
-
-	var resp response
-	if err := json.Unmarshal([]byte(jsonResult), &resp); err != nil {
-		return "", fmt.Errorf("yamlstar: failed to parse response: %w", err)
-	}
-	if resp.Error != nil {
-		return "", resp.Error
-	}
-
-	yaml, ok := resp.Data.(string)
-	if !ok {
-		return "", fmt.Errorf("yamlstar: unexpected response type for dump: %T", resp.Data)
-	}
-	return yaml, nil
-}
-
-// LibVersion returns the version string from the libyamlstar library.
-//
-// Returns an error if the library is not initialized.
+// LibVersion returns the version reported by the YAMLStar runtime.
 func LibVersion() (string, error) {
-	if err := ensureInitialized(); err != nil {
-		return "", err
-	}
-
-	// Retain thread affinity for compatibility with the GraalVM implementation.
-	runtime.LockOSThread()
-	defer runtime.UnlockOSThread()
-
-	// Attach a thread for this call
-	var thread *C.graal_isolatethread_t
-	rc := C.graal_attach_thread(isolate, &thread)
-	if rc != 0 {
-		return "", fmt.Errorf("yamlstar: failed to attach thread (code %d)", int(rc))
-	}
-	defer C.graal_detach_thread(thread)
-
-	// Call yamlstar_version function in libyamlstar
-	cResult := C.yamlstar_version(
-		thread,
-	)
-	if cResult == nil {
-		return "", ErrNullResponse
-	}
-
-	return C.GoString(cResult), nil
+	return core.LibVersion()
 }

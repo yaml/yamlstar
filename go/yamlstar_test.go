@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/yaml/yamlstar/go"
+	"github.com/yaml/yamlstar-go"
 )
 
 func TestLoadSimpleScalar(t *testing.T) {

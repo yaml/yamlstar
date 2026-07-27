@@ -387,9 +387,13 @@ do-release-tag() (
   if git rev-parse "$VERSION" >/dev/null 2>&1; then
     die "ERROR: Tag $VERSION already exists"
   fi
+  if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+    die "ERROR: Go module tag v$VERSION already exists"
+  fi
   git tag "$VERSION"
-  git push origin "$VERSION"
-  echo "Created and pushed tag $VERSION"
+  git tag "v$VERSION"
+  git push origin "$VERSION" "v$VERSION"
+  echo "Created and pushed tags $VERSION and v$VERSION"
 )
 
 # Create GitHub release with artifacts

@@ -8,7 +8,7 @@ This example demonstrates using the YAMLStar Go binding.
 The `yaml-to-json.go` script loads `../sample.yaml` and outputs it as formatted
 JSON, demonstrating:
 
-- Using the YAMLStar Go binding (CGO)
+- Using the pure-Go YAMLStar module
 - Loading YAML files
 - Converting YAML to Go data structures
 - Outputting as JSON
@@ -23,8 +23,7 @@ make test
 This will:
 
 1. Auto-install Go
-2. Set up CGO flags for libyamlstar
-3. Run the script with `go run yaml-to-json.go`
+2. Run the script with `go run yaml-to-json.go`
 
 
 ### With a custom YAML file
@@ -60,25 +59,22 @@ Output JSON:
 
 ## Development Shell
 
-Get a shell with Go and the library paths set up:
+Get a shell with Go set up:
 
 ```bash
 make shell
 ```
 
-This drops you into a bash shell with Go installed and CGO flags configured
-to find libyamlstar.
-The tools are installed locally to `.cache/makes/` so they don't require
-system-wide installation.
+This drops you into a bash shell with Go installed. The tools are installed
+locally to `.cache/makes/` so they don't require system-wide installation.
 
 Exit the shell with `exit` or Ctrl-D.
 
 
 ## Dependencies
 
-- Go 1.22+
-- libyamlstar shared library (downloaded from GitHub releases)
-- CGO enabled
+- Go 1.24+
+- No cgo or shared library
 
-The example uses the published YAMLStar Go module from `github.com/yaml/yamlstar-go` v0.1.17
-and the downloaded libyamlstar shared library.
+The repository example imports the root `github.com/yaml/yamlstar` module.
+The published compatibility import path is `github.com/yaml/yamlstar-go`.

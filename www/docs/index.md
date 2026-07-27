@@ -96,8 +96,7 @@ hide:
     <span class="ycom">// go get github.com/yaml/yamlstar-go</span>
     <span class="ykw">import</span> <span class="ystr">"github.com/yaml/yamlstar-go"</span>
 
-    ys := yamlstar.New()
-    data := ys.Load(<span class="ystr">"key: value"</span>)
+    data, _ := yamlstar.Load(<span class="ystr">"key: value"</span>)
     <span class="ycom">// map[string]interface{}{"key": "value"}</span>
     text := yamlstar.Dump(map[string]interface{}{<span class="ystr">"foo"</span>: [][]string{{<span class="ystr">"bar"</span>}}})
     <span class="ycom">// foo:

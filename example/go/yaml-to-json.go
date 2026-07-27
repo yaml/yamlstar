@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	yamlstar "github.com/yaml/yamlstar-go"
+	"github.com/yaml/yamlstar"
 )
 
 func main() {
@@ -24,7 +24,7 @@ func main() {
 
 	fmt.Println("Input YAML:")
 	fmt.Println(string(yamlContent))
-	fmt.Println("\n---\n")
+	fmt.Print("\n---\n\n")
 
 	data, err := yamlstar.Load(string(yamlContent))
 	if err != nil {

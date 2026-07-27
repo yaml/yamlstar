@@ -365,17 +365,16 @@ import (
 )
 
 func main() {
-    // Create a YAMLStar instance
-    ys := yamlstar.New()
-    defer ys.Close()
-
     // Load a YAML string
-    data := ys.Load("key: value")
+    data, err := yamlstar.Load("key: value")
+    if err != nil {
+        panic(err)
+    }
     fmt.Println(data)
     // map[string]interface{}{"key": "value"}
 
     // Load with type coercion
-    data2 := ys.Load(`
+    data2, _ := yamlstar.Load(`
 num: 42
 bool: true
 null: null
@@ -384,7 +383,7 @@ null: null
     // map[string]interface{}{"num": 42, "bool": true, "null": nil}
 
     // Load multiple documents
-    docs := ys.LoadAll("---\ndoc1\n---\ndoc2")
+    docs, _ := yamlstar.LoadAll("---\ndoc1\n---\ndoc2")
     fmt.Println(docs)
     // []interface{}{"doc1", "doc2"}
 }

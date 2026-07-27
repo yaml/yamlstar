@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/yaml/yamlstar/go"
+	"github.com/yaml/yamlstar-go"
 )
 
 func main() {
