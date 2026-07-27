@@ -8,6 +8,7 @@ version=$(sed -n 's/^version: //p' Meta)
 case "$(uname -s)" in
   Linux*) os=linux ;;
   Darwin*) os=macos ;;
+  FreeBSD*) os=freebsd ;;
   MINGW*|MSYS*|CYGWIN*) os=windows ;;
   *) os=unknown ;;
 esac
@@ -27,7 +28,7 @@ platform=$os-$arch
 find_artifact() {
   local pattern=$1
 
-  find "$artifact_dir" -maxdepth 2 -type f -name "$pattern" |
+  find "$artifact_dir" -type f -name "$pattern" |
     LC_ALL=C sort |
     head -n1
 }
@@ -84,14 +85,14 @@ else
 fi
 
 lib_dir=$(
-  find "$work_dir" -mindepth 1 -maxdepth 1 -type d \
+  find "$work_dir" -type d \
     -name "libyamlstar-$version-*" |
     LC_ALL=C sort |
   head -n1
 )
 
 cli_dir=$(
-  find "$work_dir" -mindepth 1 -maxdepth 1 -type d \
+  find "$work_dir" -type d \
     -name "yamlstar-$version-*" |
     LC_ALL=C sort |
     head -n1

@@ -95,19 +95,23 @@ defn release-files(version): +
     "yamlstar-${version}-linux-aarch64.tar.xz"
     "yamlstar-${version}-linux-x64.tar.xz"
     "yamlstar-${version}-macos-arm64.tar.xz"
+    "yamlstar-${version}-macos-x64.tar.xz"
     "libyamlstar-${version}-linux-aarch64.tar.xz"
     "libyamlstar-${version}-linux-x64.tar.xz"
     "libyamlstar-${version}-macos-arm64.tar.xz"
+    "libyamlstar-${version}-macos-x64.tar.xz"
   ]
 
 
 defn yamlstar-formula(version class shas):
   lin-arm-file =: "yamlstar-${version}-linux-aarch64.tar.xz"
   lin-int-file =: "yamlstar-${version}-linux-x64.tar.xz"
-  mac-file =: "yamlstar-${version}-macos-arm64.tar.xz"
+  mac-arm-file =: "yamlstar-${version}-macos-arm64.tar.xz"
+  mac-int-file =: "yamlstar-${version}-macos-x64.tar.xz"
   lin-arm =: shas.$lin-arm-file
   lin-int =: shas.$lin-int-file
-  mac =: shas.$mac-file
+  mac-arm =: shas.$mac-arm-file
+  mac-int =: shas.$mac-int-file
   formula =:: |
     class CLASS < Formula
       desc "YAMLStar command-line YAML loader"
@@ -133,7 +137,11 @@ defn yamlstar-formula(version class shas):
         if Hardware::CPU.arm?
           url "https://github.com/yaml/yamlstar/releases/download/" \
             "#{version}/yamlstar-#{version}-macos-arm64.tar.xz"
-          sha256 "MACOS_SHA"
+          sha256 "MACOS_ARM_SHA"
+        elsif Hardware::CPU.intel?
+          url "https://github.com/yaml/yamlstar/releases/download/" \
+            "#{version}/yamlstar-#{version}-macos-x64.tar.xz"
+          sha256 "MACOS_INTEL_SHA"
         else
           odie "YAMLStar is not available for this macOS architecture"
         end
@@ -153,16 +161,19 @@ defn yamlstar-formula(version class shas):
     .replace('VERSION' version)
     .replace('LINUX_ARM_SHA' lin-arm)
     .replace('LINUX_INTEL_SHA' lin-int)
-    .replace('MACOS_SHA' mac)
+    .replace('MACOS_ARM_SHA' mac-arm)
+    .replace('MACOS_INTEL_SHA' mac-int)
 
 
 defn libyamlstar-formula(version class shas):
   lin-arm-file =: "libyamlstar-${version}-linux-aarch64.tar.xz"
   lin-int-file =: "libyamlstar-${version}-linux-x64.tar.xz"
-  mac-file =: "libyamlstar-${version}-macos-arm64.tar.xz"
+  mac-arm-file =: "libyamlstar-${version}-macos-arm64.tar.xz"
+  mac-int-file =: "libyamlstar-${version}-macos-x64.tar.xz"
   lin-arm =: shas.$lin-arm-file
   lin-int =: shas.$lin-int-file
-  mac =: shas.$mac-file
+  mac-arm =: shas.$mac-arm-file
+  mac-int =: shas.$mac-int-file
   formula =:: |
     class CLASS < Formula
       desc "YAMLStar shared library"
@@ -188,7 +199,11 @@ defn libyamlstar-formula(version class shas):
         if Hardware::CPU.arm?
           url "https://github.com/yaml/yamlstar/releases/download/" \
             "#{version}/libyamlstar-#{version}-macos-arm64.tar.xz"
-          sha256 "MACOS_SHA"
+          sha256 "MACOS_ARM_SHA"
+        elsif Hardware::CPU.intel?
+          url "https://github.com/yaml/yamlstar/releases/download/" \
+            "#{version}/libyamlstar-#{version}-macos-x64.tar.xz"
+          sha256 "MACOS_INTEL_SHA"
         else
           odie "libyamlstar is not available for this macOS architecture"
         end
@@ -213,7 +228,8 @@ defn libyamlstar-formula(version class shas):
     .replace('VERSION' version)
     .replace('LINUX_ARM_SHA' lin-arm)
     .replace('LINUX_INTEL_SHA' lin-int)
-    .replace('MACOS_SHA' mac)
+    .replace('MACOS_ARM_SHA' mac-arm)
+    .replace('MACOS_INTEL_SHA' mac-int)
 
 
 defn readme(version): |
@@ -225,7 +241,7 @@ defn readme(version): |
 
   ## Install YAMLStar with Homebrew
 
-  Works on Linux Intel and macOS ARM.
+  Works on Linux and macOS, on Intel and ARM.
 
   ```
   $ brew install yaml/yamlstar/yamlstar

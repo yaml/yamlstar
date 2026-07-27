@@ -208,7 +208,7 @@ For language bindings that use FFI, install the matching `libyamlstar`
 release with the install script or Homebrew before loading YAML.
 Native Windows support varies by binding. Ada, Crystal, Erlang, F#, Haskell,
 Julia, PowerShell, Raku, and Scala are currently verified on Linux/macOS
-shared-library paths.
+shared-library paths. FreeBSD x64 verifies the C ABI and Python binding.
 
 | Language | Directory | Test Command |
 |----------|-----------|--------------|

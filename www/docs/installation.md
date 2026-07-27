@@ -62,9 +62,23 @@ Release archives are attached to
 [GitHub Releases](https://github.com/yaml/yamlstar/releases):
 
 - `yamlstar-VERSION-linux-x64.tar.xz`
+- `yamlstar-VERSION-linux-aarch64.tar.xz`
 - `yamlstar-VERSION-macos-arm64.tar.xz`
+- `yamlstar-VERSION-macos-x64.tar.xz`
+- `yamlstar-VERSION-freebsd-x64.tar.xz`
+- `yamlstar-VERSION-windows-x64.zip`
+- `yamlstar-VERSION-windows-arm64.zip`
+- `yamlstar-VERSION-wasm-p1.tar.xz`
 - `libyamlstar-VERSION-linux-x64.tar.xz`
+- `libyamlstar-VERSION-linux-aarch64.tar.xz`
 - `libyamlstar-VERSION-macos-arm64.tar.xz`
+- `libyamlstar-VERSION-macos-x64.tar.xz`
+- `libyamlstar-VERSION-freebsd-x64.tar.xz`
+- `libyamlstar-VERSION-windows-x64.zip`
+- `libyamlstar-VERSION-windows-arm64.zip`
+
+The WASI Preview 1 archive contains `yaml.wasm`; it does not include a shared
+library.
 
 Each archive contains a `Makefile`, so manual installation is:
 

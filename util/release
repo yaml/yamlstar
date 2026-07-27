@@ -23,28 +23,59 @@ main() (
 )
 
 detect-platform() {
-  case "$(uname -m)" in
-    x86_64|amd64) ARCH=x64 ;;
-    aarch64|arm64) ARCH=arm64 ;;
-    *) die "ERROR: Unsupported architecture $(uname -m)" ;;
-  esac
+  local target_os target_arch
 
-  if [[ $OS_NAME == linux ]]; then
+  if [[ ${GLOAT_PLATFORM:-} ]]; then
+    target_os=${GLOAT_PLATFORM%/*}
+    target_arch=${GLOAT_PLATFORM#*/}
+    case "$target_os" in
+      darwin) OS_NAME=macos ;;
+      wasip1) OS_NAME=wasm ;;
+      *) OS_NAME=$target_os ;;
+    esac
+    case "$target_arch" in
+      amd64) ARCH=x64 ;;
+      arm64) ARCH=arm64 ;;
+      wasm) ARCH=p1 ;;
+      *) die "ERROR: Unsupported target architecture $target_arch" ;;
+    esac
+  else
+    case "$(uname -m)" in
+      x86_64|amd64) ARCH=x64 ;;
+      aarch64|arm64) ARCH=arm64 ;;
+      *) die "ERROR: Unsupported architecture $(uname -m)" ;;
+    esac
+  fi
+
+  if [[ ${RELEASE_PLATFORM:-} ]]; then
+    PLATFORM=$RELEASE_PLATFORM
+  elif [[ $OS_NAME == linux ]]; then
     [[ $ARCH == arm64 ]] && ARCH=aarch64
     PLATFORM=linux-$ARCH
+  elif [[ $OS_NAME == wasm ]]; then
+    PLATFORM=wasm-$ARCH
+  else
+    PLATFORM=$OS_NAME-$ARCH
+  fi
+
+  if [[ $OS_NAME == linux || $OS_NAME == freebsd ]]; then
     EXT=so
     ARCHIVE_CMD='tar -cJf'
     ARCHIVE_EXT=tar.xz
   elif [[ $OS_NAME == macos ]]; then
-    PLATFORM=macos-$ARCH
     EXT=dylib
     ARCHIVE_CMD='tar -cJf'
     ARCHIVE_EXT=tar.xz
   elif [[ $OS_NAME == windows ]]; then
-    PLATFORM=windows-$ARCH
     EXT=dll
     ARCHIVE_CMD='zip -r'
     ARCHIVE_EXT=zip
+  elif [[ $OS_NAME == wasm ]]; then
+    EXT=wasm
+    ARCHIVE_CMD='tar -cJf'
+    ARCHIVE_EXT=tar.xz
+  else
+    die "ERROR: Unsupported target operating system $OS_NAME"
   fi
 }
 
@@ -136,13 +167,27 @@ do-check-tag() (
 do-release-lib() (
   detect-platform
 
+  [[ $OS_NAME != wasm ]] ||
+    die 'ERROR: WASI does not support libyamlstar shared libraries'
+
   # Release artifact installs use the inverse symlink layout from the build
   # tree. Clear old library files so `make build` can recover either way.
   rm -f libyamlstar/lib/libyamlstar.$EXT \
     libyamlstar/lib/libyamlstar.$EXT.*
 
   # Build the library
-  make -C libyamlstar build
+  if [[ ${CROSS_CC_TARGET:-} ]]; then
+    [[ -x ${ZIG:-} ]] ||
+      die 'ERROR: Cross-compiling libyamlstar requires Zig'
+    zig_cache=$PWD/.cache/zig
+    mkdir -p "$zig_cache/global" "$zig_cache/local"
+    CC="$ZIG cc -target $CROSS_CC_TARGET" \
+      ZIG_GLOBAL_CACHE_DIR="$zig_cache/global" \
+      ZIG_LOCAL_CACHE_DIR="$zig_cache/local" \
+      make -C libyamlstar build SO="$EXT"
+  else
+    make -C libyamlstar build SO="$EXT"
+  fi
 
   # Create release directory structure
   RELEASE_DIR=libyamlstar-$VERSION-$PLATFORM
@@ -296,9 +341,36 @@ gcc -o myapp myapp.c -lyamlstar
 
 # Build CLI archive for current platform
 do-release-cli() (
-  make -C cli build
-
   detect-platform
+
+  if [[ ${GLOAT_PLATFORM:-} ]]; then
+    case "$OS_NAME" in
+      windows)
+        CLI_BUILD_FILE=yaml-release.exe
+        CLI_FILE=yaml.exe
+        ;;
+      wasm)
+        CLI_BUILD_FILE=yaml-release.wasm
+        CLI_FILE=yaml.wasm
+        ;;
+      *)
+        CLI_BUILD_FILE=yaml-release
+        CLI_FILE=yaml
+        ;;
+    esac
+    rm -f "cli/bin/$CLI_BUILD_FILE"
+    make -C cli build-gloat \
+      CLI-GLOAT-NAME="$CLI_BUILD_FILE"
+    CLI_SOURCE="cli/bin/$CLI_BUILD_FILE"
+  else
+    make -C cli build
+    if [[ $OS_NAME == windows ]]; then
+      CLI_FILE=yaml.exe
+    else
+      CLI_FILE=yaml
+    fi
+    CLI_SOURCE="cli/bin/$CLI_FILE"
+  fi
 
   RELEASE_DIR=yamlstar-$VERSION-$PLATFORM
   RELEASE_PATH=dist/$RELEASE_DIR
@@ -306,17 +378,13 @@ do-release-cli() (
   echo "Creating release package: $RELEASE_DIR"
   rm -rf "$RELEASE_PATH"
   mkdir -p "$RELEASE_PATH"
-  if [[ $OS_NAME == windows ]]; then
-    cp cli/bin/yaml.exe "$RELEASE_PATH/"
-  else
-    cp cli/bin/yaml "$RELEASE_PATH/"
-  fi
+  cp "$CLI_SOURCE" "$RELEASE_PATH/$CLI_FILE"
 
   cat > "$RELEASE_PATH/Makefile" <<'...'
 SHELL := bash
 
 YAMLSTAR_VERSION := VERSION_PLACEHOLDER
-YAMLSTAR := $(firstword $(wildcard yaml yaml.exe))
+YAMLSTAR := $(firstword $(wildcard yaml yaml.exe yaml.wasm))
 
 PREFIX ?= /usr/local
 
@@ -339,7 +407,7 @@ YAMLStar VERSION_PLACEHOLDER for PLATFORM_PLACEHOLDER
 
 ## Contents
 
-- `yaml` / `yaml.exe` - YAMLStar command-line loader
+- `yaml` / `yaml.exe` / `yaml.wasm` - YAMLStar command-line loader
 - `Makefile` - Installation script
 
 ## Installation
@@ -432,11 +500,18 @@ do-check-release() (
   for asset in \
     "yamlstar-$VERSION-linux-aarch64.tar.xz" \
     "yamlstar-$VERSION-linux-x64.tar.xz" \
+    "yamlstar-$VERSION-freebsd-x64.tar.xz" \
     "yamlstar-$VERSION-macos-arm64.tar.xz" \
+    "yamlstar-$VERSION-macos-x64.tar.xz" \
+    "yamlstar-$VERSION-wasm-p1.tar.xz" \
+    "yamlstar-$VERSION-windows-arm64.zip" \
     "yamlstar-$VERSION-windows-x64.zip" \
     "libyamlstar-$VERSION-linux-aarch64.tar.xz" \
     "libyamlstar-$VERSION-linux-x64.tar.xz" \
+    "libyamlstar-$VERSION-freebsd-x64.tar.xz" \
     "libyamlstar-$VERSION-macos-arm64.tar.xz" \
+    "libyamlstar-$VERSION-macos-x64.tar.xz" \
+    "libyamlstar-$VERSION-windows-arm64.zip" \
     "libyamlstar-$VERSION-windows-x64.zip"
   do
     grep -qx "$asset" <<<"$assets" ||

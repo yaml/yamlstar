@@ -31,14 +31,18 @@ main() (
 
 install() (
   name=$1
-  file=$name-$vers-$os-$arch.tar.xz
+  file=$name-$vers-$os-$arch.$archive
   url=$releases_url/$vers/$file
 
   curl -fsS -L -o "$dir/$file" "$url"
 
   release_dir=$dir/$name
   mkdir -- "$release_dir"
-  tar -xf "$dir/$file" -C "$release_dir"
+  if [[ $archive == zip ]]; then
+    unzip -q "$dir/$file" -d "$release_dir"
+  else
+    tar -xf "$dir/$file" -C "$release_dir"
+  fi
 
   (
     CDPATH='' cd -- "$release_dir" || exit
@@ -69,6 +73,8 @@ install() (
     echo
     if [[ $os == macos ]]; then
       echo "  *** WARNING: '$PREFIX/lib' may need to be in DYLD_LIBRARY_PATH ***"
+    elif [[ $os == windows ]]; then
+      echo "  *** WARNING: '$PREFIX/lib' may need to be in PATH ***"
     else
       echo "  *** WARNING: '$PREFIX/lib' may need to be in LD_LIBRARY_PATH ***"
     fi
@@ -92,6 +98,10 @@ setup() {
     os=macos
   elif [[ $OSTYPE == *linux* ]]; then
     os=linux
+  elif [[ $OSTYPE == *freebsd* ]]; then
+    os=freebsd
+  elif [[ $OSTYPE == *msys* || $OSTYPE == *cygwin* ]]; then
+    os=windows
   else
     die "Unknown/unsupported OS type: '$OSTYPE'"
   fi
@@ -104,13 +114,16 @@ setup() {
     die "Unknown machine/unsupported type: '$MACHTYPE'"
   fi
 
-  if [[ $os == macos && $arch != arm64 ]]; then
-    die "YAMLStar is not available for macOS '$arch' yet"
+  if [[ $os == linux && $arch == arm64 ]]; then
+    arch=aarch64
   fi
 
-  if [[ $os == linux && $arch != x64 ]]; then
-    die "YAMLStar is not available for Linux '$arch' yet"
+  if [[ $os == freebsd && $arch != x64 ]]; then
+    die "YAMLStar is not available for FreeBSD '$arch' yet"
   fi
+
+  archive=tar.xz
+  [[ $os == windows ]] && archive=zip
 
   releases_url=https://github.com/yaml/yamlstar/releases/download
 

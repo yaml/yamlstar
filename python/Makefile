@@ -17,6 +17,7 @@ PYTHON-VENV-SETUP := $(UV) pip install --python $(PYTHON-VENV) pytest setuptools
 
 WHEEL-PLAT-linux-int64 := manylinux_2_31_x86_64
 WHEEL-PLAT-macos-arm64 := macosx_14_0_arm64
+WHEEL-PLAT-macos-int64 := macosx_15_0_x86_64
 WHEEL-PLAT-windows-int64 := win_amd64
 WHEEL-PLAT := $(WHEEL-PLAT-$(OS-ARCH))
 WHEEL-LIB-DIR := lib/yamlstar/libyamlstar
@@ -87,6 +88,7 @@ wheels-from-release: $(PYTHON-VENV) MANIFEST.in Meta
 	    case "$$relplat" in \
 	      linux-x64) plat=manylinux_2_31_x86_64; libpat='libyamlstar.so*' ;; \
 	      macos-arm64) plat=macosx_14_0_arm64; libpat='libyamlstar.dylib*' ;; \
+	      macos-x64) plat=macosx_15_0_x86_64; libpat='libyamlstar.dylib*' ;; \
 	      windows-x64) plat=win_amd64; libpat='libyamlstar.dll' ;; \
 	      *) echo "Skipping unsupported Python wheel asset: $$name"; \
 	         continue ;; \

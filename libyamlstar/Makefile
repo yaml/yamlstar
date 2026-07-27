@@ -35,6 +35,9 @@ LIB-NAME := libyamlstar
 LIB-NAME-GLOAT ?= libyamlstar
 LIB-SO-GLOAT := $(LIB-DIR)/$(LIB-NAME-GLOAT).$(SO)
 LIB-SO := $(LIB-DIR)/$(LIB-NAME).$(SO)
+GLOAT-PLATFORM-OPT := \
+  $(if $(GLOAT_PLATFORM),--platform=$(GLOAT_PLATFORM))
+GLOAT-WINDOWS-TARGET := $(filter windows/%,$(GLOAT_PLATFORM))
 GLOAT-LIB-HEADER := gloat/include/libyamlstar.h
 GLOAT-ISOLATE-HEADER := gloat/include/graal_isolate.h
 GO-GENERATED-WORK := $(abspath ../.cache/go-generate)
@@ -219,8 +222,10 @@ build-gloat: $(LIB-SO-GLOAT)
 	cp $(GLOAT-LIB-HEADER) $(LIB-HEADER)
 	cp $(GLOAT-ISOLATE-HEADER) $(LIB-DIR)/graal_isolate.h
 ifneq ($(OS-NAME),windows)
+ifeq (,$(GLOAT-WINDOWS-TARGET))
 	ln -sf $(notdir $(LIB-SO-GLOAT)) \
 	  $(LIB-DIR)/$(LIB-NAME-GLOAT).$(SO).$(VERSION)
+endif
 endif
 
 build-graalvm: $(LIB-SO)
@@ -246,7 +251,9 @@ ifdef YAMLSTAR_GLOJURE
 $(LIB-SO-GLOAT): $(GLOAT-SRCS) $(GLOAT-LINKS) | $(GLOAT-DIR)
 	@echo "Building gloat shared library..."
 	mkdir -p $(LIB-DIR)
-	</dev/null env -u GOROOT $(GLOAT-GLOJURE-ENV) $(GLOAT-BIN)/gloat --force $(GLOAT-SRCS) -o $@
+	</dev/null env -u GOROOT $(GLOAT-GLOJURE-ENV) \
+	  $(GLOAT-BIN)/gloat --force $(GLOAT-PLATFORM-OPT) \
+	  $(GLOAT-SRCS) -o $@
 	@echo "Gloat shared library created at: $@"
 endif
 

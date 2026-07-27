@@ -11,6 +11,7 @@ include $M/clean.mk
 include $M/perl.mk
 include $M/bpan.mk
 include $M/shellcheck.mk
+include $M/zig.mk
 include $M/shell.mk
 
 # Extract version from Meta file
@@ -278,6 +279,7 @@ ifdef o
 export YS_RELEASE_VERSION_OLD := $o
 endif
 export YAMLSTAR_ROOT := $(ROOT)
+export CROSS_CC_TARGET GLOAT_PLATFORM RELEASE_PLATFORM ZIG
 
 RELEASE-TARGETS := \
   version-bump \
@@ -290,6 +292,10 @@ RELEASE-TARGETS := \
 
 $(RELEASE-TARGETS):
 	util/release $@
+
+ifneq (,$(GLOAT_PLATFORM))
+release-lib: $(ZIG)
+endif
 
 # Legacy target for backward compatibility
 release-tag-legacy:
@@ -416,15 +422,23 @@ endif
 	$(YS) $(ROOT)/util/release-yamlstar build-github $(v)
 
 # The t= platform list accepts spaces or commas:
-#   t='macos linux'  or  t=macos,linux
-#   t=aarch64
+#   t='macos-arm64 linux-x64'  or  t=macos-arm64,linux-x64
+#   t=wasm-p1
 comma := ,
 
 # Rerun tests for the platforms in t= using build artifacts from a
 # prior run (r=RUN_ID, default: the latest release workflow run on
 # the current branch). Example:
-#   make release-tests-retry v=0.1.17 t=macos r=12345678
-release-tests-retry: t ?= linux aarch64 macos windows
+#   make release-tests-retry v=0.1.17 t=macos-x64 r=12345678
+release-tests-retry: t ?= \
+  linux-x64 \
+  linux-aarch64 \
+  macos-arm64 \
+  macos-x64 \
+  freebsd-x64 \
+  windows-x64 \
+  windows-arm64 \
+  wasm-p1
 release-tests-retry: $(GH)
 ifndef v
 	$(error 'make release-tests-retry' requires v=NEW_VERSION)

@@ -775,10 +775,11 @@ YAMLStar bindings are tested on:
 
 - **Linux**: x86_64, arm64
 - **macOS**: x86_64 (Intel), arm64 (Apple Silicon)
-- **Windows**: x86_64 shared-library artifacts are built; binding-level
-  native Windows support varies by language
+- **FreeBSD**: x86_64 CLI, C ABI, and Python binding tests
+- **Windows**: x86_64 binding tests; ARM64 artifact smoke tests only
+- **WASI Preview 1**: CLI smoke tests only; no shared library
 
-The shared library (`libyamlstar.so`, `libyamlstar.dylib`, `yamlstar.dll`) is
+The shared library (`libyamlstar.so`, `libyamlstar.dylib`, `libyamlstar.dll`) is
 built with Gloat and Glojure as a native Go shared library.
 
 Ada, Crystal, Erlang, F#, Haskell, Julia, Raku, and Scala are

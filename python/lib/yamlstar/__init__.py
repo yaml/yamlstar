@@ -23,7 +23,7 @@ assert sys.version_info >= (3, 6), \
 
 def find_libyamlstar():
   """Find the libyamlstar shared library."""
-  if sys.platform == 'linux':
+  if sys.platform == 'linux' or sys.platform.startswith('freebsd'):
     so = 'so'
   elif sys.platform == 'darwin':
     so = 'dylib'

@@ -115,7 +115,9 @@ Phase 1 has been successfully completed with:
 - **Core Dependencies**: 2 (Clojure 1.12.0, data.json 2.5.0)
 - **Lines of Code**: ~500 (excluding grammar.clj which is 4,247 lines)
 - **YAML Spec Compliance**: 100% (via reference parser)
-- **Supported Platforms**: Linux and macOS for binding tests; Windows shared-library artifacts are built, with binding support varying by language
+- **Supported Platforms**: Linux and macOS binding suites; FreeBSD x64 C and
+  Python bindings; Windows x64 binding tests; Windows ARM64 and WASI Preview 1
+  artifact smoke tests
 - **Language Bindings**: 32 (Ada, Clojure, Crystal, C#, D, Dart, Delphi, Dyalog APL, Elixir, Erlang, F#, Fortran, Go, Haskell, Java, Julia, Kotlin, Lua, MoonBit, Nim, Node.js, Perl, PHP, PowerShell, Python, R, Raku, Ruby, Rust, Scala, Swift, Zig)
 
 ---

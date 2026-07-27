@@ -15,10 +15,18 @@ YAMLStar uses a two-phase release process:
 ## Platform Support
 
 Currently building and releasing for:
-- Linux x64 (primary build platform)
-- macOS ARM64 (Apple Silicon)
 
-Linux ARM64, macOS x64, and Windows support are not published yet.
+- Linux x64 and AArch64
+- macOS x64 and ARM64
+- FreeBSD x64
+- Windows x64 and ARM64
+- WASI Preview 1
+
+WASI publishes the CLI module only. All other platforms publish both the CLI
+and shared library.
+
+Windows ARM64 and WASI Preview 1 run artifact smoke tests without the language
+binding suite. FreeBSD runs CLI, C ABI, and Python binding tests.
 
 ## Step 1: Bump Version and Update Changelog
 
@@ -78,10 +86,9 @@ creates a GitHub Release.
 
 The workflow will:
 - Verify the version matches the `Meta` file
-- Build `yaml` on Linux x64
-- Build `yaml` on macOS ARM64
-- Build `libyamlstar.so` on Linux x64
-- Build `libyamlstar.dylib` on macOS ARM64
+- Build the CLI and shared library for Linux, macOS, FreeBSD, and Windows
+- Build the CLI as a WASI Preview 1 module
+- Run platform smoke tests and supported binding tests
 - Create GitHub Release with all platform binaries attached
 - Publish Homebrew formulas for the CLI and shared library
 
@@ -89,9 +96,20 @@ The workflow will:
 
 The release includes:
 - `yamlstar-0.1.17-linux-x64.tar.xz`
+- `yamlstar-0.1.17-linux-aarch64.tar.xz`
 - `yamlstar-0.1.17-macos-arm64.tar.xz`
+- `yamlstar-0.1.17-macos-x64.tar.xz`
+- `yamlstar-0.1.17-freebsd-x64.tar.xz`
+- `yamlstar-0.1.17-windows-x64.zip`
+- `yamlstar-0.1.17-windows-arm64.zip`
+- `yamlstar-0.1.17-wasm-p1.tar.xz`
 - `libyamlstar-0.1.17-linux-x64.tar.xz`
+- `libyamlstar-0.1.17-linux-aarch64.tar.xz`
 - `libyamlstar-0.1.17-macos-arm64.tar.xz`
+- `libyamlstar-0.1.17-macos-x64.tar.xz`
+- `libyamlstar-0.1.17-freebsd-x64.tar.xz`
+- `libyamlstar-0.1.17-windows-x64.zip`
+- `libyamlstar-0.1.17-windows-arm64.zip`
 
 ## Step 3: Release Language Bindings
 

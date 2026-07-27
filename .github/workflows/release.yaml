@@ -28,7 +28,8 @@ on:
       tests_only:
         description: >-
           Only test these platforms (space-separated subset of:
-          linux aarch64 macos windows); skips release and publish jobs
+          linux-x64 linux-aarch64 macos-arm64 macos-x64 freebsd-x64
+          windows-x64 windows-arm64 wasm-p1); skips release and publish jobs
         default: ''
         required: false
         type: string
@@ -277,6 +278,69 @@ jobs:
           python/dist/*.whl
         retention-days: 7
 
+  build-macos-x64:
+    name: Build macOS x64
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
+    needs: verify-release
+    runs-on: macos-15-intel
+    steps:
+    - name: Checkout tag
+      uses: actions/checkout@v5
+      with:
+        ref: ${{ inputs.version }}
+
+    - name: Set up GraalVM
+      uses: graalvm/setup-graalvm@v1
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: graalvm
+        github-token: ${{ github.token }}
+        native-image-job-reports: 'true'
+
+    - name: Use GitHub Leiningen mirror
+      run: |
+        make --no-print-directory -n default >/dev/null
+        python - <<'PY'
+        from pathlib import Path
+        p = Path('.cache/makes/lein.mk')
+        text = p.read_text()
+        text = text.replace(
+          'https://codeberg.org/leiningen/leiningen/raw/tag',
+          'https://raw.githubusercontent.com/technomancy/leiningen')
+        text = text.replace(
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n',
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|\' $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_CHECKSUM=.*|export LEIN_CHECKSUM="5f5231f06c3c7924e3241e3dfa52885577fb44ddf8a9ea373d2c5e2f27217565"|\' $@\n')
+        p.write_text(text)
+        PY
+
+    - name: Check out Glojure source
+      run: |
+        glojure_version=$(
+          sed -n 's/^GLOJURE-VERSION ?= //p' .cache/makes/glojure.mk
+        )
+        git clone --depth=1 --branch "v$glojure_version" \
+          https://github.com/glojurelang/glojure \
+          .cache/glojure-source
+
+    - name: Build release archives and Python wheel
+      run: |
+        make release-lib VERSION="$VERSION" \
+          TEST-WITH-GLOJURE="$PWD/.cache/glojure-source"
+        make release-cli VERSION="$VERSION"
+        make -C python wheel VERSION="$VERSION"
+
+    - name: Upload macOS x64 artifacts
+      uses: actions/upload-artifact@v6
+      with:
+        name: macos-x64
+        path: |
+          dist/yamlstar-${{ inputs.version }}-macos-x64.tar.xz
+          dist/libyamlstar-${{ inputs.version }}-macos-x64.tar.xz
+          python/dist/*.whl
+        retention-days: 7
+
   build-windows-x64:
     name: Build Windows x64
     if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
@@ -349,6 +413,72 @@ jobs:
           dist/yamlstar-${{ inputs.version }}-windows-x64.zip
           dist/libyamlstar-${{ inputs.version }}-windows-x64.zip
           python/dist/*.whl
+        retention-days: 7
+
+  build-cross-platform:
+    name: Build ${{ matrix.name }}
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
+    needs: verify-release
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - name: FreeBSD x64
+          platform: freebsd-x64
+          gloat_platform: freebsd/amd64
+          cross_cc_target: x86_64-freebsd
+          archive_ext: tar.xz
+          shared_library: true
+        - name: Windows ARM64
+          platform: windows-arm64
+          gloat_platform: windows/arm64
+          cross_cc_target: aarch64-windows-gnu
+          archive_ext: zip
+          shared_library: true
+        - name: WASI Preview 1
+          platform: wasm-p1
+          gloat_platform: wasip1/wasm
+          archive_ext: tar.xz
+          shared_library: false
+    steps:
+    - name: Checkout tag
+      uses: actions/checkout@v5
+      with:
+        ref: ${{ inputs.version }}
+
+    - name: Install build dependencies
+      run: sudo apt-get update && sudo apt-get install -y build-essential curl git perl unzip xz-utils zip
+
+    - name: Build CLI archive
+      run: |
+        make release-cli VERSION="$VERSION" \
+          GLOAT_PLATFORM="${{ matrix.gloat_platform }}" \
+          RELEASE_PLATFORM="${{ matrix.platform }}"
+
+    - name: Build shared library archive
+      if: ${{ matrix.shared_library }}
+      run: |
+        make release-lib VERSION="$VERSION" \
+          GLOAT_PLATFORM="${{ matrix.gloat_platform }}" \
+          RELEASE_PLATFORM="${{ matrix.platform }}" \
+          CROSS_CC_TARGET="${{ matrix.cross_cc_target }}"
+
+    - name: Stage release artifacts
+      run: |
+        mkdir release-output
+        cp "dist/yamlstar-$VERSION-${{ matrix.platform }}.${{ matrix.archive_ext }}" \
+          release-output/
+        if ${{ matrix.shared_library }}; then
+          cp "dist/libyamlstar-$VERSION-${{ matrix.platform }}.${{ matrix.archive_ext }}" \
+            release-output/
+        fi
+
+    - name: Upload cross-platform artifacts
+      uses: actions/upload-artifact@v6
+      with:
+        name: ${{ matrix.platform }}
+        path: release-output/
         retention-days: 7
 
   test-linux:
@@ -493,6 +623,52 @@ jobs:
     - name: Run tests
       run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
 
+  test-macos-x64:
+    name: Test macOS x64 artifacts
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
+    needs: build-macos-x64
+    runs-on: macos-15-intel
+    steps:
+    - name: Checkout tag
+      uses: actions/checkout@v5
+      with:
+        ref: ${{ inputs.version }}
+
+    - name: Download macOS x64 artifacts
+      uses: actions/download-artifact@v7
+      with:
+        name: macos-x64
+        path: release-artifacts
+
+    - name: Install release artifacts
+      run: util/install-release-artifacts release-artifacts
+
+    - name: Smoke test CLI
+      run: |
+        cli/bin/yaml --version
+        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
+
+    - name: Use GitHub Leiningen mirror
+      run: |
+        make --no-print-directory -n default >/dev/null
+        python - <<'PY'
+        from pathlib import Path
+        p = Path('.cache/makes/lein.mk')
+        text = p.read_text()
+        text = text.replace(
+          'https://codeberg.org/leiningen/leiningen/raw/tag',
+          'https://raw.githubusercontent.com/technomancy/leiningen')
+        text = text.replace(
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n',
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|\' $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_CHECKSUM=.*|export LEIN_CHECKSUM="5f5231f06c3c7924e3241e3dfa52885577fb44ddf8a9ea373d2c5e2f27217565"|\' $@\n')
+        p.write_text(text)
+        PY
+
+    - name: Run tests
+      run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
+
   test-windows:
     name: Test Windows artifacts
     if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
@@ -590,13 +766,135 @@ jobs:
           TEST-TIME='date; time' \
           BINDING-SKIP="ada crystal delphi elixir erlang fsharp haskell lua php powershell r raku scala swift $YS_RELEASE_BINDINGS_SKIP"
 
+  test-freebsd-x64:
+    name: Test FreeBSD x64 artifacts
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
+    needs: build-cross-platform
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout tag
+      uses: actions/checkout@v5
+      with:
+        ref: ${{ inputs.version }}
+
+    - name: Download FreeBSD x64 artifacts
+      uses: actions/download-artifact@v7
+      with:
+        name: freebsd-x64
+        path: release-artifacts
+
+    - name: Smoke test CLI and C binding on FreeBSD
+      uses: vmactions/freebsd-vm@v1.5.2
+      with:
+        release: '14.3'
+        usesh: true
+        prepare: pkg install -y bash python311 py311-pip
+        run: |
+          set -eu
+          work=/tmp/yamlstar-release
+          rm -rf "$work"
+          mkdir -p "$work"
+          tar -xf "release-artifacts/yamlstar-$VERSION-freebsd-x64.tar.xz" \
+            -C "$work"
+          tar -xf "release-artifacts/libyamlstar-$VERSION-freebsd-x64.tar.xz" \
+            -C "$work"
+          cli="$work/yamlstar-$VERSION-freebsd-x64/yaml"
+          lib="$work/libyamlstar-$VERSION-freebsd-x64"
+          "$cli" --version
+          test "$(printf 'a: 1\n' | "$cli")" = '{"a":1}'
+          printf '%s\n' \
+            '#include <stdio.h>' \
+            '#include <string.h>' \
+            '#include "libyamlstar.h"' \
+            'int main(void) {' \
+            '  graal_isolate_t *isolate = NULL;' \
+            '  graal_isolatethread_t *thread = NULL;' \
+            '  if (graal_create_isolate(NULL, &isolate, &thread)) return 1;' \
+            '  if (strcmp(yamlstar_load(thread, "a: 1\\n"), "{\"data\":{\"a\":1}}")) return 2;' \
+            '  return graal_tear_down_isolate(thread);' \
+            '}' > "$work/smoke.c"
+          cc -I"$lib" -L"$lib" -Wl,-rpath,"$lib" \
+            "$work/smoke.c" -lyamlstar -o "$work/smoke"
+          "$work/smoke"
+          python3 -m venv "$work/venv"
+          . "$work/venv/bin/activate"
+          pip install pytest
+          LD_LIBRARY_PATH="$lib" PYTHONPATH="$PWD/python/lib" \
+            python -m pytest python/test/test_yamlstar.py
+
+  test-windows-arm64:
+    name: Test Windows ARM64 artifacts
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
+    needs: build-cross-platform
+    runs-on: windows-11-arm
+    steps:
+    - name: Checkout tag
+      uses: actions/checkout@v5
+      with:
+        ref: ${{ inputs.version }}
+
+    - name: Download Windows ARM64 artifacts
+      uses: actions/download-artifact@v7
+      with:
+        name: windows-arm64
+        path: release-artifacts
+
+    - name: Configure archive tools
+      run: |
+        echo 'TAR_OPTIONS=--force-local' >> "$GITHUB_ENV"
+        echo 'UNZIP=-o' >> "$GITHUB_ENV"
+
+    - name: Install release artifacts
+      run: util/install-release-artifacts release-artifacts
+
+    - name: Smoke test CLI
+      run: |
+        cli/bin/yaml.exe --version
+        [[ $(printf 'a: 1\n' | cli/bin/yaml.exe) == '{"a":1}' ]]
+
+  test-wasm-p1:
+    name: Test WASI Preview 1 artifact
+    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
+    needs: build-cross-platform
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout tag
+      uses: actions/checkout@v5
+      with:
+        ref: ${{ inputs.version }}
+
+    - name: Download WASI Preview 1 artifact
+      uses: actions/download-artifact@v7
+      with:
+        name: wasm-p1
+        path: release-artifacts
+
+    - name: Install Wasmtime
+      run: |
+        curl -sSf https://wasmtime.dev/install.sh |
+          WASMTIME_HOME="$RUNNER_TEMP/wasmtime" bash
+        echo "$RUNNER_TEMP/wasmtime/bin" >> "$GITHUB_PATH"
+
+    - name: Smoke test CLI
+      run: |
+        mkdir release-wasm
+        tar -xf "release-artifacts/yamlstar-$VERSION-wasm-p1.tar.xz" \
+          -C release-wasm
+        yaml_wasm="release-wasm/yamlstar-$VERSION-wasm-p1/yaml.wasm"
+        wasmtime run "$yaml_wasm" --version
+        [[ $(printf 'a: 1\n' |
+          wasmtime run "$yaml_wasm") == '{"a":1}' ]]
+
   test-linux-retry:
     name: Test Linux artifacts (retry)
     if: >-
       ${{
         !inputs.publish_bindings_only &&
         !inputs.publish_homebrew_only &&
-        contains(inputs.tests_only, 'linux') &&
+        (
+          contains(format(' {0} ', inputs.tests_only), ' linux-x64 ') ||
+          contains(format(' {0} ', inputs.tests_only), ' linux ')
+        ) &&
         inputs.test_artifacts_run_id != ''
       }}
     runs-on: ubuntu-latest
@@ -651,7 +949,10 @@ jobs:
       ${{
         !inputs.publish_bindings_only &&
         !inputs.publish_homebrew_only &&
-        contains(inputs.tests_only, 'aarch64') &&
+        (
+          contains(format(' {0} ', inputs.tests_only), ' linux-aarch64 ') ||
+          contains(format(' {0} ', inputs.tests_only), ' aarch64 ')
+        ) &&
         inputs.test_artifacts_run_id != ''
       }}
     runs-on: ubuntu-24.04-arm
@@ -710,7 +1011,10 @@ jobs:
       ${{
         !inputs.publish_bindings_only &&
         !inputs.publish_homebrew_only &&
-        contains(inputs.tests_only, 'macos') &&
+        (
+          contains(format(' {0} ', inputs.tests_only), ' macos-arm64 ') ||
+          contains(format(' {0} ', inputs.tests_only), ' macos ')
+        ) &&
         inputs.test_artifacts_run_id != ''
       }}
     runs-on: macos-latest
@@ -768,7 +1072,10 @@ jobs:
       ${{
         !inputs.publish_bindings_only &&
         !inputs.publish_homebrew_only &&
-        contains(inputs.tests_only, 'windows') &&
+        (
+          contains(format(' {0} ', inputs.tests_only), ' windows-x64 ') ||
+          contains(format(' {0} ', inputs.tests_only), ' windows ')
+        ) &&
         inputs.test_artifacts_run_id != ''
       }}
     runs-on: windows-latest
@@ -868,6 +1175,207 @@ jobs:
           TEST-TIME='date; time' \
           BINDING-SKIP="ada crystal delphi elixir erlang fsharp haskell lua php powershell r raku scala swift $YS_RELEASE_BINDINGS_SKIP"
 
+  test-macos-x64-retry:
+    name: Test macOS x64 artifacts (retry)
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        !inputs.publish_homebrew_only &&
+        contains(format(' {0} ', inputs.tests_only), ' macos-x64 ') &&
+        inputs.test_artifacts_run_id != ''
+      }}
+    runs-on: macos-15-intel
+    permissions:
+      actions: read
+      contents: read
+    steps:
+    - name: Checkout ref
+      uses: actions/checkout@v5
+
+    - name: Download macOS x64 artifacts
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh run download "${{ inputs.test_artifacts_run_id }}" \
+          --repo "${{ github.repository }}" \
+          --name macos-x64 \
+          --dir release-artifacts
+
+    - name: Install release artifacts
+      run: util/install-release-artifacts release-artifacts
+
+    - name: Smoke test CLI
+      run: |
+        cli/bin/yaml --version
+        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
+
+    - name: Use GitHub Leiningen mirror
+      run: |
+        make --no-print-directory -n default >/dev/null
+        python - <<'PY'
+        from pathlib import Path
+        p = Path('.cache/makes/lein.mk')
+        text = p.read_text()
+        text = text.replace(
+          'https://codeberg.org/leiningen/leiningen/raw/tag',
+          'https://raw.githubusercontent.com/technomancy/leiningen')
+        text = text.replace(
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n',
+          '\t$Q curl+ $(LEIN-DOWN) > $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|\' $@\n'
+          '\t$Q sed -i.bak \'s|export LEIN_CHECKSUM=.*|export LEIN_CHECKSUM="5f5231f06c3c7924e3241e3dfa52885577fb44ddf8a9ea373d2c5e2f27217565"|\' $@\n')
+        p.write_text(text)
+        PY
+
+    - name: Run tests
+      run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
+
+  test-freebsd-x64-retry:
+    name: Test FreeBSD x64 artifacts (retry)
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        !inputs.publish_homebrew_only &&
+        contains(format(' {0} ', inputs.tests_only), ' freebsd-x64 ') &&
+        inputs.test_artifacts_run_id != ''
+      }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+    - name: Checkout ref
+      uses: actions/checkout@v5
+
+    - name: Download FreeBSD x64 artifacts
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh run download "${{ inputs.test_artifacts_run_id }}" \
+          --repo "${{ github.repository }}" \
+          --name freebsd-x64 \
+          --dir release-artifacts
+
+    - name: Smoke test CLI and C binding on FreeBSD
+      uses: vmactions/freebsd-vm@v1.5.2
+      with:
+        release: '14.3'
+        usesh: true
+        prepare: pkg install -y bash python311 py311-pip
+        run: |
+          set -eu
+          work=/tmp/yamlstar-release
+          rm -rf "$work"
+          mkdir -p "$work"
+          tar -xf "release-artifacts/yamlstar-$VERSION-freebsd-x64.tar.xz" \
+            -C "$work"
+          tar -xf "release-artifacts/libyamlstar-$VERSION-freebsd-x64.tar.xz" \
+            -C "$work"
+          cli="$work/yamlstar-$VERSION-freebsd-x64/yaml"
+          lib="$work/libyamlstar-$VERSION-freebsd-x64"
+          "$cli" --version
+          test "$(printf 'a: 1\n' | "$cli")" = '{"a":1}'
+          printf '%s\n' \
+            '#include <stdio.h>' \
+            '#include <string.h>' \
+            '#include "libyamlstar.h"' \
+            'int main(void) {' \
+            '  graal_isolate_t *isolate = NULL;' \
+            '  graal_isolatethread_t *thread = NULL;' \
+            '  if (graal_create_isolate(NULL, &isolate, &thread)) return 1;' \
+            '  if (strcmp(yamlstar_load(thread, "a: 1\\n"), "{\"data\":{\"a\":1}}")) return 2;' \
+            '  return graal_tear_down_isolate(thread);' \
+            '}' > "$work/smoke.c"
+          cc -I"$lib" -L"$lib" -Wl,-rpath,"$lib" \
+            "$work/smoke.c" -lyamlstar -o "$work/smoke"
+          "$work/smoke"
+          python3 -m venv "$work/venv"
+          . "$work/venv/bin/activate"
+          pip install pytest
+          LD_LIBRARY_PATH="$lib" PYTHONPATH="$PWD/python/lib" \
+            python -m pytest python/test/test_yamlstar.py
+
+  test-windows-arm64-retry:
+    name: Test Windows ARM64 artifacts (retry)
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        !inputs.publish_homebrew_only &&
+        contains(format(' {0} ', inputs.tests_only), ' windows-arm64 ') &&
+        inputs.test_artifacts_run_id != ''
+      }}
+    runs-on: windows-11-arm
+    permissions:
+      actions: read
+      contents: read
+    steps:
+    - name: Checkout ref
+      uses: actions/checkout@v5
+
+    - name: Download Windows ARM64 artifacts
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh run download "${{ inputs.test_artifacts_run_id }}" \
+          --repo "${{ github.repository }}" \
+          --name windows-arm64 \
+          --dir release-artifacts
+
+    - name: Configure archive tools
+      run: |
+        echo 'TAR_OPTIONS=--force-local' >> "$GITHUB_ENV"
+        echo 'UNZIP=-o' >> "$GITHUB_ENV"
+
+    - name: Install release artifacts
+      run: util/install-release-artifacts release-artifacts
+
+    - name: Smoke test CLI
+      run: |
+        cli/bin/yaml.exe --version
+        [[ $(printf 'a: 1\n' | cli/bin/yaml.exe) == '{"a":1}' ]]
+
+  test-wasm-p1-retry:
+    name: Test WASI Preview 1 artifact (retry)
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        !inputs.publish_homebrew_only &&
+        contains(format(' {0} ', inputs.tests_only), ' wasm-p1 ') &&
+        inputs.test_artifacts_run_id != ''
+      }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+    - name: Checkout ref
+      uses: actions/checkout@v5
+
+    - name: Download WASI Preview 1 artifact
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh run download "${{ inputs.test_artifacts_run_id }}" \
+          --repo "${{ github.repository }}" \
+          --name wasm-p1 \
+          --dir release-artifacts
+
+    - name: Install Wasmtime
+      run: |
+        curl -sSf https://wasmtime.dev/install.sh |
+          WASMTIME_HOME="$RUNNER_TEMP/wasmtime" bash
+        echo "$RUNNER_TEMP/wasmtime/bin" >> "$GITHUB_PATH"
+
+    - name: Smoke test CLI
+      run: |
+        mkdir release-wasm
+        tar -xf "release-artifacts/yamlstar-$VERSION-wasm-p1.tar.xz" \
+          -C release-wasm
+        yaml_wasm="release-wasm/yamlstar-$VERSION-wasm-p1/yaml.wasm"
+        wasmtime run "$yaml_wasm" --version
+        [[ $(printf 'a: 1\n' |
+          wasmtime run "$yaml_wasm") == '{"a":1}' ]]
+
   create-release:
     name: Create GitHub release
     if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
@@ -875,11 +1383,17 @@ jobs:
     - test-linux
     - test-linux-aarch64
     - test-macos
+    - test-macos-x64
+    - test-freebsd-x64
     - test-windows
+    - test-windows-arm64
+    - test-wasm-p1
     - build-linux-x64
     - build-linux-aarch64
     - build-macos-arm64
+    - build-macos-x64
     - build-windows-x64
+    - build-cross-platform
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -947,7 +1461,7 @@ jobs:
 
   publish-homebrew:
     name: Publish Homebrew tap
-    if: |
+    if: >-
       ${{
         always() &&
         !cancelled() &&
@@ -993,7 +1507,7 @@ jobs:
 
   publish-bindings:
     name: Publish language bindings
-    if: |
+    if: >-
       ${{
         always() &&
         !cancelled() &&
