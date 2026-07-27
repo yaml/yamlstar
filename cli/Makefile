@@ -29,7 +29,8 @@ CLI-OUT := bin/$(CLI-NAME)
 CLI-JAR := target/cli-$(LIBYAMLSTAR-VERSION)-SNAPSHOT-standalone.jar
 
 GLOAT-ENGINE := $(or $(GLOAT_ENGINE),glj)
-CLI-BIN-GLOAT := bin/yaml-gloat-$(GLOAT-ENGINE)
+CLI-GLOAT-NAME ?= yaml-gloat-$(GLOAT-ENGINE)
+CLI-BIN-GLOAT := bin/$(CLI-GLOAT-NAME)
 GLOAT-CACHE := ../libyamlstar/cache/gloat-srcs
 GLOAT-CORE := ../core/src/yamlstar
 GLOAT-CLI-SRCS := \
@@ -101,7 +102,9 @@ build-graalvm:
 build-gloat:
 	YAMLSTAR_GLOJURE=1 $(MAKE) _build-gloat \
 	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
+	  CLI-GLOAT-NAME=$(CLI-GLOAT-NAME) \
 	  $(if $(GLOAT-DIR),GLOAT-DIR=$(GLOAT-DIR)) \
+	  $(if $(LET_GO_SRC),LET_GO_SRC=$(LET_GO_SRC)) \
 	  $(if $(YAML-PARSER-DIR),YAML-PARSER-DIR=$(YAML-PARSER-DIR)) \
 	  $(if $(TEST-WITH-GLOJURE),TEST-WITH-GLOJURE=$(TEST-WITH-GLOJURE))
 
@@ -132,6 +135,7 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
 	mkdir -p $(dir $@)
 	</dev/null env -u GOROOT $(GLOAT-GLOJURE-ENV) \
 	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
+	  $(if $(LET_GO_SRC),LET_GO_SRC=$(abspath $(LET_GO_SRC))) \
 	  $(GLOAT-BIN)/gloat --force $(GLOAT-CLI-SRCS) -o $@
 	test -x $@
 	@echo "Gloat ($(GLOAT-ENGINE)) CLI created at: $@"

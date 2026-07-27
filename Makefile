@@ -20,12 +20,22 @@ RELEASE-SECRETS := \
   $(wildcard $(HOME)/.yamlscript-secrets.yaml)
 RELEASE-AUTH := $(strip $(GH_TOKEN)$(GITHUB_TOKEN)$(RELEASE-SECRETS))
 
+CLI-LOCAL-SIBLING-DIR := $(abspath $(GIT-REPO-DIR)/..)
+CLI-LOCAL-CACHE := $(ROOT)/.cache/cli-local
+glojure-dir ?= $(CLI-LOCAL-SIBLING-DIR)/glojure
+glojure-commit ?= HEAD
+gloat-dir ?= $(CLI-LOCAL-SIBLING-DIR)/gloat
+gloat-commit ?= HEAD
+let-go-dir ?= $(CLI-LOCAL-SIBLING-DIR)/let-go
+let-go-commit ?= HEAD
+
 MAKES-CLEAN := \
   META-INF/ \
   release-* \
 
 MAKES-REALCLEAN := \
   $(MAVEN-REPOSITORY) \
+  .cache/cli-local/ \
   bench/gloat-*/ \
   bench/graalvm/ \
   python/.eggs/ \
@@ -162,6 +172,7 @@ shellcheck: $(SHELLCHECK)
 	  util/release \
 	  util/release-repo.bash \
 	  util/release-binding-published \
+	  util/cli-local-source \
 	  util/install-release-artifacts \
 	  util/release-go \
 	  util/release-fortran \
@@ -186,9 +197,6 @@ cli:
 cli-graalvm:
 	$(MAKE) -C cli build-graalvm
 
-cli-gloat:
-	$(MAKE) -C cli build-gloat GLOAT_ENGINE=$(or $(GLOAT_ENGINE),glj)
-
 cli-gloat-glj:
 	$(MAKE) -C cli build-gloat-glj
 
@@ -197,6 +205,29 @@ cli-gloat-lgvm:
 
 cli-gloat-lglvm:
 	$(MAKE) -C cli build-gloat-lglvm
+
+define CLI-LOCAL-BUILD
+	@gloat_dir=$$($(ROOT)/util/cli-local-source \
+	  gloat "$(gloat-dir)" "$(gloat-commit)" "$(CLI-LOCAL-CACHE)"); \
+	glojure_dir=$$($(ROOT)/util/cli-local-source \
+	  glojure "$(glojure-dir)" "$(glojure-commit)" "$(CLI-LOCAL-CACHE)"); \
+	$(if $(2),let_go_dir=$$($(ROOT)/util/cli-local-source \
+	  let-go "$(let-go-dir)" "$(let-go-commit)" "$(CLI-LOCAL-CACHE)");) \
+	$(MAKE) -C cli build-gloat-$(1) \
+	  CLI-GLOAT-NAME=yaml-local-$(1) \
+	  GLOAT-DIR="$$gloat_dir" \
+	  TEST-WITH-GLOJURE="$$glojure_dir" \
+	  $(if $(2),LET_GO_SRC="$$let_go_dir")
+endef
+
+cli-local-glj:
+	$(call CLI-LOCAL-BUILD,glj,)
+
+cli-local-lgvm:
+	$(call CLI-LOCAL-BUILD,lgvm,let-go)
+
+cli-local-lglvm:
+	$(call CLI-LOCAL-BUILD,lglvm,let-go)
 
 libyamlstar:
 	$(MAKE) -C libyamlstar build
