@@ -28,6 +28,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - crystal/shard.yml
     - crystal/src/yamlstar/version.cr
     - core/src/yamlstar/api.clj
+    - internal/glojure/pkg/yamlstar/api/loader.go
     - csharp/YAMLStar.csproj
     - d/source/yamlstar.d
     - dart/lib/yamlstar.dart
@@ -89,6 +90,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - swift/Sources/YAMLStar/YAMLStar.swift
     - swift/doc/readme.md
     - util/yamlj
+    - www/docs/bindings.md
     - www/docs/install
     - www/docs/installation.md
     - www/docs/index.md
