@@ -103,10 +103,10 @@ hide:
     <span class="ycom">// foo:
     // - - bar</span>
 
-<span class="ykey">Architecture</span><span class="ysep">:</span>
+  <span class="ykey">Architecture</span><span class="ysep">:</span>
   <span class="ykey">Native</span><span class="ysep">:</span>
-    <span class="ystr">Written in Clojure and compiled to native binary</span>
-    <span class="ystr">with <a href="https://www.graalvm.org/latest/reference-manual/native-image/">GraalVM native-image</a></span>
+    <span class="ystr">Written in Clojure and compiled to Go</span>
+    <span class="ystr">with <a href="https://github.com/gloathub/gloat">Gloat</a> and <a href="https://github.com/glojurelang/glojure">Glojure</a></span>
   <span class="ykey">Load Stack</span><span class="ysep">:</span>
   - <span class="ykey">Parser</span><span class="ysep">:</span> <span class="ystr">Pure Clojure YAML 1.2 parser</span>
   - <span class="ykey">Composer</span><span class="ysep">:</span> <span class="ystr">Event stream to node tree</span>

@@ -1,5 +1,7 @@
 include ../common/init.mk
 
+YAMLSTAR_GLOJURE ?= 1
+
 # Load platform tools before common.mk (which includes shell.mk last)
 # Avoids graalvm.mk/java.mk conflict when both platforms are present
 ifdef YAMLSTAR_GLOJURE
@@ -30,9 +32,11 @@ MAKES-REALCLEAN := \
 SO ?= so
 LIB-DIR := lib
 LIB-NAME := libyamlstar
-LIB-NAME-GLOAT := libyamlstarglj
+LIB-NAME-GLOAT ?= libyamlstar
 LIB-SO-GLOAT := $(LIB-DIR)/$(LIB-NAME-GLOAT).$(SO)
 LIB-SO := $(LIB-DIR)/$(LIB-NAME).$(SO)
+GLOAT-LIB-HEADER := gloat/include/libyamlstar.h
+GLOAT-ISOLATE-HEADER := gloat/include/graal_isolate.h
 
 CORE-YAMLSTAR := ../core/src/yamlstar
 
@@ -196,8 +200,11 @@ LIB-HEADER := $(LIB-DIR)/$(LIB-NAME).h
 LIB-HEADER-GLOAT := $(LIB-DIR)/$(LIB-NAME-GLOAT).h
 
 build-gloat: $(LIB-SO-GLOAT)
+	cp $(GLOAT-LIB-HEADER) $(LIB-HEADER)
+	cp $(GLOAT-ISOLATE-HEADER) $(LIB-DIR)/graal_isolate.h
 ifneq ($(OS-NAME),windows)
-	ln -sf $(notdir $(LIB-SO-GLOAT)) $(LIB-DIR)/$(LIB-NAME-GLOAT).$(SO).$(VERSION)
+	ln -sf $(notdir $(LIB-SO-GLOAT)) \
+	  $(LIB-DIR)/$(LIB-NAME-GLOAT).$(SO).$(VERSION)
 endif
 
 build-graalvm: $(LIB-SO)
@@ -208,25 +215,24 @@ endif
 # Build both: each requires separate make invocations (tool includes conflict)
 build-all:
 	YAMLSTAR_GLOJURE=1 $(MAKE) build-gloat
-	env -u YAMLSTAR_GLOJURE $(MAKE) build-graalvm
+	env -u YAMLSTAR_GLOJURE $(MAKE) build-graalvm \
+	  LIB-NAME=libyamlstar-graalvm
 
 test:
 
-ifdef YAMLSTAR_GLOJURE
-INSTALL-LIB := $(LIB-SO-GLOAT)
-else
 INSTALL-LIB := $(LIB-SO)
-endif
 
-install: $(INSTALL-LIB)
+install: build
 	mkdir -p $(PREFIX)/lib/
 	install -m 644 $(INSTALL-LIB) $(PREFIX)/lib/
 
+ifdef YAMLSTAR_GLOJURE
 $(LIB-SO-GLOAT): $(GLOAT-SRCS) $(GLOAT-LINKS) | $(GLOAT-DIR)
 	@echo "Building gloat shared library..."
 	mkdir -p $(LIB-DIR)
 	</dev/null env -u GOROOT $(GLOAT-GLOJURE-ENV) $(GLOAT-BIN)/gloat --force $(GLOAT-SRCS) -o $@
 	@echo "Gloat shared library created at: $@"
+endif
 
 ifndef YAML-PARSER-DIR
 $(CORE-JAR):
@@ -236,6 +242,7 @@ endif
 $(LIB-JAR): $(CORE-JAR) $(LEIN)
 	cd graalvm && $(LEIN) $(LEIN-YAML-PARSER) uberjar
 
+ifndef YAMLSTAR_GLOJURE
 $(LIB-SO): $(LIB-JAR) $(REFLECTION-JSON) $(GRAALVM)
 	@echo "Building GraalVM shared library..."
 	mkdir -p $(LIB-DIR)
@@ -250,3 +257,4 @@ $(LIB-SO): $(LIB-JAR) $(REFLECTION-JSON) $(GRAALVM)
 
 # graal_isolate.h is a side effect of building the GraalVM SO
 $(LIB-DIR)/graal_isolate.h: $(LIB-SO)
+endif

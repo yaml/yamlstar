@@ -22,7 +22,7 @@ assert sys.version_info >= (3, 6), \
   "Python 3.6 or greater required for 'yamlstar'."
 
 def find_libyamlstar():
-  """Find libyamlstar shared library. Returns (path, backend)."""
+  """Find the libyamlstar shared library."""
   if sys.platform == 'linux':
     so = 'so'
   elif sys.platform == 'darwin':
@@ -54,16 +54,12 @@ def find_libyamlstar():
     '..', 'libyamlstar', 'lib')
   library_paths.insert(0, os.path.abspath(lib_path))
 
-  if os.environ.get('YAMLSTAR_GLOJURE'):
-    lib_name, backend = 'libyamlstarglj', 'gloat'
-  else:
-    lib_name, backend = 'libyamlstar', 'graalvm'
-
+  lib_name = 'libyamlstar'
   filename = "%s.%s" % (lib_name, so)
   for path in library_paths:
     full_path = os.path.join(path, filename)
     if os.path.isfile(full_path):
-      return full_path, backend
+      return full_path
 
   raise Exception(
     """\
@@ -72,54 +68,32 @@ Search paths: %s
 Build with: cd libyamlstar && make build
 """ % (filename, os.pathsep.join(library_paths)))
 
-# Load libyamlstar shared library and detect backend:
-_libyamlstar_path, _backend = find_libyamlstar()
+# Load libyamlstar shared library:
+_libyamlstar_path = find_libyamlstar()
 libyamlstar = ctypes.CDLL(_libyamlstar_path)
 
-# Create bindings to library functions (signatures differ by backend):
-if _backend == 'gloat':
-  # Gloat: functions take (yaml_bytes, opts_bytes) -> json_bytes
-  yamlstar_load_fn = libyamlstar.yamlstar_load
-  yamlstar_load_fn.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
-  yamlstar_load_fn.restype = ctypes.c_char_p
+# Public functions use the stable thread-first libyamlstar ABI. Glojure does
+# not need a runtime isolate, so its compatibility implementation accepts a
+# null thread handle.
+yamlstar_load_fn = libyamlstar.yamlstar_load
+yamlstar_load_fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+yamlstar_load_fn.restype = ctypes.c_char_p
 
-  yamlstar_load_all_fn = libyamlstar.yamlstar_load_all
-  yamlstar_load_all_fn.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
-  yamlstar_load_all_fn.restype = ctypes.c_char_p
+yamlstar_load_all_fn = libyamlstar.yamlstar_load_all
+yamlstar_load_all_fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+yamlstar_load_all_fn.restype = ctypes.c_char_p
 
-  yamlstar_dump_fn = libyamlstar.yamlstar_dump
-  yamlstar_dump_fn.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
-  yamlstar_dump_fn.restype = ctypes.c_char_p
+yamlstar_dump_fn = libyamlstar.yamlstar_dump
+yamlstar_dump_fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+yamlstar_dump_fn.restype = ctypes.c_char_p
 
-  yamlstar_dump_all_fn = libyamlstar.yamlstar_dump_all
-  yamlstar_dump_all_fn.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
-  yamlstar_dump_all_fn.restype = ctypes.c_char_p
+yamlstar_dump_all_fn = libyamlstar.yamlstar_dump_all
+yamlstar_dump_all_fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+yamlstar_dump_all_fn.restype = ctypes.c_char_p
 
-  yamlstar_version_fn = libyamlstar.yamlstar_version
-  yamlstar_version_fn.argtypes = []
-  yamlstar_version_fn.restype = ctypes.c_char_p
-
-else:
-  # GraalVM: functions take (isolatethread, yaml_bytes) -> json_bytes
-  yamlstar_load_fn = libyamlstar.yamlstar_load
-  yamlstar_load_fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
-  yamlstar_load_fn.restype = ctypes.c_char_p
-
-  yamlstar_load_all_fn = libyamlstar.yamlstar_load_all
-  yamlstar_load_all_fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
-  yamlstar_load_all_fn.restype = ctypes.c_char_p
-
-  yamlstar_dump_fn = libyamlstar.yamlstar_dump
-  yamlstar_dump_fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
-  yamlstar_dump_fn.restype = ctypes.c_char_p
-
-  yamlstar_dump_all_fn = libyamlstar.yamlstar_dump_all
-  yamlstar_dump_all_fn.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
-  yamlstar_dump_all_fn.restype = ctypes.c_char_p
-
-  yamlstar_version_fn = libyamlstar.yamlstar_version
-  yamlstar_version_fn.argtypes = [ctypes.c_void_p]
-  yamlstar_version_fn.restype = ctypes.c_char_p
+yamlstar_version_fn = libyamlstar.yamlstar_version
+yamlstar_version_fn.argtypes = [ctypes.c_void_p]
+yamlstar_version_fn.restype = ctypes.c_char_p
 
 
 # The YAMLStar class is the main user facing API for this module.
@@ -138,16 +112,16 @@ class YAMLStar():
   """
 
   def __init__(self):
-    if _backend == 'graalvm':
-      # Create a new GraalVM isolate thread for the life of this instance:
-      self._isolatethread = ctypes.c_void_p()
-      rc = libyamlstar.graal_create_isolate(
-        None,
-        None,
-        ctypes.byref(self._isolatethread),
-      )
-      if rc != 0:
-        raise Exception("Failed to create GraalVM isolate")
+    # GraalVM fills this handle; the Glojure compatibility implementation
+    # leaves it null because its Go runtime is process-wide.
+    self._isolatethread = ctypes.c_void_p()
+    rc = libyamlstar.graal_create_isolate(
+      None,
+      None,
+      ctypes.byref(self._isolatethread),
+    )
+    if rc != 0:
+      raise Exception("Failed to initialize libyamlstar")
 
   # Load a single YAML document and return the result:
   def load(self, yaml_input):
@@ -166,10 +140,7 @@ class YAMLStar():
     self.error = None
     yaml_bytes = ctypes.c_char_p(bytes(yaml_input, "utf8"))
 
-    if _backend == 'gloat':
-      data_json = yamlstar_load_fn(yaml_bytes, ctypes.c_char_p(b"{}")).decode()
-    else:
-      data_json = yamlstar_load_fn(self._isolatethread, yaml_bytes).decode()
+    data_json = yamlstar_load_fn(self._isolatethread, yaml_bytes).decode()
 
     resp = json.loads(data_json)
     self.error = resp.get('error')
@@ -196,12 +167,8 @@ class YAMLStar():
     self.error = None
     yaml_bytes = ctypes.c_char_p(bytes(yaml_input, "utf8"))
 
-    if _backend == 'gloat':
-      data_json = \
-        yamlstar_load_all_fn(yaml_bytes, ctypes.c_char_p(b"{}")).decode()
-    else:
-      data_json = \
-        yamlstar_load_all_fn(self._isolatethread, yaml_bytes).decode()
+    data_json = \
+      yamlstar_load_all_fn(self._isolatethread, yaml_bytes).decode()
 
     resp = json.loads(data_json)
     self.error = resp.get('error')
@@ -218,10 +185,7 @@ class YAMLStar():
     self.error = None
     data_bytes = ctypes.c_char_p(bytes(json.dumps(value), "utf8"))
 
-    if _backend == 'gloat':
-      data_json = yamlstar_dump_fn(data_bytes, ctypes.c_char_p(b"{}")).decode()
-    else:
-      data_json = yamlstar_dump_fn(self._isolatethread, data_bytes).decode()
+    data_json = yamlstar_dump_fn(self._isolatethread, data_bytes).decode()
 
     resp = json.loads(data_json)
     self.error = resp.get('error')
@@ -238,12 +202,8 @@ class YAMLStar():
     self.error = None
     data_bytes = ctypes.c_char_p(bytes(json.dumps(values), "utf8"))
 
-    if _backend == 'gloat':
-      data_json = \
-        yamlstar_dump_all_fn(data_bytes, ctypes.c_char_p(b"{}")).decode()
-    else:
-      data_json = \
-        yamlstar_dump_all_fn(self._isolatethread, data_bytes).decode()
+    data_json = \
+      yamlstar_dump_all_fn(self._isolatethread, data_bytes).decode()
 
     resp = json.loads(data_json)
     self.error = resp.get('error')
@@ -261,13 +221,10 @@ class YAMLStar():
     Returns:
       Version string
     """
-    if _backend == 'gloat':
-      return yamlstar_version_fn().decode()
-    else:
-      return yamlstar_version_fn(self._isolatethread).decode()
+    return yamlstar_version_fn(self._isolatethread).decode()
 
   def __del__(self):
-    if _backend == 'graalvm' and hasattr(self, '_isolatethread'):
+    if hasattr(self, '_isolatethread'):
       rc = libyamlstar.graal_tear_down_isolate(self._isolatethread)
       if rc != 0:
-        raise Exception("Failed to tear down GraalVM isolate")
+        raise Exception("Failed to tear down libyamlstar")

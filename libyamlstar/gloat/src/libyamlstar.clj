@@ -5,11 +5,27 @@
             [ys.json :as json]))
 
 (def EXPORT
-  {"yamlstar-load"     [:str :str :str]
-   "yamlstar-load-all" [:str :str :str]
-   "yamlstar-dump"     [:str :str :str]
-   "yamlstar-dump-all" [:str :str :str]
-   "yamlstar-version"  [:str]})
+  {"graal-create-isolate"     [:int :int :int :int]
+   "graal-tear-down-isolate"  [:int :int]
+   "graal-attach-thread"      [:int :int :int]
+   "graal-detach-thread"      [:int :int]
+   "graal-get-current-thread" [:int :int]
+   "graal-get-isolate"        [:int :int]
+   "yamlstar-load"            [:int :str :str]
+   "yamlstar-load-all"        [:int :str :str]
+   "yamlstar-dump"            [:int :str :str]
+   "yamlstar-dump-all"        [:int :str :str]
+   "yamlstar-version"         [:int :str]})
+
+;; The public C API historically exposed GraalVM isolate lifecycle functions.
+;; Glojure runs inside Go's process-wide runtime and needs no isolate, so these
+;; compatibility exports accept and ignore the opaque handles.
+(defn graal-create-isolate [_params _isolate _thread] 0)
+(defn graal-tear-down-isolate [_thread] 0)
+(defn graal-attach-thread [_isolate _thread] 0)
+(defn graal-detach-thread [_thread] 0)
+(defn graal-get-current-thread [_isolate] 0)
+(defn graal-get-isolate [_thread] 0)
 
 (defn nil-keys->string
   "Replace nil keys with string 'null' for JSON serialization.
@@ -27,7 +43,7 @@
 
 (defn yamlstar-load
   "Load YAML string, return JSON string with {:data ...} or {:error ...}"
-  [yaml-str opts-json]
+  [_thread yaml-str]
   (try
     (let [result (yaml/load yaml-str)]
       (json/dump {:data (nil-keys->string result)}))
@@ -41,7 +57,7 @@
 
 (defn yamlstar-load-all
   "Load all YAML documents, return JSON string with {:data [...]} or {:error ...}"
-  [yaml-str opts-json]
+  [_thread yaml-str]
   (try
     (let [result (yaml/load-all yaml-str)]
       (json/dump {:data (nil-keys->string result)}))
@@ -52,7 +68,7 @@
 
 (defn yamlstar-dump
   "Dump one JSON-encoded value to YAML, return JSON string with {:data ...} or {:error ...}"
-  [data-json opts-json]
+  [_thread data-json]
   (try
     (let [result (yaml/dump (json/load data-json))]
       (json/dump {:data result}))
@@ -66,7 +82,7 @@
 
 (defn yamlstar-dump-all
   "Dump JSON-encoded documents to YAML, return JSON string with {:data ...} or {:error ...}"
-  [data-json opts-json]
+  [_thread data-json]
   (try
     (let [result (yaml/dump-all (json/load data-json))]
       (json/dump {:data result}))
@@ -77,5 +93,5 @@
 
 (defn yamlstar-version
   "Return the YAMLStar version string"
-  []
+  [_thread]
   (yaml/version))

@@ -42,14 +42,7 @@ ifdef v
 YAML-TEST-SUITE-ENV += YAMLSTAR_TEST_SUITE_VERBOSE='$v'
 endif
 
-# Python uses the gloat library when YAMLSTAR_GLOJURE=1, GraalVM otherwise
-ifdef YAMLSTAR_GLOJURE
-PYTHON-SO := $(LIBYS)/lib/libyamlstarglj.$(SO)
-$(PYTHON-SO):
-	$(MAKE) -C $(LIBYS) build YAMLSTAR_GLOJURE=1
-else
 PYTHON-SO := $(LIBYAMLSTAR-SO)
-endif
 
 
 test: test-pytest

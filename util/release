@@ -169,8 +169,11 @@ do-release-lib() (
     cd - > /dev/null
   fi
 
-  # Copy header files
-  cp libyamlstar/lib/*.h "$RELEASE_PATH/"
+  # Copy only the stable public ABI headers. The Gloat build also emits an
+  # internal header whose integer handle types are not part of this API.
+  cp libyamlstar/lib/libyamlstar.h \
+    libyamlstar/lib/graal_isolate.h \
+    "$RELEASE_PATH/"
 
   # Create installation Makefile
   cat > "$RELEASE_PATH/Makefile" <<'...'
@@ -212,7 +215,7 @@ YAMLStar VERSION_PLACEHOLDER for PLATFORM_PLACEHOLDER
 - `libyamlstar.EXT_PLACEHOLDER` - Symlink to versioned library
 - `libyamlstar.EXT_PLACEHOLDER.0` - Symlink for API version compatibility
 - `libyamlstar.h` - Main library header
-- `graal_isolate.h` - GraalVM isolate header
+- `graal_isolate.h` - Compatibility lifecycle API header
 - `Makefile` - Installation script
 
 ## Installation

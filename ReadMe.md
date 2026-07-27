@@ -81,10 +81,10 @@ features:
   - GraalVM native-image shared library
   - Language bindings (Ada, Clojure, Crystal, C#, D, Dart, Delphi, Dyalog APL, Elixir, Erlang, F#, Fortran, Go, Haskell, Java, Julia, Kotlin, Lua, MoonBit, Nim, Node.js, Perl, PHP, PowerShell, Python, R, Raku, Ruby, Rust, Scala, Swift, Zig)
 
-- **Phase 2: Glojure Migration**
+- **Phase 2: Glojure Migration** ✅ Complete
   - Port to Glojure (Clojure on Go)
   - AOT compilation to Go
-  - Eliminate GraalVM dependency
+  - Eliminate GraalVM from the shared-library build
   - Improved cross-platform support
 
 - **Phase 3: Plugin System**
@@ -131,7 +131,7 @@ YAML Output
 - Node-to-data resolver implemented
 - Complete test suite covering all major features
 - Zero external dependencies (except Clojure + data.json)
-- GraalVM native-image shared library (`libyamlstar.so`)
+- Gloat/Glojure shared library (`libyamlstar.so`)
 - **32 language bindings**: Ada, Clojure, Crystal, C#, D, Dart, Delphi, Dyalog APL, Elixir, Erlang, F#, Fortran, Go, Haskell, Java, Julia, Kotlin, Lua, MoonBit, Nim, Node.js, Perl, PHP, PowerShell, Python, R, Raku, Ruby, Rust, Scala, Swift, Zig
 
 **Ready for testing!** Run `make test` in the `core/` directory, or try any of the language bindings.
@@ -140,7 +140,8 @@ YAML Output
 
 ### Run Tests
 
-The build system automatically installs all dependencies (Leiningen, GraalVM, etc.) on first run:
+The build system automatically installs all dependencies (Gloat, Glojure,
+Leiningen, etc.) on first run:
 
 ```bash
 cd core
@@ -191,7 +192,9 @@ See [DEVELOPMENT.md](DEVELOPMENT.md) for detailed development guide.
 
 ## Language Bindings
 
-YAMLStar provides bindings for multiple programming languages via a shared GraalVM native-image library (`libyamlstar.so`). All bindings provide identical behavior and API.
+YAMLStar provides bindings for multiple programming languages via a shared
+Gloat/Glojure library (`libyamlstar.so`). All bindings provide identical
+behavior and API.
 
 For language bindings that use FFI, install the matching `libyamlstar`
 release with the install script or Homebrew before loading YAML.

@@ -780,7 +780,7 @@ YAMLStar bindings are tested on:
   native Windows support varies by language
 
 The shared library (`libyamlstar.so`, `libyamlstar.dylib`, `yamlstar.dll`) is
-built using GraalVM native-image for optimal performance and small binary size.
+built with Gloat and Glojure as a native Go shared library.
 
 Ada, Crystal, Erlang, F#, Haskell, Julia, Raku, and Scala are
 currently tested on the Linux/macOS shared-library path. Native Windows support

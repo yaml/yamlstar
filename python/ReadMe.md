@@ -6,7 +6,7 @@ Python bindings for YAMLStar - a pure YAML 1.2 loader implemented in Clojure.
 
 - **YAML 1.2 Spec Compliance**: 100% compliant with YAML 1.2 core schema
 - **Pure Implementation**: No dependencies on SnakeYAML or other external parsers
-- **Fast Native Performance**: Uses GraalVM native-image shared library
+- **Fast Native Performance**: Uses the native YAMLStar shared library
 - **Simple API**: Load YAML documents with a single function call
 - **Multi-Document Support**: Load multiple YAML documents from a single string
 
@@ -189,7 +189,8 @@ print(f"YAMLStar version: {version}")
 ### `YAMLStar` Class
 
 #### `__init__()`
-Create a new YAMLStar instance. Each instance maintains its own GraalVM isolate.
+Create a new YAMLStar instance. Each instance maintains its own native-library
+lifecycle handle.
 
 ```python
 ys = yamlstar.YAMLStar()
@@ -287,7 +288,7 @@ The package searches for `libyamlstar.so` (or `.dylib` on macOS) in:
 | YAML Version | 1.2 | 1.1 |
 | Implementation | Pure Clojure | C + Python |
 | Type Inference | YAML 1.2 core schema | YAML 1.1 + custom |
-| Native Performance | Yes (GraalVM) | Yes (C extension) |
+| Native Performance | Yes (Gloat/Glojure) | Yes (C extension) |
 | Dependencies | libyamlstar.so | None |
 
 ## License

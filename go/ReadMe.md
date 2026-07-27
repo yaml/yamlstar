@@ -6,10 +6,10 @@ Go bindings for YAMLStar - a pure YAML 1.2 loader implemented in Clojure.
 
 - **YAML 1.2 Spec Compliance**: 100% compliant with YAML 1.2 core schema
 - **Pure Implementation**: No dependencies on external YAML parsers
-- **Fast Native Performance**: Uses GraalVM native-image shared library
+- **Fast Native Performance**: Uses the native YAMLStar shared library
 - **Simple API**: Load YAML documents with a single function call
 - **Multi-Document Support**: Load multiple YAML documents from a single string
-- **Thread Safe**: Proper GraalVM isolate thread management
+- **Thread Safe**: Proper native-library lifecycle management
 
 ## Installation
 
@@ -251,8 +251,9 @@ Set `CGO_LDFLAGS` and `LD_LIBRARY_PATH` to include custom locations.
 ## Thread Safety
 
 The library is thread-safe. Each call to Load/LoadAll creates a dedicated
-GraalVM thread that is properly cleaned up after the call completes.
-The package uses `runtime.LockOSThread()` to ensure proper GraalVM operation.
+native-library thread handle that is properly cleaned up after the call
+completes. The package retains `runtime.LockOSThread()` for ABI compatibility
+with both supported library implementations.
 
 ## License
 

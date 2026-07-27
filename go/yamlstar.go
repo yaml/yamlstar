@@ -41,13 +41,15 @@ import (
 // Version is the version of the yamlstar library this binding works with.
 const Version = "0.1.17"
 
-// ErrNotInitialized is returned when the library failed to initialize.
+// ErrNotInitialized is retained for API compatibility. Initialization
+// failures are reported directly by ensureInitialized.
 var ErrNotInitialized = errors.New("yamlstar: library not initialized")
 
 // ErrNullResponse is returned when the C function returns a null pointer.
 var ErrNullResponse = errors.New("yamlstar: received null response from library")
 
-// GraalVM isolate - shared across all calls
+// Native-library lifecycle handle, shared across all calls. It remains nil
+// with the process-wide Glojure runtime.
 var (
 	isolate *C.graal_isolate_t
 	initErr error
@@ -73,14 +75,14 @@ type response struct {
 	Error *YAMLError `json:"error"`
 }
 
-// init initializes the GraalVM isolate.
+// init initializes the native library.
 // This is called automatically when the package is imported.
 func init() {
 	// Create the isolate without creating an initial thread
 	// We'll attach threads as needed per-call
 	rc := C.graal_create_isolate(nil, &isolate, nil)
 	if rc != 0 {
-		initErr = fmt.Errorf("yamlstar: failed to create GraalVM isolate (code %d)", int(rc))
+		initErr = fmt.Errorf("yamlstar: failed to initialize native library (code %d)", int(rc))
 	}
 }
 
@@ -88,9 +90,6 @@ func init() {
 func ensureInitialized() error {
 	if initErr != nil {
 		return initErr
-	}
-	if isolate == nil {
-		return ErrNotInitialized
 	}
 	return nil
 }
@@ -111,7 +110,7 @@ func Load(input string) (any, error) {
 		return nil, err
 	}
 
-	// Lock OS thread for GraalVM native image calls
+	// Retain thread affinity for compatibility with the GraalVM implementation.
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
 
@@ -129,7 +128,7 @@ func Load(input string) (any, error) {
 
 	// Call yamlstar_load function in libyamlstar
 	cResult := C.yamlstar_load(
-		(C.longlong)(uintptr(unsafe.Pointer(thread))),
+		thread,
 		cInput,
 	)
 	if cResult == nil {
@@ -163,7 +162,7 @@ func LoadAll(input string) ([]any, error) {
 		return nil, err
 	}
 
-	// Lock OS thread for GraalVM native image calls
+	// Retain thread affinity for compatibility with the GraalVM implementation.
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
 
@@ -181,7 +180,7 @@ func LoadAll(input string) ([]any, error) {
 
 	// Call yamlstar_load_all function in libyamlstar
 	cResult := C.yamlstar_load_all(
-		(C.longlong)(uintptr(unsafe.Pointer(thread))),
+		thread,
 		cInput,
 	)
 	if cResult == nil {
@@ -257,12 +256,12 @@ func dumpJSON(data []byte, all bool) (string, error) {
 	var cResult *C.char
 	if all {
 		cResult = C.yamlstar_dump_all(
-			(C.longlong)(uintptr(unsafe.Pointer(thread))),
+			thread,
 			cInput,
 		)
 	} else {
 		cResult = C.yamlstar_dump(
-			(C.longlong)(uintptr(unsafe.Pointer(thread))),
+			thread,
 			cInput,
 		)
 	}
@@ -295,7 +294,7 @@ func LibVersion() (string, error) {
 		return "", err
 	}
 
-	// Lock OS thread for GraalVM native image calls
+	// Retain thread affinity for compatibility with the GraalVM implementation.
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
 
@@ -309,7 +308,7 @@ func LibVersion() (string, error) {
 
 	// Call yamlstar_version function in libyamlstar
 	cResult := C.yamlstar_version(
-		(C.longlong)(uintptr(unsafe.Pointer(thread))),
+		thread,
 	)
 	if cResult == nil {
 		return "", ErrNullResponse

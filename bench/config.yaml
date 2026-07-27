@@ -1,5 +1,7 @@
 version: 1
 
+# "graalvm" names the stable lifecycle/thread-first C ABI. Glojure engines
+# export that same ABI through compatibility functions.
 defaults:
   engines:
   - graalvm
@@ -42,7 +44,7 @@ engines:
       artifact: libyamlstar/lib/libyamlstar-graalvm.so
 
   gloat-lgvm:
-    abi: gloat
+    abi: graalvm
     sources:
       gloat:
         directory: ~/src/gloat
@@ -61,7 +63,7 @@ engines:
       artifact: libyamlstar/lib/libyamlstar-gloat-lgvm.so
 
   gloat-glj:
-    abi: gloat
+    abi: graalvm
     sources:
       gloat:
         directory: ~/src/gloat

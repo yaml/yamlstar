@@ -81,21 +81,21 @@ Output (maps, vectors, scalars)
 - **Well-Tested**: Comprehensive test coverage
 - **Production Ready**: Stable API, semantic versioning
 
-## Phase 2: Glojure Migration 🚧 Planned
+## Phase 2: Glojure Migration ✅ Complete
 
-**Target**: Q2 2026
+**Status**: Implemented
 
-Phase 2 will port YAMLStar from Clojure/GraalVM to Glojure (Clojure on Go),
-eliminating the GraalVM dependency and improving cross-platform support.
+Phase 2 ports YAMLStar from Clojure/GraalVM to Glojure (Clojure on Go),
+eliminating the GraalVM dependency from the shared library and improving
+cross-platform support.
 
-### Goals
+### Completed Work
 
-- Port core implementation to Glojure
-- AOT compilation to Go instead of JVM bytecode
-- Generate Go shared library directly
-- Eliminate GraalVM native-image dependency
-- Improve build times and binary size
-- Better cross-platform support (especially Windows)
+- ✅ Port core implementation to Glojure
+- ✅ AOT compilation to Go instead of JVM bytecode
+- ✅ Generate Go shared library directly
+- ✅ Preserve the existing C ABI for all language bindings
+- ✅ Eliminate GraalVM native-image from the default shared-library build
 
 ### Benefits
 
@@ -119,12 +119,11 @@ eliminating the GraalVM dependency and improving cross-platform support.
 
 ### Migration Path
 
-1. **Prototype**: Port parser to Glojure, validate correctness
-2. **Core**: Migrate composer, resolver, constructor
-3. **FFI**: Update C API to use Go shared library
-4. **Bindings**: Update all language bindings (transparent to users)
-5. **Testing**: Ensure 100% compatibility with Phase 1
-6. **Release**: Ship v0.2.0 with Glojure backend
+1. ✅ **Prototype**: Port parser to Glojure, validate correctness
+2. ✅ **Core**: Migrate composer, resolver, constructor
+3. ✅ **FFI**: Preserve the public C API over the Go shared library
+4. ✅ **Bindings**: Keep the engine change transparent to users
+5. ✅ **Build**: Make Gloat/Glojure the default for `libyamlstar`
 
 ### Backwards Compatibility
 
