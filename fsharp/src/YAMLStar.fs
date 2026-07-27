@@ -27,7 +27,9 @@ type YAMLStar() =
   let rc = Native.graal_create_isolate(nativeint 0, nativeint 0, &thread)
 
   do
-    if rc <> 0 || thread = nativeint 0 then
+    // Glojure uses a process-wide runtime and leaves this compatibility
+    // handle null.
+    if rc <> 0 then
       raise (YAMLStarException "Failed to create isolate")
 
   member _.LoadJson(input: string) =

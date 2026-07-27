@@ -17,7 +17,9 @@ public sealed class YAMLStar : IDisposable
             IntPtr.Zero,
             ref _isolateThread);
 
-        if (rc != 0 || _isolateThread == IntPtr.Zero)
+        // Glojure uses one process-wide Go runtime and deliberately leaves
+        // this compatibility handle null.
+        if (rc != 0)
         {
             throw new YAMLStarException("Failed to create GraalVM isolate");
         }
@@ -190,7 +192,12 @@ public sealed class YAMLStar : IDisposable
 
     public void Dispose()
     {
-        if (!_disposed && _isolateThread != IntPtr.Zero)
+        if (_disposed)
+        {
+            return;
+        }
+
+        if (_isolateThread != IntPtr.Zero)
         {
             var rc = YAMLStarNative.graal_tear_down_isolate(_isolateThread);
             if (rc != 0)
@@ -198,7 +205,8 @@ public sealed class YAMLStar : IDisposable
                 // Log error but don't throw since we're in Dispose
                 Console.Error.WriteLine($"Failed to tear down isolate: {rc}");
             }
-            _disposed = true;
         }
+
+        _disposed = true;
     }
 }

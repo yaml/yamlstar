@@ -191,7 +191,7 @@ jobs:
     - name: Install build dependencies
       run: |
         apt-get update
-        apt-get install -y build-essential curl git python3 xz-utils zlib1g-dev
+        apt-get install -y build-essential curl git python3 unzip xz-utils zlib1g-dev
 
     - name: Use GitHub Leiningen mirror
       run: |
@@ -401,7 +401,9 @@ jobs:
 
     - name: Build release archives and Python wheel
       run: |
-        make release-lib VERSION="$VERSION"
+        gloat_path="$(cygpath -u "$RUNNER_TEMP")/bin:/c/mingw64/bin:/mingw64/bin:/usr/bin:/bin"
+        make release-lib VERSION="$VERSION" \
+          GLOAT_PATH="$gloat_path"
         make release-cli VERSION="$VERSION"
         make -C python wheel VERSION="$VERSION"
 
@@ -788,7 +790,7 @@ jobs:
       with:
         release: '14.3'
         usesh: true
-        prepare: pkg install -y bash python311 py311-pip
+        prepare: pkg install -y bash python3 devel/py-pytest
         run: |
           set -eu
           work=/tmp/yamlstar-release
@@ -816,11 +818,8 @@ jobs:
           cc -I"$lib" -L"$lib" -Wl,-rpath,"$lib" \
             "$work/smoke.c" -lyamlstar -o "$work/smoke"
           "$work/smoke"
-          python3 -m venv "$work/venv"
-          . "$work/venv/bin/activate"
-          pip install pytest
           LD_LIBRARY_PATH="$lib" PYTHONPATH="$PWD/python/lib" \
-            python -m pytest python/test/test_yamlstar.py
+            python3 -m pytest python/test/test_yamlstar.py
 
   test-windows-arm64:
     name: Test Windows ARM64 artifacts

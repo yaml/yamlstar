@@ -201,7 +201,8 @@ GLOAT-GLOJURE-ENV := \
 
 _twg-build: | $(GLOAT-DIR)
 	@echo "Building glj from $(TEST-WITH-GLOJURE)..."
-	$(GLOAT-GLOJURE-ENV) $(GLOAT-BIN)/gloat --glj-build
+	env -u GOROOT $(GLOAT-GLOJURE-ENV) \
+	  $(GLOAT-BIN)/gloat --glj-build
 
 $(LIB-SO-GLOAT): _twg-build
 
@@ -251,7 +252,9 @@ ifdef YAMLSTAR_GLOJURE
 $(LIB-SO-GLOAT): $(GLOAT-SRCS) $(GLOAT-LINKS) | $(GLOAT-DIR)
 	@echo "Building gloat shared library..."
 	mkdir -p $(LIB-DIR)
-	</dev/null env -u GOROOT $(GLOAT-GLOJURE-ENV) \
+	</dev/null env -u GOROOT \
+	  $(if $(GLOAT_PATH),PATH='$(GLOAT_PATH)') \
+	  $(GLOAT-GLOJURE-ENV) \
 	  $(GLOAT-BIN)/gloat --force $(GLOAT-PLATFORM-OPT) \
 	  $(GLOAT-SRCS) -o $@
 	@echo "Gloat shared library created at: $@"

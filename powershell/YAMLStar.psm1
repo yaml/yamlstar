@@ -33,7 +33,9 @@ function Invoke-YAMLStarJson {
       [IntPtr]::Zero,
       [IntPtr]::Zero,
       [ref] $thread)
-    if ($rc -ne 0 -or $thread -eq [IntPtr]::Zero) {
+    # Glojure uses a process-wide runtime and leaves this compatibility
+    # handle null.
+    if ($rc -ne 0) {
       throw 'Failed to create isolate'
     }
 
