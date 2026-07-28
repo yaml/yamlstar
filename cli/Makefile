@@ -31,6 +31,10 @@ CLI-JAR := target/cli-$(LIBYAMLSTAR-VERSION)-SNAPSHOT-standalone.jar
 GLOAT-ENGINE := $(or $(GLOAT_ENGINE),glj)
 GLOAT-PLATFORM-OPT := \
   $(if $(GLOAT_PLATFORM),--platform=$(GLOAT_PLATFORM))
+GLOAT-RUN := $(GLOAT-BIN)/gloat
+ifeq ($(OS-NAME),windows)
+GLOAT-RUN := /usr/bin/bash $(GLOAT-BIN)/gloat
+endif
 CLI-GLOAT-NAME ?= yaml-gloat-$(GLOAT-ENGINE)
 CLI-BIN-GLOAT := bin/$(CLI-GLOAT-NAME)
 GLOAT-CACHE := ../libyamlstar/cache/gloat-srcs
@@ -76,7 +80,7 @@ GLOAT-GLOJURE-ENV := \
 
 .PHONY: _prepare-glj
 _prepare-glj: _prepare-gloat-bin
-	$(GLOAT-GLOJURE-ENV) $(GLOAT-BIN)/gloat --glj-build
+	$(GLOAT-GLOJURE-ENV) $(GLOAT-RUN) --glj-build
 
 GLOAT-CLI-GLJ-DEP := _prepare-glj
 endif
@@ -138,7 +142,7 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
 	</dev/null env -u GOROOT $(GLOAT-GLOJURE-ENV) \
 	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
 	  $(if $(LET_GO_SRC),LET_GO_SRC=$(abspath $(LET_GO_SRC))) \
-	  $(GLOAT-BIN)/gloat --force $(GLOAT-PLATFORM-OPT) \
+	  $(GLOAT-RUN) --force $(GLOAT-PLATFORM-OPT) \
 	  $(GLOAT-CLI-SRCS) -o $@
 	test -x $@
 	@echo "Gloat ($(GLOAT-ENGINE)) CLI created at: $@"

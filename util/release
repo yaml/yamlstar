@@ -343,7 +343,7 @@ gcc -o myapp myapp.c -lyamlstar
 do-release-cli() (
   detect-platform
 
-  if [[ ${GLOAT_PLATFORM:-} ]]; then
+  if [[ ${GLOAT_PLATFORM:-} || ${YAMLSTAR_GLOJURE:-} ]]; then
     case "$OS_NAME" in
       windows)
         CLI_BUILD_FILE=yaml-release.exe

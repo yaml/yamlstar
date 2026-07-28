@@ -328,7 +328,9 @@ jobs:
       run: |
         make release-lib VERSION="$VERSION" \
           TEST-WITH-GLOJURE="$PWD/.cache/glojure-source"
-        make release-cli VERSION="$VERSION"
+        make release-cli VERSION="$VERSION" \
+          YAMLSTAR_GLOJURE=1 \
+          TEST-WITH-GLOJURE="$PWD/.cache/glojure-source"
         make -C python wheel VERSION="$VERSION"
 
     - name: Upload macOS x64 artifacts

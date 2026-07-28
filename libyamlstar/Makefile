@@ -38,6 +38,10 @@ LIB-SO := $(LIB-DIR)/$(LIB-NAME).$(SO)
 GLOAT-PLATFORM-OPT := \
   $(if $(GLOAT_PLATFORM),--platform=$(GLOAT_PLATFORM))
 GLOAT-WINDOWS-TARGET := $(filter windows/%,$(GLOAT_PLATFORM))
+GLOAT-RUN := $(GLOAT-BIN)/gloat
+ifeq ($(OS-NAME),windows)
+GLOAT-RUN := /usr/bin/bash $(GLOAT-BIN)/gloat
+endif
 GLOAT-LIB-HEADER := gloat/include/libyamlstar.h
 GLOAT-ISOLATE-HEADER := gloat/include/graal_isolate.h
 GO-GENERATED-WORK := $(abspath ../.cache/go-generate)
@@ -202,7 +206,7 @@ GLOAT-GLOJURE-ENV := \
 _twg-build: | $(GLOAT-DIR)
 	@echo "Building glj from $(TEST-WITH-GLOJURE)..."
 	env -u GOROOT $(GLOAT-GLOJURE-ENV) \
-	  $(GLOAT-BIN)/gloat --glj-build
+	  $(GLOAT-RUN) --glj-build
 
 $(LIB-SO-GLOAT): _twg-build
 
@@ -255,7 +259,7 @@ $(LIB-SO-GLOAT): $(GLOAT-SRCS) $(GLOAT-LINKS) | $(GLOAT-DIR)
 	</dev/null env -u GOROOT \
 	  $(if $(GLOAT_PATH),PATH='$(GLOAT_PATH)') \
 	  $(GLOAT-GLOJURE-ENV) \
-	  $(GLOAT-BIN)/gloat --force $(GLOAT-PLATFORM-OPT) \
+	  $(GLOAT-RUN) --force $(GLOAT-PLATFORM-OPT) \
 	  $(GLOAT-SRCS) -o $@
 	@echo "Gloat shared library created at: $@"
 endif

@@ -117,14 +117,23 @@ Options:
      (sequential? value) (pretty-json-seq value level)
      :else (json/dump value))))
 
+(defn read-stdin []
+  #?(:glj
+     (let [[content error] (io.ReadAll os.Stdin)]
+       (if (nil? error)
+         (fmt.Sprintf "%s" content)
+         (throw error)))
+     :lg
+     (slurp *in*)))
+
 (defn read-input [opts]
   (cond
     (:eval opts) (:eval opts)
     (:file opts) (slurp (:file opts))
     (first (:arguments opts))
     (let [filename (first (:arguments opts))]
-      (if (= filename "-") (slurp *in*) (slurp filename)))
-    :else (slurp *in*)))
+      (if (= filename "-") (read-stdin) (slurp filename)))
+    :else (read-stdin)))
 
 (defn format-output [data opts]
   (let [data (nil-keys->string data)]
