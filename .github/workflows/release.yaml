@@ -332,7 +332,7 @@ jobs:
           YAMLSTAR_GLOJURE=1 \
           TEST-WITH-GLOJURE="$PWD/.cache/glojure-source"
         make -C python wheel VERSION="$VERSION" \
-          OA-macos-int64=macos-x86_64-none
+          'PYTHON-NAME=cpython-$(PYTHON-VERSION)-macos-x86_64-none'
 
     - name: Upload macOS x64 artifacts
       uses: actions/upload-artifact@v6
@@ -348,67 +348,27 @@ jobs:
     name: Build Windows x64
     if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
     needs: verify-release
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout tag
       uses: actions/checkout@v5
       with:
         ref: ${{ inputs.version }}
 
-    - name: Set up MSVC
-      uses: ilammy/msvc-dev-cmd@v1
-
-    - name: Set up GraalVM
-      uses: graalvm/setup-graalvm@v1
-      with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: graalvm
-        github-token: ${{ github.token }}
-        native-image-job-reports: 'true'
-
-    - name: Install native build tools and zip
-      run: choco install mingw zip -y
-
-    - name: Install shasum shim
-      run: |
-        mkdir -p "$RUNNER_TEMP/bin"
-        {
-          echo '#!/usr/bin/env bash'
-          echo 'if [[ ${1:-} == -a && ${2:-} == 256 && ${3:-} == -c ]]; then'
-          echo '  sha256sum -c'
-          echo 'else'
-          echo '  echo "Unsupported shasum arguments: $*" >&2'
-          echo '  exit 2'
-          echo 'fi'
-        } > "$RUNNER_TEMP/bin/shasum"
-        chmod +x "$RUNNER_TEMP/bin/shasum"
-        echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
-
-    - name: Use GitHub Leiningen mirror
-      run: |
-        make --no-print-directory -n default >/dev/null
-        python - <<'PY'
-        from pathlib import Path
-        p = Path('.cache/makes/lein.mk')
-        text = p.read_text()
-        text = text.replace(
-          'https://codeberg.org/leiningen/leiningen/raw/tag',
-          'https://raw.githubusercontent.com/technomancy/leiningen')
-        text = text.replace(
-          '\t$Q curl+ $(LEIN-DOWN) > $@\n',
-          '\t$Q curl+ $(LEIN-DOWN) > $@\n'
-          '\t$Q sed -i.bak \'s|export LEIN_VERSION=.*|export LEIN_VERSION="$(LEIN-VERSION)"|\' $@\n'
-          '\t$Q sed -i.bak \'s|export LEIN_CHECKSUM=.*|export LEIN_CHECKSUM="5f5231f06c3c7924e3241e3dfa52885577fb44ddf8a9ea373d2c5e2f27217565"|\' $@\n')
-        p.write_text(text)
-        PY
+    - name: Install build dependencies
+      run: sudo apt-get update && sudo apt-get install -y build-essential curl git perl unzip xz-utils zip
 
     - name: Build release archives and Python wheel
       run: |
-        gloat_path="$(cygpath -u "$RUNNER_TEMP")/bin:/c/mingw64/bin:/mingw64/bin:/usr/bin:/bin"
-        PATH="$gloat_path" make release-lib VERSION="$VERSION" \
-          OS-TYPE=msys ARCH-TYPE=x86_64
-        make release-cli VERSION="$VERSION"
-        make -C python wheel VERSION="$VERSION"
+        make release-cli VERSION="$VERSION" \
+          GLOAT_PLATFORM=windows/amd64 \
+          RELEASE_PLATFORM=windows-x64
+        make release-lib VERSION="$VERSION" \
+          GLOAT_PLATFORM=windows/amd64 \
+          RELEASE_PLATFORM=windows-x64 \
+          CROSS_CC_TARGET=x86_64-windows-gnu
+        make -C python wheels-from-release VERSION="$VERSION" \
+          RELEASE-WHEEL-DIR=../dist
 
     - name: Upload Windows artifacts
       uses: actions/upload-artifact@v6
@@ -672,7 +632,7 @@ jobs:
         PY
 
     - name: Run tests
-      run: make test-all TEST-TIME='date; time' OA-macos-int64=macos-x86_64-none BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
+      run: make test-all TEST-TIME='date; time' 'PYTHON-NAME=cpython-$(PYTHON-VERSION)-macos-x86_64-none' BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
 
   test-windows:
     name: Test Windows artifacts
@@ -1235,7 +1195,7 @@ jobs:
         PY
 
     - name: Run tests
-      run: make test-all TEST-TIME='date; time' OA-macos-int64=macos-x86_64-none BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
+      run: make test-all TEST-TIME='date; time' 'PYTHON-NAME=cpython-$(PYTHON-VERSION)-macos-x86_64-none' BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
 
   test-freebsd-x64-retry:
     name: Test FreeBSD x64 artifacts (retry)
