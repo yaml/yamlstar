@@ -3,6 +3,7 @@ M := ../.cache/makes
 
 ifdef YAMLSTAR_GLOJURE
 include $M/gloat.mk
+include $M/lein.mk
 else
 include $M/graalvm.mk
 include $M/lein.mk

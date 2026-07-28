@@ -170,6 +170,9 @@ public final class YAMLStar {
             FileHandle.standardError.write(
                 Data("Failed to tear down isolate\n".utf8))
         }
-        dlclose(handle)
+
+        // A Go c-shared runtime cannot be safely unloaded on macOS. Keep the
+        // process-wide library loaded and let the operating system reclaim it
+        // when the process exits.
     }
 }

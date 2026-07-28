@@ -2,6 +2,10 @@ include ../common/init.mk
 include $M/dart.mk
 include $(COMMON)/common.mk
 
+ifeq ($(OS-NAME),windows)
+override export PATH := $(LIBYS)/lib:$(PATH)
+endif
+
 export PUB_CACHE := $(ROOT)/.cache/pub
 DART-HOME := $(ROOT)/.cache/dart-home
 DART-ENV := HOME=$(DART-HOME) DART_SUPPRESS_ANALYTICS=true
