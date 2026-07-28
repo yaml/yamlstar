@@ -39,8 +39,16 @@ GLOAT-PLATFORM-OPT := \
   $(if $(GLOAT_PLATFORM),--platform=$(GLOAT_PLATFORM))
 GLOAT-WINDOWS-TARGET := $(filter windows/%,$(GLOAT_PLATFORM))
 GLOAT-RUN := $(GLOAT-BIN)/gloat
+GLOAT-RUN-DEPS :=
 ifeq ($(OS-NAME),windows)
 GLOAT-RUN := /usr/bin/bash $(GLOAT-BIN)/gloat
+GLOAT-BASH-SHIM := $(GLOAT-BIN)/bash
+GLOAT-RUN-DEPS := $(GLOAT-BASH-SHIM)
+
+$(GLOAT-BASH-SHIM): | $(GLOAT-DIR)
+	@printf '%s\n' '#!/usr/bin/bash' \
+	  'exec /usr/bin/bash "$$@"' > $@
+	chmod +x $@
 endif
 GLOAT-LIB-HEADER := gloat/include/libyamlstar.h
 GLOAT-ISOLATE-HEADER := gloat/include/graal_isolate.h
@@ -203,7 +211,7 @@ GLOAT-GLOJURE-ENV := \
   GOCACHE=$(GLOAT-DIR)/.cache/local/cache/go-build \
   GOMODCACHE=$(GLOAT-DIR)/.cache/local/go/pkg/mod
 
-_twg-build: | $(GLOAT-DIR)
+_twg-build: $(GLOAT-RUN-DEPS) | $(GLOAT-DIR)
 	@echo "Building glj from $(TEST-WITH-GLOJURE)..."
 	env -u GOROOT $(GLOAT-GLOJURE-ENV) \
 	  $(GLOAT-RUN) --glj-build
@@ -253,7 +261,7 @@ install: build
 	install -m 644 $(INSTALL-LIB) $(PREFIX)/lib/
 
 ifdef YAMLSTAR_GLOJURE
-$(LIB-SO-GLOAT): $(GLOAT-SRCS) $(GLOAT-LINKS) | $(GLOAT-DIR)
+$(LIB-SO-GLOAT): $(GLOAT-SRCS) $(GLOAT-LINKS) $(GLOAT-RUN-DEPS) | $(GLOAT-DIR)
 	@echo "Building gloat shared library..."
 	mkdir -p $(LIB-DIR)
 	</dev/null env -u GOROOT \

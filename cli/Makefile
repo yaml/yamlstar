@@ -32,8 +32,16 @@ GLOAT-ENGINE := $(or $(GLOAT_ENGINE),glj)
 GLOAT-PLATFORM-OPT := \
   $(if $(GLOAT_PLATFORM),--platform=$(GLOAT_PLATFORM))
 GLOAT-RUN := $(GLOAT-BIN)/gloat
+GLOAT-RUN-DEPS :=
 ifeq ($(OS-NAME),windows)
 GLOAT-RUN := /usr/bin/bash $(GLOAT-BIN)/gloat
+GLOAT-BASH-SHIM := $(GLOAT-BIN)/bash
+GLOAT-RUN-DEPS := $(GLOAT-BASH-SHIM)
+
+$(GLOAT-BASH-SHIM): | $(GLOAT-DIR)
+	@printf '%s\n' '#!/usr/bin/bash' \
+	  'exec /usr/bin/bash "$$@"' > $@
+	chmod +x $@
 endif
 CLI-GLOAT-NAME ?= yaml-gloat-$(GLOAT-ENGINE)
 CLI-BIN-GLOAT := bin/$(CLI-GLOAT-NAME)
@@ -79,8 +87,8 @@ GLOAT-GLOJURE-ENV := \
   GOMODCACHE=$(GLOAT-DIR)/.cache/local/go/pkg/mod
 
 .PHONY: _prepare-glj
-_prepare-glj: _prepare-gloat-bin
-	$(GLOAT-GLOJURE-ENV) $(GLOAT-RUN) --glj-build
+_prepare-glj: _prepare-gloat-bin $(GLOAT-RUN-DEPS)
+	env -u GOROOT $(GLOAT-GLOJURE-ENV) $(GLOAT-RUN) --glj-build
 
 GLOAT-CLI-GLJ-DEP := _prepare-glj
 endif
@@ -132,6 +140,7 @@ _prepare-gloat:
 	  $(if $(YAML-PARSER-DIR),YAML-PARSER-DIR=$(YAML-PARSER-DIR))
 
 $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
+  $(GLOAT-RUN-DEPS) \
   $(GLOAT-CLI-GLJ-DEP) \
   $(GLOAT-CORE)/parser.clj \
   $(GLOAT-CORE)/composer.clj \

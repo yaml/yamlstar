@@ -624,7 +624,7 @@ jobs:
         PY
 
     - name: Run tests
-      run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
+      run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r rust zig $YS_RELEASE_BINDINGS_SKIP"
 
   test-macos-x64:
     name: Test macOS x64 artifacts
@@ -670,7 +670,7 @@ jobs:
         PY
 
     - name: Run tests
-      run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
+      run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r rust zig $YS_RELEASE_BINDINGS_SKIP"
 
   test-windows:
     name: Test Windows artifacts
@@ -814,7 +814,11 @@ jobs:
             '  graal_isolate_t *isolate = NULL;' \
             '  graal_isolatethread_t *thread = NULL;' \
             '  if (graal_create_isolate(NULL, &isolate, &thread)) return 1;' \
-            '  if (strcmp(yamlstar_load(thread, "a: 1\\n"), "{\"data\":{\"a\":1}}")) return 2;' \
+            '  const char *result = yamlstar_load(thread, "a: 1\n");' \
+            '  if (strcmp(result, "{\"data\":{\"a\":1}}")) {' \
+            '    fprintf(stderr, "unexpected yamlstar_load result: %s\n", result);' \
+            '    return 2;' \
+            '  }' \
             '  return graal_tear_down_isolate(thread);' \
             '}' > "$work/smoke.c"
           cc -I"$lib" -L"$lib" -Wl,-rpath,"$lib" \
@@ -1065,7 +1069,7 @@ jobs:
       run: |
         make test-all \
           TEST-TIME='date; time' \
-          BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
+          BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r rust zig $YS_RELEASE_BINDINGS_SKIP"
 
   test-windows-retry:
     name: Test Windows artifacts (retry)
@@ -1229,7 +1233,7 @@ jobs:
         PY
 
     - name: Run tests
-      run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
+      run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r rust zig $YS_RELEASE_BINDINGS_SKIP"
 
   test-freebsd-x64-retry:
     name: Test FreeBSD x64 artifacts (retry)
@@ -1285,7 +1289,11 @@ jobs:
             '  graal_isolate_t *isolate = NULL;' \
             '  graal_isolatethread_t *thread = NULL;' \
             '  if (graal_create_isolate(NULL, &isolate, &thread)) return 1;' \
-            '  if (strcmp(yamlstar_load(thread, "a: 1\\n"), "{\"data\":{\"a\":1}}")) return 2;' \
+            '  const char *result = yamlstar_load(thread, "a: 1\n");' \
+            '  if (strcmp(result, "{\"data\":{\"a\":1}}")) {' \
+            '    fprintf(stderr, "unexpected yamlstar_load result: %s\n", result);' \
+            '    return 2;' \
+            '  }' \
             '  return graal_tear_down_isolate(thread);' \
             '}' > "$work/smoke.c"
           cc -I"$lib" -L"$lib" -Wl,-rpath,"$lib" \
