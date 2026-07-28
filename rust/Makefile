@@ -9,7 +9,7 @@ MAKES-CLEAN := \
 
 
 test: $(CARGO) $(LIBYAMLSTAR-SO)
-	cargo $@
+	cargo test -- --test-threads=1
 
 build check clippy fmt: $(CARGO)
 	cargo $@

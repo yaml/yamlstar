@@ -402,8 +402,8 @@ jobs:
     - name: Build release archives and Python wheel
       run: |
         gloat_path="$(cygpath -u "$RUNNER_TEMP")/bin:/c/mingw64/bin:/mingw64/bin:/usr/bin:/bin"
-        make release-lib VERSION="$VERSION" \
-          GLOAT_PATH="$gloat_path"
+        export GLOAT_PATH="$gloat_path"
+        make release-lib VERSION="$VERSION"
         make release-cli VERSION="$VERSION"
         make -C python wheel VERSION="$VERSION"
 
@@ -793,6 +793,7 @@ jobs:
         prepare: pkg install -y bash python3 devel/py-pytest
         run: |
           set -eu
+          VERSION='${{ inputs.version }}'
           work=/tmp/yamlstar-release
           rm -rf "$work"
           mkdir -p "$work"
@@ -1263,6 +1264,7 @@ jobs:
         prepare: pkg install -y bash python311 py311-pip
         run: |
           set -eu
+          VERSION='${{ inputs.version }}'
           work=/tmp/yamlstar-release
           rm -rf "$work"
           mkdir -p "$work"

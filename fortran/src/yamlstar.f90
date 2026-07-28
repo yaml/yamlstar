@@ -86,6 +86,9 @@ module yamlstar
   type :: yamlstar_t
     private
     type(c_ptr) :: isolate_thread = c_null_ptr
+    ! Glojure uses a process-wide runtime and leaves this compatibility
+    ! handle null even after successful initialization.
+    logical :: initialized = .false.
   contains
     procedure :: init => yamlstar_init
     procedure :: destroy => yamlstar_destroy
@@ -107,6 +110,7 @@ contains
     if (rc /= 0) then
       error stop 'Failed to create GraalVM isolate'
     end if
+    this%initialized = .true.
   end subroutine yamlstar_init
 
   ! Destroy YAMLStar and tear down GraalVM isolate
@@ -114,12 +118,13 @@ contains
     class(yamlstar_t), intent(inout) :: this
     integer(c_int) :: rc
 
-    if (c_associated(this%isolate_thread)) then
+    if (this%initialized) then
       rc = graal_tear_down_isolate(this%isolate_thread)
       if (rc /= 0) then
         error stop 'Failed to tear down GraalVM isolate'
       end if
       this%isolate_thread = c_null_ptr
+      this%initialized = .false.
     end if
   end subroutine yamlstar_destroy
 
@@ -131,7 +136,7 @@ contains
     type(c_ptr) :: json_ptr
     character(len=:), allocatable :: yaml_c
 
-    if (.not. c_associated(this%isolate_thread)) then
+    if (.not. this%initialized) then
       error stop 'YAMLStar not initialized'
     end if
 
@@ -153,7 +158,7 @@ contains
     type(c_ptr) :: json_ptr
     character(len=:), allocatable :: yaml_c
 
-    if (.not. c_associated(this%isolate_thread)) then
+    if (.not. this%initialized) then
       error stop 'YAMLStar not initialized'
     end if
 
@@ -175,7 +180,7 @@ contains
     type(c_ptr) :: json_ptr
     character(len=:), allocatable :: data_json_c
 
-    if (.not. c_associated(this%isolate_thread)) then
+    if (.not. this%initialized) then
       error stop 'YAMLStar not initialized'
     end if
 
@@ -192,7 +197,7 @@ contains
     type(c_ptr) :: json_ptr
     character(len=:), allocatable :: data_json_c
 
-    if (.not. c_associated(this%isolate_thread)) then
+    if (.not. this%initialized) then
       error stop 'YAMLStar not initialized'
     end if
 
@@ -207,7 +212,7 @@ contains
     character(len=:), allocatable :: ver
     type(c_ptr) :: ver_ptr
 
-    if (.not. c_associated(this%isolate_thread)) then
+    if (.not. this%initialized) then
       error stop 'YAMLStar not initialized'
     end if
 
