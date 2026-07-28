@@ -34,7 +34,7 @@
 
 #![warn(clippy::pedantic)]
 
-use std::path::Path;
+use std::{mem::ManuallyDrop, path::Path};
 
 use dlopen::symbor::Library;
 use libc::{c_int, c_void as void};
@@ -82,7 +82,9 @@ type YamlstarVersionFn = unsafe extern "C" fn(*mut void) -> *mut i8;
 /// A wrapper around libyamlstar.
 pub struct YAMLStar {
     /// A handle to the opened dynamic library.
-    _handle: Library,
+    // Go c-shared libraries cannot be safely unloaded on macOS. Keep the
+    // process-wide library loaded until process exit.
+    _handle: ManuallyDrop<Library>,
     /// A GraalVM isolate.
     _isolate: *mut void,
     /// A GraalVM isolate thread.
@@ -164,7 +166,7 @@ impl YAMLStar {
         }
 
         Ok(Self {
-            _handle: handle,
+            _handle: ManuallyDrop::new(handle),
             _isolate: isolate,
             isolate_thread,
             _create_isolate_fn: create_isolate_fn,

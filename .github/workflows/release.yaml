@@ -331,7 +331,8 @@ jobs:
         make release-cli VERSION="$VERSION" \
           YAMLSTAR_GLOJURE=1 \
           TEST-WITH-GLOJURE="$PWD/.cache/glojure-source"
-        make -C python wheel VERSION="$VERSION"
+        make -C python wheel VERSION="$VERSION" \
+          OA-macos-int64=macos-x86_64-none
 
     - name: Upload macOS x64 artifacts
       uses: actions/upload-artifact@v6
@@ -404,7 +405,8 @@ jobs:
     - name: Build release archives and Python wheel
       run: |
         gloat_path="$(cygpath -u "$RUNNER_TEMP")/bin:/c/mingw64/bin:/mingw64/bin:/usr/bin:/bin"
-        PATH="$gloat_path" make release-lib VERSION="$VERSION"
+        PATH="$gloat_path" make release-lib VERSION="$VERSION" \
+          OS-TYPE=msys ARCH-TYPE=x86_64
         make release-cli VERSION="$VERSION"
         make -C python wheel VERSION="$VERSION"
 
@@ -624,7 +626,7 @@ jobs:
         PY
 
     - name: Run tests
-      run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r rust zig $YS_RELEASE_BINDINGS_SKIP"
+      run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
 
   test-macos-x64:
     name: Test macOS x64 artifacts
@@ -670,7 +672,7 @@ jobs:
         PY
 
     - name: Run tests
-      run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r rust zig $YS_RELEASE_BINDINGS_SKIP"
+      run: make test-all TEST-TIME='date; time' OA-macos-int64=macos-x86_64-none BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
 
   test-windows:
     name: Test Windows artifacts
@@ -1069,7 +1071,7 @@ jobs:
       run: |
         make test-all \
           TEST-TIME='date; time' \
-          BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r rust zig $YS_RELEASE_BINDINGS_SKIP"
+          BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
 
   test-windows-retry:
     name: Test Windows artifacts (retry)
@@ -1233,7 +1235,7 @@ jobs:
         PY
 
     - name: Run tests
-      run: make test-all TEST-TIME='date; time' BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r rust zig $YS_RELEASE_BINDINGS_SKIP"
+      run: make test-all TEST-TIME='date; time' OA-macos-int64=macos-x86_64-none BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
 
   test-freebsd-x64-retry:
     name: Test FreeBSD x64 artifacts (retry)

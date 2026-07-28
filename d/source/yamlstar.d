@@ -38,12 +38,12 @@ else
 
 version (Posix)
 {
-  import core.sys.posix.dlfcn : dlopen, dlsym, dlclose, RTLD_NOW;
+  import core.sys.posix.dlfcn : dlopen, dlsym, RTLD_NOW;
 }
 version (Windows)
 {
   import core.sys.windows.winbase :
-    LoadLibraryA, GetProcAddress, FreeLibrary;
+    LoadLibraryA, GetProcAddress;
 }
 
 // FFI signatures for the 3 libyamlstar functions used by this binding:
@@ -198,17 +198,17 @@ class YAMLStar
     return resp["data"];
   }
 
-  /// Tear down the GraalVM isolate and close libyamlstar:
+  /// Tear down the GraalVM isolate:
   void close()
   {
     if (lib is null)
       return;
     if (tearDownIsolate(isolateThread) != 0)
       throw new YAMLStarException("Failed to tear down isolate");
-    version (Posix)
-      dlclose(lib);
-    version (Windows)
-      FreeLibrary(lib);
+
+    // A Go c-shared runtime cannot be safely unloaded on macOS. Keep the
+    // process-wide library loaded and let the operating system reclaim it
+    // when the process exits.
     lib = null;
   }
 }
