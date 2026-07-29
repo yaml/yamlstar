@@ -14,7 +14,8 @@ build-doc:: ReadMe.md
 test:: $(LIBYAMLSTAR-SO-VERSION) $(ZIG)
 	zig build test
 
-release-deps:: $(ZIG)
+release-deps::
+	@true
 
 clean::
 	$(RM) -r .zig-cache zig-out

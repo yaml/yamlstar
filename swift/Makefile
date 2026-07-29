@@ -14,7 +14,8 @@ build-doc:: ReadMe.md
 test:: $(LIBYAMLSTAR-SO-VERSION) $(SWIFT)
 	swift test $(SWIFT-FLAGS)
 
-release-deps:: $(SWIFT)
+release-deps::
+	@true
 
 clean::
 	$(RM) -r .build

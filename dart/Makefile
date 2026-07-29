@@ -23,8 +23,7 @@ test:: $(LIBYAMLSTAR-SO-VERSION) $(DART)
 
 # pub.dev requires the file names README.md and CHANGELOG.md.
 release: $(DART) README.md CHANGELOG.md
-	mkdir -p $(DART-HOME)
-	$(DART-ENV) dart pub publish --force
+	DART_SUPPRESS_ANALYTICS=true dart pub publish --force
 	$(RM) README.md CHANGELOG.md
 
 release-deps:: $(DART)

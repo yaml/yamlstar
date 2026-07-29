@@ -39,27 +39,34 @@ bindings =::
 - clojure
 - crystal
 - csharp
+- d
+- dart
+- delphi
 - dyalog
 - elixir
 - erlang
 - fsharp
-- go
-- delphi
 - fortran
+- go
 - haskell
 - java
 - julia
+- kotlin
 - lua
 - moonbit
+- nim
 - nodejs
 - perl
 - php
 - powershell
 - python
+- r
 - raku
 - ruby
 - rust
 - scala
+- swift
+- zig
 
 verbose =: B(ENV.YS_RELEASE_VERBOSE)
 dryrun =: boolean(ENV.YS_RELEASE_DRYRUN)
@@ -473,8 +480,8 @@ defn do-bindings(new):
     if binding-published?(dir new):
       say: "\nSkipping binding already published: $dir"
       else:
-        # pub.dev requires interactive browser OAuth, so Dart must be
-        # published locally rather than from a GitHub Actions runner.
+        # Publishing to pub.dev requires interactive browser OAuth.
+        # Publish Dart locally with 'make -C dart release' instead.
         if (dir == 'dart') && ENV.YS_RELEASE_CI:
           say: "\nSkipping dart binding: pub.dev requires interactive OAuth"
           else:

@@ -31,7 +31,8 @@ test:: $(LIBYAMLSTAR-SO-VERSION) $(R-PROFILE-SITE) $(R-TOOLCHAIN)
 	R CMD INSTALL --library=$(RLIB) .
 	R_LIBS="$(RLIB)" $(R-RUN) -f tests/test-yamlstar.R
 
-release-deps:: $(R)
+release-deps::
+	@true
 
 clean::
 	$(RM) -r $(RLIB) src/*.o src/*.so
