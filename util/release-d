@@ -15,15 +15,20 @@ update() (
 
 after_release() (
   local secret=${DUB_UPDATE_SECRET:-}
-  if [[ -z $secret && -f ~/.yamlstar-secrets.yaml ]]; then
-    local expr value
-    for expr in .d.token .dub.token .dlang.token; do
-      value=$(ys -e "$expr:say" ~/.yamlstar-secrets.yaml 2>/dev/null || true)
-      if [[ $value && $value != nil ]]; then
-        secret=$value
-        break
-      fi
-    done
+  local secrets_file=${YS_SECRETS_FILE:-$HOME/.yamlscript-secrets.yaml}
+  if [[ -z $secret && -f $secrets_file ]]; then
+    secret=$(
+      awk '
+        $1 == "dlang:" { in_dlang = 1; next }
+        in_dlang && $0 ~ /^[^[:space:]]/ { in_dlang = 0 }
+        in_dlang && $1 == "token:" {
+          sub(/^[[:space:]]*token:[[:space:]]*/, "")
+          gsub(/^'\''|'\''$/, "")
+          print
+          exit
+        }
+      ' "$secrets_file"
+    )
   fi
 
   [[ $secret ]] || {
