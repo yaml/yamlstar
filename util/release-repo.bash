@@ -5,7 +5,12 @@ set -euo pipefail
 [[ ${YS_RELEASE_VERBOSE-} ]] && set -x
 
 root=${YAMLSTAR_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)}
-version=$YS_RELEASE_VERSION_NEW
+version=${YS_RELEASE_VERSION_NEW:-${v:-}}
+
+[[ $version ]] || {
+  echo 'Error: YS_RELEASE_VERSION_NEW or v must be set' >&2
+  exit 1
+}
 
 main() (
   init
@@ -60,11 +65,11 @@ release() (
   if git diff --cached --quiet; then
     echo "No changes for yamlstar-$lang"
   else
-    git commit -m "Release $YS_RELEASE_VERSION_NEW"
+    git commit -m "Release $version"
     git push origin HEAD
   fi
 
-  tag=$tag_prefix$YS_RELEASE_VERSION_NEW
+  tag=$tag_prefix$version
   if git ls-remote --exit-code --tags origin "refs/tags/$tag" \
       >/dev/null 2>&1; then
     echo "Tag $tag already published for yamlstar-$lang"
