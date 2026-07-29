@@ -528,7 +528,7 @@ defn expand-binding-list(items):
 
 
 defn binding-published?(dir new):
-  if ENV.YS_RELEASE_FORCE_BINDINGS:
+  if ENV.YS_RELEASE_FORCE_BINDINGS == '1':
     then: false
     else:
       try:

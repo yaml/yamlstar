@@ -49,16 +49,28 @@ ifndef ADA-GITHUB-TOKEN
 endif
 	mkdir -p $(XDG_RUNTIME_DIR)
 	$(ALR) settings --global --set user.github_login $(ADA-GITHUB-USER)
-	@GH_TOKEN=$(ADA-GITHUB-TOKEN) \
-	  $(ALR) publish --manifest $(ADA-MANIFEST) $(ADA-ORIGIN)
 	@set -eu; \
-	  pr_data=$$(GH_TOKEN=$(ADA-GITHUB-TOKEN) $(GH) pr list \
-	    --repo $(ADA-ALIRE-INDEX-REPO) \
-	    --state open \
-	    --author $(ADA-GITHUB-USER) \
-	    --head $(ADA-ALIRE-INDEX-BRANCH) \
-	    --json number,isDraft \
-	    --jq 'if length == 1 then "\(.[0].number) \(.[0].isDraft)" else empty end'); \
+	  find_pr() { \
+	    GH_TOKEN=$(ADA-GITHUB-TOKEN) $(GH) pr list \
+	      --repo $(ADA-ALIRE-INDEX-REPO) \
+	      --state open \
+	      --author $(ADA-GITHUB-USER) \
+	      --head $(ADA-ALIRE-INDEX-BRANCH) \
+	      --json number,isDraft \
+	      --jq 'if length == 1 then "\(.[0].number) \(.[0].isDraft)" else empty end'; \
+	  }; \
+	  pr_data=$$(find_pr); \
+	  if [ -z "$$pr_data" ]; then \
+	    GH_TOKEN=$(ADA-GITHUB-TOKEN) \
+	      $(ALR) publish --manifest $(ADA-MANIFEST) $(ADA-ORIGIN); \
+	    for attempt in 1 2 3 4 5; do \
+	      pr_data=$$(find_pr); \
+	      [ -n "$$pr_data" ] && break; \
+	      sleep 2; \
+	    done; \
+	  else \
+	    echo "Alire index PR already exists for $(ADA-ALIRE-INDEX-BRANCH)"; \
+	  fi; \
 	  set -- $$pr_data; \
 	  if [ "$$#" -ne 2 ]; then \
 	    echo "ERROR: Expected one open Alire index PR for $(ADA-ALIRE-INDEX-BRANCH)" >&2; \
