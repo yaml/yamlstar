@@ -2,7 +2,7 @@ SHELL := bash
 .SHELLFLAGS := -e -o pipefail -c
 
 YAMLSTAR_VERSION := 0.1.18
-DYALOG-RELEASE-VERSION := $(or $(YS_RELEASE_VERSION_NEW),$n)
+DYALOG-RELEASE-VERSION := $(or $(YS_RELEASE_VERSION_NEW),$v)
 IMAGE := yamlstar-dyalog
 DOCKER_CONFIG := $(CURDIR)/.cache/docker
 DOCKER := DOCKER_CONFIG=$(DOCKER_CONFIG) docker
@@ -89,7 +89,10 @@ ifeq (,$(DYALOG-RELEASE-VERSION))
 endif
 	mkdir -p $(TATIN-BUILD-DIR)
 	chmod a+w $(TATIN-BUILD-DIR)
-	$(TATIN-RUN) 'dyalogscript tools/tatin-release.apls'
+	@set -e; \
+	  chmod a+r $(TATIN-CLIENT); \
+	  trap 'chmod 600 $(TATIN-CLIENT)' EXIT; \
+	  $(TATIN-RUN) 'dyalogscript tools/tatin-release.apls'
 
 $(TATIN-CLIENT): FORCE
 	@set -e; \

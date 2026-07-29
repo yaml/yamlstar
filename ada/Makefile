@@ -10,10 +10,10 @@ include $(COMMON)/common.mk
 MAKES-CLEAN += alire
 
 ADA-ORIGIN = \
-  https://github.com/yaml/yamlstar/archive/refs/tags/$(n).tar.gz
+  https://github.com/yaml/yamlstar/archive/refs/tags/$(v).tar.gz
 ADA-MANIFEST := ada/alire.toml
 ADA-ALIRE-INDEX-REPO := alire-project/alire-index
-ADA-ALIRE-INDEX-BRANCH = release/yamlstar-$(n)
+ADA-ALIRE-INDEX-BRANCH = release/yamlstar-$(v)
 ADA-GITHUB-USER ?= $(or $(GITHUB_ACTOR),\
   $(shell ys -e '.github.user:say' ~/.yamlscript-secrets.yaml 2>/dev/null))
 ADA-GITHUB-TOKEN ?= $(or $(GH_TOKEN),$(GITHUB_TOKEN),\
@@ -38,8 +38,8 @@ release:: $(ALR) $(GH) test build-doc
 ifndef ALR
 	$(error 'alr' is required to publish the Ada binding)
 endif
-ifndef n
-	$(error 'make $@' needs the n variable set to the new version)
+ifndef v
+	$(error 'make $@' needs the v variable set to the new version)
 endif
 ifndef ADA-GITHUB-USER
 	$(error Can't determine GitHub user)
