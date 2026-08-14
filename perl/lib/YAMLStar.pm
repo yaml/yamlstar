@@ -40,22 +40,22 @@ my $graal_tear_down_isolate = $ffi->function(
 
 my $yamlstar_load = $ffi->function(
     yamlstar_load =>
-        ['sint64', 'string'] => 'string',
+        ['sint64', 'string', 'string'] => 'string',
 );
 
 my $yamlstar_load_all = $ffi->function(
     yamlstar_load_all =>
-        ['sint64', 'string'] => 'string',
+        ['sint64', 'string', 'string'] => 'string',
 );
 
 my $yamlstar_dump = $ffi->function(
     yamlstar_dump =>
-        ['sint64', 'string'] => 'string',
+        ['sint64', 'string', 'string'] => 'string',
 );
 
 my $yamlstar_dump_all = $ffi->function(
     yamlstar_dump_all =>
-        ['sint64', 'string'] => 'string',
+        ['sint64', 'string', 'string'] => 'string',
 );
 
 my $yamlstar_version = $ffi->function(
@@ -111,7 +111,7 @@ sub load {
     $self->error(undef);
 
     my $resp = Cpanel::JSON::XS::decode_json(
-        $yamlstar_load->(${$self->isolatethread}, $yaml)
+        $yamlstar_load->(${$self->isolatethread}, $yaml, '{}')
     );
 
     return $resp->{data} if exists $resp->{data};
@@ -130,7 +130,7 @@ sub load_all {
     $self->error(undef);
 
     my $resp = Cpanel::JSON::XS::decode_json(
-        $yamlstar_load_all->(${$self->isolatethread}, $yaml)
+        $yamlstar_load_all->(${$self->isolatethread}, $yaml, '{}')
     );
 
     return $resp->{data} if exists $resp->{data};
@@ -152,6 +152,7 @@ sub dump {
         $yamlstar_dump->(
             ${$self->isolatethread},
             Cpanel::JSON::XS::encode_json($value),
+            '{}',
         )
     );
 
@@ -174,6 +175,7 @@ sub dump_all {
         $yamlstar_dump_all->(
             ${$self->isolatethread},
             Cpanel::JSON::XS::encode_json($values),
+            '{}',
         )
     );
 

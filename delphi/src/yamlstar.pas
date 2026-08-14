@@ -154,7 +154,7 @@ var
   JSONStr: string;
 begin
   { Call yamlstar_load function in libyamlstar shared library }
-  JSONResponse := yamlstar_native.yamlstar_load(FIsolateThread, PAnsiChar(AnsiString(YAMLInput)));
+  JSONResponse := yamlstar_native.yamlstar_load(FIsolateThread, PAnsiChar(AnsiString(YAMLInput)), '{}');
   JSONStr := string(JSONResponse);
 
   { Parse and return the response }
@@ -168,7 +168,7 @@ var
   Data: TJSONData;
 begin
   { Call yamlstar_load_all function in libyamlstar shared library }
-  JSONResponse := yamlstar_native.yamlstar_load_all(FIsolateThread, PAnsiChar(AnsiString(YAMLInput)));
+  JSONResponse := yamlstar_native.yamlstar_load_all(FIsolateThread, PAnsiChar(AnsiString(YAMLInput)), '{}');
   JSONStr := string(JSONResponse);
 
   { Parse the response }
@@ -189,7 +189,7 @@ var
   JSONResponse: PAnsiChar;
   ResponseData: TJSONData;
 begin
-  JSONResponse := yamlstar_native.yamlstar_dump(FIsolateThread, PAnsiChar(AnsiString(Data.AsJSON)));
+  JSONResponse := yamlstar_native.yamlstar_dump(FIsolateThread, PAnsiChar(AnsiString(Data.AsJSON)), '{}');
   ResponseData := ParseResponse(string(JSONResponse));
   try
     Result := ResponseData.AsString;
@@ -203,7 +203,7 @@ var
   JSONResponse: PAnsiChar;
   ResponseData: TJSONData;
 begin
-  JSONResponse := yamlstar_native.yamlstar_dump_all(FIsolateThread, PAnsiChar(AnsiString(Data.AsJSON)));
+  JSONResponse := yamlstar_native.yamlstar_dump_all(FIsolateThread, PAnsiChar(AnsiString(Data.AsJSON)), '{}');
   ResponseData := ParseResponse(string(JSONResponse));
   try
     Result := ResponseData.AsString;

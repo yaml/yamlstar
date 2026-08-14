@@ -20,7 +20,7 @@ trait LibYAMLStar extends Library:
 
   def graal_tear_down_isolate(thread: Pointer): Int
 
-  def yamlstar_load(thread: Pointer, input: String): String
+  def yamlstar_load(thread: Pointer, input: String, optsJson: String): String
 
 object YAMLStar:
   val version = "0.1.18"
@@ -39,7 +39,7 @@ object YAMLStar:
     val thread = PointerByReference()
     if lib.graal_create_isolate(null, isolate, thread) != 0 then
       throw RuntimeException("Failed to create isolate")
-    val json = lib.yamlstar_load(thread.getValue(), input)
+    val json = lib.yamlstar_load(thread.getValue(), input, "{}")
     if lib.graal_tear_down_isolate(thread.getValue()) != 0 then
       throw RuntimeException("Failed to tear down isolate")
     json

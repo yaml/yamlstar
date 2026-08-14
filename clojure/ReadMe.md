@@ -30,7 +30,7 @@ org.yamlstar/yamlstar {:mvn/version "0.1.18"}
 ;=> ["doc1" "doc2"]
 
 ;; Load with a parser plugin (see https://yamlstar.org/plugins/)
-(yaml/load "key: value" {:plugin {:parser {:use "snakeyaml"}}})
+(yaml/load "key: value" {:plugin {:parser {:name "snakeyaml"}}})
 ;=> {"key" "value"}
 ```
 

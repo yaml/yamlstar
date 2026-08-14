@@ -30,19 +30,23 @@ function graal_tear_down_isolate(isolate_thread: Pointer): cint;
   cdecl; external LIBYAMLSTAR;
 
 { Load a single YAML document }
-function yamlstar_load(isolate_thread: Pointer; yaml: PAnsiChar): PAnsiChar;
+function yamlstar_load(isolate_thread: Pointer; yaml: PAnsiChar;
+  opts_json: PAnsiChar): PAnsiChar;
   cdecl; external LIBYAMLSTAR;
 
 { Load all YAML documents from a multi-document string }
-function yamlstar_load_all(isolate_thread: Pointer; yaml: PAnsiChar): PAnsiChar;
+function yamlstar_load_all(isolate_thread: Pointer; yaml: PAnsiChar;
+  opts_json: PAnsiChar): PAnsiChar;
   cdecl; external LIBYAMLSTAR;
 
 { Dump a JSON-encoded value to YAML }
-function yamlstar_dump(isolate_thread: Pointer; data_json: PAnsiChar): PAnsiChar;
+function yamlstar_dump(isolate_thread: Pointer; data_json: PAnsiChar;
+  opts_json: PAnsiChar): PAnsiChar;
   cdecl; external LIBYAMLSTAR;
 
 { Dump JSON-encoded documents to YAML }
-function yamlstar_dump_all(isolate_thread: Pointer; data_json: PAnsiChar): PAnsiChar;
+function yamlstar_dump_all(isolate_thread: Pointer; data_json: PAnsiChar;
+  opts_json: PAnsiChar): PAnsiChar;
   cdecl; external LIBYAMLSTAR;
 
 { Get the YAMLStar version string }

@@ -3,7 +3,7 @@
   (:require [clojure.data.json :as json]
             [clojure.string :as str]
             [yamlstar.api :as yaml]
-            [yamlstar.plugin.snakeyaml])
+            [yamlstar.plugin.parser.snakeyaml])
   (:gen-class
    :methods [^:static [loadYaml [String String] String]
              ^:static [loadYamlAll [String String] String]

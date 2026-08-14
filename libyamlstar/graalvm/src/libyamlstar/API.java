@@ -16,7 +16,7 @@ public final class API {
      * @param isolateId The GraalVM isolate thread context
      * @param yamlStr The YAML string to parse
      * @param optsJson JSON options string (e.g.
-     *     {"plugin": {"parser": {"use": "snakeyaml"}}}); NULL or "{}" for
+     *     {"plugin": {"parser": {"name": "snakeyaml"}}}); NULL or "{}" for
      *     defaults
      * @return JSON string: {"data": ...} on success, {"error": {...}} on failure
      */

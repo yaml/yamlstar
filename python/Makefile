@@ -16,12 +16,13 @@ MAKES-CLEAN := \
 PYTHON-VENV-SETUP := $(UV) pip install --python $(PYTHON-VENV) pytest setuptools twine wheel
 
 WHEEL-PLAT-linux-int64 := manylinux_2_31_x86_64
+WHEEL-PLAT-linux-arm64 := manylinux_2_31_aarch64
 WHEEL-PLAT-macos-arm64 := macosx_14_0_arm64
 WHEEL-PLAT-macos-int64 := macosx_15_0_x86_64
 WHEEL-PLAT-windows-int64 := win_amd64
 WHEEL-PLAT := $(WHEEL-PLAT-$(OS-ARCH))
 WHEEL-LIB-DIR := lib/yamlstar/libyamlstar
-WHEEL-LIB = $(WHEEL-LIB-DIR)/$(notdir $(PYTHON-SO))
+WHEEL-LIB = $(WHEEL-LIB-DIR)/.libs-copied
 RELEASE-WHEEL-VERSION := $(or $(n),$(VERSION))
 RELEASE-WHEEL-DIR ?= dist/release-assets
 RELEASE-WHEEL-ARCHIVES := \
@@ -72,7 +73,8 @@ wheel: $(PYTHON-VENV) MANIFEST.in Meta $(WHEEL-LIB)
 
 $(WHEEL-LIB): $(PYTHON-SO)
 	mkdir -p $(dir $@)
-	cp -p $< $@
+	cp -p $(dir $<)/libyamlstar* $(WHEEL-LIB-DIR)/
+	touch $@
 
 wheels-from-release: $(PYTHON-VENV) MANIFEST.in Meta
 	@test -n "$(RELEASE-WHEEL-ARCHIVES)" || { \
@@ -86,10 +88,11 @@ wheels-from-release: $(PYTHON-VENV) MANIFEST.in Meta
 	    name=$${name%.zip}; \
 	    relplat=$${name#libyamlstar-$(RELEASE-WHEEL-VERSION)-}; \
 	    case "$$relplat" in \
-	      linux-x64) plat=manylinux_2_31_x86_64; libpat='libyamlstar.so*' ;; \
-	      macos-arm64) plat=macosx_14_0_arm64; libpat='libyamlstar.dylib*' ;; \
-	      macos-x64) plat=macosx_15_0_x86_64; libpat='libyamlstar.dylib*' ;; \
-	      windows-x64) plat=win_amd64; libpat='libyamlstar.dll' ;; \
+	      linux-x64) plat=manylinux_2_31_x86_64; libpat='libyamlstar*.so*' ;; \
+	      linux-aarch64) plat=manylinux_2_31_aarch64; libpat='libyamlstar*.so*' ;; \
+	      macos-arm64) plat=macosx_14_0_arm64; libpat='libyamlstar*.dylib*' ;; \
+	      macos-x64) plat=macosx_15_0_x86_64; libpat='libyamlstar*.dylib*' ;; \
+	      windows-x64) plat=win_amd64; libpat='libyamlstar*.dll' ;; \
 	      *) echo "Skipping unsupported Python wheel asset: $$name"; \
 	         continue ;; \
 	    esac; \
@@ -100,9 +103,11 @@ wheels-from-release: $(PYTHON-VENV) MANIFEST.in Meta
 	      *.zip) unzip -q "$$archive" -d "$$tmp" ;; \
 	      *) tar -C "$$tmp" -xf "$$archive" ;; \
 	    esac; \
-	    lib=$$(find "$$tmp" -type f -name "$$libpat" | sort | head -n1); \
-	    test -n "$$lib" || { echo "No $$libpat found in $$archive"; exit 1; }; \
-	    cp -p "$$lib" $(WHEEL-LIB-DIR)/; \
+	    libs=$$(find "$$tmp" -type f -name "$$libpat" | sort); \
+	    test -n "$$libs" || { echo "No $$libpat found in $$archive"; exit 1; }; \
+	    printf '%s\n' "$$libs" | while IFS= read -r lib; do \
+	      cp -p "$$lib" $(WHEEL-LIB-DIR)/; \
+	    done; \
 	    echo "Building Python wheel for $$relplat"; \
 	    $(VENV) && python setup.py bdist_wheel --plat-name "$$plat"; \
 	    rm -rf "$$tmp"; \

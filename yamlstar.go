@@ -72,22 +72,43 @@ type options struct {
 // Option configures a YAML load or dump operation.
 type Option func(*options)
 
-// WithParser selects the parser plugin used for loading.
-func WithParser(name string) Option {
+// Plugin is a YAMLStar plugin option fragment.
+type Plugin func(*options)
+
+// Parser selects the parser plugin used for loading.
+func Parser(name string) Plugin {
 	return func(o *options) {
 		o.parser = name
 	}
 }
 
-func optsJSON(opts []Option) (string, error) {
+// WithPlugin adds a plugin option fragment.
+func WithPlugin(plugin Plugin) Option {
+	return func(o *options) {
+		plugin(o)
+	}
+}
+
+// WithParser selects the parser plugin used for loading.
+//
+// Deprecated: use WithPlugin(Parser(name)).
+func WithParser(name string) Option {
+	return WithPlugin(Parser(name))
+}
+
+func applyOptions(opts []Option) options {
 	var o options
 	for _, opt := range opts {
 		opt(&o)
 	}
+	return o
+}
+
+func (o options) json() (string, error) {
 	cfg := map[string]any{}
 	if o.parser != "" {
 		cfg["plugin"] = map[string]any{
-			"parser": map[string]any{"use": o.parser},
+			"parser": map[string]any{"name": o.parser},
 		}
 	}
 	data, err := json.Marshal(cfg)
@@ -95,6 +116,17 @@ func optsJSON(opts []Option) (string, error) {
 		return "", fmt.Errorf("yamlstar: failed to encode options: %w", err)
 	}
 	return string(data), nil
+}
+
+// withParser is retained for internal tests that configure options directly.
+func withParser(name string) Option {
+	return func(o *options) {
+		o.parser = name
+	}
+}
+
+func optsJSON(opts []Option) (string, error) {
+	return applyOptions(opts).json()
 }
 
 var (
@@ -222,22 +254,22 @@ func LoadAll(input string, opts ...Option) ([]any, error) {
 }
 
 // Dump serializes a JSON-compatible Go value as YAML.
-func Dump(value any) (string, error) {
+func Dump(value any, opts ...Option) (string, error) {
 	data, err := json.Marshal(value)
 	if err != nil {
 		return "", fmt.Errorf("yamlstar: failed to encode dump input: %w", err)
 	}
-	return dumpJSON(data, false, nil)
+	return dumpJSON(data, false, opts)
 }
 
 // DumpAll serializes JSON-compatible Go values as a YAML stream.
-func DumpAll(values []any) (string, error) {
+func DumpAll(values []any, opts ...Option) (string, error) {
 	data, err := json.Marshal(values)
 	if err != nil {
 		return "", fmt.Errorf(
 			"yamlstar: failed to encode dump-all input: %w", err)
 	}
-	return dumpJSON(data, true, nil)
+	return dumpJSON(data, true, opts)
 }
 
 func dumpJSON(data []byte, all bool, opts []Option) (string, error) {

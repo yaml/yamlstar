@@ -62,10 +62,10 @@ class YAMLStar
 
     extern "int graal_create_isolate(void* params, void** isolate, void** thread)"
     extern "int graal_tear_down_isolate(void* thread)"
-    extern "char* yamlstar_load(void* thread, char* yaml)"
-    extern "char* yamlstar_load_all(void* thread, char* yaml)"
-    extern "char* yamlstar_dump(void* thread, char* json)"
-    extern "char* yamlstar_dump_all(void* thread, char* json)"
+    extern "char* yamlstar_load(void* thread, char* yaml, char* opts_json)"
+    extern "char* yamlstar_load_all(void* thread, char* yaml, char* opts_json)"
+    extern "char* yamlstar_dump(void* thread, char* json, char* opts_json)"
+    extern "char* yamlstar_dump_all(void* thread, char* json, char* opts_json)"
     extern "char* yamlstar_version(void* thread)"
   end
 
@@ -129,11 +129,11 @@ class YAMLStar
   private
 
   def call_yaml(function, input)
-    handle_response(LibYAMLStar.public_send(function, @thread, input.to_s).to_s)
+    handle_response(LibYAMLStar.public_send(function, @thread, input.to_s, "{}").to_s)
   end
 
   def call_json(function, value)
-    handle_response(LibYAMLStar.public_send(function, @thread, JSON.generate(value)).to_s)
+    handle_response(LibYAMLStar.public_send(function, @thread, JSON.generate(value), "{}").to_s)
   end
 
   def handle_response(json)

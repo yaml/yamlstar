@@ -20,7 +20,7 @@
 
 typedef int (*create_isolate_fn)(void *, void **, void **);
 typedef int (*tear_down_isolate_fn)(void *);
-typedef char *(*yamlstar_load_fn)(void *, const char *);
+typedef char *(*yamlstar_load_fn)(void *, const char *, const char *);
 
 static void *libyamlstar = NULL;
 static create_isolate_fn create_isolate;
@@ -135,7 +135,7 @@ static ERL_NIF_TERM load_json_nif(
     return error_tuple(env, "Failed to create isolate");
   }
 
-  json = yamlstar_load(thread, input_z);
+  json = yamlstar_load(thread, input_z, "{}");
   enif_free(input_z);
 
   if (json == NULL) {

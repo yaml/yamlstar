@@ -41,7 +41,7 @@ private typealias TearDownIsolateFn = @convention(c) (
     UnsafeMutableRawPointer?
 ) -> Int32
 private typealias LoadYamlstarFn = @convention(c) (
-    UnsafeMutableRawPointer?, UnsafePointer<CChar>?
+    UnsafeMutableRawPointer?, UnsafePointer<CChar>?, UnsafePointer<CChar>?
 ) -> UnsafePointer<CChar>?
 
 /// Error thrown by the YAMLStar loader.
@@ -133,7 +133,7 @@ public final class YAMLStar {
         error = nil
 
         // Call 'yamlstar_load' function in libyamlstar shared library:
-        guard let respPtr = loadYamlstar(isolateThread, input) else {
+        guard let respPtr = loadYamlstar(isolateThread, input, "{}") else {
             throw YAMLStarError(message: "Null response from 'libyamlstar'")
         }
 

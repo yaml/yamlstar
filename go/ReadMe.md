@@ -180,16 +180,19 @@ Serialize JSON-compatible Go values as a multi-document YAML stream.
 
 ### Options
 
-#### `WithParser(name string) Option`
+#### `WithPlugin(Parser(name)) Option`
 
 Select the parser plugin used for loading
 (see https://yamlstar.org/plugins/):
 
 ```go
-data, err := yamlstar.Load("key: value", yamlstar.WithParser("snakeyaml"))
+data, err := yamlstar.Load(
+    "key: value",
+    yamlstar.WithPlugin(yamlstar.Parser("reference")),
+)
 ```
 
-Available parsers: `reference` (default) and `snakeyaml`.
+Available parser in the pure Go package: `reference` (default).
 
 #### `LibVersion() (string, error)`
 

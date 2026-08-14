@@ -18,22 +18,26 @@ internal static class YAMLStarNative
     [DllImport(LibraryName)]
     public static extern IntPtr yamlstar_load(
         IntPtr isolate_thread_ptr,
-        [MarshalAs(UnmanagedType.LPStr)] string yaml);
+        [MarshalAs(UnmanagedType.LPStr)] string yaml,
+        [MarshalAs(UnmanagedType.LPStr)] string optsJson);
 
     [DllImport(LibraryName)]
     public static extern IntPtr yamlstar_load_all(
         IntPtr isolate_thread_ptr,
-        [MarshalAs(UnmanagedType.LPStr)] string yaml);
+        [MarshalAs(UnmanagedType.LPStr)] string yaml,
+        [MarshalAs(UnmanagedType.LPStr)] string optsJson);
 
     [DllImport(LibraryName)]
     public static extern IntPtr yamlstar_dump(
         IntPtr isolate_thread_ptr,
-        [MarshalAs(UnmanagedType.LPStr)] string dataJson);
+        [MarshalAs(UnmanagedType.LPStr)] string dataJson,
+        [MarshalAs(UnmanagedType.LPStr)] string optsJson);
 
     [DllImport(LibraryName)]
     public static extern IntPtr yamlstar_dump_all(
         IntPtr isolate_thread_ptr,
-        [MarshalAs(UnmanagedType.LPStr)] string dataJson);
+        [MarshalAs(UnmanagedType.LPStr)] string dataJson,
+        [MarshalAs(UnmanagedType.LPStr)] string optsJson);
 
     [DllImport(LibraryName)]
     public static extern IntPtr yamlstar_version(IntPtr isolate_thread_ptr);

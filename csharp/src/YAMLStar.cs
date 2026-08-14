@@ -6,6 +6,7 @@ namespace YAMLStar;
 
 public sealed class YAMLStar : IDisposable
 {
+    private const string EmptyOptions = "{}";
     private readonly IntPtr _isolateThread;
     private bool _disposed;
 
@@ -32,7 +33,10 @@ public sealed class YAMLStar : IDisposable
             throw new ObjectDisposedException(nameof(YAMLStar));
         }
 
-        var result = YAMLStarNative.yamlstar_load(_isolateThread, yaml);
+        var result = YAMLStarNative.yamlstar_load(
+            _isolateThread,
+            yaml,
+            EmptyOptions);
 
         if (result == IntPtr.Zero)
         {
@@ -55,7 +59,10 @@ public sealed class YAMLStar : IDisposable
             throw new ObjectDisposedException(nameof(YAMLStar));
         }
 
-        var result = YAMLStarNative.yamlstar_load_all(_isolateThread, yaml);
+        var result = YAMLStarNative.yamlstar_load_all(
+            _isolateThread,
+            yaml,
+            EmptyOptions);
 
         if (result == IntPtr.Zero)
         {
@@ -80,7 +87,8 @@ public sealed class YAMLStar : IDisposable
 
         var result = YAMLStarNative.yamlstar_dump(
             _isolateThread,
-            JsonSerializer.Serialize(value));
+            JsonSerializer.Serialize(value),
+            EmptyOptions);
 
         if (result == IntPtr.Zero)
         {
@@ -105,7 +113,8 @@ public sealed class YAMLStar : IDisposable
 
         var result = YAMLStarNative.yamlstar_dump_all(
             _isolateThread,
-            JsonSerializer.Serialize(values));
+            JsonSerializer.Serialize(values),
+            EmptyOptions);
 
         if (result == IntPtr.Zero)
         {

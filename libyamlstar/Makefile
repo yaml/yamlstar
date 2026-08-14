@@ -31,9 +31,10 @@ MAKES-REALCLEAN := \
 # Library paths and names
 SO ?= so
 LIB-DIR := lib
-LIB-NAME := libyamlstar
-LIB-NAME-GLOAT ?= libyamlstar
+LIB-NAME ?= libyamlstar-graalvm
+LIB-NAME-GLOAT ?= libyamlstar-glojure
 LIB-SO-GLOAT := $(LIB-DIR)/$(LIB-NAME-GLOAT).$(SO)
+LIB-SO-GLOAT-DEFAULT := $(LIB-DIR)/libyamlstar.$(SO)
 LIB-SO := $(LIB-DIR)/$(LIB-NAME).$(SO)
 GLOAT-PLATFORM-OPT := \
   $(if $(GLOAT_PLATFORM),--platform=$(GLOAT_PLATFORM))
@@ -153,6 +154,8 @@ GLOAT-SRCS := \
   $(GLOAT-LINK-DIR)/yaml_parser/grammar.clj \
   $(GLOAT-LINK-DIR)/yaml_parser/core.clj \
   $(CORE-YAMLSTAR)/plugin.clj \
+  $(CORE-YAMLSTAR)/options.clj \
+  $(CORE-YAMLSTAR)/plugin/parser.clj \
   $(CORE-YAMLSTAR)/parser.clj \
   $(CORE-YAMLSTAR)/composer.clj \
   $(CORE-YAMLSTAR)/resolver.clj \
@@ -229,20 +232,26 @@ else
 build: build-graalvm
 endif
 
-LIB-HEADER := $(LIB-DIR)/$(LIB-NAME).h
+LIB-HEADER := $(LIB-DIR)/libyamlstar.h
 LIB-HEADER-GLOAT := $(LIB-DIR)/$(LIB-NAME-GLOAT).h
 
 build-gloat: $(LIB-SO-GLOAT)
 	cp $(GLOAT-LIB-HEADER) $(LIB-HEADER)
 	cp $(GLOAT-ISOLATE-HEADER) $(LIB-DIR)/graal_isolate.h
+	cp $(LIB-SO-GLOAT) $(LIB-SO-GLOAT-DEFAULT)
 ifneq ($(OS-NAME),windows)
 ifeq (,$(GLOAT-WINDOWS-TARGET))
 	ln -sf $(notdir $(LIB-SO-GLOAT)) \
 	  $(LIB-DIR)/$(LIB-NAME-GLOAT).$(SO).$(VERSION)
+	ln -sf $(notdir $(LIB-SO-GLOAT)) \
+	  $(LIB-DIR)/libyamlstar.$(SO).$(VERSION)
 endif
 endif
 
 build-graalvm: $(LIB-SO)
+	if test -f $(LIB-DIR)/$(LIB-NAME).h; then \
+	  cp $(LIB-DIR)/$(LIB-NAME).h $(LIB-HEADER); \
+	fi
 ifneq ($(OS-NAME),windows)
 	ln -sf $(notdir $(LIB-SO)) $(LIB-DIR)/$(LIB-NAME).$(SO).$(VERSION)
 endif
@@ -250,12 +259,15 @@ endif
 # Build both: each requires separate make invocations (tool includes conflict)
 build-all:
 	YAMLSTAR_GLOJURE=1 $(MAKE) build-gloat
-	env -u YAMLSTAR_GLOJURE $(MAKE) build-graalvm \
-	  LIB-NAME=libyamlstar-graalvm
+	$(MAKE) build-graalvm YAMLSTAR_GLOJURE=
 
 test:
 
+ifdef YAMLSTAR_GLOJURE
+INSTALL-LIB := $(LIB-SO-GLOAT)
+else
 INSTALL-LIB := $(LIB-SO)
+endif
 
 install: build
 	mkdir -p $(PREFIX)/lib/

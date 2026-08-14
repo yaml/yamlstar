@@ -44,16 +44,16 @@ sub resolve-lib {
 sub load-json($json) { ::("Rakudo::Internals::JSON").from-json($json); }
 sub dump-json($data) { ::("Rakudo::Internals::JSON").to-json($data); }
 
-sub yamlstar_load(uint64, Str --> Str)
+sub yamlstar_load(uint64, Str, Str --> Str)
   is native(&resolve-lib) {*};
 
-sub yamlstar_load_all(uint64, Str --> Str)
+sub yamlstar_load_all(uint64, Str, Str --> Str)
   is native(&resolve-lib) {*};
 
-sub yamlstar_dump(uint64, Str --> Str)
+sub yamlstar_dump(uint64, Str, Str --> Str)
   is native(&resolve-lib) {*};
 
-sub yamlstar_dump_all(uint64, Str --> Str)
+sub yamlstar_dump_all(uint64, Str, Str --> Str)
   is native(&resolve-lib) {*};
 
 sub yamlstar_version(uint64 --> Str)
@@ -90,22 +90,22 @@ method close {
 
 method load(Str $input) {
   self!handle-response:
-    yamlstar_load($!isolate-thread, $input);
+    yamlstar_load($!isolate-thread, $input, '{}');
 }
 
 method load-all(Str $input) {
   self!handle-response:
-    yamlstar_load_all($!isolate-thread, $input);
+    yamlstar_load_all($!isolate-thread, $input, '{}');
 }
 
 method dump($value) {
   self!handle-response:
-    yamlstar_dump($!isolate-thread, dump-json($value));
+    yamlstar_dump($!isolate-thread, dump-json($value), '{}');
 }
 
 method dump-all($values) {
   self!handle-response:
-    yamlstar_dump_all($!isolate-thread, dump-json($values));
+    yamlstar_dump_all($!isolate-thread, dump-json($values), '{}');
 }
 
 method version {

@@ -172,8 +172,8 @@ do-release-lib() (
 
   # Release artifact installs use the inverse symlink layout from the build
   # tree. Clear old library files so `make build` can recover either way.
-  rm -f libyamlstar/lib/libyamlstar.$EXT \
-    libyamlstar/lib/libyamlstar.$EXT.*
+  rm -f libyamlstar/lib/libyamlstar*.$EXT \
+    libyamlstar/lib/libyamlstar*.$EXT.*
 
   # Build the library
   if [[ ${CROSS_CC_TARGET:-} ]]; then
@@ -198,7 +198,7 @@ do-release-lib() (
   mkdir -p "$RELEASE_PATH"
 
   # Copy library files
-  for f in libyamlstar/lib/libyamlstar.$EXT*; do
+  for f in libyamlstar/lib/libyamlstar*.$EXT*; do
     cp -P "$f" "$RELEASE_PATH/"
   done
 

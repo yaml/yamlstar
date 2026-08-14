@@ -16,10 +16,10 @@ class YAMLStar
         thread : Void**,
       ) : Int32
       fun graal_tear_down_isolate(thread : Void*) : Int32
-      fun yamlstar_load(thread : Void*, input : LibC::Char*) : LibC::Char*
-      fun yamlstar_load_all(thread : Void*, input : LibC::Char*) : LibC::Char*
-      fun yamlstar_dump(thread : Void*, input : LibC::Char*) : LibC::Char*
-      fun yamlstar_dump_all(thread : Void*, input : LibC::Char*) : LibC::Char*
+      fun yamlstar_load(thread : Void*, input : LibC::Char*, opts_json : LibC::Char*) : LibC::Char*
+      fun yamlstar_load_all(thread : Void*, input : LibC::Char*, opts_json : LibC::Char*) : LibC::Char*
+      fun yamlstar_dump(thread : Void*, input : LibC::Char*, opts_json : LibC::Char*) : LibC::Char*
+      fun yamlstar_dump_all(thread : Void*, input : LibC::Char*, opts_json : LibC::Char*) : LibC::Char*
       fun yamlstar_version(thread : Void*) : LibC::Char*
     end
   end
@@ -84,9 +84,9 @@ class YAMLStar
   private def call_yaml(function, input)
     json_ptr = case function
                when :yamlstar_load
-                 LibYAMLStar::Lib.yamlstar_load(@thread, input.to_unsafe)
+                 LibYAMLStar::Lib.yamlstar_load(@thread, input.to_unsafe, "{}")
                when :yamlstar_load_all
-                 LibYAMLStar::Lib.yamlstar_load_all(@thread, input.to_unsafe)
+                 LibYAMLStar::Lib.yamlstar_load_all(@thread, input.to_unsafe, "{}")
                else
                  raise Error.new("Unknown libyamlstar function")
                end
@@ -97,9 +97,9 @@ class YAMLStar
     json = value.to_json
     json_ptr = case function
                when :yamlstar_dump
-                 LibYAMLStar::Lib.yamlstar_dump(@thread, json.to_unsafe)
+                 LibYAMLStar::Lib.yamlstar_dump(@thread, json.to_unsafe, "{}")
                when :yamlstar_dump_all
-                 LibYAMLStar::Lib.yamlstar_dump_all(@thread, json.to_unsafe)
+                 LibYAMLStar::Lib.yamlstar_dump_all(@thread, json.to_unsafe, "{}")
                else
                  raise Error.new("Unknown libyamlstar function")
                end

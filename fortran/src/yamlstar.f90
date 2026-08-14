@@ -26,38 +26,42 @@ module yamlstar_c
     end function graal_tear_down_isolate
 
     ! Load a YAML document
-    function yamlstar_load_c(isolate_thread, yaml) &
+    function yamlstar_load_c(isolate_thread, yaml, opts_json) &
         bind(C, name='yamlstar_load') result(json_ptr)
       import :: c_ptr, c_char
       type(c_ptr), value :: isolate_thread
       character(kind=c_char), intent(in) :: yaml(*)
+      character(kind=c_char), intent(in) :: opts_json(*)
       type(c_ptr) :: json_ptr
     end function yamlstar_load_c
 
     ! Load all YAML documents from a multi-document string
-    function yamlstar_load_all_c(isolate_thread, yaml) &
+    function yamlstar_load_all_c(isolate_thread, yaml, opts_json) &
         bind(C, name='yamlstar_load_all') result(json_ptr)
       import :: c_ptr, c_char
       type(c_ptr), value :: isolate_thread
       character(kind=c_char), intent(in) :: yaml(*)
+      character(kind=c_char), intent(in) :: opts_json(*)
       type(c_ptr) :: json_ptr
     end function yamlstar_load_all_c
 
     ! Dump a JSON-encoded value to YAML
-    function yamlstar_dump_c(isolate_thread, data_json) &
+    function yamlstar_dump_c(isolate_thread, data_json, opts_json) &
         bind(C, name='yamlstar_dump') result(json_ptr)
       import :: c_ptr, c_char
       type(c_ptr), value :: isolate_thread
       character(kind=c_char), intent(in) :: data_json(*)
+      character(kind=c_char), intent(in) :: opts_json(*)
       type(c_ptr) :: json_ptr
     end function yamlstar_dump_c
 
     ! Dump JSON-encoded documents to YAML
-    function yamlstar_dump_all_c(isolate_thread, data_json) &
+    function yamlstar_dump_all_c(isolate_thread, data_json, opts_json) &
         bind(C, name='yamlstar_dump_all') result(json_ptr)
       import :: c_ptr, c_char
       type(c_ptr), value :: isolate_thread
       character(kind=c_char), intent(in) :: data_json(*)
+      character(kind=c_char), intent(in) :: opts_json(*)
       type(c_ptr) :: json_ptr
     end function yamlstar_dump_all_c
 
@@ -135,6 +139,7 @@ contains
     character(len=:), allocatable :: json
     type(c_ptr) :: json_ptr
     character(len=:), allocatable :: yaml_c
+    character(len=:), allocatable :: opts_c
 
     if (.not. this%initialized) then
       error stop 'YAMLStar not initialized'
@@ -142,9 +147,10 @@ contains
 
     ! Convert Fortran string to C string
     yaml_c = f_string_to_c(yaml)
+    opts_c = f_string_to_c("{}")
 
     ! Call C function
-    json_ptr = yamlstar_load_c(this%isolate_thread, yaml_c)
+    json_ptr = yamlstar_load_c(this%isolate_thread, yaml_c, opts_c)
 
     ! Convert C string to Fortran string
     json = c_ptr_to_string(json_ptr)
@@ -157,6 +163,7 @@ contains
     character(len=:), allocatable :: json
     type(c_ptr) :: json_ptr
     character(len=:), allocatable :: yaml_c
+    character(len=:), allocatable :: opts_c
 
     if (.not. this%initialized) then
       error stop 'YAMLStar not initialized'
@@ -164,9 +171,10 @@ contains
 
     ! Convert Fortran string to C string
     yaml_c = f_string_to_c(yaml)
+    opts_c = f_string_to_c("{}")
 
     ! Call C function
-    json_ptr = yamlstar_load_all_c(this%isolate_thread, yaml_c)
+    json_ptr = yamlstar_load_all_c(this%isolate_thread, yaml_c, opts_c)
 
     ! Convert C string to Fortran string
     json = c_ptr_to_string(json_ptr)
@@ -179,13 +187,15 @@ contains
     character(len=:), allocatable :: json
     type(c_ptr) :: json_ptr
     character(len=:), allocatable :: data_json_c
+    character(len=:), allocatable :: opts_c
 
     if (.not. this%initialized) then
       error stop 'YAMLStar not initialized'
     end if
 
     data_json_c = f_string_to_c(data_json)
-    json_ptr = yamlstar_dump_c(this%isolate_thread, data_json_c)
+    opts_c = f_string_to_c("{}")
+    json_ptr = yamlstar_dump_c(this%isolate_thread, data_json_c, opts_c)
     json = c_ptr_to_string(json_ptr)
   end function yamlstar_dump
 
@@ -196,13 +206,15 @@ contains
     character(len=:), allocatable :: json
     type(c_ptr) :: json_ptr
     character(len=:), allocatable :: data_json_c
+    character(len=:), allocatable :: opts_c
 
     if (.not. this%initialized) then
       error stop 'YAMLStar not initialized'
     end if
 
     data_json_c = f_string_to_c(data_json)
-    json_ptr = yamlstar_dump_all_c(this%isolate_thread, data_json_c)
+    opts_c = f_string_to_c("{}")
+    json_ptr = yamlstar_dump_all_c(this%isolate_thread, data_json_c, opts_c)
     json = c_ptr_to_string(json_ptr)
   end function yamlstar_dump_all
 

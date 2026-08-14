@@ -208,7 +208,13 @@ cli:
 cli-graalvm:
 	$(MAKE) -C cli build-graalvm
 
+build-yamlstar-graalvm:
+	$(MAKE) -C cli build-graalvm
+
 cli-gloat-glj:
+	$(MAKE) -C cli build-gloat-glj
+
+build-yamlstar-glojure:
 	$(MAKE) -C cli build-gloat-glj
 
 cli-gloat-lgvm:
@@ -242,6 +248,9 @@ cli-local-lglvm:
 
 libyamlstar:
 	$(MAKE) -C libyamlstar build
+
+build-libyamlstar:
+	$(MAKE) -C libyamlstar build-all
 
 serve:
 	$(MAKE) -C www serve

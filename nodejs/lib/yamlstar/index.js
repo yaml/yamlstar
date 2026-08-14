@@ -12,10 +12,10 @@ function defineForeignFunctionInterface() {
   return ffi.Library(libPath, {
     'graal_create_isolate': ['int', ['pointer', 'pointer', 'pointer']],
     'graal_tear_down_isolate': ['int', ['pointer']],
-    'yamlstar_load': ['string', ['pointer', 'string']],
-    'yamlstar_load_all': ['string', ['pointer', 'string']],
-    'yamlstar_dump': ['string', ['pointer', 'string']],
-    'yamlstar_dump_all': ['string', ['pointer', 'string']],
+    'yamlstar_load': ['string', ['pointer', 'string', 'string']],
+    'yamlstar_load_all': ['string', ['pointer', 'string', 'string']],
+    'yamlstar_dump': ['string', ['pointer', 'string', 'string']],
+    'yamlstar_dump_all': ['string', ['pointer', 'string', 'string']],
     'yamlstar_version': ['string', ['pointer']],
   });
 }
@@ -40,6 +40,7 @@ class YAMLStar {
     let dataJson = this.libyamlstar.yamlstar_load(
       this.isolatethread.deref(),
       input,
+      '{}',
     );
 
     let resp = JSON.parse(dataJson);
@@ -59,6 +60,7 @@ class YAMLStar {
     let dataJson = this.libyamlstar.yamlstar_load_all(
       this.isolatethread.deref(),
       input,
+      '{}',
     );
 
     let resp = JSON.parse(dataJson);
@@ -78,6 +80,7 @@ class YAMLStar {
     let dataJson = this.libyamlstar.yamlstar_dump(
       this.isolatethread.deref(),
       JSON.stringify(value),
+      '{}',
     );
 
     let resp = JSON.parse(dataJson);
@@ -97,6 +100,7 @@ class YAMLStar {
     let dataJson = this.libyamlstar.yamlstar_dump_all(
       this.isolatethread.deref(),
       JSON.stringify(values),
+      '{}',
     );
 
     let resp = JSON.parse(dataJson);

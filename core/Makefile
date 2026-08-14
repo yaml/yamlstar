@@ -35,7 +35,7 @@ test jar: $(LEIN)
 	lein $@
 
 test-snakeyaml: $(LEIN)
-	YAMLSTAR_PARSER=snakeyaml lein test
+	lein test yamlstar.snakeyaml-test
 
 smoke-parser: $(BB) $(LEIN)
 	$(BB) --classpath "$$(lein classpath)" ../test-parser.clj
@@ -58,8 +58,7 @@ test-suite: $(LEIN) test-suite-fixture
 	  lein with-profile +test-suite test $(YAML-TEST-SUITE-NS)
 
 test-suite-snakeyaml: $(LEIN) test-suite-fixture
-	YAMLSTAR_PARSER=snakeyaml $(YAML-TEST-SUITE-ENV) \
-	  lein with-profile +test-suite test $(YAML-TEST-SUITE-NS)
+	$(MAKE) test-snakeyaml
 
 test-suite-load: $(LEIN) test-suite-fixture
 	$(YAML-TEST-SUITE-ENV) \

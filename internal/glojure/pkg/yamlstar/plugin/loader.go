@@ -200,7 +200,6 @@ func LoadNS() {
 	kw_plugin := lang.NewKeyword("plugin")
 	kw_private := lang.NewKeyword("private")
 	kw_unknown := lang.NewKeyword("unknown")
-	kw_use := lang.NewKeyword("use")
 	// var clojure.core/assoc
 	var_clojure_DOT_core_assoc := lang.InternVarName(sym_clojure_DOT_core, sym_assoc)
 	// var clojure.core/deref
@@ -487,7 +486,7 @@ func LoadNS() {
 							var tmp11 any
 							{ // let
 								// let binding "G__63"
-								tmp12 := aotExternalFn20("yamlstar.plugin.", v2)
+								tmp12 := aotExternalFn20("yamlstar.plugin.parser.", v2)
 								tmp13 := aotExternalFn19(tmp12, "plugin")
 								tmp14 := aotExternalFn18(tmp13)
 								var v15 any = tmp14
@@ -549,7 +548,7 @@ func LoadNS() {
 		aotDirectFn4 = tmp1
 		var_yamlstar_DOT_plugin_resolve_DASH_parser = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_resolve_DASH_parser.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.glj", kw_line, int(57), kw_column, int(7), kw_end_DASH_line, int(57), kw_end_DASH_column, int(20), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Look up a parser plugin by name.\n\n  If the name is not registered, tries to load the namespace\n  yamlstar.plugin.<name> and use its `plugin` var (which is expected\n  to self-register). Throws if no plugin can be found.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.glj", kw_line, int(57), kw_column, int(7), kw_end_DASH_line, int(57), kw_end_DASH_column, int(20), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Look up a parser plugin by name.\n\n  If the name is not registered, tries to load the namespace\nyamlstar.plugin.parser.<name> and use its `plugin` var (which is expected\n  to self-register). Throws if no plugin can be found.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		})
 	}
 	// parser-opts
@@ -635,20 +634,20 @@ func LoadNS() {
 									_ = tmp20
 									var tmp24 any
 									{ // let
-										// let binding "use"
-										tmp25 := kw_use.Invoke1(v19)
+										// let binding "name"
+										tmp25 := kw_name.Invoke1(v19)
 										var v26 any = tmp25
 										_ = v26
 										var tmp27 any
 										tmp28 := aotExternalFn12(v26)
 										if lang.IsTruthy(tmp28) {
 										} else {
-											tmp29 := lang.NewMap(kw_use, v26)
-											tmp30 := aotExternalFn7("Parser plugin :use must be a string name", tmp29)
+											tmp29 := lang.NewMap(kw_name, v26)
+											tmp30 := aotExternalFn7("Parser plugin :name must be a string name", tmp29)
 											panic(tmp30)
 										}
 										_ = tmp27
-										tmp31 := aotExternalFn8(v19, kw_use)
+										tmp31 := aotExternalFn8(v19, kw_name)
 										tmp32 := lang.NewVector(v26, tmp31)
 										tmp24 = tmp32
 									} // end let
@@ -671,7 +670,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_plugin_parser_DASH_opts = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_parser_DASH_opts.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.glj", kw_line, int(78), kw_column, int(7), kw_end_DASH_line, int(78), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_opts)), kw_doc, "Extract [parser-name config] from a load opts map.\n\n  Returns nil when opts selects no parser plugin (the fast path).\n  The config is the :parser map without :use, merged over the plugin's\n  :default-config by the caller.\n\n  Throws on malformed opts:\n  - :plugin value is not a map\n  - a plugin type other than :parser is configured\n  - :parser value is not a map\n  - :use value is not a string", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.glj", kw_line, int(78), kw_column, int(7), kw_end_DASH_line, int(78), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_opts)), kw_doc, "Extract [parser-name config] from a load opts map.\n\n  Returns nil when opts selects no parser plugin (the fast path).\n  The config is the :parser map without :name, merged over the plugin's\n  :default-config by the caller.\n\n  Throws on malformed opts:\n  - :plugin value is not a map\n  - a plugin type other than :parser is configured\n  - :parser value is not a map\n  - :name value is not a string", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		})
 	}
 	// register-parser!

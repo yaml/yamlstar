@@ -46,9 +46,14 @@ plugin:
 
 ```clojure
 (require '[yamlstar.core :as yaml]
-         '[yamlstar.plugin.snakeyaml])
+         '[yamlstar.options :as opts]
+         '[yamlstar.plugin.parser :as parser])
 
-(yaml/load "key: value" {:plugin {:parser {:use "snakeyaml"}}})
+(def options
+  (-> (opts/options)
+      (opts/plugin (parser/name "snakeyaml"))))
+
+(yaml/load "key: value" options)
 ```
 
 ### Python
@@ -56,14 +61,15 @@ plugin:
 ```python
 import yamlstar
 
-ys = yamlstar.YAMLStar()
-
-# Shorthand:
-data = ys.load("key: value", parser='snakeyaml')
+opts = yamlstar.Options().plugin(yamlstar.parser('snakeyaml'))
+ys = yamlstar.YAMLStar(opts, so='libyamlstar-graalvm')
+data = ys.load("key: value")
 
 # Full options form:
-data = ys.load("key: value",
-               options={'plugin': {'parser': {'use': 'snakeyaml'}}})
+ys = yamlstar.YAMLStar(
+    {'plugin': {'parser': {'name': 'snakeyaml'}}},
+    so='libyamlstar-graalvm')
+data = ys.load("key: value")
 ```
 
 ### Go
@@ -72,7 +78,7 @@ data = ys.load("key: value",
 import "github.com/yaml/yamlstar/go"
 
 data, err := yamlstar.Load("key: value",
-    yamlstar.WithParser("snakeyaml"))
+    yamlstar.WithPlugin(yamlstar.Parser("reference")))
 ```
 
 ## Environment Override
@@ -81,7 +87,7 @@ The `YAMLSTAR_PARSER` environment variable changes the default parser
 for operations that don't select one explicitly:
 
 ```bash
-YAMLSTAR_PARSER=snakeyaml python my-program.py
+YAMLSTAR_PARSER=reference python my-program.py
 ```
 
 This is useful for testing a whole program or test suite against a
@@ -99,7 +105,7 @@ char *yamlstar_load(long long isolate, const char *yaml,
 ```
 
 - Pass `"{}"` (or NULL) when no options are set.
-- Example: `{"plugin": {"parser": {"use": "snakeyaml"}}}`
+- Example: `{"plugin": {"parser": {"name": "snakeyaml"}}}`
 - Keys are normalized from `snake_case` to `kebab-case`; values are
   never rewritten.
 
@@ -118,7 +124,7 @@ A parser plugin is a Clojure map registered with
 ```
 
 The `:parse` function receives the YAML string and a config map (the
-`:use` siblings merged over `:default-config`) and must return the
+`:name` siblings merged over `:default-config`) and must return the
 standard YAMLStar event stream: an ordered sequence of maps using this
 vocabulary:
 

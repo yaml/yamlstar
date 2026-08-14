@@ -69,13 +69,17 @@ type CreateIsolateFn = unsafe extern "C" fn(*mut void, *const *mut void, *const 
 /// Prototype of the `graal_tear_down_isolate` function.
 type TearDownIsolateFn = unsafe extern "C" fn(*mut void) -> c_int;
 /// Prototype of the `yamlstar_load` function.
-type YamlstarLoadFn = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
+type YamlstarLoadFn =
+    unsafe extern "C" fn(*mut void, *const u8, *const u8) -> *mut i8;
 /// Prototype of the `yamlstar_load_all` function.
-type YamlstarLoadAllFn = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
+type YamlstarLoadAllFn =
+    unsafe extern "C" fn(*mut void, *const u8, *const u8) -> *mut i8;
 /// Prototype of the `yamlstar_dump` function.
-type YamlstarDumpFn = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
+type YamlstarDumpFn =
+    unsafe extern "C" fn(*mut void, *const u8, *const u8) -> *mut i8;
 /// Prototype of the `yamlstar_dump_all` function.
-type YamlstarDumpAllFn = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
+type YamlstarDumpAllFn =
+    unsafe extern "C" fn(*mut void, *const u8, *const u8) -> *mut i8;
 /// Prototype of the `yamlstar_version` function.
 type YamlstarVersionFn = unsafe extern "C" fn(*mut void) -> *mut i8;
 
@@ -266,7 +270,13 @@ impl YAMLStar {
     fn load_raw(&self, yaml: &str) -> Result<*mut i8, Error> {
         let input = std::ffi::CString::new(yaml)
             .map_err(|_| Error::Ffi("load: input contains a nil-byte".to_string()))?;
-        let json = unsafe { (self.load_fn)(self.isolate_thread, input.as_bytes().as_ptr()) };
+        let json = unsafe {
+            (self.load_fn)(
+                self.isolate_thread,
+                input.as_bytes().as_ptr(),
+                b"{}\0".as_ptr(),
+            )
+        };
         if json.is_null() {
             Err(Error::Ffi("yamlstar_load: returned null".to_string()))
         } else {
@@ -278,7 +288,13 @@ impl YAMLStar {
     fn load_all_raw(&self, yaml: &str) -> Result<*mut i8, Error> {
         let input = std::ffi::CString::new(yaml)
             .map_err(|_| Error::Ffi("load_all: input contains a nil-byte".to_string()))?;
-        let json = unsafe { (self.load_all_fn)(self.isolate_thread, input.as_bytes().as_ptr()) };
+        let json = unsafe {
+            (self.load_all_fn)(
+                self.isolate_thread,
+                input.as_bytes().as_ptr(),
+                b"{}\0".as_ptr(),
+            )
+        };
         if json.is_null() {
             Err(Error::Ffi(
                 "yamlstar_load_all: returned null".to_string(),
@@ -292,7 +308,13 @@ impl YAMLStar {
     fn dump_raw(&self, data_json: &str) -> Result<*mut i8, Error> {
         let input = std::ffi::CString::new(data_json)
             .map_err(|_| Error::Ffi("dump: input contains a nil-byte".to_string()))?;
-        let json = unsafe { (self.dump_fn)(self.isolate_thread, input.as_bytes().as_ptr()) };
+        let json = unsafe {
+            (self.dump_fn)(
+                self.isolate_thread,
+                input.as_bytes().as_ptr(),
+                b"{}\0".as_ptr(),
+            )
+        };
         if json.is_null() {
             Err(Error::Ffi("yamlstar_dump: returned null".to_string()))
         } else {
@@ -304,7 +326,13 @@ impl YAMLStar {
     fn dump_all_raw(&self, data_json: &str) -> Result<*mut i8, Error> {
         let input = std::ffi::CString::new(data_json)
             .map_err(|_| Error::Ffi("dump_all: input contains a nil-byte".to_string()))?;
-        let json = unsafe { (self.dump_all_fn)(self.isolate_thread, input.as_bytes().as_ptr()) };
+        let json = unsafe {
+            (self.dump_all_fn)(
+                self.isolate_thread,
+                input.as_bytes().as_ptr(),
+                b"{}\0".as_ptr(),
+            )
+        };
         if json.is_null() {
             Err(Error::Ffi(
                 "yamlstar_dump_all: returned null".to_string(),

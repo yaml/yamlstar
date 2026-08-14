@@ -7,7 +7,7 @@
 
 typedef int (*graal_create_isolate_fn)(void *, void *, void *);
 typedef int (*graal_tear_down_isolate_fn)(void *);
-typedef char *(*yamlstar_load_fn)(void *, char *);
+typedef char *(*yamlstar_load_fn)(void *, char *, char *);
 
 static void *libyamlstar = NULL;
 static void *isolate_thread = NULL;
@@ -96,7 +96,7 @@ int yamlstar_load_json(const char *input, char *output, int max) {
     return rc;
   }
 
-  char *json = load_yaml(isolate_thread, (char *)input);
+  char *json = load_yaml(isolate_thread, (char *)input, "{}");
   if (json == NULL) {
     return copy_error(output, max, "null response from libyamlstar");
   }

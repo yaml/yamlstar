@@ -13,7 +13,10 @@ public static class YAMLStarNative {
   public static extern int graal_tear_down_isolate(IntPtr thread);
 
   [DllImport("libyamlstar")]
-  public static extern IntPtr yamlstar_load(IntPtr thread, string input);
+  public static extern IntPtr yamlstar_load(
+    IntPtr thread,
+    string input,
+    string optsJson);
 }
 '@
 
@@ -39,7 +42,7 @@ function Invoke-YAMLStarJson {
       throw 'Failed to create isolate'
     }
 
-    $ptr = [YAMLStarNative]::yamlstar_load($thread, $InputObject)
+    $ptr = [YAMLStarNative]::yamlstar_load($thread, $InputObject, '{}')
     if ($ptr -eq [IntPtr]::Zero) {
       [void] [YAMLStarNative]::graal_tear_down_isolate($thread)
       throw 'Null response from libyamlstar'

@@ -31,10 +31,10 @@ class YAMLStar
             self::$ffi = FFI::cdef('
                 int graal_create_isolate(void* params, void** isolate, void** thread);
                 int graal_tear_down_isolate(void* thread);
-                char* yamlstar_load(void* thread, const char* input);
-                char* yamlstar_load_all(void* thread, const char* input);
-                char* yamlstar_dump(void* thread, const char* input);
-                char* yamlstar_dump_all(void* thread, const char* input);
+                char* yamlstar_load(void* thread, const char* input, const char* opts_json);
+                char* yamlstar_load_all(void* thread, const char* input, const char* opts_json);
+                char* yamlstar_dump(void* thread, const char* input, const char* opts_json);
+                char* yamlstar_dump_all(void* thread, const char* input, const char* opts_json);
                 char* yamlstar_version(void* thread);
             ', self::$libPath);
         }
@@ -92,7 +92,7 @@ class YAMLStar
 
     private function callYaml(string $function, string $input)
     {
-        $result = self::$ffi->$function($this->isolateThread, $input);
+        $result = self::$ffi->$function($this->isolateThread, $input, '{}');
         return $this->handleResponse($result);
     }
 
@@ -103,7 +103,7 @@ class YAMLStar
             throw new RuntimeException('Failed to encode value as JSON');
         }
 
-        $result = self::$ffi->$function($this->isolateThread, $json);
+        $result = self::$ffi->$function($this->isolateThread, $json, '{}');
         return $this->handleResponse($result);
     }
 

@@ -51,7 +51,7 @@ extern (C)
 {
   alias CreateIsolateFn = int function(void*, void**, void**);
   alias TearDownIsolateFn = int function(void*);
-  alias LoadYamlstarFn = char* function(void*, const(char)*);
+  alias LoadYamlstarFn = char* function(void*, const(char)*, const(char)*);
 }
 
 /// Exception thrown by the YAMLStar loader.
@@ -176,7 +176,7 @@ class YAMLStar
     error = JSONValue.init;
 
     // Call 'yamlstar_load' function in libyamlstar shared library:
-    auto respPtr = loadYamlstar(isolateThread, input.toStringz);
+    auto respPtr = loadYamlstar(isolateThread, input.toStringz, "{}");
     if (respPtr is null)
       throw new YAMLStarException("Null response from 'libyamlstar'");
 

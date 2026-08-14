@@ -34,7 +34,7 @@
 
 typedef int (*create_isolate_fn)(void *, void **, void **);
 typedef int (*tear_down_isolate_fn)(void *);
-typedef char *(*yamlstar_load_fn)(void *, const char *);
+typedef char *(*yamlstar_load_fn)(void *, const char *, const char *);
 
 static void *libyamlstar = NULL;
 static create_isolate_fn create_isolate;
@@ -154,7 +154,7 @@ SEXP C_yamlstar_load(SEXP input) {
   }
 
   json = yamlstar_load(
-    thread, CHAR(STRING_ELT(input, 0)));
+    thread, CHAR(STRING_ELT(input, 0)), "{}");
 
   result = Rf_mkString(json == NULL ? "" : json);
 

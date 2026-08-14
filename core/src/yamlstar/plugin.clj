@@ -17,9 +17,9 @@
 
   Plugins are selected per load operation via the opts map:
 
-    {:plugin {:parser {:use \"snakeyaml\"}}}
+    {:plugin {:parser {:name \"snakeyaml\"}}}
 
-  Keys other than :use under :parser are passed to the plugin's :parse
+  Keys other than :name under :parser are passed to the plugin's :parse
   function as its config argument, merged over :default-config."
   (:require [clojure.string :as str]))
 
@@ -58,13 +58,13 @@
   "Look up a parser plugin by name.
 
   If the name is not registered, tries to load the namespace
-  yamlstar.plugin.<name> and use its `plugin` var (which is expected
+  yamlstar.plugin.parser.<name> and use its `plugin` var (which is expected
   to self-register). Throws if no plugin can be found."
   [name]
   (or (get @parser-registry name)
       (try
         (some-> (requiring-resolve
-                  (symbol (str "yamlstar.plugin." name) "plugin"))
+                  (symbol (str "yamlstar.plugin.parser." name) "plugin"))
                 deref)
         (catch Exception _ nil))
       (throw (ex-info (str "Unknown YAML parser plugin: " name
@@ -79,14 +79,14 @@
   "Extract [parser-name config] from a load opts map.
 
   Returns nil when opts selects no parser plugin (the fast path).
-  The config is the :parser map without :use, merged over the plugin's
+  The config is the :parser map without :name, merged over the plugin's
   :default-config by the caller.
 
   Throws on malformed opts:
   - :plugin value is not a map
   - a plugin type other than :parser is configured
   - :parser value is not a map
-  - :use value is not a string"
+  - :name value is not a string"
   [opts]
   (when-let [plugin-cfg (:plugin opts)]
     (when-not (map? plugin-cfg)
@@ -101,11 +101,11 @@
       (when-not (map? parser-cfg)
         (throw (ex-info "Plugin config :parser must be a map"
                         {:parser parser-cfg})))
-      (let [use (:use parser-cfg)]
-        (when-not (string? use)
-          (throw (ex-info "Parser plugin :use must be a string name"
-                          {:use use})))
-        [use (dissoc parser-cfg :use)]))))
+      (let [name (:name parser-cfg)]
+        (when-not (string? name)
+          (throw (ex-info "Parser plugin :name must be a string name"
+                          {:name name})))
+        [name (dissoc parser-cfg :name)]))))
 
 (defn parse-with
   "Resolve the named parser plugin and parse yaml-str with it.

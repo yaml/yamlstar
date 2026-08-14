@@ -34,16 +34,16 @@ foreign import ccall "graal_tear_down_isolate"
   c_graal_tear_down_isolate :: GraalIsolateThreadPtr -> IO CInt
 
 foreign import ccall "yamlstar_load"
-  c_yamlstar_load :: CLLong -> CString -> IO CString
+  c_yamlstar_load :: CLLong -> CString -> CString -> IO CString
 
 foreign import ccall "yamlstar_load_all"
-  c_yamlstar_load_all :: CLLong -> CString -> IO CString
+  c_yamlstar_load_all :: CLLong -> CString -> CString -> IO CString
 
 foreign import ccall "yamlstar_dump"
-  c_yamlstar_dump :: CLLong -> CString -> IO CString
+  c_yamlstar_dump :: CLLong -> CString -> CString -> IO CString
 
 foreign import ccall "yamlstar_dump_all"
-  c_yamlstar_dump_all :: CLLong -> CString -> IO CString
+  c_yamlstar_dump_all :: CLLong -> CString -> CString -> IO CString
 
 foreign import ccall "yamlstar_version"
   c_yamlstar_version :: CLLong -> IO CString
@@ -85,14 +85,15 @@ yamlstarVersionFFI =
       then return BS.empty
       else BS.packCString cResult
 
-callWithInput :: (CLLong -> CString -> IO CString) -> BS.ByteString -> IO LBS.ByteString
+callWithInput :: (CLLong -> CString -> CString -> IO CString) -> BS.ByteString -> IO LBS.ByteString
 callWithInput func input =
   withGraalIsolate $ \isolateThread ->
     BSU.unsafeUseAsCString input $ \cInput -> do
-      cResult <- func (threadId isolateThread) cInput
-      if cResult == nullPtr
-        then return LBS.empty
-        else LBS.fromStrict <$> BS.packCString cResult
+      BSU.unsafeUseAsCString (BS.pack [123, 125]) $ \cOpts -> do
+        cResult <- func (threadId isolateThread) cInput cOpts
+        if cResult == nullPtr
+          then return LBS.empty
+          else LBS.fromStrict <$> BS.packCString cResult
 
 threadId :: GraalIsolateThreadPtr -> CLLong
 threadId = fromIntegral . ptrToIntPtr

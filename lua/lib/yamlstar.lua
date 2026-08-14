@@ -83,10 +83,10 @@ int graal_create_isolate(void* params, graal_isolate_t** isolate,
                         graal_isolatethread_t** thread);
 int graal_tear_down_isolate(graal_isolatethread_t* thread);
 
-const char* yamlstar_load(graal_isolatethread_t* thread, const char* s);
-const char* yamlstar_load_all(graal_isolatethread_t* thread, const char* s);
-const char* yamlstar_dump(graal_isolatethread_t* thread, const char* s);
-const char* yamlstar_dump_all(graal_isolatethread_t* thread, const char* s);
+const char* yamlstar_load(graal_isolatethread_t* thread, const char* s, const char* opts_json);
+const char* yamlstar_load_all(graal_isolatethread_t* thread, const char* s, const char* opts_json);
+const char* yamlstar_dump(graal_isolatethread_t* thread, const char* s, const char* opts_json);
+const char* yamlstar_dump_all(graal_isolatethread_t* thread, const char* s, const char* opts_json);
 const char* yamlstar_version(graal_isolatethread_t* thread);
 ]]
 
@@ -121,19 +121,19 @@ local function handle_response(self, data_json)
 end
 
 function YAMLStar:load(input)
-  return handle_response(self, libyamlstar.yamlstar_load(self.thread, input))
+  return handle_response(self, libyamlstar.yamlstar_load(self.thread, input, "{}"))
 end
 
 function YAMLStar:load_all(input)
-  return handle_response(self, libyamlstar.yamlstar_load_all(self.thread, input))
+  return handle_response(self, libyamlstar.yamlstar_load_all(self.thread, input, "{}"))
 end
 
 function YAMLStar:dump(value)
-  return handle_response(self, libyamlstar.yamlstar_dump(self.thread, json.encode(value)))
+  return handle_response(self, libyamlstar.yamlstar_dump(self.thread, json.encode(value), "{}"))
 end
 
 function YAMLStar:dump_all(values)
-  return handle_response(self, libyamlstar.yamlstar_dump_all(self.thread, json.encode(values)))
+  return handle_response(self, libyamlstar.yamlstar_dump_all(self.thread, json.encode(values), "{}"))
 end
 
 function YAMLStar:version()
@@ -155,4 +155,3 @@ M.YAMLStar = YAMLStar
 M.new = YAMLStar.new
 
 return M
-

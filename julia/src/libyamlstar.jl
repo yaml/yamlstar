@@ -30,19 +30,19 @@ function tear_down_isolate(thread)
 end
 
 function yamlstar_load(thread, input::String)
-    ccall(yamlstar_load_fptr[], Cstring, (Ptr{Cvoid}, Cstring), thread, input)
+    ccall(yamlstar_load_fptr[], Cstring, (Ptr{Cvoid}, Cstring, Cstring), thread, input, "{}")
 end
 
 function yamlstar_load_all(thread, input::String)
-    ccall(yamlstar_load_all_fptr[], Cstring, (Ptr{Cvoid}, Cstring), thread, input)
+    ccall(yamlstar_load_all_fptr[], Cstring, (Ptr{Cvoid}, Cstring, Cstring), thread, input, "{}")
 end
 
 function yamlstar_dump(thread, input::String)
-    ccall(yamlstar_dump_fptr[], Cstring, (Ptr{Cvoid}, Cstring), thread, input)
+    ccall(yamlstar_dump_fptr[], Cstring, (Ptr{Cvoid}, Cstring, Cstring), thread, input, "{}")
 end
 
 function yamlstar_dump_all(thread, input::String)
-    ccall(yamlstar_dump_all_fptr[], Cstring, (Ptr{Cvoid}, Cstring), thread, input)
+    ccall(yamlstar_dump_all_fptr[], Cstring, (Ptr{Cvoid}, Cstring, Cstring), thread, input, "{}")
 end
 
 function yamlstar_version(thread)

@@ -43,6 +43,7 @@ const TearDownIsolateFn = *const fn (?*anyopaque) callconv(.c) c_int;
 const LoadYamlstarFn = *const fn (
     ?*anyopaque,
     [*:0]const u8,
+    [*:0]const u8,
 ) callconv(.c) ?[*:0]const u8;
 
 pub const Error = error{
@@ -196,6 +197,7 @@ pub const YAMLStar = struct {
         const resp_ptr = self.yamlstar_load(
             self.isolate_thread,
             input_z,
+            "{}",
         ) orelse return Error.NullResponse;
 
         // Decode the JSON response:

@@ -24,12 +24,15 @@ package body YAMLStar is
       External_Name => "graal_tear_down_isolate";
 
    function YAMLStar_Load
-     (Thread : Isolate_Thread; Input : CS.chars_ptr) return CS.chars_ptr
+     (Thread : Isolate_Thread;
+      Input : CS.chars_ptr;
+      Opts_JSON : CS.chars_ptr) return CS.chars_ptr
       with Import, Convention => C, External_Name => "yamlstar_load";
 
    function Load_JSON (Input : String) return String is
       Thread : aliased Isolate_Thread := System.Null_Address;
       C_Input : CS.chars_ptr := CS.New_String (Input);
+      C_Opts : CS.chars_ptr := CS.New_String ("{}");
       C_Output : CS.chars_ptr;
       RC : C.int;
    begin
@@ -37,11 +40,13 @@ package body YAMLStar is
         (System.Null_Address, System.Null_Address, Thread'Access);
       if RC /= 0 then
          CS.Free (C_Input);
+         CS.Free (C_Opts);
          raise Program_Error with "Failed to create isolate";
       end if;
 
-      C_Output := YAMLStar_Load (Thread, C_Input);
+      C_Output := YAMLStar_Load (Thread, C_Input, C_Opts);
       CS.Free (C_Input);
+      CS.Free (C_Opts);
 
       if C_Output = CS.Null_Ptr then
          RC := Tear_Down_Isolate (Thread);

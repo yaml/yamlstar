@@ -20,7 +20,7 @@ module Native =
   extern int graal_tear_down_isolate(nativeint threadPtr)
 
   [<DllImport(LibraryName)>]
-  extern nativeint yamlstar_load(nativeint threadPtr, string yaml)
+  extern nativeint yamlstar_load(nativeint threadPtr, string yaml, string optsJson)
 
 type YAMLStar() =
   let mutable thread = nativeint 0
@@ -33,7 +33,7 @@ type YAMLStar() =
       raise (YAMLStarException "Failed to create isolate")
 
   member _.LoadJson(input: string) =
-    let ptr = Native.yamlstar_load(thread, input)
+    let ptr = Native.yamlstar_load(thread, input, "{}")
     if ptr = nativeint 0 then
       raise (YAMLStarException "Null response from libyamlstar")
     Marshal.PtrToStringAnsi(ptr)

@@ -247,23 +247,27 @@ def test_module_version():
 def test_load_with_snakeyaml_parser(ys):
     """Test loading with the snakeyaml parser plugin."""
     yaml_str = "a: [1, {b: two}]\nc: |\n  text\n"
-    assert ys.load(yaml_str, parser='snakeyaml') == ys.load(yaml_str)
-    assert ys.load_all("---\ndoc1\n---\ndoc2", parser='snakeyaml') \
-        == ["doc1", "doc2"]
+    opts = yamlstar.Options().plugin(yamlstar.parser('snakeyaml'))
+    snakeyaml = yamlstar.YAMLStar(opts, so='libyamlstar-graalvm')
+    assert snakeyaml.load(yaml_str) == ys.load(yaml_str)
+    assert snakeyaml.load_all("---\ndoc1\n---\ndoc2") == ["doc1", "doc2"]
 
 
 def test_load_with_options_dict(ys):
     """Test loading with a full options dict."""
-    options = {'plugin': {'parser': {'use': 'snakeyaml'}}}
-    assert ys.load("key: value", options=options) == {"key": "value"}
+    options = {'plugin': {'parser': {'name': 'reference'}}}
+    assert yamlstar.YAMLStar(options).load("key: value") == {"key": "value"}
 
 
 def test_load_with_reference_parser(ys):
     """Test explicitly selecting the reference parser."""
-    assert ys.load("key: value", parser='reference') == {"key": "value"}
+    opts = yamlstar.Options().plugin(yamlstar.parser('reference'))
+    assert yamlstar.YAMLStar(opts).load("key: value") == {"key": "value"}
 
 
 def test_load_with_unknown_parser(ys):
     """Test that an unknown parser name raises a useful error."""
+    opts = yamlstar.Options().plugin(yamlstar.parser('no-such-parser'))
+    unknown = yamlstar.YAMLStar(opts)
     with pytest.raises(Exception, match="Unknown YAML parser plugin"):
-        ys.load("key: value", parser='no-such-parser')
+        unknown.load("key: value")

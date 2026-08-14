@@ -30,7 +30,7 @@
 
   Args:
     yaml-str: A string containing YAML content
-    opts: (optional) Options map; {:plugin {:parser {:use \"name\"}}}
+    opts: (optional) Options map; {:plugin {:parser {:name \"name\"}}}
           selects a parser plugin
 
   Returns:
@@ -55,7 +55,7 @@
 
   Args:
     yaml-str: A string containing one or more YAML documents
-    opts: (optional) Options map; {:plugin {:parser {:use \"name\"}}}
+    opts: (optional) Options map; {:plugin {:parser {:name \"name\"}}}
           selects a parser plugin
 
   Returns:

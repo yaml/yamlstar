@@ -47,9 +47,9 @@
 
   (testing "parser selection is extracted with config"
     (is (= ["snakeyaml" {}]
-           (plugin/parser-opts {:plugin {:parser {:use "snakeyaml"}}})))
+           (plugin/parser-opts {:plugin {:parser {:name "snakeyaml"}}})))
     (is (= ["x" {:setting 1}]
-           (plugin/parser-opts {:plugin {:parser {:use "x" :setting 1}}}))))
+           (plugin/parser-opts {:plugin {:parser {:name "x" :setting 1}}}))))
 
   (testing "malformed opts are rejected"
     (is (thrown-with-msg? Exception #":plugin must be a map"
@@ -58,14 +58,14 @@
                           (plugin/parser-opts {:plugin {:emitter {}}})))
     (is (thrown-with-msg? Exception #":parser must be a map"
                           (plugin/parser-opts {:plugin {:parser "nope"}})))
-    (is (thrown-with-msg? Exception #":use must be a string"
+    (is (thrown-with-msg? Exception #":name must be a string"
                           (plugin/parser-opts
-                            {:plugin {:parser {:use 5}}})))))
+                            {:plugin {:parser {:name 5}}})))))
 
 (deftest load-with-opts-test
   (testing "reference via opts equals the 1-arity result"
     (let [yaml "a: 1\nb:\n- 2\n- x\n"
-          opts {:plugin {:parser {:use "reference"}}}]
+          opts {:plugin {:parser {:name "reference"}}}]
       (is (= (yaml/load yaml) (yaml/load yaml opts)))
       (is (= (yaml/load-all "---\na\n---\nb\n")
              (yaml/load-all "---\na\n---\nb\n" opts)))))
@@ -80,9 +80,9 @@
                  {:event "document_end"}
                  {:event "stream_end"}])})
     (is (= "fixed" (yaml/load "ignored"
-                              {:plugin {:parser {:use "fixed"}}})))
+                              {:plugin {:parser {:name "fixed"}}})))
     (is (= "custom" (yaml/load "ignored"
-                               {:plugin {:parser {:use "fixed"
+                               {:plugin {:parser {:name "fixed"
                                                   :value "custom"}}})))
     (plugin/unregister-parser! "fixed"))
 
@@ -96,14 +96,14 @@
                  {:event "scalar" :value (str (:a config) (:b config))}
                  {:event "document_end"}
                  {:event "stream_end"}])})
-    (is (= "AB" (yaml/load "x" {:plugin {:parser {:use "cfg"}}})))
-    (is (= "Ab" (yaml/load "x" {:plugin {:parser {:use "cfg" :b "b"}}})))
+    (is (= "AB" (yaml/load "x" {:plugin {:parser {:name "cfg"}}})))
+    (is (= "Ab" (yaml/load "x" {:plugin {:parser {:name "cfg" :b "b"}}})))
     (plugin/unregister-parser! "cfg"))
 
   (testing "unknown parser in load opts throws"
     (is (thrown-with-msg? Exception #"Unknown YAML parser plugin"
                           (yaml/load "a: 1"
-                                     {:plugin {:parser {:use "nope"}}})))))
+                                     {:plugin {:parser {:name "nope"}}})))))
 
 (deftest parse-arity-test
   (testing "parse 1-arity and 2-arity nil opts agree"

@@ -14,7 +14,7 @@
 
 typedef int (*graal_create_isolate_fn)(void *, void *, void *);
 typedef int (*graal_tear_down_isolate_fn)(void *);
-typedef char *(*yamlstar_load_fn)(void *, char *);
+typedef char *(*yamlstar_load_fn)(void *, char *, char *);
 
 static void *libyamlstar = NULL;
 static void *isolate_thread = NULL;
@@ -108,7 +108,7 @@ moonbit_bytes_t ys_yamlstar_load(moonbit_bytes_t input) {
   memcpy(source, input, (size_t)len);
   source[len] = '\0';
 
-  char *json = load_yaml(isolate_thread, source);
+  char *json = load_yaml(isolate_thread, source, "{}");
   free(source);
 
   if (json == NULL) {

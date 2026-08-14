@@ -35,9 +35,14 @@ typedef _CreateIsolateDart = int Function(
 );
 typedef _TearDownIsolateC = Int32 Function(Pointer<Void>);
 typedef _TearDownIsolateDart = int Function(Pointer<Void>);
-typedef _LoadYamlstarC = Pointer<Utf8> Function(Pointer<Void>, Pointer<Utf8>);
+typedef _LoadYamlstarC = Pointer<Utf8> Function(
+  Pointer<Void>,
+  Pointer<Utf8>,
+  Pointer<Utf8>,
+);
 typedef _LoadYamlstarDart = Pointer<Utf8> Function(
   Pointer<Void>,
+  Pointer<Utf8>,
   Pointer<Utf8>,
 );
 
@@ -146,12 +151,14 @@ class YAMLStar {
 
     // Call 'yamlstar_load' function in libyamlstar shared library:
     final inputPtr = input.toNativeUtf8();
+    final optsPtr = '{}'.toNativeUtf8();
     final String dataJson;
     try {
-      final respPtr = _loadYamlstar(_isolateThread, inputPtr);
+      final respPtr = _loadYamlstar(_isolateThread, inputPtr, optsPtr);
       dataJson = respPtr.toDartString();
     } finally {
       calloc.free(inputPtr);
+      calloc.free(optsPtr);
     }
 
     // Decode the JSON response:

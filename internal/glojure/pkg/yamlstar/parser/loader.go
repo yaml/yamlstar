@@ -369,7 +369,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_parser_parse = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_parser_parse.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/parser.glj", kw_line, int(31), kw_column, int(7), kw_end_DASH_line, int(31), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str), lang.NewVector(sym_yaml_DASH_str, sym_opts)), kw_doc, "Parse a YAML string into an event stream.\n\n  Args:\n    yaml-str: A string containing YAML content\n    opts: (optional) Options map; {:plugin {:parser {:use \"name\"}}}\n          selects a parser plugin\n\n  Returns:\n    A sequence of event maps representing the YAML structure\n\n  Example event:\n    {:event \"scalar\" :value \"hello\" :style \"plain\"}\n    {:event \"mapping_start\" :flow false}", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/parser.glj", kw_line, int(31), kw_column, int(7), kw_end_DASH_line, int(31), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str), lang.NewVector(sym_yaml_DASH_str, sym_opts)), kw_doc, "Parse a YAML string into an event stream.\n\n  Args:\n    yaml-str: A string containing YAML content\n    opts: (optional) Options map; {:plugin {:parser {:name \"name\"}}}\n          selects a parser plugin\n\n  Returns:\n    A sequence of event maps representing the YAML structure\n\n  Example event:\n    {:event \"scalar\" :value \"hello\" :style \"plain\"}\n    {:event \"mapping_start\" :flow false}", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
 		})
 	}
 	// reference-plugin

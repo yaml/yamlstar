@@ -40,7 +40,7 @@ type
   ): cint {.cdecl.}
   TearDownIsolateFn = proc (thread: pointer): cint {.cdecl.}
   LoadYamlstarFn = proc (
-    thread: pointer, input: cstring,
+    thread: pointer, input: cstring, optsJson: cstring,
   ): cstring {.cdecl.}
 
   ## The YAMLStar type is the main user facing API for this module.
@@ -122,7 +122,7 @@ proc load*(ys: YAMLStar, input: string): JsonNode =
   ys.error = nil
 
   # Call 'yamlstar_load' function in libyamlstar shared library:
-  let respPtr = ys.loadYamlstar(ys.isolateThread, input.cstring)
+  let respPtr = ys.loadYamlstar(ys.isolateThread, input.cstring, "{}")
   if respPtr == nil:
     raise newException(YAMLStarError, "Null response from 'libyamlstar'")
 

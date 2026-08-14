@@ -259,14 +259,14 @@ func TestPackageVersion(t *testing.T) {
 
 func TestLoadWithReferenceParser(t *testing.T) {
 	data, err := yamlstar.Load(
-		"key: value", yamlstar.WithParser("reference"))
+		"key: value", yamlstar.WithPlugin(yamlstar.Parser("reference")))
 	require.NoError(t, err)
 	assert.Equal(t, map[string]any{"key": "value"}, data)
 }
 
 func TestLoadWithUnknownParser(t *testing.T) {
 	_, err := yamlstar.Load(
-		"key: value", yamlstar.WithParser("no-such-parser"))
+		"key: value", yamlstar.WithPlugin(yamlstar.Parser("no-such-parser")))
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "Unknown YAML parser plugin")
 }
