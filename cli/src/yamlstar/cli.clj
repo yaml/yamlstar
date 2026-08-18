@@ -5,6 +5,7 @@
             [clojure.pprint :as pp]
             [clojure.string :as str]
             [yamlstar.api :as yaml]
+            [yamlstar.contract :as contract]
             [yamlstar.parser :as parser]
             [yamlstar.composer :as composer]
             [yamlstar.resolver :as resolver]
@@ -38,10 +39,17 @@
     node))
 
 (def cli-options
-  [["-f" "--file FILE" "Input file (or use positional arg)"]
-   ["-e" "--eval YAML" "Evaluate YAML string"]
-   ["-J" "--json" "Output pretty JSON"]
-   ["-Y" "--yaml" "Output YAML"]
+  [["-f" "--from STAGE" "Force input stage: token, event, node, or yaml"]
+   [nil "--file FILE" "Input file (or use positional arg)"]
+   [nil "--eval YAML" "Evaluate YAML string"]
+   ["-e" "--event" "Event output"]
+   ["-E" "--EVENT" "Event output with metadata"]
+   ["-n" "--node" "Node representation output"]
+   ["-N" "--NODE" "Detailed node output"]
+   ["-j" "--json" "Output compact JSON"]
+   ["-J" "--JSON" "Output pretty JSON"]
+   ["-y" "--yaml" "Normalized YAML output"]
+   ["-Y" "--YAML" "YAML output preserving representation details"]
    ["-o" "--output FILE" "Output file"]
    ["-s" "--stream" "Output all documents"]
    ["-d" "--debug" "Debug all stages"]
@@ -56,13 +64,16 @@
 
 Usage: yaml [options] [file]
 
-Default: Read stdin, output compact JSON
+Default: Read stdin as YAML, output compact JSON
 
 Examples:
   yaml                       # stdin → compact JSON
   yaml config.yaml           # file → compact JSON
   yaml -J config.yaml        # file → pretty JSON
-  yaml -Y config.yaml        # file → YAML
+  yaml -e config.yaml        # YAML → events
+  yaml -N config.yaml        # YAML → detailed nodes
+  yaml -e file.yaml | yaml -Y # YAML → events → YAML
+  go-yaml -N file.yaml | yaml -Y # go-yaml nodes → YAML
   cat f.yaml | yaml -J       # stdin → pretty JSON
   yaml -D parse config.yaml  # Debug parser stage
 
@@ -140,11 +151,11 @@ Options:")
 
 (defn read-input [opts args]
   (cond
-    ;; -e flag takes precedence
+    ;; --eval takes precedence
     (:eval opts)
     (:eval opts)
 
-    ;; -f flag or positional argument
+    ;; --file or positional argument
     (or (:file opts) (first args))
     (let [filename (or (:file opts) (first args))]
       (if (= filename "-")
@@ -178,35 +189,76 @@ Options:")
     (seq? x) (map nil-keys->string x)
     :else x))
 
-(defn format-output [data opts]
+(defn format-json-output [data opts]
   (let [preprocessed (nil-keys->string data)]
-    (cond
-      (:yaml opts)
-      (if (:stream opts)
-        (yaml/dump-all preprocessed)
-        (yaml/dump preprocessed))
-
-      ;; Pretty JSON
-      (:json opts)
+    (if (:JSON opts)
       (json/write-str preprocessed :indent true)
-
-      ;; Default: compact JSON
-      :else
       (json/write-str preprocessed))))
 
 (defn write-output [output opts]
-  (if-let [out-file (:output opts)]
-    (spit out-file output)
-    (println output)))
+  (let [output (if (str/ends-with? output "\n") output (str output "\n"))]
+    (if-let [out-file (:output opts)]
+      (spit out-file output)
+      (do
+        (print output)
+        (flush)))))
 
 ;;; Main logic
 
+(defn output-stage [opts]
+  (cond
+    (or (:event opts) (:EVENT opts)) :event
+    (or (:node opts) (:NODE opts)) :node
+    (or (:yaml opts) (:YAML opts)) :yaml
+    :else :json))
+
+(defn token-follow-up []
+  (throw (ex-info
+          (str "token chaining is not supported by YAMLStar yet; "
+               "yaml-parser token support is the explicit follow-up") {})))
+
+(defn format-contract [value]
+  (yaml/dump value))
+
+(defn convert-input [input opts]
+  (let [{:keys [stage value source]} (contract/read-contract input (:from opts))
+        target (output-stage opts)]
+    (when (= stage :token)
+      (token-follow-up))
+    (when (and (not= target :json) (not= stage :yaml))
+      (contract/check-forward! stage target))
+    (case stage
+      :yaml
+      (case target
+        :event (format-contract
+                (contract/event-contract (contract/yaml-events source)))
+        :node (format-contract
+               (contract/node-contract
+                (contract/events-nodes (contract/yaml-events source))
+                (:NODE opts)))
+        :yaml (contract/yaml-output source (:YAML opts) (:stream opts))
+        :json (format-json-output (contract/yaml-value source (:stream opts)) opts))
+
+      :event
+      (let [events (contract/contract-events value)]
+        (case target
+          :event (format-contract (contract/event-contract events))
+          :node (format-contract
+                 (contract/node-contract (contract/events-nodes events)
+                                         (:NODE opts)))
+          :yaml (contract/events-yaml events)
+          :json (throw (ex-info "JSON output is only supported for YAML text input" {}))))
+
+      :node
+      (let [nodes (contract/contract-nodes value)]
+        (case target
+          :node (format-contract (contract/node-contract nodes (:NODE opts)))
+          :yaml (contract/nodes-yaml nodes)
+          :json (throw (ex-info "JSON output is only supported for YAML text input" {})))))))
+
 (defn do-load [yaml-str opts]
   (try
-    (let [data (if (:stream opts)
-                 (yaml/load-all yaml-str)
-                 (yaml/load yaml-str))
-          output (format-output data opts)]
+    (let [output (convert-input yaml-str opts)]
       (write-output output opts)
       0)
     (catch Exception e

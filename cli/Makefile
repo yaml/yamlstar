@@ -64,6 +64,7 @@ GLOAT-CLI-SRCS := \
   $(GLOAT-CACHE)/serializer.clj \
   $(GLOAT-CACHE)/emitter.clj \
   $(GLOAT-CORE)/api.clj \
+  $(GLOAT-CORE)/contract.clj \
   gloat/src/yamlstar/cli.clj \
 
 _prepare-gloat-bin:
@@ -147,6 +148,7 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
   $(GLOAT-CORE)/composer.clj \
   $(GLOAT-CORE)/resolver.clj \
   $(GLOAT-CORE)/api.clj \
+  $(GLOAT-CORE)/contract.clj \
   gloat/src/yamlstar/cli.clj
 	mkdir -p $(dir $@)
 	</dev/null env -u GOROOT $(GLOAT-GLOJURE-ENV) \

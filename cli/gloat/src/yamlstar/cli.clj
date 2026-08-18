@@ -2,6 +2,7 @@
   "Gloat-compatible YAMLStar command-line interface."
   (:require [clojure.string :as str]
             [yamlstar.api :as yaml]
+            [yamlstar.contract :as contract]
             [ys.json :as json]))
 
 (def usage-text
@@ -10,20 +11,32 @@
 Usage: yaml [options] [file]
 
 Options:
-  -f, --file FILE    Read YAML from FILE
-  -e, --eval YAML    Read YAML from the command line
-  -J, --json         Output pretty JSON
-  -Y, --yaml         Output YAML
+  -f, --from STAGE   Force input stage: token, event, node, or yaml
+      --file FILE    Read YAML from FILE
+      --eval YAML    Read YAML from the command line
+  -e, --event        Event output
+  -E, --EVENT        Event output with metadata
+  -n, --node         Node representation output
+  -N, --NODE         Detailed node output
+  -j, --json         Output compact JSON
+  -J, --JSON         Output pretty JSON
+  -y, --yaml         Normalized YAML output
+  -Y, --YAML         YAML output preserving representation details
   -o, --output FILE  Write output to FILE
   -s, --stream       Load all YAML documents
   -v, --version      Print version
   -h, --help         Print help")
 
 (defn die [message]
-  (binding [*out* *err*]
-    (println (str "Error: " message)))
-  #?(:glj (os.Exit 1)
-     :lg (System/exit 1)))
+  #?(:glj
+     (do
+       (fmt.Fprintln os.Stderr (str "Error: " message))
+       (os.Exit 1))
+     :lg
+     (do
+       (binding [*out* *err*]
+         (println (str "Error: " message)))
+       (System/exit 1))))
 
 (defn parse-args [argv]
   (loop [args argv
@@ -40,21 +53,44 @@ Options:
           (or (= arg "-v") (= arg "--version"))
           (recur more (assoc opts :version true) positional)
 
-          (or (= arg "-J") (= arg "--json"))
+          (or (= arg "-j") (= arg "--json"))
           (recur more (assoc opts :json true) positional)
 
-          (or (= arg "-Y") (= arg "--yaml"))
+          (or (= arg "-J") (= arg "--JSON"))
+          (recur more (assoc opts :JSON true) positional)
+
+          (or (= arg "-y") (= arg "--yaml"))
           (recur more (assoc opts :yaml true) positional)
+
+          (or (= arg "-Y") (= arg "--YAML"))
+          (recur more (assoc opts :YAML true) positional)
+
+          (or (= arg "-e") (= arg "--event"))
+          (recur more (assoc opts :event true) positional)
+
+          (or (= arg "-E") (= arg "--EVENT"))
+          (recur more (assoc opts :EVENT true) positional)
+
+          (or (= arg "-n") (= arg "--node"))
+          (recur more (assoc opts :node true) positional)
+
+          (or (= arg "-N") (= arg "--NODE"))
+          (recur more (assoc opts :NODE true) positional)
 
           (or (= arg "-s") (= arg "--stream"))
           (recur more (assoc opts :stream true) positional)
 
-          (or (= arg "-f") (= arg "--file"))
+          (or (= arg "-f") (= arg "--from"))
+          (if (empty? more)
+            (die (str arg " requires a stage"))
+            (recur (rest more) (assoc opts :from (first more)) positional))
+
+          (= arg "--file")
           (if (empty? more)
             (die (str arg " requires a filename"))
             (recur (rest more) (assoc opts :file (first more)) positional))
 
-          (or (= arg "-e") (= arg "--eval"))
+          (= arg "--eval")
           (if (empty? more)
             (die (str arg " requires a YAML string"))
             (recur (rest more) (assoc opts :eval (first more)) positional))
@@ -135,16 +171,10 @@ Options:
       (if (= filename "-") (read-stdin) (slurp filename)))
     :else (read-stdin)))
 
-(defn format-output [data opts]
+(defn format-json-output [data opts]
   (let [data (nil-keys->string data)]
-    (cond
-      (:yaml opts)
-      (if (:stream opts) (yaml/dump-all data) (yaml/dump data))
-
-      (:json opts)
+    (if (:JSON opts)
       (pretty-json data)
-
-      :else
       (json/dump data))))
 
 (defn write-output [output opts]
@@ -152,12 +182,52 @@ Options:
     (spit (:output opts) output)
     (println output)))
 
+(defn output-stage [opts]
+  (cond
+    (or (:event opts) (:EVENT opts)) :event
+    (or (:node opts) (:NODE opts)) :node
+    (or (:yaml opts) (:YAML opts)) :yaml
+    :else :json))
+
+(defn token-follow-up []
+  (throw (ex-info
+          (str "token chaining is not supported by YAMLStar yet; "
+               "yaml-parser token support is the explicit follow-up") {})))
+
+(defn convert-input [input opts]
+  (let [{:keys [stage value source]} (contract/read-contract input (:from opts))
+        target (output-stage opts)]
+    (when (= stage :token) (token-follow-up))
+    (when (and (not= target :json) (not= stage :yaml))
+      (contract/check-forward! stage target))
+    (case stage
+      :yaml
+      (case target
+        :event (yaml/dump (contract/event-contract (contract/yaml-events source)))
+        :node (yaml/dump (contract/node-contract
+                          (contract/events-nodes (contract/yaml-events source))
+                          (:NODE opts)))
+        :yaml (contract/yaml-output source (:YAML opts) (:stream opts))
+        :json (format-json-output (contract/yaml-value source (:stream opts)) opts))
+
+      :event
+      (let [events (contract/contract-events value)]
+        (case target
+          :event (yaml/dump (contract/event-contract events))
+          :node (yaml/dump (contract/node-contract
+                            (contract/events-nodes events) (:NODE opts)))
+          :yaml (contract/events-yaml events)
+          :json (throw (ex-info "JSON output is only supported for YAML text input" {}))))
+
+      :node
+      (let [nodes (contract/contract-nodes value)]
+        (case target
+          :node (yaml/dump (contract/node-contract nodes (:NODE opts)))
+          :yaml (contract/nodes-yaml nodes)
+          :json (throw (ex-info "JSON output is only supported for YAML text input" {})))))))
+
 (defn run [opts]
-  (let [source (read-input opts)
-        data (if (:stream opts)
-               (yaml/load-all source)
-               (yaml/load source))]
-    (write-output (format-output data opts) opts)))
+  (write-output (convert-input (read-input opts) opts) opts))
 
 (defn -main [& argv]
   (let [opts (parse-args argv)]
@@ -168,4 +238,4 @@ Options:
       (try
         (run opts)
         (catch #?(:glj go/any :lg Exception) error
-          (die (str error)))))))
+          (die (or (ex-message error) (str error))))))))

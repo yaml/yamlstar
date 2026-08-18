@@ -14,25 +14,28 @@
 
 (defn- plain-safe? [value]
   (and (not (implicit-string? value))
-       (not (re-find #"[#\[\]\{\},&*?:|>'\"%@`]" value))
+       (not (re-find #"[!#\[\]\{\},&*?:|>'\"%@`]" value))
        (not (re-find #"^\s|\s$" value))
        (not (re-find #"\r|\n|\t" value))
        (not (re-find #"^[-?](\s|$)" value))))
 
 (defn- core-tag? [tag]
   (contains? #{"!!null" "!!bool" "!!int" "!!float" "!!str"
+               "!!map" "!!seq"
                "tag:yaml.org,2002:null"
                "tag:yaml.org,2002:bool"
                "tag:yaml.org,2002:int"
                "tag:yaml.org,2002:float"
-               "tag:yaml.org,2002:str"}
+               "tag:yaml.org,2002:str"
+               "tag:yaml.org,2002:map"
+               "tag:yaml.org,2002:seq"}
              tag))
 
 (defn- string-tag? [tag]
   (contains? #{"!!str" "tag:yaml.org,2002:str"} tag))
 
 (defn- scalar-style [value tag]
-  (when (= tag "!!str")
+  (when (contains? #{"!!str" "tag:yaml.org,2002:str"} tag)
     (let [newline-count (count (filter #{\newline} value))]
       (cond
         (plain-safe? value) nil

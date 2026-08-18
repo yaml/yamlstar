@@ -2,7 +2,7 @@
   "Emit YAML events as a YAML string."
   (:require [clojure.string :as str]))
 
-(declare emit-node)
+(declare emit-node flow-text)
 
 (defn- indent [n]
   (apply str (repeat n " ")))
@@ -65,8 +65,7 @@
   ([value] (plain-safe? value nil))
   ([value tag]
    (and (not (str/blank? value))
-        (or tag (not (implicit-string? value)))
-        (not (re-find #"[#\[\]\{\},&*?:|>'\"%@`]" value))
+        (not (re-find #"[!#\[\]\{\},&*?:|>'\"%@`]" value))
         (not (re-find #"^\s|\s$" value))
         (not (re-find #"\r|\n|\t" value))
         (not (re-find #"^[-?](\s|$)" value)))))
@@ -182,6 +181,25 @@
       (or (scalar-inline-text event) (quote-single (:value event)))
       "?")))
 
+(defn- flow-text [events]
+  (let [event (first events)]
+    (case (:event event)
+      "scalar" (or (scalar-inline-text event) (quote-double (:value event)))
+      "alias" (str "*" (:name event))
+      "sequence_start"
+      (with-properties
+        event
+        (str "[" (str/join ", "
+                           (map flow-text
+                                (split-nodes (butlast (rest events))))) "]"))
+      "mapping_start"
+      (with-properties
+        event
+        (str "{" (str/join ", "
+                           (map (fn [[key value]]
+                                  (str (flow-text key) ": " (flow-text value)))
+                                (mapping-pairs (butlast (rest events))))) "}")))))
+
 (defn- inline-text [events]
   (let [event (first events)]
     (cond
@@ -190,6 +208,10 @@
 
       (and (= 1 (count events)) (= "alias" (:event event)))
       (str "*" (:name event))
+
+      (and (:flow event)
+           (contains? #{"mapping_start" "sequence_start"} (:event event)))
+      (flow-text events)
 
       (and (= 2 (count events))
            (= "mapping_start" (:event (first events)))
@@ -242,12 +264,16 @@
                           (emit-node val-events child-level key-prefix)
 
                           (= "sequence_start" (:event (first val-events)))
-                          (str key-line-prefix (emit-key key-events) ":\n"
-                               (emit-node val-events child-level nil))
+                          (if (str/blank? (node-properties (first val-events)))
+                            (str key-line-prefix (emit-key key-events) ":\n"
+                                 (emit-node val-events child-level nil))
+                            (emit-node val-events child-level key-prefix))
 
                           :else
-                          (str key-line-prefix (emit-key key-events) ":\n"
-                               (emit-node val-events (+ child-level 2) nil)))]
+                          (if (str/blank? (node-properties (first val-events)))
+                            (str key-line-prefix (emit-key key-events) ":\n"
+                                 (emit-node val-events (+ child-level 2) nil))
+                            (emit-node val-events child-level key-prefix)))]
                    (recur more false (conj out rendered))))))))))
 
 (defn- emit-sequence [events level prefix]
@@ -281,11 +307,15 @@
 (defn- emit-node
   ([events level] (emit-node events level nil))
   ([events level prefix]
-  (case (:event (first events))
-    "scalar" (emit-scalar (first events) level prefix)
-    "alias" (emit-alias (first events) level prefix)
-    "mapping_start" (emit-mapping events level prefix)
-    "sequence_start" (emit-sequence events level prefix))))
+   (if (and (:flow (first events))
+            (contains? #{"mapping_start" "sequence_start"}
+                       (:event (first events))))
+     (str (or prefix (indent level)) (flow-text events) "\n")
+     (case (:event (first events))
+       "scalar" (emit-scalar (first events) level prefix)
+       "alias" (emit-alias (first events) level prefix)
+       "mapping_start" (emit-mapping events level prefix)
+       "sequence_start" (emit-sequence events level prefix)))))
 
 (defn- document-event-groups [events]
   (loop [remaining events

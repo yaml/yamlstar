@@ -1,7 +1,7 @@
 # YAMLStar CLI
 
-The `yaml` command loads YAML and prints JSON by default. It can also emit YAML
-with `-Y`.
+The `yaml` command loads YAML and prints JSON by default. It can also expose
+and consume the same event and node contracts as the go-yaml CLI.
 
 ## Examples
 
@@ -23,11 +23,41 @@ Pretty-print JSON:
 yaml -J config.yaml
 ```
 
-Emit YAML:
+Emit normalized YAML:
 
 ```bash
-yaml -Y config.yaml
+yaml -y config.yaml
 ```
+
+Inspect events or detailed nodes:
+
+```bash
+yaml -e config.yaml
+yaml -N config.yaml
+```
+
+Chain representations forward through YAMLStar or between both CLIs:
+
+```bash
+yaml -e config.yaml | yaml -N | yaml -Y
+go-yaml -e config.yaml | yaml -Y
+yaml -N config.yaml | go-yaml -Y
+```
+
+The supported direction is YAML text to events to nodes to YAML text. The
+contracts are YAML data, so `yq` transformations can be inserted between
+commands:
+
+```bash
+yaml -e config.yaml |
+  yq '(.[] | select(.event == "SCALAR" and .value == "old")).value = "new"' |
+  yaml -Y
+```
+
+Input is detected from its schema. Use `-f event`, `-f node`, or `-f yaml`
+when it is ambiguous. The short stage names `e`, `n`, and `y` are accepted.
+Token input is deliberately unsupported for now: it remains the explicit
+follow-up for `org.yamlstar/yaml-parser`.
 
 Load every document in a YAML stream:
 
@@ -38,13 +68,13 @@ yaml -s stream.yaml
 Emit every document in a YAML stream:
 
 ```bash
-yaml -Y -s stream.yaml
+yaml -y -s stream.yaml
 ```
 
 Evaluate a YAML string directly:
 
 ```bash
-yaml -e 'a: 1'
+yaml --eval 'a: 1'
 ```
 
 Write output to a file:
@@ -58,13 +88,20 @@ yaml config.yaml -o config.json
 ```text
 Usage: yaml [options] [file]
 
-Default: Read stdin, output compact JSON
+Default: Read stdin as YAML, output compact JSON
 
 Options:
-  -f, --file FILE          Input file (or use positional arg)
-  -e, --eval YAML          Evaluate YAML string
-  -J, --json               Output pretty JSON
-  -Y, --yaml               Output YAML
+  -f, --from STAGE         Force input stage: token, event, node, or yaml
+      --file FILE          Input file (or use positional arg)
+      --eval YAML          Evaluate YAML string
+  -e, --event              Event output
+  -E, --EVENT              Event output with metadata
+  -n, --node               Node representation output
+  -N, --NODE               Detailed node output
+  -j, --json               Output compact JSON
+  -J, --JSON               Output pretty JSON
+  -y, --yaml               Normalized YAML output
+  -Y, --YAML               YAML output preserving representation details
   -o, --output FILE        Output file
   -s, --stream             Output all documents
   -d, --debug              Debug all stages
@@ -75,7 +112,7 @@ Options:
   -h, --help               Print help
 ```
 
-`-Y` emits YAML using YAMLStar's dump stack:
+`-y` emits normalized YAML using YAMLStar's dump stack:
 
 ```text
 native value
