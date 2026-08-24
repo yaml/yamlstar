@@ -31,6 +31,7 @@ import (
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/numbers"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/parser"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin"
+	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/parser/go_yaml"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/representer"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/resolver"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/serializer"
@@ -145,6 +146,7 @@ var namespaces = []string{
 	"yamlstar.desolver",
 	"libyamlstar",
 	"yamlstar.plugin",
+	"yamlstar.plugin.parser.go-yaml",
 	"yaml-parser.parser",
 	"yamlstar.composer",
 	"yamlstar.parser",
@@ -168,6 +170,7 @@ func initialize() error {
 			require.Invoke(lang.NewSymbol(namespace))
 		}
 		glj.Var("yamlstar.parser", "register-reference-parser!").Invoke()
+		glj.Var("yamlstar.parser", "set-default-parser!").Invoke("go-yaml")
 	})
 	return initializeErr
 }

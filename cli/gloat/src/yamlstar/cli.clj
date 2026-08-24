@@ -2,7 +2,12 @@
   "Gloat-compatible YAMLStar command-line interface."
   (:require [clojure.string :as str]
             [yamlstar.api :as yaml]
+            [yamlstar.cli-default :as cli-default]
+            [yamlstar.composer :as composer]
             [yamlstar.contract :as contract]
+            [yamlstar.constructor :as constructor]
+            [yamlstar.parser :as parser]
+            [yamlstar.resolver :as resolver]
             [ys.json :as json]))
 
 (def usage-text
@@ -24,8 +29,18 @@ Options:
   -Y, --YAML         YAML output preserving representation details
   -o, --output FILE  Write output to FILE
   -s, --stream       Load all YAML documents
+  -d, --debug        Debug all stages
+  -D, --debug-stage  Debug specific stage: parse, compose, resolve, construct
   -v, --version      Print version
   -h, --help         Print help")
+
+(defmacro with-timing [stage-name & body]
+  `(let [start# (time.Now)
+         result# (do ~@body)
+         elapsed# (/ (double (.Nanoseconds (time.Since start#))) 1000000.0)]
+     (println (fmt.Sprintf "*** %-9s *** %.6f ms" ~stage-name elapsed#))
+     (println)
+     result#))
 
 (defn die [message]
   #?(:glj
@@ -85,6 +100,17 @@ Options:
             (die (str arg " requires a stage"))
             (recur (rest more) (assoc opts :from (first more)) positional))
 
+          (or (= arg "-d") (= arg "--debug"))
+          (recur more (assoc opts :debug true) positional)
+
+          (or (= arg "-D") (= arg "--debug-stage"))
+          (if (empty? more)
+            (die (str arg " requires a stage"))
+            (let [stage (first more)]
+              (if (#{"parse" "compose" "resolve" "construct"} stage)
+                (recur (rest more) (assoc opts :debug-stage stage) positional)
+                (die (str arg " stage must be one of: parse, compose, resolve, construct")))))
+
           (= arg "--file")
           (if (empty? more)
             (die (str arg " requires a filename"))
@@ -119,6 +145,42 @@ Options:
     (vector? x) (mapv nil-keys->string x)
     (sequential? x) (map nil-keys->string x)
     :else x))
+
+(defn do-debug-parse [yaml-str]
+  (let [events (with-timing "parse"
+                 (parser/parse yaml-str))]
+    (doseq [event events]
+      (prn event))))
+
+(defn do-debug-compose [yaml-str]
+  (let [events (parser/parse yaml-str)
+        node (with-timing "compose"
+               (composer/compose events))]
+    (prn node)))
+
+(defn do-debug-resolve [yaml-str]
+  (let [events (parser/parse yaml-str)
+        node (composer/compose events)
+        resolved (with-timing "resolve"
+                   (resolver/resolve node))]
+    (prn resolved)))
+
+(defn do-debug-construct [yaml-str]
+  (let [events (parser/parse yaml-str)
+        node (composer/compose events)
+        resolved (resolver/resolve node)
+        data (with-timing "construct"
+               (constructor/construct resolved))]
+    (prn data)))
+
+(defn do-debug-all [yaml-str]
+  (do-debug-parse yaml-str)
+  (println)
+  (do-debug-compose yaml-str)
+  (println)
+  (do-debug-resolve yaml-str)
+  (println)
+  (do-debug-construct yaml-str))
 
 (declare pretty-json)
 
@@ -230,12 +292,25 @@ Options:
   (write-output (convert-input (read-input opts) opts) opts))
 
 (defn -main [& argv]
+  (parser/set-default-parser! cli-default/default-parser)
   (let [opts (parse-args argv)]
     (cond
       (:help opts) (println usage-text)
       (:version opts) (println (str "yamlstar version " (yaml/version)))
       :else
       (try
-        (run opts)
+        (cond
+          (:debug opts)
+          (do-debug-all (read-input opts))
+
+          (:debug-stage opts)
+          (case (:debug-stage opts)
+            "parse" (do-debug-parse (read-input opts))
+            "compose" (do-debug-compose (read-input opts))
+            "resolve" (do-debug-resolve (read-input opts))
+            "construct" (do-debug-construct (read-input opts)))
+
+          :else
+          (run opts))
         (catch #?(:glj go/any :lg Exception) error
           (die (or (ex-message error) (str error))))))))

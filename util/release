@@ -166,14 +166,23 @@ do-check-tag() (
 # Build shared library for current platform
 do-release-lib() (
   detect-platform
+  local lib_build_target lib_build_engine
 
   [[ $OS_NAME != wasm ]] ||
     die 'ERROR: WASI does not support libyamlstar shared libraries'
 
   # Release artifact installs use the inverse symlink layout from the build
-  # tree. Clear old library files so `make build` can recover either way.
+  # tree. Clear old library files so the selected build can recover either way.
   rm -f libyamlstar/lib/libyamlstar*.$EXT \
     libyamlstar/lib/libyamlstar*.$EXT.*
+
+  if [[ -n ${GLOAT_PLATFORM:-} || ${YAMLSTAR_ENGINE:-} == glojure || -n ${YAMLSTAR_GLOJURE:-} ]]; then
+    lib_build_target=build-gloat
+    lib_build_engine=glojure
+  else
+    lib_build_target=build-graalvm
+    lib_build_engine=graalvm
+  fi
 
   # Build the library
   if [[ ${CROSS_CC_TARGET:-} ]]; then
@@ -184,9 +193,9 @@ do-release-lib() (
     CC="$ZIG cc -target $CROSS_CC_TARGET" \
       ZIG_GLOBAL_CACHE_DIR="$zig_cache/global" \
       ZIG_LOCAL_CACHE_DIR="$zig_cache/local" \
-      make -C libyamlstar build SO="$EXT"
+      make -C libyamlstar "$lib_build_target" YAMLSTAR_ENGINE="$lib_build_engine" SO="$EXT"
   else
-    make -C libyamlstar build SO="$EXT"
+    make -C libyamlstar "$lib_build_target" YAMLSTAR_ENGINE="$lib_build_engine" SO="$EXT"
   fi
 
   # Create release directory structure
@@ -343,7 +352,7 @@ gcc -o myapp myapp.c -lyamlstar
 do-release-cli() (
   detect-platform
 
-  if [[ ${GLOAT_PLATFORM:-} || ${YAMLSTAR_GLOJURE:-} ]]; then
+  if [[ -n ${GLOAT_PLATFORM:-} || ${YAMLSTAR_ENGINE:-} == glojure || -n ${YAMLSTAR_GLOJURE:-} ]]; then
     case "$OS_NAME" in
       windows)
         CLI_BUILD_FILE=yaml-release.exe

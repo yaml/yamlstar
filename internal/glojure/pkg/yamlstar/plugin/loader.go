@@ -371,11 +371,11 @@ func LoadNS() {
 			_ = v4
 			var tmp5 any
 			{ // let
-				// let binding "map__64"
+				// let binding "map__4"
 				tmp6 := aotDirectFn4(v2)
 				var v7 any = tmp6
 				_ = v7
-				// let binding "map__64"
+				// let binding "map__4"
 				var tmp8 any
 				tmp9 := aotExternalFn0(v7)
 				if lang.IsTruthy(tmp9) {
@@ -485,7 +485,7 @@ func LoadNS() {
 							}()
 							var tmp11 any
 							{ // let
-								// let binding "G__63"
+								// let binding "G__3"
 								tmp12 := aotExternalFn20("yamlstar.plugin.parser.", v2)
 								tmp13 := aotExternalFn19(tmp12, "plugin")
 								tmp14 := aotExternalFn18(tmp13)
@@ -548,7 +548,7 @@ func LoadNS() {
 		aotDirectFn4 = tmp1
 		var_yamlstar_DOT_plugin_resolve_DASH_parser = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_resolve_DASH_parser.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.glj", kw_line, int(57), kw_column, int(7), kw_end_DASH_line, int(57), kw_end_DASH_column, int(20), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Look up a parser plugin by name.\n\n  If the name is not registered, tries to load the namespace\nyamlstar.plugin.parser.<name> and use its `plugin` var (which is expected\n  to self-register). Throws if no plugin can be found.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.glj", kw_line, int(57), kw_column, int(7), kw_end_DASH_line, int(57), kw_end_DASH_column, int(20), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Look up a parser plugin by name.\n\n  If the name is not registered, tries to load the namespace\n  yamlstar.plugin.parser.<name> and use its `plugin` var (which is expected\n  to self-register). Throws if no plugin can be found.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		})
 	}
 	// parser-opts
@@ -682,10 +682,10 @@ func LoadNS() {
 			_ = v2
 			var tmp3 any
 			{ // let
-				// let binding "map__62"
+				// let binding "map__2"
 				var v4 any = v2
 				_ = v4
-				// let binding "map__62"
+				// let binding "map__2"
 				var tmp5 any
 				tmp6 := aotExternalFn0(v4)
 				if lang.IsTruthy(tmp6) {

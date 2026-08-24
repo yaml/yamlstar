@@ -15,3 +15,8 @@
   "Select the SnakeYAML parser plugin."
   []
   (name "snakeyaml"))
+
+(defn go-yaml
+  "Select the go-yaml parser plugin."
+  []
+  (name "go-yaml"))

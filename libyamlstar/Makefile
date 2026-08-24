@@ -1,20 +1,22 @@
 include ../common/init.mk
 
-YAMLSTAR_GLOJURE ?= 1
+YAMLSTAR_ENGINE ?= $(if $(YAMLSTAR_GLOJURE),glojure,graalvm)
 
 # Load platform tools before common.mk (which includes shell.mk last)
 # Avoids graalvm.mk/java.mk conflict when both platforms are present
-ifdef YAMLSTAR_GLOJURE
+ifeq ($(YAMLSTAR_ENGINE),glojure)
 include $M/gloat.mk
-else
+else ifeq ($(YAMLSTAR_ENGINE),graalvm)
 include $M/graalvm.mk
 include $M/clojure.mk
 include $M/lein.mk
+else
+$(error Unknown YAMLSTAR_ENGINE '$(YAMLSTAR_ENGINE)')
 endif
 
 include ../common/common.mk
 
-ifndef YAMLSTAR_GLOJURE
+ifeq ($(YAMLSTAR_ENGINE),graalvm)
 include ../common/native.mk
 endif
 
@@ -22,7 +24,10 @@ MAKES-CLEAN := \
   graalvm/target \
   graalvm/.lein-* \
   cache/yaml-parser-* \
+  cache/go-yaml-* \
+  cache/libyamlstar-glojure-abi-* \
   cache/gloat-srcs \
+  ../internal/goyamlparser \
   lib/ \
 
 MAKES-REALCLEAN := \
@@ -36,6 +41,8 @@ LIB-NAME-GLOAT ?= libyamlstar-glojure
 LIB-SO-GLOAT := $(LIB-DIR)/$(LIB-NAME-GLOAT).$(SO)
 LIB-SO-GLOAT-DEFAULT := $(LIB-DIR)/libyamlstar.$(SO)
 LIB-SO := $(LIB-DIR)/$(LIB-NAME).$(SO)
+LIBYAMLSTAR-GLOAT-ABI := export-load-opts-v2
+LIBYAMLSTAR-GLOAT-ABI-STAMP := cache/libyamlstar-glojure-abi-$(LIBYAMLSTAR-GLOAT-ABI).stamp
 GLOAT-PLATFORM-OPT := \
   $(if $(GLOAT_PLATFORM),--platform=$(GLOAT_PLATFORM))
 GLOAT-WINDOWS-TARGET := $(filter windows/%,$(GLOAT_PLATFORM))
@@ -65,6 +72,15 @@ YAML-PARSER-VERSION := 0.2.3
 YAML-PARSER-JAR := cache/yaml-parser-$(YAML-PARSER-VERSION).jar
 YAML-PARSER-URL := https://repo.clojars.org/org/yamlstar/yaml-parser/$(YAML-PARSER-VERSION)/yaml-parser-$(YAML-PARSER-VERSION).jar
 YAML-PARSER-GLOAT-PREPARE := gloat/prepare-yaml-parser
+GO-YAML-REF ?= 643e93b9c9bec2be8ae2b842a3492c54532549c9
+GO-YAML-REPO ?= https://github.com/yaml/go-yaml
+GO-YAML-SRC-DIR := cache/go-yaml-$(GO-YAML-REF)
+GO-YAML-STAMP := $(GO-YAML-SRC-DIR)/.fetched
+GO-YAML-GENERATED-DIR := ../internal/goyamlparser
+GO-YAML-GENERATED-STAMP := $(GO-YAML-GENERATED-DIR)/.generated
+GO-YAML-PREPARE := gloat/prepare-go-yaml-parser
+GLOAT-GO-YAML-PATCH := gloat/patch-gloat-extra-go-dir
+GLOAT-GO-YAML-PATCH-STAMP := $(GLOAT-DIR)/.yamlstar-go-yaml-extra-patched
 
 ifdef YAML-PARSER-DIR
 YAML-PARSER-SRC-DIR := $(abspath $(YAML-PARSER-DIR))/src
@@ -133,6 +149,35 @@ $(GLOAT-LINK-DIR)/emitter.clj: $(CORE-YAMLSTAR)/emitter.cljc
 	@mkdir -p $(dir $@)
 	ln -sf $(abspath $<) $@
 
+$(GLOAT-LINK-DIR)/plugin/parser/go_yaml.clj: $(CORE-YAMLSTAR)/plugin/parser/go_yaml.cljc
+	@mkdir -p $(dir $@)
+	ln -sf $(abspath $<) $@
+
+$(GO-YAML-STAMP):
+	rm -rf '$(GO-YAML-SRC-DIR).tmp'
+	mkdir -p cache
+	git init '$(GO-YAML-SRC-DIR).tmp'
+	git -C '$(GO-YAML-SRC-DIR).tmp' fetch --depth=1 '$(GO-YAML-REPO)' '$(GO-YAML-REF)'
+	git -C '$(GO-YAML-SRC-DIR).tmp' checkout --detach FETCH_HEAD
+	rm -rf '$(GO-YAML-SRC-DIR)'
+	mv '$(GO-YAML-SRC-DIR).tmp' '$(GO-YAML-SRC-DIR)'
+	touch '$@'
+
+$(GO-YAML-GENERATED-STAMP): $(GO-YAML-STAMP) $(GO-YAML-PREPARE)
+	bash $(GO-YAML-PREPARE) $(GO-YAML-SRC-DIR) $(GO-YAML-GENERATED-DIR)
+
+prepare-go-yaml-parser: $(GO-YAML-GENERATED-STAMP)
+
+$(GLOAT-GO-YAML-PATCH-STAMP): $(GLOAT) $(GLOAT-GO-YAML-PATCH)
+	bash $(GLOAT-GO-YAML-PATCH) $(GLOAT-DIR)/src/gloat.clj
+	touch $@
+
+patch-gloat-go-yaml: $(GLOAT-GO-YAML-PATCH-STAMP)
+
+$(LIBYAMLSTAR-GLOAT-ABI-STAMP):
+	@mkdir -p $(dir $@)
+	printf '%s\n' '$(LIBYAMLSTAR-GLOAT-ABI)' > $@
+
 GLOAT-LINKS := \
   $(GLOAT-LINK-DIR)/yaml_parser/prelude.clj \
   $(GLOAT-LINK-DIR)/yaml_parser/parser.clj \
@@ -145,6 +190,7 @@ GLOAT-LINKS := \
   $(GLOAT-LINK-DIR)/desolver.clj \
   $(GLOAT-LINK-DIR)/serializer.clj \
   $(GLOAT-LINK-DIR)/emitter.clj \
+  $(GLOAT-LINK-DIR)/plugin/parser/go_yaml.clj \
 
 # Clojure source files compiled by gloat (order matters for namespaces)
 GLOAT-SRCS := \
@@ -156,6 +202,7 @@ GLOAT-SRCS := \
   $(CORE-YAMLSTAR)/plugin.clj \
   $(CORE-YAMLSTAR)/options.clj \
   $(CORE-YAMLSTAR)/plugin/parser.clj \
+  $(GLOAT-LINK-DIR)/plugin/parser/go_yaml.clj \
   $(CORE-YAMLSTAR)/parser.clj \
   $(CORE-YAMLSTAR)/composer.clj \
   $(CORE-YAMLSTAR)/resolver.clj \
@@ -168,8 +215,7 @@ GLOAT-SRCS := \
   $(CORE-YAMLSTAR)/api.clj \
   gloat/src/libyamlstar.clj \
 
-.PHONY: prepare-gloat
-prepare-gloat: $(GLOAT-LINKS)
+prepare-gloat: $(GLOAT-LINKS) prepare-go-yaml-parser patch-gloat-go-yaml
 ifdef YAML-PARSER-DIR
 	ln -sf $(YAML-PARSER-SRC-DIR)/yaml_parser/prelude.cljc $(GLOAT-LINK-DIR)/yaml_parser/prelude.clj
 	ln -sf $(YAML-PARSER-SRC-DIR)/yaml_parser/parser.cljc $(GLOAT-LINK-DIR)/yaml_parser/parser.clj
@@ -200,7 +246,6 @@ ifdef YAML-PARSER-DIR
 LEIN-YAML-PARSER := \
   update-in :source-paths conj '"$(YAML-PARSER-SRC-DIR)"' --
 
-.PHONY: _yaml-parser-core
 _yaml-parser-core: $(LEIN) $(YAML-PARSER-SOURCE-FILES)
 	cd ../core && $(LEIN) $(LEIN-YAML-PARSER) with-profile +uberjar install
 
@@ -226,17 +271,12 @@ endif
 # --- end TEST-WITH-GLOJURE ---
 
 
-ifdef YAMLSTAR_GLOJURE
-build: build-gloat
-else
-build: build-graalvm
-endif
-
 LIB-HEADER := $(LIB-DIR)/libyamlstar.h
 LIB-HEADER-GLOAT := $(LIB-DIR)/$(LIB-NAME-GLOAT).h
 
 build-gloat: $(LIB-SO-GLOAT)
 	cp $(GLOAT-LIB-HEADER) $(LIB-HEADER)
+	cp $(GLOAT-LIB-HEADER) $(LIB-HEADER-GLOAT)
 	cp $(GLOAT-ISOLATE-HEADER) $(LIB-DIR)/graal_isolate.h
 	cp $(LIB-SO-GLOAT) $(LIB-SO-GLOAT-DEFAULT)
 ifneq ($(OS-NAME),windows)
@@ -256,28 +296,29 @@ ifneq ($(OS-NAME),windows)
 	ln -sf $(notdir $(LIB-SO)) $(LIB-DIR)/$(LIB-NAME).$(SO).$(VERSION)
 endif
 
-# Build both: each requires separate make invocations (tool includes conflict)
-build-all:
-	YAMLSTAR_GLOJURE=1 $(MAKE) build-gloat
-	$(MAKE) build-graalvm YAMLSTAR_GLOJURE=
-
 test:
 
-ifdef YAMLSTAR_GLOJURE
+ifeq ($(YAMLSTAR_ENGINE),glojure)
 INSTALL-LIB := $(LIB-SO-GLOAT)
+install: build-gloat
 else
 INSTALL-LIB := $(LIB-SO)
+install: build-graalvm
 endif
 
-install: build
+install:
 	mkdir -p $(PREFIX)/lib/
 	install -m 644 $(INSTALL-LIB) $(PREFIX)/lib/
 
-ifdef YAMLSTAR_GLOJURE
-$(LIB-SO-GLOAT): $(GLOAT-SRCS) $(GLOAT-LINKS) $(GLOAT-RUN-DEPS) | $(GLOAT-DIR)
+ifeq ($(YAMLSTAR_ENGINE),glojure)
+$(LIB-SO-GLOAT): $(GLOAT-SRCS) $(GLOAT-LINKS) $(GO-YAML-GENERATED-STAMP) \
+  $(GLOAT-GO-YAML-PATCH-STAMP) $(GLOAT-LIB-HEADER) $(GLOAT-RUN-DEPS) \
+  $(LIBYAMLSTAR-GLOAT-ABI-STAMP) | $(GLOAT-DIR)
 	@echo "Building gloat shared library..."
 	mkdir -p $(LIB-DIR)
 	</dev/null env -u GOROOT \
+	  GLOAT_MODULE=github.com/yaml/yamlstar \
+	  GLOAT_EXTRA_GO_DIR=$(abspath $(GO-YAML-GENERATED-DIR)) \
 	  $(if $(GLOAT_PATH),PATH='$(GLOAT_PATH)') \
 	  $(GLOAT-GLOJURE-ENV) \
 	  $(GLOAT-RUN) --force $(GLOAT-PLATFORM-OPT) \
@@ -293,7 +334,7 @@ endif
 $(LIB-JAR): $(CORE-JAR) $(LEIN)
 	cd graalvm && $(LEIN) $(LEIN-YAML-PARSER) uberjar
 
-ifndef YAMLSTAR_GLOJURE
+ifeq ($(YAMLSTAR_ENGINE),graalvm)
 $(LIB-SO): $(LIB-JAR) $(REFLECTION-JSON) $(GRAALVM)
 	@echo "Building GraalVM shared library..."
 	mkdir -p $(LIB-DIR)

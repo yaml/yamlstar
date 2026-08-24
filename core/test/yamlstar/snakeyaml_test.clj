@@ -36,9 +36,19 @@
    "multi doc" "---\ndoc1\n---\ndoc2\n...\n---\ndoc3\n"
    "comments" "# leading\na: 1 # trailing\n# footer\n"})
 
+(defmacro with-graalvm-native-image [& body]
+  `(let [k# "org.graalvm.nativeimage.imagecode"
+         old# (System/getProperty k#)]
+     (try
+       (System/setProperty k# "runtime")
+       ~@body
+       (finally
+         (if old#
+           (System/setProperty k# old#)
+           (System/clearProperty k#))))))
+
 (deftest event-stream-equivalence-test
-  (with-redefs [yamlstar.plugin.parser.snakeyaml/in-graalvm-native-image?
-                (constantly true)]
+  (with-graalvm-native-image
     (doseq [[label yaml-str] corpus]
       (testing label
         (is (= (parser/parse yaml-str)
@@ -46,8 +56,7 @@
             (str "event streams differ for: " label))))))
 
 (deftest load-equivalence-test
-  (with-redefs [yamlstar.plugin.parser.snakeyaml/in-graalvm-native-image?
-                (constantly true)]
+  (with-graalvm-native-image
     (let [opts {:plugin {:parser {:name "snakeyaml"}}}]
       (doseq [[label yaml-str] corpus
               ;; skip inputs the reference loader itself rejects
@@ -72,8 +81,7 @@
           #"only available through the GraalVM libyamlstar shared library"
           (yaml/load "a: 1" {:plugin {:parser {:name "snakeyaml"}}}))))
   (testing "snakeyaml resolves when running in a GraalVM native image"
-    (with-redefs [yamlstar.plugin.parser.snakeyaml/in-graalvm-native-image?
-                  (constantly true)]
+    (with-graalvm-native-image
       (is (= {"a" 1}
              (yaml/load "a: 1" {:plugin {:parser {:name "snakeyaml"}}})))))
   (testing "malformed YAML errors surface from load"

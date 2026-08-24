@@ -327,9 +327,10 @@ jobs:
     - name: Build release archives and Python wheel
       run: |
         make release-lib VERSION="$VERSION" \
+          YAMLSTAR_ENGINE=glojure \
           TEST-WITH-GLOJURE="$PWD/.cache/glojure-source"
         make release-cli VERSION="$VERSION" \
-          YAMLSTAR_GLOJURE=1 \
+          YAMLSTAR_ENGINE=glojure \
           TEST-WITH-GLOJURE="$PWD/.cache/glojure-source"
         make -C python wheel VERSION="$VERSION" \
           'PYTHON-NAME=cpython-$(PYTHON-VERSION)-macos-x86_64-none'
@@ -632,7 +633,7 @@ jobs:
         PY
 
     - name: Run tests
-      run: make test-all YAMLSTAR_GLOJURE=1 YAMLSTAR_SYSTEM_RUBY=1 TEST-TIME='date; time' 'PYTHON-NAME=cpython-$(PYTHON-VERSION)-macos-x86_64-none' RAKU-VERSION=2026.01-01 BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua moonbit php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
+      run: make test-all YAMLSTAR_ENGINE=glojure YAMLSTAR_SYSTEM_RUBY=1 TEST-TIME='date; time' 'PYTHON-NAME=cpython-$(PYTHON-VERSION)-macos-x86_64-none' RAKU-VERSION=2026.01-01 BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua moonbit php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
 
   test-windows:
     name: Test Windows artifacts
@@ -1195,7 +1196,7 @@ jobs:
         PY
 
     - name: Run tests
-      run: make test-all YAMLSTAR_GLOJURE=1 YAMLSTAR_SYSTEM_RUBY=1 TEST-TIME='date; time' 'PYTHON-NAME=cpython-$(PYTHON-VERSION)-macos-x86_64-none' RAKU-VERSION=2026.01-01 BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua moonbit php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
+      run: make test-all YAMLSTAR_ENGINE=glojure YAMLSTAR_SYSTEM_RUBY=1 TEST-TIME='date; time' 'PYTHON-NAME=cpython-$(PYTHON-VERSION)-macos-x86_64-none' RAKU-VERSION=2026.01-01 BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua moonbit php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
 
   test-freebsd-x64-retry:
     name: Test FreeBSD x64 artifacts (retry)

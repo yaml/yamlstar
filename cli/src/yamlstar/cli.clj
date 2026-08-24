@@ -5,6 +5,7 @@
             [clojure.pprint :as pp]
             [clojure.string :as str]
             [yamlstar.api :as yaml]
+            [yamlstar.cli-default :as cli-default]
             [yamlstar.contract :as contract]
             [yamlstar.parser :as parser]
             [yamlstar.composer :as composer]
@@ -269,6 +270,7 @@ Options:")
       1)))
 
 (defn -main [& args]
+  (parser/set-default-parser! cli-default/default-parser)
   (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)]
     (cond
       ;; Help

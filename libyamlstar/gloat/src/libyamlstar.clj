@@ -2,7 +2,11 @@
   "Shared library bridge - Gloat EXPORT-based C API for YAMLStar"
   (:require [clojure.string :as str]
             [yamlstar.api :as yaml]
+            [yamlstar.parser :as parser]
+            [yamlstar.plugin.parser.go-yaml]
             [ys.json :as json]))
+
+(parser/set-default-parser! "go-yaml")
 
 (def EXPORT
   {"graal-create-isolate"     [:int :int :int :int]
@@ -11,10 +15,10 @@
    "graal-detach-thread"      [:int :int]
    "graal-get-current-thread" [:int :int]
    "graal-get-isolate"        [:int :int]
-   "yamlstar-load"            [:int :str :str]
-   "yamlstar-load-all"        [:int :str :str]
-   "yamlstar-dump"            [:int :str :str]
-   "yamlstar-dump-all"        [:int :str :str]
+   "yamlstar-load"            [:int :str :str :str]
+   "yamlstar-load-all"        [:int :str :str :str]
+   "yamlstar-dump"            [:int :str :str :str]
+   "yamlstar-dump-all"        [:int :str :str :str]
    "yamlstar-version"         [:int :str]})
 
 ;; The public C API historically exposed GraalVM isolate lifecycle functions.

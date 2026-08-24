@@ -1,17 +1,56 @@
 include ../common/init.mk
 M := ../.cache/makes
 
-ifdef YAMLSTAR_GLOJURE
+RT ?= $(if $(YAMLSTAR_GLOJURE),glj,graal)
+PARSER ?= $(if $(filter glj,$(RT)),go,ref)
+
+VALID-RT := graal glj go
+VALID-PARSER := ref snake go
+
+ifeq (,$(filter $(RT),$(VALID-RT)))
+$(error Unknown RT '$(RT)'. Expected one of: $(VALID-RT))
+endif
+
+ifeq (,$(filter $(PARSER),$(VALID-PARSER)))
+$(error Unknown PARSER '$(PARSER)'. Expected one of: $(VALID-PARSER))
+endif
+
+PARSER-NAME := $(if $(filter ref,$(PARSER)),reference,$(if $(filter snake,$(PARSER)),snakeyaml,go-yaml))
+YAMLSTAR_ENGINE ?= $(if $(filter graal,$(RT)),graalvm,glojure)
+CLI-NAME ?= yaml-$(RT)-$(PARSER)
+CLI-DEFAULT-REQUIRE := $(if $(filter snake,$(PARSER)),[yamlstar.plugin.parser.snakeyaml],$(if $(filter go,$(PARSER)),[yamlstar.plugin.parser.go-yaml]))
+
+ifeq ($(RT),graal)
+ifneq (,$(filter go,$(PARSER)))
+$(error Unsupported parser/runtime pair: RT=graal PARSER=go)
+endif
+endif
+
+ifeq ($(RT),glj)
+ifneq (,$(filter snake,$(PARSER)))
+$(error Unsupported parser/runtime pair: RT=glj PARSER=snake)
+endif
+endif
+
+ifeq ($(RT),go)
+ifneq (,$(filter snake go,$(PARSER)))
+$(error Unsupported parser/runtime pair: RT=go PARSER=$(PARSER))
+endif
+endif
+
+ifeq ($(YAMLSTAR_ENGINE),glojure)
 include $M/gloat.mk
 include $M/lein.mk
-else
+else ifeq ($(YAMLSTAR_ENGINE),graalvm)
 include $M/graalvm.mk
 include $M/lein.mk
+else
+$(error Unknown YAMLSTAR_ENGINE '$(YAMLSTAR_ENGINE)')
 endif
 
 include $(COMMON)/common.mk
 
-ifndef YAMLSTAR_GLOJURE
+ifeq ($(YAMLSTAR_ENGINE),graalvm)
 include $(COMMON)/native.mk
 endif
 
@@ -19,17 +58,20 @@ MAKES-CLEAN := \
   target \
   .lein-* \
   bin \
+  cache \
 
-CLI-NAME ?= yaml
 ifeq ($(OS-NAME),windows)
 CLI-BIN := bin/$(CLI-NAME).exe
 else
 CLI-BIN := bin/$(CLI-NAME)
 endif
 CLI-OUT := bin/$(CLI-NAME)
-CLI-JAR := target/cli-$(LIBYAMLSTAR-VERSION)-SNAPSHOT-standalone.jar
+CLI-UBERJAR := target/cli-$(LIBYAMLSTAR-VERSION)-SNAPSHOT-standalone.jar
+CLI-JAR := target/$(CLI-NAME)-$(LIBYAMLSTAR-VERSION)-SNAPSHOT-standalone.jar
+CLI-DEFAULT-DIR := cache/cli-defaults/$(CLI-NAME)-$(PARSER-NAME)
+CLI-DEFAULT-SRC := $(CLI-DEFAULT-DIR)/yamlstar/cli_default.clj
 
-GLOAT-ENGINE := $(or $(GLOAT_ENGINE),glj)
+GLOAT-ENGINE := $(or $(GLOAT_ENGINE),$(if $(filter go,$(RT)),lgvm,glj))
 GLOAT-PLATFORM-OPT := \
   $(if $(GLOAT_PLATFORM),--platform=$(GLOAT_PLATFORM))
 GLOAT-RUN := $(GLOAT-BIN)/gloat
@@ -44,16 +86,25 @@ $(GLOAT-BASH-SHIM): | $(GLOAT-DIR)
 	  'exec /usr/bin/bash "$$@"' > $@
 	chmod +x $@
 endif
+ifeq ($(YAMLSTAR_ENGINE),glojure)
+CLI-GLOAT-NAME ?= $(CLI-NAME)
+else
 CLI-GLOAT-NAME ?= yaml-gloat-$(GLOAT-ENGINE)
+endif
 CLI-BIN-GLOAT := bin/$(CLI-GLOAT-NAME)
 GLOAT-CACHE := ../libyamlstar/cache/gloat-srcs
 GLOAT-CORE := ../core/src/yamlstar
+GLOAT-GO-YAML-SRC := $(GLOAT-CACHE)/plugin/parser/go_yaml.clj
 GLOAT-CLI-SRCS := \
   $(GLOAT-CACHE)/yaml_parser/prelude.clj \
   $(GLOAT-CACHE)/yaml_parser/parser.clj \
   $(GLOAT-CACHE)/yaml_parser/receiver.clj \
   $(GLOAT-CACHE)/yaml_parser/grammar.clj \
   $(GLOAT-CACHE)/yaml_parser/core.clj \
+  $(GLOAT-CORE)/plugin.clj \
+  $(GLOAT-CORE)/options.clj \
+  $(GLOAT-CORE)/plugin/parser.clj \
+  $(if $(filter go,$(PARSER)),$(GLOAT-GO-YAML-SRC)) \
   $(GLOAT-CORE)/parser.clj \
   $(GLOAT-CORE)/composer.clj \
   $(GLOAT-CORE)/resolver.clj \
@@ -64,6 +115,7 @@ GLOAT-CLI-SRCS := \
   $(GLOAT-CACHE)/serializer.clj \
   $(GLOAT-CACHE)/emitter.clj \
   $(GLOAT-CORE)/api.clj \
+  $(CLI-DEFAULT-SRC) \
   $(GLOAT-CORE)/contract.clj \
   gloat/src/yamlstar/cli.clj \
 
@@ -88,7 +140,6 @@ GLOAT-GLOJURE-ENV := \
   GOCACHE=$(GLOAT-DIR)/.cache/local/cache/go-build \
   GOMODCACHE=$(GLOAT-DIR)/.cache/local/go/pkg/mod
 
-.PHONY: _prepare-glj
 _prepare-glj: _prepare-gloat-bin $(GLOAT-RUN-DEPS)
 	env -u GOROOT $(GLOAT-GLOJURE-ENV) $(GLOAT-RUN) --glj-build
 
@@ -99,10 +150,10 @@ endif
 CORE-JAR := $(MAVEN-REPOSITORY)/yamlstar/core/$(LIBYAMLSTAR-VERSION)-SNAPSHOT/core-$(LIBYAMLSTAR-VERSION)-SNAPSHOT.jar
 
 
-test: $(CORE-JAR) $(LEIN)
-	lein test
+test: $(CORE-JAR) $(LEIN) $(CLI-DEFAULT-SRC)
+	$(LEIN) update-in :source-paths conj '"$(CLI-DEFAULT-DIR)"' -- test
 
-ifdef YAMLSTAR_GLOJURE
+ifeq ($(YAMLSTAR_ENGINE),glojure)
 build: _build-gloat
 else
 build: $(CLI-BIN)
@@ -113,10 +164,12 @@ jar: $(CLI-JAR)
 install:
 
 build-graalvm:
-	$(MAKE) build CLI-NAME=yaml-graalvm YAMLSTAR_GLOJURE=
+	$(MAKE) build RT=graal PARSER=ref CLI-NAME=yaml-graalvm
 
 build-gloat:
-	YAMLSTAR_GLOJURE=1 $(MAKE) _build-gloat \
+	$(MAKE) _build-gloat \
+	  RT=glj \
+	  PARSER=go \
 	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
 	  CLI-GLOAT-NAME=$(CLI-GLOAT-NAME) \
 	  $(if $(GLOAT-DIR),GLOAT-DIR=$(GLOAT-DIR)) \
@@ -125,25 +178,39 @@ build-gloat:
 	  $(if $(TEST-WITH-GLOJURE),TEST-WITH-GLOJURE=$(TEST-WITH-GLOJURE))
 
 build-gloat-glj:
-	$(MAKE) build-gloat GLOAT_ENGINE=glj
+	$(MAKE) build RT=glj PARSER=go CLI-NAME=yaml-gloat-glj
+
+build-gloat-ref:
+	$(MAKE) build RT=glj PARSER=ref CLI-NAME=yaml-gloat-ref
+
+build-graalvm-ref:
+	$(MAKE) build RT=graal PARSER=ref CLI-NAME=yaml-graalvm-ref
+
+build-graalvm-snake:
+	$(MAKE) build RT=graal PARSER=snake CLI-NAME=yaml-graalvm-snake
 
 build-gloat-lgvm:
-	$(MAKE) build-gloat GLOAT_ENGINE=lgvm
+	$(MAKE) build RT=go PARSER=ref CLI-NAME=yaml-gloat-lgvm GLOAT_ENGINE=lgvm
 
 build-gloat-lglvm:
-	$(MAKE) build-gloat GLOAT_ENGINE=lglvm
+	$(MAKE) build RT=go PARSER=ref CLI-NAME=yaml-gloat-lglvm GLOAT_ENGINE=lglvm
 
 _build-gloat: $(CLI-BIN-GLOAT)
 
-.PHONY: _prepare-gloat
 _prepare-gloat:
-	YAMLSTAR_GLOJURE=1 $(MAKE) -C ../libyamlstar prepare-gloat \
+	$(MAKE) -C ../libyamlstar prepare-gloat \
+	  YAMLSTAR_ENGINE=glojure \
 	  GLOAT-DIR=$(GLOAT-DIR) \
 	  $(if $(YAML-PARSER-DIR),YAML-PARSER-DIR=$(YAML-PARSER-DIR))
 
 $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
   $(GLOAT-RUN-DEPS) \
   $(GLOAT-CLI-GLJ-DEP) \
+  $(CLI-DEFAULT-SRC) \
+  $(GLOAT-CORE)/plugin.clj \
+  $(GLOAT-CORE)/options.clj \
+  $(GLOAT-CORE)/plugin/parser.clj \
+  $(if $(filter go,$(PARSER)),$(GLOAT-GO-YAML-SRC)) \
   $(GLOAT-CORE)/parser.clj \
   $(GLOAT-CORE)/composer.clj \
   $(GLOAT-CORE)/resolver.clj \
@@ -152,6 +219,8 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
   gloat/src/yamlstar/cli.clj
 	mkdir -p $(dir $@)
 	</dev/null env -u GOROOT $(GLOAT-GLOJURE-ENV) \
+	  GLOAT_MODULE=github.com/yaml/yamlstar \
+	  GLOAT_EXTRA_GO_DIR=$(abspath ../internal/goyamlparser) \
 	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
 	  $(if $(LET_GO_SRC),LET_GO_SRC=$(abspath $(LET_GO_SRC))) \
 	  $(GLOAT-RUN) --force $(GLOAT-PLATFORM-OPT) \
@@ -159,12 +228,33 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
 	test -x $@
 	@echo "Gloat ($(GLOAT-ENGINE)) CLI created at: $@"
 
-$(CLI-JAR): $(CORE-JAR) $(LEIN)
-	lein uberjar
+$(CLI-DEFAULT-SRC):
+	@mkdir -p $(dir $@)
+	@if test -n '$(CLI-DEFAULT-REQUIRE)'; then \
+	  printf '%s\n' \
+	    '(ns yamlstar.cli-default' \
+	    '  (:require $(CLI-DEFAULT-REQUIRE)))' \
+	    '' \
+	    '(def default-parser "$(PARSER-NAME)")' \
+	    > $@; \
+	else \
+	  printf '%s\n' \
+	    '(ns yamlstar.cli-default)' \
+	    '' \
+	    '(def default-parser "$(PARSER-NAME)")' \
+	    > $@; \
+	fi
+
+ifeq ($(YAMLSTAR_ENGINE),graalvm)
+$(CLI-JAR): $(CORE-JAR) $(LEIN) $(CLI-DEFAULT-SRC) src/yamlstar/cli.clj
+	$(LEIN) update-in :source-paths conj '"$(CLI-DEFAULT-DIR)"' -- uberjar
+	cp $(CLI-UBERJAR) $@
+endif
 
 $(CORE-JAR):
 	$(MAKE) -C ../core install
 
+ifeq ($(YAMLSTAR_ENGINE),graalvm)
 $(CLI-BIN): $(CLI-JAR) $(GRAALVM)
 	mkdir -p $(dir $@)
 	$(NATIVE-IMAGE) \
@@ -173,3 +263,4 @@ $(CLI-BIN): $(CLI-JAR) $(GRAALVM)
 	  -o $(CLI-OUT)
 	test -f $@
 	@echo "Native binary created at: $@"
+endif

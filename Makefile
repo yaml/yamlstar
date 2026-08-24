@@ -16,6 +16,7 @@ include $M/shell.mk
 
 # Extract version from Meta file
 VERSION := $(shell grep '^version:' Meta | cut -d' ' -f2)
+YAMLSTAR_ENGINE ?= $(if $(YAMLSTAR_GLOJURE),glojure,graalvm)
 RELEASE-LOG := release-$n.log
 RELEASE-SECRETS := \
   $(wildcard $(HOME)/.yamlstar-secrets.yaml) \
@@ -84,7 +85,7 @@ BINDING-LANGS ?= \
   zig \
 
 # Gloat build cannot run JVM-based bindings (clojure, java)
-ifdef YAMLSTAR_GLOJURE
+ifeq ($(YAMLSTAR_ENGINE),glojure)
 BINDING-SKIP ?= clojure java
 else
 BINDING-SKIP ?=
@@ -115,8 +116,10 @@ ALL-TESTS := \
   $(BINDING-TESTS)
 TEST-TIME ?=
 
-build install::
-	$(MAKE) -C libyamlstar $@
+build:: build-libyamlstar
+
+install::
+	$(MAKE) -C libyamlstar install
 
 test ?= test/*.t
 
@@ -149,9 +152,9 @@ test-unit: $(TEST-UNIT-DEPS)
 	perl -x "$$(command -v prove)"$(if $(v), -v,) $(test)
 endif
 
-ifdef YAMLSTAR_GLOJURE
+ifeq ($(YAMLSTAR_ENGINE),glojure)
 test-suite test-suite-load test-suite-roundtrip test-suite-emit:
-	$(MAKE) -C python $@ YAMLSTAR_GLOJURE=1
+	$(MAKE) -C python $@ YAMLSTAR_ENGINE=glojure
 else
 test-suite test-suite-load test-suite-roundtrip test-suite-emit:
 	$(MAKE) -C core $@
@@ -208,13 +211,21 @@ cli:
 cli-graalvm:
 	$(MAKE) -C cli build-graalvm
 
-build-yamlstar-graalvm:
+build-cli-graalvm:
 	$(MAKE) -C cli build-graalvm
 
-cli-gloat-glj:
+build-cli-glojure:
 	$(MAKE) -C cli build-gloat-glj
 
-build-yamlstar-glojure:
+build-libyamlstar: build-libyamlstar-graalvm build-libyamlstar-glojure
+
+build-libyamlstar-graalvm:
+	$(MAKE) -C libyamlstar build-graalvm YAMLSTAR_ENGINE=graalvm
+
+build-libyamlstar-glojure:
+	$(MAKE) -C libyamlstar build-gloat YAMLSTAR_ENGINE=glojure
+
+cli-gloat-glj:
 	$(MAKE) -C cli build-gloat-glj
 
 cli-gloat-lgvm:
@@ -245,12 +256,6 @@ cli-local-lgvm:
 
 cli-local-lglvm:
 	$(call CLI-LOCAL-BUILD,lglvm,let-go)
-
-libyamlstar:
-	$(MAKE) -C libyamlstar build
-
-build-libyamlstar:
-	$(MAKE) -C libyamlstar build-all
 
 serve:
 	$(MAKE) -C www serve
@@ -572,5 +577,3 @@ endif
 	  --dir python/dist/release-assets
 	$(MAKE) -C python wheels-from-release n=$(v)
 	$(MAKE) -C python publish-wheels
-
-.PHONY: cli core libyamlstar test

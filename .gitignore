@@ -18,6 +18,10 @@ META-INF/
 /*.yaml
 /*.ys
 /out*
+/test-libyamlstar.py
+/test-libyamlstar.sh
+/time-parser-plugins.sh
+/internal/goyamlparser/
 
 target/
 classes/
