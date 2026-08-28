@@ -62,13 +62,26 @@ cat > "$dst/adapter.go" <<'GO'
 package goyamlparser
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"strings"
+
+	"github.com/glojurelang/glojure/pkg/lang"
 )
 
-func ParseYAMLStarEvents(input string) (string, error) {
+var (
+	kwEvent    = lang.NewKeyword("event")
+	kwExplicit = lang.NewKeyword("explicit")
+	kwVersion  = lang.NewKeyword("version")
+	kwFlow     = lang.NewKeyword("flow")
+	kwValue    = lang.NewKeyword("value")
+	kwStyle    = lang.NewKeyword("style")
+	kwName     = lang.NewKeyword("name")
+	kwAnchor   = lang.NewKeyword("anchor")
+	kwTag      = lang.NewKeyword("tag")
+)
+
+func ParseYAMLStarEvents(input string) (any, error) {
 	if input == "" {
 		input = "\n"
 	} else if !strings.HasSuffix(input, "\n") {
@@ -79,7 +92,7 @@ func ParseYAMLStarEvents(input string) (string, error) {
 	parser.SetInputString([]byte(input))
 	defer parser.Delete()
 
-	events := []map[string]any{}
+	events := []any{}
 	for {
 		var event Event
 		err := parser.Parse(&event)
@@ -87,7 +100,7 @@ func ParseYAMLStarEvents(input string) (string, error) {
 			break
 		}
 		if err != nil {
-			return "", err
+			return nil, err
 		}
 		if item := yamlstarEvent(&event); item != nil {
 			events = append(events, item)
@@ -97,73 +110,73 @@ func ParseYAMLStarEvents(input string) (string, error) {
 		}
 	}
 
-	data, err := json.Marshal(events)
-	if err != nil {
-		return "", err
-	}
-	return string(data), nil
+	return lang.NewVector(events...), nil
 }
 
-func yamlstarEvent(event *Event) map[string]any {
+func yamlstarEvent(event *Event) any {
 	switch event.Type {
 	case STREAM_START_EVENT:
-		return map[string]any{"event": "stream_start"}
+		return lang.NewMap(kwEvent, "stream_start")
 	case STREAM_END_EVENT:
-		return map[string]any{"event": "stream_end"}
+		return lang.NewMap(kwEvent, "stream_end")
 	case DOCUMENT_START_EVENT:
-		item := map[string]any{"event": "document_start"}
+		values := []any{kwEvent, "document_start"}
 		if !event.Implicit {
-			item["explicit"] = true
+			values = append(values, kwExplicit, true)
 		}
 		if version := event.GetVersionDirective(); version != nil {
-			item["version"] = fmt.Sprintf("%d.%d", version.Major(), version.Minor())
+			values = append(
+				values,
+				kwVersion,
+				fmt.Sprintf("%d.%d", version.Major(), version.Minor()),
+			)
 		}
-		return item
+		return lang.NewMap(values...)
 	case DOCUMENT_END_EVENT:
-		item := map[string]any{"event": "document_end"}
+		values := []any{kwEvent, "document_end"}
 		if !event.Implicit {
-			item["explicit"] = true
+			values = append(values, kwExplicit, true)
 		}
-		return item
+		return lang.NewMap(values...)
 	case MAPPING_START_EVENT:
 		item := nodeStartEvent("mapping_start", event)
 		if event.MappingStyle() == FLOW_MAPPING_STYLE {
-			item["flow"] = true
+			item = item.Assoc(kwFlow, true).(lang.IPersistentMap)
 		}
 		return item
 	case MAPPING_END_EVENT:
-		return map[string]any{"event": "mapping_end"}
+		return lang.NewMap(kwEvent, "mapping_end")
 	case SEQUENCE_START_EVENT:
 		item := nodeStartEvent("sequence_start", event)
 		if event.SequenceStyle() == FLOW_SEQUENCE_STYLE {
-			item["flow"] = true
+			item = item.Assoc(kwFlow, true).(lang.IPersistentMap)
 		}
 		return item
 	case SEQUENCE_END_EVENT:
-		return map[string]any{"event": "sequence_end"}
+		return lang.NewMap(kwEvent, "sequence_end")
 	case SCALAR_EVENT:
 		item := nodeStartEvent("scalar", event)
-		item["value"] = string(event.Value)
+		item = item.Assoc(kwValue, string(event.Value)).(lang.IPersistentMap)
 		if style := scalarStyle(event.ScalarStyle()); style != "" {
-			item["style"] = style
+			item = item.Assoc(kwStyle, style).(lang.IPersistentMap)
 		}
 		return item
 	case ALIAS_EVENT:
-		return map[string]any{"event": "alias", "name": string(event.Anchor)}
+		return lang.NewMap(kwEvent, "alias", kwName, string(event.Anchor))
 	default:
 		return nil
 	}
 }
 
-func nodeStartEvent(name string, event *Event) map[string]any {
-	item := map[string]any{"event": name}
+func nodeStartEvent(name string, event *Event) lang.IPersistentMap {
+	values := []any{kwEvent, name}
 	if len(event.Anchor) > 0 {
-		item["anchor"] = string(event.Anchor)
+		values = append(values, kwAnchor, string(event.Anchor))
 	}
 	if tag := normalizeTag(string(event.Tag)); tag != "" {
-		item["tag"] = tag
+		values = append(values, kwTag, tag)
 	}
-	return item
+	return lang.NewMap(values...)
 }
 
 func scalarStyle(style ScalarStyle) string {
