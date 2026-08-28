@@ -39,6 +39,12 @@
     (is (thrown-with-msg? Exception #"Available: .*reference"
                           (plugin/resolve-parser "no-such-parser")))))
 
+(deftest reference-parser-namespace-test
+  (testing "reference parser resolves without registry side effects"
+    (plugin/unregister-parser! "reference")
+    (is (= "reference" (:name (plugin/resolve-parser "reference"))))
+    (parser/register-reference-parser!)))
+
 (deftest parser-opts-test
   (testing "nil and empty opts take the fast path"
     (is (nil? (plugin/parser-opts nil)))

@@ -202,6 +202,7 @@ GLOAT-SRCS := \
   $(CORE-YAMLSTAR)/plugin.clj \
   $(CORE-YAMLSTAR)/options.clj \
   $(CORE-YAMLSTAR)/plugin/parser.clj \
+  $(CORE-YAMLSTAR)/plugin/parser/reference.clj \
   $(GLOAT-LINK-DIR)/plugin/parser/go_yaml.clj \
   $(CORE-YAMLSTAR)/parser.clj \
   $(CORE-YAMLSTAR)/composer.clj \

@@ -3,9 +3,11 @@
   (:require [clojure.string :as str]
             [yamlstar.api :as yaml]
             [yamlstar.parser :as parser]
+            [yamlstar.plugin.parser.reference]
             [yamlstar.plugin.parser.go-yaml]
             [ys.json :as json]))
 
+(parser/register-reference-parser!)
 (parser/set-default-parser! "go-yaml")
 
 (def EXPORT

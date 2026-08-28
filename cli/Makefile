@@ -104,6 +104,7 @@ GLOAT-CLI-SRCS := \
   $(GLOAT-CORE)/plugin.clj \
   $(GLOAT-CORE)/options.clj \
   $(GLOAT-CORE)/plugin/parser.clj \
+  $(GLOAT-CORE)/plugin/parser/reference.clj \
   $(if $(filter go,$(PARSER)),$(GLOAT-GO-YAML-SRC)) \
   $(GLOAT-CORE)/parser.clj \
   $(GLOAT-CORE)/composer.clj \
@@ -210,6 +211,7 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
   $(GLOAT-CORE)/plugin.clj \
   $(GLOAT-CORE)/options.clj \
   $(GLOAT-CORE)/plugin/parser.clj \
+  $(GLOAT-CORE)/plugin/parser/reference.clj \
   $(if $(filter go,$(PARSER)),$(GLOAT-GO-YAML-SRC)) \
   $(GLOAT-CORE)/parser.clj \
   $(GLOAT-CORE)/composer.clj \
