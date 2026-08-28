@@ -144,9 +144,11 @@ jobs:
 
     - name: Build release archives and Python wheel
       run: |
-        make release-lib VERSION="$VERSION"
-        make release-cli VERSION="$VERSION"
-        make -C python wheel VERSION="$VERSION"
+        make release-lib VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
+        make release-cli VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
+        make -C python wheel VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
+        make release-lib VERSION="$VERSION" YAMLSTAR_ENGINE=graalvm
+        make release-cli VERSION="$VERSION" YAMLSTAR_ENGINE=graalvm
 
     - name: Upload Linux artifacts
       uses: actions/upload-artifact@v6
@@ -155,6 +157,8 @@ jobs:
         path: |
           dist/yamlstar-${{ inputs.version }}-linux-x64.tar.xz
           dist/libyamlstar-${{ inputs.version }}-linux-x64.tar.xz
+          dist/yamlstar-${{ inputs.version }}-linux-x64-graalvm.tar.xz
+          dist/libyamlstar-${{ inputs.version }}-linux-x64-graalvm.tar.xz
           python/dist/*.whl
         retention-days: 7
 
@@ -213,8 +217,10 @@ jobs:
 
     - name: Build release archives
       run: |
-        make release-lib VERSION="$VERSION"
-        make release-cli VERSION="$VERSION"
+        make release-lib VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
+        make release-cli VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
+        make release-lib VERSION="$VERSION" YAMLSTAR_ENGINE=graalvm
+        make release-cli VERSION="$VERSION" YAMLSTAR_ENGINE=graalvm
 
     - name: Upload Linux AArch64 artifacts
       uses: actions/upload-artifact@v6
@@ -223,6 +229,8 @@ jobs:
         path: |
           dist/yamlstar-${{ inputs.version }}-linux-aarch64.tar.xz
           dist/libyamlstar-${{ inputs.version }}-linux-aarch64.tar.xz
+          dist/yamlstar-${{ inputs.version }}-linux-aarch64-graalvm.tar.xz
+          dist/libyamlstar-${{ inputs.version }}-linux-aarch64-graalvm.tar.xz
         retention-days: 7
 
   build-macos-arm64:
@@ -264,9 +272,11 @@ jobs:
 
     - name: Build release archives and Python wheel
       run: |
-        make release-lib VERSION="$VERSION"
-        make release-cli VERSION="$VERSION"
-        make -C python wheel VERSION="$VERSION"
+        make release-lib VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
+        make release-cli VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
+        make -C python wheel VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
+        make release-lib VERSION="$VERSION" YAMLSTAR_ENGINE=graalvm
+        make release-cli VERSION="$VERSION" YAMLSTAR_ENGINE=graalvm
 
     - name: Upload macOS artifacts
       uses: actions/upload-artifact@v6
@@ -275,6 +285,8 @@ jobs:
         path: |
           dist/yamlstar-${{ inputs.version }}-macos-arm64.tar.xz
           dist/libyamlstar-${{ inputs.version }}-macos-arm64.tar.xz
+          dist/yamlstar-${{ inputs.version }}-macos-arm64-graalvm.tar.xz
+          dist/libyamlstar-${{ inputs.version }}-macos-arm64-graalvm.tar.xz
           python/dist/*.whl
         retention-days: 7
 
@@ -333,6 +345,7 @@ jobs:
           YAMLSTAR_ENGINE=glojure \
           TEST-WITH-GLOJURE="$PWD/.cache/glojure-source"
         make -C python wheel VERSION="$VERSION" \
+          YAMLSTAR_ENGINE=glojure \
           'PYTHON-NAME=cpython-$(PYTHON-VERSION)-macos-x86_64-none'
 
     - name: Upload macOS x64 artifacts

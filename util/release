@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
-# shellcheck disable=2235
+# shellcheck disable=SC2030,SC2031,SC2235
 
 set -euo pipefail
 
-export VERSION=$(grep '^version:' "$(dirname "$0")/../Meta" | cut -d' ' -f2)
+VERSION=$(grep '^version:' "$(dirname "$0")/../Meta" | cut -d' ' -f2)
+export VERSION
 
 case "$(uname -s)" in
   Linux*)
@@ -76,6 +77,30 @@ detect-platform() {
     ARCHIVE_EXT=tar.xz
   else
     die "ERROR: Unsupported target operating system $OS_NAME"
+  fi
+}
+
+release-engine() {
+  if [[ -n ${GLOAT_PLATFORM:-} || -n ${YAMLSTAR_GLOJURE:-} ]]; then
+    echo glojure
+  else
+    case "${YAMLSTAR_ENGINE:-glojure}" in
+      glojure) echo glojure ;;
+      graalvm) echo graalvm ;;
+      *) die "ERROR: Unknown YAMLSTAR_ENGINE '${YAMLSTAR_ENGINE:-}'" ;;
+    esac
+  fi
+}
+
+release-suffix() {
+  local engine=$1
+
+  if [[ ${RELEASE_SUFFIX+x} ]]; then
+    echo "$RELEASE_SUFFIX"
+  elif [[ $engine == graalvm ]]; then
+    echo -graalvm
+  else
+    echo ''
   fi
 }
 
@@ -166,7 +191,8 @@ do-check-tag() (
 # Build shared library for current platform
 do-release-lib() (
   detect-platform
-  local lib_build_target lib_build_engine
+  local lib_build_target lib_build_engine release_suffix
+  local lib_file lib_link lib_versioned
 
   [[ $OS_NAME != wasm ]] ||
     die 'ERROR: WASI does not support libyamlstar shared libraries'
@@ -176,13 +202,18 @@ do-release-lib() (
   rm -f libyamlstar/lib/libyamlstar*.$EXT \
     libyamlstar/lib/libyamlstar*.$EXT.*
 
-  if [[ -n ${GLOAT_PLATFORM:-} || ${YAMLSTAR_ENGINE:-} == glojure || -n ${YAMLSTAR_GLOJURE:-} ]]; then
+  lib_build_engine=$(release-engine)
+  release_suffix=$(release-suffix "$lib_build_engine")
+
+  if [[ $lib_build_engine == glojure ]]; then
     lib_build_target=build-gloat
-    lib_build_engine=glojure
   else
     lib_build_target=build-graalvm
-    lib_build_engine=graalvm
   fi
+
+  lib_file=libyamlstar-$lib_build_engine.$EXT
+  lib_link=libyamlstar.$EXT
+  lib_versioned=$lib_file.$VERSION
 
   # Build the library
   if [[ ${CROSS_CC_TARGET:-} ]]; then
@@ -199,28 +230,23 @@ do-release-lib() (
   fi
 
   # Create release directory structure
-  RELEASE_DIR=libyamlstar-$VERSION-$PLATFORM
+  RELEASE_DIR=libyamlstar-$VERSION-$PLATFORM$release_suffix
   RELEASE_PATH=dist/$RELEASE_DIR
 
   echo "Creating release package: $RELEASE_DIR"
   rm -rf "$RELEASE_PATH"
   mkdir -p "$RELEASE_PATH"
 
-  # Copy library files
-  for f in libyamlstar/lib/libyamlstar*.$EXT*; do
-    cp -P "$f" "$RELEASE_PATH/"
-  done
+  cp -L "libyamlstar/lib/$lib_file" "$RELEASE_PATH/$lib_file"
 
   if [[ $OS_NAME != windows ]]; then
-    # Make the versioned library the real file, then point compatibility
-    # symlinks at it. The build tree may have the inverse layout.
     cd "$RELEASE_PATH"
-    cp -L libyamlstar.$EXT libyamlstar.$EXT.$VERSION.tmp
-    mv libyamlstar.$EXT.$VERSION.tmp libyamlstar.$EXT.$VERSION
-    rm -f libyamlstar.$EXT libyamlstar.$EXT.0
-    ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$EXT
-    ln -sf libyamlstar.$EXT.$VERSION libyamlstar.$EXT.0
+    ln -sf "$lib_file" "$lib_link"
+    ln -sf "$lib_file" "$lib_link.0"
+    ln -sf "$lib_file" "$lib_versioned"
     cd - > /dev/null
+  else
+    cp -p "$RELEASE_PATH/$lib_file" "$RELEASE_PATH/$lib_link"
   fi
 
   # Copy only the stable public ABI headers. The Gloat build also emits an
@@ -238,6 +264,9 @@ ROOT := $(shell cd '$(abspath $(dir $(lastword $(MAKEFILE_LIST))))' && pwd -P)
 YAMLSTAR_VERSION := VERSION_PLACEHOLDER
 
 LIBYAMLSTAR := $(firstword $(wildcard libyamlstar.EXT_PLACEHOLDER*))
+LIBYAMLSTAR_ENGINE := $(firstword \
+  $(wildcard libyamlstar-glojure.EXT_PLACEHOLDER) \
+  $(wildcard libyamlstar-graalvm.EXT_PLACEHOLDER))
 
 PREFIX ?= /usr/local
 
@@ -245,9 +274,11 @@ install:
 ifneq (,$(LIBYAMLSTAR))
 	mkdir -p $(PREFIX)/lib
 	cp -pP libyamlstar.EXT_PLACEHOLDER* $(PREFIX)/lib/
+	cp -pP libyamlstar-glojure.EXT_PLACEHOLDER* $(PREFIX)/lib/ 2>/dev/null || true
+	cp -pP libyamlstar-graalvm.EXT_PLACEHOLDER* $(PREFIX)/lib/ 2>/dev/null || true
 	mkdir -p $(PREFIX)/include/libyamlstar-$(YAMLSTAR_VERSION)
 	cp -pP *.h $(PREFIX)/include/libyamlstar-$(YAMLSTAR_VERSION)/
-	@echo 'Installed $(PREFIX)/lib/$(LIBYAMLSTAR) - version $(YAMLSTAR_VERSION)'
+	@echo 'Installed $(PREFIX)/lib/$(LIBYAMLSTAR_ENGINE) - version $(YAMLSTAR_VERSION)'
 else
 	$(error Weird! Nothing to install in this directory.)
 endif
@@ -265,8 +296,8 @@ YAMLStar VERSION_PLACEHOLDER for PLATFORM_PLACEHOLDER
 
 ## Contents
 
-- `libyamlstar.EXT_PLACEHOLDER.VERSION_PLACEHOLDER` - Versioned shared library
-- `libyamlstar.EXT_PLACEHOLDER` - Symlink to versioned library
+- `LIB_FILE_PLACEHOLDER` - Engine shared library
+- `LIB_LINK_PLACEHOLDER` - Compatibility LIB_LINK_KIND_PLACEHOLDER
 - `libyamlstar.EXT_PLACEHOLDER.0` - Symlink for API version compatibility
 - `libyamlstar.h` - Main library header
 - `graal_isolate.h` - Compatibility lifecycle API header
@@ -293,6 +324,7 @@ Copy the library and headers to your preferred location:
 ```bash
 # Libraries
 cp -P libyamlstar.EXT_PLACEHOLDER* /path/to/lib/
+cp -P libyamlstar-ENGINE_PLACEHOLDER.EXT_PLACEHOLDER* /path/to/lib/
 
 # Headers
 mkdir -p /path/to/include/libyamlstar-VERSION_PLACEHOLDER
@@ -323,10 +355,14 @@ gcc -o myapp myapp.c -lyamlstar
   $SED "s/VERSION_PLACEHOLDER/$VERSION/g" "$RELEASE_PATH/ReadMe.md"
   $SED "s/PLATFORM_PLACEHOLDER/$PLATFORM/g" "$RELEASE_PATH/ReadMe.md"
   $SED "s/EXT_PLACEHOLDER/$EXT/g" "$RELEASE_PATH/ReadMe.md"
+  $SED "s/ENGINE_PLACEHOLDER/$lib_build_engine/g" "$RELEASE_PATH/ReadMe.md"
+  $SED "s/LIB_FILE_PLACEHOLDER/$lib_file/g" "$RELEASE_PATH/ReadMe.md"
+  $SED "s/LIB_LINK_PLACEHOLDER/$lib_link/g" "$RELEASE_PATH/ReadMe.md"
   if [[ $OS_NAME == windows ]]; then
-    $SED "s/- \`libyamlstar.$EXT.$VERSION\` - Versioned shared library/- \`libyamlstar.$EXT\` - Shared library/" \
-      "$RELEASE_PATH/ReadMe.md"
+    $SED "s/LIB_LINK_KIND_PLACEHOLDER/library copy/g" "$RELEASE_PATH/ReadMe.md"
     $SED "/Symlink/d" "$RELEASE_PATH/ReadMe.md"
+  else
+    $SED "s/LIB_LINK_KIND_PLACEHOLDER/symlink/g" "$RELEASE_PATH/ReadMe.md"
   fi
 
   # Create archive
@@ -351,49 +387,60 @@ gcc -o myapp myapp.c -lyamlstar
 # Build CLI archive for current platform
 do-release-cli() (
   detect-platform
+  local cli_build_engine release_suffix
+  local cli_build_file cli_file cli_source
 
-  if [[ -n ${GLOAT_PLATFORM:-} || ${YAMLSTAR_ENGINE:-} == glojure || -n ${YAMLSTAR_GLOJURE:-} ]]; then
-    case "$OS_NAME" in
-      windows)
-        CLI_BUILD_FILE=yaml-release.exe
-        CLI_FILE=yaml.exe
-        ;;
-      wasm)
-        CLI_BUILD_FILE=yaml-release.wasm
-        CLI_FILE=yaml.wasm
-        ;;
-      *)
-        CLI_BUILD_FILE=yaml-release
-        CLI_FILE=yaml
-        ;;
-    esac
-    rm -f "cli/bin/$CLI_BUILD_FILE"
+  cli_build_engine=$(release-engine)
+  release_suffix=$(release-suffix "$cli_build_engine")
+
+  case "$OS_NAME" in
+    windows)
+      cli_build_file=yaml-$cli_build_engine.exe
+      cli_file=yaml.exe
+      ;;
+    wasm)
+      cli_build_file=yaml-$cli_build_engine.wasm
+      cli_file=yaml.wasm
+      ;;
+    *)
+      cli_build_file=yaml-$cli_build_engine
+      cli_file=yaml
+      ;;
+  esac
+
+  if [[ $cli_build_engine == glojure ]]; then
+    rm -f "cli/bin/$cli_build_file"
     make -C cli build-gloat \
-      CLI-GLOAT-NAME="$CLI_BUILD_FILE"
-    CLI_SOURCE="cli/bin/$CLI_BUILD_FILE"
+      CLI-GLOAT-NAME="$cli_build_file"
+    cli_source="cli/bin/$cli_build_file"
   else
-    make -C cli build
-    if [[ $OS_NAME == windows ]]; then
-      CLI_FILE=yaml.exe
-    else
-      CLI_FILE=yaml
-    fi
-    CLI_SOURCE="cli/bin/$CLI_FILE"
+    rm -f "cli/bin/$cli_build_file"
+    make -C cli build-graalvm
+    cli_source="cli/bin/$cli_build_file"
   fi
 
-  RELEASE_DIR=yamlstar-$VERSION-$PLATFORM
+  RELEASE_DIR=yamlstar-$VERSION-$PLATFORM$release_suffix
   RELEASE_PATH=dist/$RELEASE_DIR
 
   echo "Creating release package: $RELEASE_DIR"
   rm -rf "$RELEASE_PATH"
   mkdir -p "$RELEASE_PATH"
-  cp "$CLI_SOURCE" "$RELEASE_PATH/$CLI_FILE"
+  cp "$cli_source" "$RELEASE_PATH/$cli_build_file"
+  if [[ $OS_NAME == windows ]]; then
+    cp "$RELEASE_PATH/$cli_build_file" "$RELEASE_PATH/$cli_file"
+  else
+    (cd "$RELEASE_PATH" && ln -sf "$cli_build_file" "$cli_file")
+  fi
 
   cat > "$RELEASE_PATH/Makefile" <<'...'
 SHELL := bash
 
 YAMLSTAR_VERSION := VERSION_PLACEHOLDER
-YAMLSTAR := $(firstword $(wildcard yaml yaml.exe yaml.wasm))
+YAMLSTAR := \
+  $(wildcard yaml yaml.exe yaml.wasm) \
+  $(wildcard yaml-glojure yaml-graalvm) \
+  $(wildcard yaml-glojure.exe yaml-graalvm.exe) \
+  $(wildcard yaml-glojure.wasm yaml-graalvm.wasm)
 
 PREFIX ?= /usr/local
 
@@ -401,7 +448,7 @@ install:
 ifneq (,$(YAMLSTAR))
 	mkdir -p $(PREFIX)/bin
 	cp -pP $(YAMLSTAR) $(PREFIX)/bin/
-	@echo 'Installed $(PREFIX)/bin/$(YAMLSTAR) - version $(YAMLSTAR_VERSION)'
+	@echo 'Installed YAMLStar CLI - version $(YAMLSTAR_VERSION)'
 else
 	$(error Weird! Nothing to install in this directory.)
 endif
@@ -416,7 +463,8 @@ YAMLStar VERSION_PLACEHOLDER for PLATFORM_PLACEHOLDER
 
 ## Contents
 
-- `yaml` / `yaml.exe` / `yaml.wasm` - YAMLStar command-line loader
+- `CLI_BUILD_FILE_PLACEHOLDER` - Engine command-line loader
+- `CLI_FILE_PLACEHOLDER` - Compatibility command name
 - `Makefile` - Installation script
 
 ## Installation
@@ -444,6 +492,9 @@ More information: https://yamlstar.org/cli/
 
   $SED "s/VERSION_PLACEHOLDER/$VERSION/g" "$RELEASE_PATH/ReadMe.md"
   $SED "s/PLATFORM_PLACEHOLDER/$PLATFORM/g" "$RELEASE_PATH/ReadMe.md"
+  $SED "s/ENGINE_PLACEHOLDER/$cli_build_engine/g" "$RELEASE_PATH/ReadMe.md"
+  $SED "s/CLI_BUILD_FILE_PLACEHOLDER/$cli_build_file/g" "$RELEASE_PATH/ReadMe.md"
+  $SED "s/CLI_FILE_PLACEHOLDER/$cli_file/g" "$RELEASE_PATH/ReadMe.md"
 
   mkdir -p dist
   cd dist
@@ -499,7 +550,8 @@ do-release-github() (
 do-check-release() (
   git fetch --tags --force
   if [[ -f ~/.yamlstar-secrets.yaml ]]; then
-    export GH_TOKEN=$(ys -e '.github.token:say' ~/.yamlstar-secrets.yaml)
+    GH_TOKEN=$(ys -e '.github.token:say' ~/.yamlstar-secrets.yaml)
+    export GH_TOKEN
   fi
   echo "Checking for GitHub release $VERSION..."
   gh release view "$VERSION" >/dev/null 2>&1 ||
@@ -508,17 +560,23 @@ do-check-release() (
   assets=$(gh release view "$VERSION" --json assets --jq '.assets[].name')
   for asset in \
     "yamlstar-$VERSION-linux-aarch64.tar.xz" \
+    "yamlstar-$VERSION-linux-aarch64-graalvm.tar.xz" \
     "yamlstar-$VERSION-linux-x64.tar.xz" \
+    "yamlstar-$VERSION-linux-x64-graalvm.tar.xz" \
     "yamlstar-$VERSION-freebsd-x64.tar.xz" \
     "yamlstar-$VERSION-macos-arm64.tar.xz" \
+    "yamlstar-$VERSION-macos-arm64-graalvm.tar.xz" \
     "yamlstar-$VERSION-macos-x64.tar.xz" \
     "yamlstar-$VERSION-wasm-p1.tar.xz" \
     "yamlstar-$VERSION-windows-arm64.zip" \
     "yamlstar-$VERSION-windows-x64.zip" \
     "libyamlstar-$VERSION-linux-aarch64.tar.xz" \
+    "libyamlstar-$VERSION-linux-aarch64-graalvm.tar.xz" \
     "libyamlstar-$VERSION-linux-x64.tar.xz" \
+    "libyamlstar-$VERSION-linux-x64-graalvm.tar.xz" \
     "libyamlstar-$VERSION-freebsd-x64.tar.xz" \
     "libyamlstar-$VERSION-macos-arm64.tar.xz" \
+    "libyamlstar-$VERSION-macos-arm64-graalvm.tar.xz" \
     "libyamlstar-$VERSION-macos-x64.tar.xz" \
     "libyamlstar-$VERSION-windows-arm64.zip" \
     "libyamlstar-$VERSION-windows-x64.zip"
@@ -931,7 +989,7 @@ readline_prompt() {
   local default=$2
   local answer
 
-  read -e -i "$default" -p "$prompt" answer
+  read -r -e -i "$default" -p "$prompt" answer
   echo "$answer"
 }
 

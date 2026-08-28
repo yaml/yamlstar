@@ -279,7 +279,13 @@ build-gloat: $(LIB-SO-GLOAT)
 	cp $(GLOAT-LIB-HEADER) $(LIB-HEADER)
 	cp $(GLOAT-LIB-HEADER) $(LIB-HEADER-GLOAT)
 	cp $(GLOAT-ISOLATE-HEADER) $(LIB-DIR)/graal_isolate.h
+ifeq ($(OS-NAME),windows)
 	cp $(LIB-SO-GLOAT) $(LIB-SO-GLOAT-DEFAULT)
+else ifneq (,$(GLOAT-WINDOWS-TARGET))
+	cp $(LIB-SO-GLOAT) $(LIB-SO-GLOAT-DEFAULT)
+else
+	ln -sf $(notdir $(LIB-SO-GLOAT)) $(LIB-SO-GLOAT-DEFAULT)
+endif
 ifneq ($(OS-NAME),windows)
 ifeq (,$(GLOAT-WINDOWS-TARGET))
 	ln -sf $(notdir $(LIB-SO-GLOAT)) \
@@ -293,6 +299,11 @@ build-graalvm: $(LIB-SO)
 	if test -f $(LIB-DIR)/$(LIB-NAME).h; then \
 	  cp $(LIB-DIR)/$(LIB-NAME).h $(LIB-HEADER); \
 	fi
+ifeq ($(OS-NAME),windows)
+	cp $(LIB-SO) $(LIB-DIR)/libyamlstar.$(SO)
+else
+	ln -sf $(notdir $(LIB-SO)) $(LIB-DIR)/libyamlstar.$(SO)
+endif
 ifneq ($(OS-NAME),windows)
 	ln -sf $(notdir $(LIB-SO)) $(LIB-DIR)/$(LIB-NAME).$(SO).$(VERSION)
 endif

@@ -32,6 +32,8 @@ PYTHON-BINDING-DEPS := $(PYTHON-VENV)/.yamlstar-binding-deps
 YAML-TEST-SUITE-DIR ?= ../yaml-test-suite
 YAML-TEST-SUITE-ENV := YAMLSTAR_TEST_SUITE_DIR='$(YAML-TEST-SUITE-DIR)'
 YAMLSTAR_ENGINE ?= $(if $(YAMLSTAR_GLOJURE),glojure,graalvm)
+WHEEL-LIB-ENGINE := \
+  $(if $(filter glojure,$(YAMLSTAR_ENGINE)),libyamlstar-glojure,libyamlstar-graalvm)
 ifeq ($(YAMLSTAR_ENGINE),glojure)
 YAML-TEST-SUITE-ENV += YAMLSTAR_TEST_SUITE_EXPECTED_FAILS_FLAVOR='glojure'
 endif
@@ -73,8 +75,10 @@ wheel: $(PYTHON-VENV) MANIFEST.in Meta $(WHEEL-LIB)
 	$(VENV) && python setup.py bdist_wheel --plat-name $(WHEEL-PLAT)
 
 $(WHEEL-LIB): $(PYTHON-SO)
+	rm -rf $(WHEEL-LIB-DIR)
 	mkdir -p $(dir $@)
-	cp -p $(dir $<)/libyamlstar* $(WHEEL-LIB-DIR)/
+	cp -pL $(dir $<)/$(WHEEL-LIB-ENGINE).$(SO)* $(WHEEL-LIB-DIR)/
+	cp -pL $(dir $<)/libyamlstar.$(SO)* $(WHEEL-LIB-DIR)/
 	touch $@
 
 wheels-from-release: $(PYTHON-VENV) MANIFEST.in Meta
@@ -104,10 +108,10 @@ wheels-from-release: $(PYTHON-VENV) MANIFEST.in Meta
 	      *.zip) unzip -q "$$archive" -d "$$tmp" ;; \
 	      *) tar -C "$$tmp" -xf "$$archive" ;; \
 	    esac; \
-	    libs=$$(find "$$tmp" -type f -name "$$libpat" | sort); \
+	    libs=$$(find "$$tmp" \( -type f -o -type l \) -name "$$libpat" | sort); \
 	    test -n "$$libs" || { echo "No $$libpat found in $$archive"; exit 1; }; \
 	    printf '%s\n' "$$libs" | while IFS= read -r lib; do \
-	      cp -p "$$lib" $(WHEEL-LIB-DIR)/; \
+	      cp -pL "$$lib" $(WHEEL-LIB-DIR)/; \
 	    done; \
 	    echo "Building Python wheel for $$relplat"; \
 	    $(VENV) && python setup.py bdist_wheel --plat-name "$$plat"; \

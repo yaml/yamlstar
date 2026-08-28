@@ -215,7 +215,7 @@ build-cli-graalvm:
 	$(MAKE) -C cli build-graalvm
 
 build-cli-glojure:
-	$(MAKE) -C cli build-gloat-glj
+	$(MAKE) -C cli build-gloat
 
 build-libyamlstar: build-libyamlstar-graalvm build-libyamlstar-glojure
 

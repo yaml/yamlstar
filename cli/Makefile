@@ -18,7 +18,7 @@ endif
 PARSER-NAME := $(if $(filter ref,$(PARSER)),reference,$(if $(filter snake,$(PARSER)),snakeyaml,go-yaml))
 YAMLSTAR_ENGINE ?= $(if $(filter graal,$(RT)),graalvm,glojure)
 CLI-NAME ?= yaml-$(RT)-$(PARSER)
-CLI-DEFAULT-REQUIRE := $(if $(filter snake,$(PARSER)),[yamlstar.plugin.parser.snakeyaml],$(if $(filter go,$(PARSER)),[yamlstar.plugin.parser.go-yaml]))
+CLI-DEFAULT-REQUIRE := $(if $(filter graal,$(RT)),[yamlstar.plugin.parser.snakeyaml],$(if $(filter glj,$(RT)),[yamlstar.plugin.parser.go-yaml]))
 
 ifeq ($(RT),graal)
 ifneq (,$(filter go,$(PARSER)))
@@ -89,8 +89,10 @@ endif
 ifeq ($(YAMLSTAR_ENGINE),glojure)
 CLI-GLOAT-NAME ?= $(CLI-NAME)
 else
-CLI-GLOAT-NAME ?= yaml-gloat-$(GLOAT-ENGINE)
+CLI-GLOAT-NAME ?= yaml-glojure
 endif
+BUILD-GLOAT-NAME := \
+  $(if $(filter command line,$(origin CLI-GLOAT-NAME)),$(CLI-GLOAT-NAME),yaml-glojure)
 CLI-BIN-GLOAT := bin/$(CLI-GLOAT-NAME)
 GLOAT-CACHE := ../libyamlstar/cache/gloat-srcs
 GLOAT-CORE := ../core/src/yamlstar
@@ -105,7 +107,7 @@ GLOAT-CLI-SRCS := \
   $(GLOAT-CORE)/options.clj \
   $(GLOAT-CORE)/plugin/parser.clj \
   $(GLOAT-CORE)/plugin/parser/reference.clj \
-  $(if $(filter go,$(PARSER)),$(GLOAT-GO-YAML-SRC)) \
+  $(if $(filter glj,$(RT)),$(GLOAT-GO-YAML-SRC)) \
   $(GLOAT-CORE)/parser.clj \
   $(GLOAT-CORE)/composer.clj \
   $(GLOAT-CORE)/resolver.clj \
@@ -165,14 +167,14 @@ jar: $(CLI-JAR)
 install:
 
 build-graalvm:
-	$(MAKE) build RT=graal PARSER=ref CLI-NAME=yaml-graalvm
+	$(MAKE) build RT=graal PARSER=snake CLI-NAME=yaml-graalvm
 
 build-gloat:
 	$(MAKE) _build-gloat \
 	  RT=glj \
 	  PARSER=go \
 	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
-	  CLI-GLOAT-NAME=$(CLI-GLOAT-NAME) \
+	  CLI-GLOAT-NAME=$(BUILD-GLOAT-NAME) \
 	  $(if $(GLOAT-DIR),GLOAT-DIR=$(GLOAT-DIR)) \
 	  $(if $(LET_GO_SRC),LET_GO_SRC=$(LET_GO_SRC)) \
 	  $(if $(YAML-PARSER-DIR),YAML-PARSER-DIR=$(YAML-PARSER-DIR)) \
@@ -212,7 +214,7 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
   $(GLOAT-CORE)/options.clj \
   $(GLOAT-CORE)/plugin/parser.clj \
   $(GLOAT-CORE)/plugin/parser/reference.clj \
-  $(if $(filter go,$(PARSER)),$(GLOAT-GO-YAML-SRC)) \
+  $(if $(filter glj,$(RT)),$(GLOAT-GO-YAML-SRC)) \
   $(GLOAT-CORE)/parser.clj \
   $(GLOAT-CORE)/composer.clj \
   $(GLOAT-CORE)/resolver.clj \
