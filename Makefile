@@ -23,13 +23,12 @@ RELEASE-SECRETS := \
   $(wildcard $(HOME)/.yamlscript-secrets.yaml)
 RELEASE-AUTH := $(strip $(GH_TOKEN)$(GITHUB_TOKEN)$(RELEASE-SECRETS))
 
-CLI-LOCAL-SIBLING-DIR := $(abspath $(GIT-REPO-DIR)/..)
 CLI-LOCAL-CACHE := $(ROOT)/.cache/cli-local
-glojure-dir ?= $(CLI-LOCAL-SIBLING-DIR)/glojure
+glojure-dir ?= $(ROOT)/repos/glojure
 glojure-commit ?= HEAD
-gloat-dir ?= $(CLI-LOCAL-SIBLING-DIR)/gloat
+gloat-dir ?= $(ROOT)/repos/gloat
 gloat-commit ?= HEAD
-let-go-dir ?= $(CLI-LOCAL-SIBLING-DIR)/let-go
+let-go-dir ?= $(ROOT)/repos/let-go
 let-go-commit ?= HEAD
 
 MAKES-CLEAN := \
@@ -215,7 +214,7 @@ build-cli-graalvm:
 	$(MAKE) -C cli build-graalvm
 
 build-cli-glojure:
-	$(MAKE) -C cli build-gloat
+	$(MAKE) -C cli build-glojure
 
 build-libyamlstar: build-libyamlstar-graalvm build-libyamlstar-glojure
 
@@ -223,16 +222,22 @@ build-libyamlstar-graalvm:
 	$(MAKE) -C libyamlstar build-graalvm YAMLSTAR_ENGINE=graalvm
 
 build-libyamlstar-glojure:
-	$(MAKE) -C libyamlstar build-gloat YAMLSTAR_ENGINE=glojure
+	$(MAKE) -C libyamlstar build-glojure YAMLSTAR_ENGINE=glojure
 
 cli-gloat-glj:
-	$(MAKE) -C cli build-gloat-glj
+	$(MAKE) -C cli build-glojure \
+	  CLI-GLOAT-NAME=yaml-gloat-glj \
+	  GLOAT_ENGINE=glj
 
 cli-gloat-lgvm:
-	$(MAKE) -C cli build-gloat-lgvm
+	$(MAKE) -C cli build-glojure \
+	  CLI-GLOAT-NAME=yaml-gloat-lgvm \
+	  GLOAT_ENGINE=lgvm
 
 cli-gloat-lglvm:
-	$(MAKE) -C cli build-gloat-lglvm
+	$(MAKE) -C cli build-glojure \
+	  CLI-GLOAT-NAME=yaml-gloat-lglvm \
+	  GLOAT_ENGINE=lglvm
 
 define CLI-LOCAL-BUILD
 	@gloat_dir=$$($(ROOT)/util/cli-local-source \
@@ -241,8 +246,9 @@ define CLI-LOCAL-BUILD
 	  glojure "$(glojure-dir)" "$(glojure-commit)" "$(CLI-LOCAL-CACHE)"); \
 	$(if $(2),let_go_dir=$$($(ROOT)/util/cli-local-source \
 	  let-go "$(let-go-dir)" "$(let-go-commit)" "$(CLI-LOCAL-CACHE)");) \
-	$(MAKE) -C cli build-gloat-$(1) \
+	$(MAKE) -C cli build-glojure \
 	  CLI-GLOAT-NAME=yaml-local-$(1) \
+	  GLOAT_ENGINE=$(1) \
 	  GLOAT-DIR="$$gloat_dir" \
 	  TEST-WITH-GLOJURE="$$glojure_dir" \
 	  $(if $(2),LET_GO_SRC="$$let_go_dir")

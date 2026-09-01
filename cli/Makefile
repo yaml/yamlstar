@@ -18,7 +18,11 @@ endif
 PARSER-NAME := $(if $(filter ref,$(PARSER)),reference,$(if $(filter snake,$(PARSER)),snakeyaml,go-yaml))
 YAMLSTAR_ENGINE ?= $(if $(filter graal,$(RT)),graalvm,glojure)
 CLI-NAME ?= yaml-$(RT)-$(PARSER)
-CLI-DEFAULT-REQUIRE := $(if $(filter graal,$(RT)),[yamlstar.plugin.parser.snakeyaml],$(if $(filter glj,$(RT)),[yamlstar.plugin.parser.go-yaml]))
+CLI-DEFAULT-REQUIRE := $(strip \
+  $(if $(filter graal,$(RT)),[yamlstar.plugin.parser.snakeyaml], \
+    $(if $(filter glj,$(RT)),[yamlstar.plugin.parser.go-yaml])))
+CLI-GRAALVM-NAME := yaml-graalvm
+CLI-GLOJURE-NAME := yaml-glojure
 
 ifeq ($(RT),graal)
 ifneq (,$(filter go,$(PARSER)))
@@ -62,8 +66,12 @@ MAKES-CLEAN := \
 
 ifeq ($(OS-NAME),windows)
 CLI-BIN := bin/$(CLI-NAME).exe
+CLI-COMPAT := bin/yaml.exe
+CLI-GRAALVM-BIN := bin/$(CLI-GRAALVM-NAME).exe
 else
 CLI-BIN := bin/$(CLI-NAME)
+CLI-COMPAT := bin/yaml
+CLI-GRAALVM-BIN := bin/$(CLI-GRAALVM-NAME)
 endif
 CLI-OUT := bin/$(CLI-NAME)
 CLI-UBERJAR := target/cli-$(LIBYAMLSTAR-VERSION)-SNAPSHOT-standalone.jar
@@ -92,11 +100,13 @@ else
 CLI-GLOAT-NAME ?= yaml-glojure
 endif
 BUILD-GLOAT-NAME := \
-  $(if $(filter command line,$(origin CLI-GLOAT-NAME)),$(CLI-GLOAT-NAME),yaml-glojure)
+  $(if $(filter command line,$(origin CLI-GLOAT-NAME)),$(CLI-GLOAT-NAME),$(CLI-GLOJURE-NAME))
+BUILD-GLOAT-BIN := bin/$(BUILD-GLOAT-NAME)
 CLI-BIN-GLOAT := bin/$(CLI-GLOAT-NAME)
 GLOAT-CACHE := ../libyamlstar/cache/gloat-srcs
 GLOAT-CORE := ../core/src/yamlstar
 GLOAT-GO-YAML-SRC := $(GLOAT-CACHE)/plugin/parser/go_yaml.clj
+GLOAT-CLI-OPTIONS-SRC := $(GLOAT-CACHE)/cli_options.clj
 GLOAT-CLI-SRCS := \
   $(GLOAT-CACHE)/yaml_parser/prelude.clj \
   $(GLOAT-CACHE)/yaml_parser/parser.clj \
@@ -118,6 +128,7 @@ GLOAT-CLI-SRCS := \
   $(GLOAT-CACHE)/serializer.clj \
   $(GLOAT-CACHE)/emitter.clj \
   $(GLOAT-CORE)/api.clj \
+  $(GLOAT-CLI-OPTIONS-SRC) \
   $(CLI-DEFAULT-SRC) \
   $(GLOAT-CORE)/contract.clj \
   gloat/src/yamlstar/cli.clj \
@@ -157,46 +168,45 @@ test: $(CORE-JAR) $(LEIN) $(CLI-DEFAULT-SRC)
 	$(LEIN) update-in :source-paths conj '"$(CLI-DEFAULT-DIR)"' -- test
 
 ifeq ($(YAMLSTAR_ENGINE),glojure)
-build: _build-gloat
+_build-selected: _build-gloat
 else
-build: $(CLI-BIN)
+_build-selected: $(CLI-BIN)
 endif
+
+build: build-graalvm build-glojure
 
 jar: $(CLI-JAR)
 
 install:
 
 build-graalvm:
-	$(MAKE) build RT=graal PARSER=snake CLI-NAME=yaml-graalvm
+	$(MAKE) _build-selected \
+	  RT=graal \
+	  PARSER=snake \
+	  YAMLSTAR_ENGINE=graalvm \
+	  CLI-NAME=$(CLI-GRAALVM-NAME)
+ifeq ($(OS-NAME),windows)
+	cp $(CLI-GRAALVM-BIN) $(CLI-COMPAT)
+else
+	ln -sf $(notdir $(CLI-GRAALVM-BIN)) $(CLI-COMPAT)
+endif
 
-build-gloat:
+build-glojure:
 	$(MAKE) _build-gloat \
 	  RT=glj \
 	  PARSER=go \
+	  YAMLSTAR_ENGINE=glojure \
 	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
 	  CLI-GLOAT-NAME=$(BUILD-GLOAT-NAME) \
 	  $(if $(GLOAT-DIR),GLOAT-DIR=$(GLOAT-DIR)) \
 	  $(if $(LET_GO_SRC),LET_GO_SRC=$(LET_GO_SRC)) \
 	  $(if $(YAML-PARSER-DIR),YAML-PARSER-DIR=$(YAML-PARSER-DIR)) \
 	  $(if $(TEST-WITH-GLOJURE),TEST-WITH-GLOJURE=$(TEST-WITH-GLOJURE))
-
-build-gloat-glj:
-	$(MAKE) build RT=glj PARSER=go CLI-NAME=yaml-gloat-glj
-
-build-gloat-ref:
-	$(MAKE) build RT=glj PARSER=ref CLI-NAME=yaml-gloat-ref
-
-build-graalvm-ref:
-	$(MAKE) build RT=graal PARSER=ref CLI-NAME=yaml-graalvm-ref
-
-build-graalvm-snake:
-	$(MAKE) build RT=graal PARSER=snake CLI-NAME=yaml-graalvm-snake
-
-build-gloat-lgvm:
-	$(MAKE) build RT=go PARSER=ref CLI-NAME=yaml-gloat-lgvm GLOAT_ENGINE=lgvm
-
-build-gloat-lglvm:
-	$(MAKE) build RT=go PARSER=ref CLI-NAME=yaml-gloat-lglvm GLOAT_ENGINE=lglvm
+ifeq ($(OS-NAME),windows)
+	cp $(BUILD-GLOAT-BIN) $(CLI-COMPAT)
+else
+	ln -sf $(notdir $(BUILD-GLOAT-BIN)) $(CLI-COMPAT)
+endif
 
 _build-gloat: $(CLI-BIN-GLOAT)
 
@@ -219,6 +229,7 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
   $(GLOAT-CORE)/composer.clj \
   $(GLOAT-CORE)/resolver.clj \
   $(GLOAT-CORE)/api.clj \
+  $(GLOAT-CLI-OPTIONS-SRC) \
   $(GLOAT-CORE)/contract.clj \
   gloat/src/yamlstar/cli.clj
 	mkdir -p $(dir $@)
@@ -231,6 +242,10 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
 	  $(GLOAT-CLI-SRCS) -o $@
 	test -x $@
 	@echo "Gloat ($(GLOAT-ENGINE)) CLI created at: $@"
+
+$(GLOAT-CLI-OPTIONS-SRC): $(GLOAT-CORE)/cli_options.cljc
+	@mkdir -p $(dir $@)
+	ln -sf $(abspath $<) $@
 
 $(CLI-DEFAULT-SRC):
 	@mkdir -p $(dir $@)

@@ -61,23 +61,26 @@
            (seq value)
            (every? #(or (compact-node? %) (detailed-node? %)) value))))
 
-(defn read-contract [source forced]
-  (let [stage (when forced (parse-stage forced))
-        value (when (or (nil? stage) (not= stage :yaml))
-                (yaml/load source))
-        detected (cond
-                   stage stage
-                   (token-contract? value) :token
-                   (event-contract? value) :event
-                   (node-contract? value) :node
-                   :else :yaml)]
-    (when (and (= detected :token) (not (token-contract? value)))
-      (throw (ex-info "invalid token input: stream boundaries are required" {})))
-    (when (and (= detected :event) (not (event-contract? value)))
-      (throw (ex-info "invalid event input: stream boundaries are required" {})))
-    (when (and (= detected :node) (not (node-contract? value)))
-      (throw (ex-info "invalid node input" {})))
-    {:stage detected :value value :source source}))
+(defn read-contract
+  ([source forced]
+   (read-contract source forced nil))
+  ([source forced opts]
+   (let [stage (when forced (parse-stage forced))
+         value (when (or (nil? stage) (not= stage :yaml))
+                 (yaml/load source opts))
+         detected (cond
+                    stage stage
+                    (token-contract? value) :token
+                    (event-contract? value) :event
+                    (node-contract? value) :node
+                    :else :yaml)]
+     (when (and (= detected :token) (not (token-contract? value)))
+       (throw (ex-info "invalid token input: stream boundaries are required" {})))
+     (when (and (= detected :event) (not (event-contract? value)))
+       (throw (ex-info "invalid event input: stream boundaries are required" {})))
+     (when (and (= detected :node) (not (node-contract? value)))
+       (throw (ex-info "invalid node input" {})))
+     {:stage detected :value value :source source})))
 
 (defn title-style [style]
   (when style
@@ -246,8 +249,11 @@
          (remove nil?)
          (mapv resolver/resolve))))
 
-(defn yaml-events [source]
-  (parser/parse source))
+(defn yaml-events
+  ([source]
+   (yaml-events source nil))
+  ([source opts]
+   (parser/parse source opts)))
 
 (defn events-nodes [events]
   (vec (composer/compose-all events)))
@@ -259,15 +265,21 @@
 (defn nodes-yaml [nodes]
   (emitter/emit (serializer/serialize-all nodes) (> (count nodes) 1)))
 
-(defn yaml-value [source stream?]
-  (if stream? (yaml/load-all source) (yaml/load source)))
+(defn yaml-value
+  ([source stream?]
+   (yaml-value source stream? nil))
+  ([source stream? opts]
+   (if stream? (yaml/load-all source opts) (yaml/load source opts))))
 
-(defn yaml-output [source preserve? stream?]
-  (if preserve?
-    (events-yaml (yaml-events source))
-    (if stream?
-      (yaml/dump-all (yaml/load-all source))
-      (yaml/dump (yaml/load source)))))
+(defn yaml-output
+  ([source preserve? stream?]
+   (yaml-output source preserve? stream? nil))
+  ([source preserve? stream? opts]
+   (if preserve?
+     (events-yaml (yaml-events source opts))
+     (if stream?
+       (yaml/dump-all (yaml/load-all source opts))
+       (yaml/dump (yaml/load source opts))))))
 
 (defn check-forward! [from to]
   (when (< (stages to) (stages from))

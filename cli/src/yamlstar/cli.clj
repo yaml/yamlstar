@@ -5,6 +5,7 @@
             [clojure.pprint :as pp]
             [clojure.string :as str]
             [yamlstar.api :as yaml]
+            [yamlstar.cli-options :as runtime]
             [yamlstar.cli-default :as cli-default]
             [yamlstar.contract :as contract]
             [yamlstar.parser :as parser]
@@ -53,6 +54,10 @@
    ["-Y" "--YAML" "YAML output preserving representation details"]
    ["-o" "--output FILE" "Output file"]
    ["-s" "--stream" "Output all documents"]
+   [nil "--config CONFIG" "YAMLStar options file or inline YAML mapping"]
+   [nil "--parser NAME" "YAML parser plugin name"]
+   [nil "--plugin API=NAME" "YAMLStar plugin selector"
+    :assoc-fn (fn [m k v] (update m k (fnil conj []) v))]
    ["-d" "--debug" "Debug all stages"]
    ["-D" "--debug-stage STAGE" "Debug specific stage: parse, compose, resolve, construct"
     :validate [#{"parse" "compose" "resolve" "construct"} "Must be: parse, compose, resolve, construct"]]
@@ -77,6 +82,8 @@ Examples:
   go-yaml -N file.yaml | yaml -Y # go-yaml nodes → YAML
   cat f.yaml | yaml -J       # stdin → pretty JSON
   yaml -D parse config.yaml  # Debug parser stage
+  yaml --parser reference f.yaml
+  yaml --config '{plugin: {parser: {name: reference}}}' f.yaml
 
 Options:")
 
@@ -89,10 +96,10 @@ Options:")
 
 ;;; Debug functions
 
-(defn do-debug-parse [yaml-str]
+(defn do-debug-parse [yaml-str runtime-opts]
   (try
     (let [events (with-timing "parse"
-                   (parser/parse yaml-str))]
+                   (parser/parse yaml-str runtime-opts))]
       (doseq [e events]
         (prn e)))
     (catch Exception e
@@ -100,9 +107,9 @@ Options:")
       (when (.getCause e)
         (println "Cause:" (.getMessage (.getCause e)))))))
 
-(defn do-debug-compose [yaml-str]
+(defn do-debug-compose [yaml-str runtime-opts]
   (try
-    (let [events (parser/parse yaml-str)
+    (let [events (parser/parse yaml-str runtime-opts)
           node (with-timing "compose"
                  (composer/compose events))]
       (binding [pp/*print-right-margin* 50]
@@ -112,9 +119,9 @@ Options:")
       (when (.getCause e)
         (println "Cause:" (.getMessage (.getCause e)))))))
 
-(defn do-debug-resolve [yaml-str]
+(defn do-debug-resolve [yaml-str runtime-opts]
   (try
-    (let [events (parser/parse yaml-str)
+    (let [events (parser/parse yaml-str runtime-opts)
           node (composer/compose events)
           resolved (with-timing "resolve"
                      (resolver/resolve node))]
@@ -125,9 +132,9 @@ Options:")
       (when (.getCause e)
         (println "Cause:" (.getMessage (.getCause e)))))))
 
-(defn do-debug-construct [yaml-str]
+(defn do-debug-construct [yaml-str runtime-opts]
   (try
-    (let [events (parser/parse yaml-str)
+    (let [events (parser/parse yaml-str runtime-opts)
           node (composer/compose events)
           resolved (resolver/resolve node)
           data (with-timing "construct"
@@ -139,14 +146,14 @@ Options:")
       (when (.getCause e)
         (println "Cause:" (.getMessage (.getCause e)))))))
 
-(defn do-debug-all [yaml-str]
-  (do-debug-parse yaml-str)
+(defn do-debug-all [yaml-str runtime-opts]
+  (do-debug-parse yaml-str runtime-opts)
   (println)
-  (do-debug-compose yaml-str)
+  (do-debug-compose yaml-str runtime-opts)
   (println)
-  (do-debug-resolve yaml-str)
+  (do-debug-resolve yaml-str runtime-opts)
   (println)
-  (do-debug-construct yaml-str))
+  (do-debug-construct yaml-str runtime-opts))
 
 ;;; Input handling
 
@@ -221,8 +228,9 @@ Options:")
 (defn format-contract [value]
   (yaml/dump value))
 
-(defn convert-input [input opts]
-  (let [{:keys [stage value source]} (contract/read-contract input (:from opts))
+(defn convert-input [input opts runtime-opts]
+  (let [{:keys [stage value source]}
+        (contract/read-contract input (:from opts) runtime-opts)
         target (output-stage opts)]
     (when (= stage :token)
       (token-follow-up))
@@ -232,13 +240,17 @@ Options:")
       :yaml
       (case target
         :event (format-contract
-                (contract/event-contract (contract/yaml-events source)))
+                (contract/event-contract
+                 (contract/yaml-events source runtime-opts)))
         :node (format-contract
                (contract/node-contract
-                (contract/events-nodes (contract/yaml-events source))
+                (contract/events-nodes
+                 (contract/yaml-events source runtime-opts))
                 (:NODE opts)))
-        :yaml (contract/yaml-output source (:YAML opts) (:stream opts))
-        :json (format-json-output (contract/yaml-value source (:stream opts)) opts))
+        :yaml (contract/yaml-output source (:YAML opts) (:stream opts)
+                                    runtime-opts)
+        :json (format-json-output
+               (contract/yaml-value source (:stream opts) runtime-opts) opts))
 
       :event
       (let [events (contract/contract-events value)]
@@ -257,9 +269,9 @@ Options:")
           :yaml (contract/nodes-yaml nodes)
           :json (throw (ex-info "JSON output is only supported for YAML text input" {})))))))
 
-(defn do-load [yaml-str opts]
+(defn do-load [yaml-str opts runtime-opts]
   (try
-    (let [output (convert-input yaml-str opts)]
+    (let [output (convert-input yaml-str opts runtime-opts)]
       (write-output output opts)
       0)
     (catch Exception e
@@ -293,22 +305,30 @@ Options:")
 
       ;; Debug modes
       :else
-      (let [yaml-str (read-input options arguments)]
-        (cond
-          ;; Debug all stages
-          (:debug options)
-          (do (do-debug-all yaml-str) 0)
+      (try
+        (let [runtime-opts (runtime/runtime-options options)
+              yaml-str (read-input options arguments)]
+          (cond
+            ;; Debug all stages
+            (:debug options)
+            (do (do-debug-all yaml-str runtime-opts) 0)
 
-          ;; Debug specific stage
-          (:debug-stage options)
-          (do
-            (case (:debug-stage options)
-              "parse"     (do-debug-parse yaml-str)
-              "compose"   (do-debug-compose yaml-str)
-              "resolve"   (do-debug-resolve yaml-str)
-              "construct" (do-debug-construct yaml-str))
-            0)
+            ;; Debug specific stage
+            (:debug-stage options)
+            (do
+              (case (:debug-stage options)
+                "parse"     (do-debug-parse yaml-str runtime-opts)
+                "compose"   (do-debug-compose yaml-str runtime-opts)
+                "resolve"   (do-debug-resolve yaml-str runtime-opts)
+                "construct" (do-debug-construct yaml-str runtime-opts))
+              0)
 
-          ;; Normal load
-          :else
-          (do-load yaml-str options))))))
+            ;; Normal load
+            :else
+            (do-load yaml-str options runtime-opts)))
+        (catch Exception e
+          (binding [*out* *err*]
+            (println "Error:" (.getMessage e))
+            (when (:stack-trace options)
+              (.printStackTrace e)))
+          1)))))

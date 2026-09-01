@@ -206,7 +206,7 @@ do-release-lib() (
   release_suffix=$(release-suffix "$lib_build_engine")
 
   if [[ $lib_build_engine == glojure ]]; then
-    lib_build_target=build-gloat
+    lib_build_target=build-glojure
   else
     lib_build_target=build-graalvm
   fi
@@ -410,7 +410,7 @@ do-release-cli() (
 
   if [[ $cli_build_engine == glojure ]]; then
     rm -f "cli/bin/$cli_build_file"
-    make -C cli build-gloat \
+    make -C cli build-glojure \
       CLI-GLOAT-NAME="$cli_build_file"
     cli_source="cli/bin/$cli_build_file"
   else

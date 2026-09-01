@@ -275,7 +275,12 @@ endif
 LIB-HEADER := $(LIB-DIR)/libyamlstar.h
 LIB-HEADER-GLOAT := $(LIB-DIR)/$(LIB-NAME-GLOAT).h
 
-build-gloat: $(LIB-SO-GLOAT)
+build: build-graalvm build-glojure
+
+build-glojure:
+	$(MAKE) _build-glojure YAMLSTAR_ENGINE=glojure
+
+_build-glojure: $(LIB-SO-GLOAT)
 	cp $(GLOAT-LIB-HEADER) $(LIB-HEADER)
 	cp $(GLOAT-LIB-HEADER) $(LIB-HEADER-GLOAT)
 	cp $(GLOAT-ISOLATE-HEADER) $(LIB-DIR)/graal_isolate.h
@@ -295,7 +300,10 @@ ifeq (,$(GLOAT-WINDOWS-TARGET))
 endif
 endif
 
-build-graalvm: $(LIB-SO)
+build-graalvm:
+	$(MAKE) _build-graalvm YAMLSTAR_ENGINE=graalvm
+
+_build-graalvm: $(LIB-SO)
 	if test -f $(LIB-DIR)/$(LIB-NAME).h; then \
 	  cp $(LIB-DIR)/$(LIB-NAME).h $(LIB-HEADER); \
 	fi
@@ -312,7 +320,7 @@ test:
 
 ifeq ($(YAMLSTAR_ENGINE),glojure)
 INSTALL-LIB := $(LIB-SO-GLOAT)
-install: build-gloat
+install: build-glojure
 else
 INSTALL-LIB := $(LIB-SO)
 install: build-graalvm
