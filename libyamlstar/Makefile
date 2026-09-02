@@ -13,6 +13,7 @@ include $M/lein.mk
 else
 $(error Unknown YAMLSTAR_ENGINE '$(YAMLSTAR_ENGINE)')
 endif
+include $M/perl.mk
 
 include ../common/common.mk
 
@@ -65,6 +66,12 @@ GO-GENERATED-DIR := $(abspath ../internal/glojure)
 GO-GENERATED-MODULE := github.com/yaml/yamlstar/internal/glojure
 
 CORE-YAMLSTAR := ../core/src/yamlstar
+CORE-SRCS := \
+  $(wildcard $(CORE-YAMLSTAR)/*.clj) \
+  $(wildcard $(CORE-YAMLSTAR)/*.cljc) \
+  $(wildcard $(CORE-YAMLSTAR)/plugin/*.clj) \
+  $(wildcard $(CORE-YAMLSTAR)/plugin/parser/*.clj) \
+  $(wildcard $(CORE-YAMLSTAR)/plugin/parser/*.cljc)
 
 # Gloat compiles Clojure sources directly, so use the sources shipped in the
 # exact yaml-parser artifact consumed by the JVM build.
@@ -103,10 +110,11 @@ $(YAML-PARSER-JAR):
 	mv '$@.tmp' '$@'
 
 ifndef YAML-PARSER-DIR
-$(YAML-PARSER-SRC-STAMP): $(YAML-PARSER-JAR) $(YAML-PARSER-GLOAT-PREPARE)
+$(YAML-PARSER-SRC-STAMP): $(YAML-PARSER-JAR) $(YAML-PARSER-GLOAT-PREPARE) \
+  $(PERL)
 	@mkdir -p $(YAML-PARSER-SRC-DIR)
 	unzip -oq $< 'yaml_parser/*.clj' 'yaml_parser/*.cljc' -d $(YAML-PARSER-SRC-DIR)
-	perl $(YAML-PARSER-GLOAT-PREPARE) $(YAML-PARSER-SRC-DIR)
+	$(PERL) $(YAML-PARSER-GLOAT-PREPARE) $(YAML-PARSER-SRC-DIR)
 	touch $@
 endif
 
@@ -163,8 +171,9 @@ $(GO-YAML-STAMP):
 	mv '$(GO-YAML-SRC-DIR).tmp' '$(GO-YAML-SRC-DIR)'
 	touch '$@'
 
-$(GO-YAML-GENERATED-STAMP): $(GO-YAML-STAMP) $(GO-YAML-PREPARE)
-	bash $(GO-YAML-PREPARE) $(GO-YAML-SRC-DIR) $(GO-YAML-GENERATED-DIR)
+$(GO-YAML-GENERATED-STAMP): $(GO-YAML-STAMP) $(GO-YAML-PREPARE) $(PERL)
+	PERL=$(PERL) bash $(GO-YAML-PREPARE) $(GO-YAML-SRC-DIR) \
+	  $(GO-YAML-GENERATED-DIR)
 
 prepare-go-yaml-parser: $(GO-YAML-GENERATED-STAMP)
 
@@ -250,7 +259,7 @@ LEIN-YAML-PARSER := \
 _yaml-parser-core: $(LEIN) $(YAML-PARSER-SOURCE-FILES)
 	cd ../core && $(LEIN) $(LEIN-YAML-PARSER) with-profile +uberjar install
 
-$(CORE-JAR): _yaml-parser-core
+$(CORE-JAR): _yaml-parser-core $(CORE-SRCS)
 endif
 
 # --- TEST-WITH-GLOJURE support ---
@@ -347,7 +356,7 @@ $(LIB-SO-GLOAT): $(GLOAT-SRCS) $(GLOAT-LINKS) $(GO-YAML-GENERATED-STAMP) \
 endif
 
 ifndef YAML-PARSER-DIR
-$(CORE-JAR):
+$(CORE-JAR): $(CORE-SRCS)
 	$(MAKE) -C ../core install
 endif
 

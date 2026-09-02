@@ -3,6 +3,7 @@ set -euo pipefail
 
 src=${1:?source go-yaml directory required}
 dst=${2:?destination package directory required}
+perl=${PERL:-perl}
 
 pkg_src=$src/internal/libyaml
 for file in yaml.go errors.go reader.go scanner.go parser.go; do
@@ -13,7 +14,7 @@ rm -rf "$dst"
 mkdir -p "$dst"
 
 for file in yaml.go errors.go reader.go scanner.go parser.go; do
-  perl -0pe 's/\bpackage libyaml\b/package goyamlparser/' \
+  "$perl" -0pe 's/\bpackage libyaml\b/package goyamlparser/' \
     < "$pkg_src/$file" > "$dst/$file"
 done
 

@@ -107,6 +107,12 @@ GLOAT-CACHE := ../libyamlstar/cache/gloat-srcs
 GLOAT-CORE := ../core/src/yamlstar
 GLOAT-GO-YAML-SRC := $(GLOAT-CACHE)/plugin/parser/go_yaml.clj
 GLOAT-CLI-OPTIONS-SRC := $(GLOAT-CACHE)/cli_options.clj
+CORE-SRCS := \
+  $(wildcard $(GLOAT-CORE)/*.clj) \
+  $(wildcard $(GLOAT-CORE)/*.cljc) \
+  $(wildcard $(GLOAT-CORE)/plugin/*.clj) \
+  $(wildcard $(GLOAT-CORE)/plugin/parser/*.clj) \
+  $(wildcard $(GLOAT-CORE)/plugin/parser/*.cljc)
 GLOAT-CLI-SRCS := \
   $(GLOAT-CACHE)/yaml_parser/prelude.clj \
   $(GLOAT-CACHE)/yaml_parser/parser.clj \
@@ -270,7 +276,7 @@ $(CLI-JAR): $(CORE-JAR) $(LEIN) $(CLI-DEFAULT-SRC) src/yamlstar/cli.clj
 	cp $(CLI-UBERJAR) $@
 endif
 
-$(CORE-JAR):
+$(CORE-JAR): $(CORE-SRCS)
 	$(MAKE) -C ../core install
 
 ifeq ($(YAMLSTAR_ENGINE),graalvm)
