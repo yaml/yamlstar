@@ -114,7 +114,7 @@ if [[ -f "$cli_dir/yaml.exe" ]]; then
   cp -pP "$cli_dir"/yaml.exe cli/bin/
   chmod 755 cli/bin/yaml.exe
 else
-  cp -pP "$cli_dir"/yaml cli/bin/
+  cp -pL "$cli_dir"/yaml cli/bin/
   chmod 755 cli/bin/yaml
 fi
 
