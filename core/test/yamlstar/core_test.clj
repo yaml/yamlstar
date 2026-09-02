@@ -211,21 +211,14 @@
     (is (= "true\n" (yaml/dump true)))
     (is (= "null\n" (yaml/dump nil)))))
 
-(deftest test-dump-safe-integer-range
-  (testing "Dump integers within JSON-safe exact range"
+(deftest test-dump-integer-range
+  (testing "Dump integers within and beyond the JSON-safe exact range"
     (is (= "9007199254740991\n" (yaml/dump 9007199254740991)))
-    (is (= "-9007199254740991\n" (yaml/dump -9007199254740991))))
-  (testing "Reject integers outside JSON-safe exact range"
-    (doseq [value [9007199254740992
-                   -9007199254740992
-                   (bigint "9999999999999999999")]]
-      (is (thrown-with-msg?
-           clojure.lang.ExceptionInfo
-           #"YAML integer out of supported range"
-           (yaml/dump value)))))
-  (testing "Dump string versions of large integers as strings"
-    (is (= "'9999999999999999999'\n"
-           (yaml/dump "9999999999999999999")))))
+    (is (= "-9007199254740991\n" (yaml/dump -9007199254740991)))
+    (is (= "9007199254740992\n" (yaml/dump 9007199254740992)))
+    (is (= "-9007199254740992\n" (yaml/dump -9007199254740992)))
+    (is (= "9999999999999999999\n"
+           (yaml/dump (bigint "9999999999999999999"))))))
 
 (deftest test-dump-simple-mapping
   (testing "Dump a simple mapping"
@@ -325,9 +318,17 @@
              (yaml/dump-all values)))
       (is (= values (yaml/load-all (yaml/dump-all values)))))))
 
-(deftest test-dump-rejects-non-string-map-keys
-  (testing "Dump rejects non-string map keys"
-    (is (thrown-with-msg?
-         clojure.lang.ExceptionInfo
-         #"string map keys"
-         (yaml/dump {1 "one"})))))
+(deftest test-dump-non-string-map-keys
+  (testing "Dump scalar and keyword map keys"
+    (is (= "1: one\ntrue: yes\nname: value\nns/key: namespaced\n"
+           (yaml/dump (array-map
+                        1 "one"
+                        true "yes"
+                        :name "value"
+                        :ns/key "namespaced"))))))
+
+(deftest test-dump-clojure-collections
+  (testing "Dump lists and sets as YAML sequences"
+    (is (= "- a\n- b\n" (yaml/dump '("a" "b"))))
+    (is (= #{"a" "b"}
+           (set (yaml/load (yaml/dump #{"a" "b"})))))))

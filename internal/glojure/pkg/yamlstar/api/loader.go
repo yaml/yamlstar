@@ -306,7 +306,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_api_dump = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_api_dump.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(75), kw_column, int(7), kw_end_DASH_line, int(75), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_doc, "Dump a JSON-compatible Clojure value to a YAML string.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(75), kw_column, int(7), kw_end_DASH_line, int(75), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_doc, "Dump a supported native value to a YAML string.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
 		})
 	}
 	// load
@@ -421,7 +421,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_api_dump_DASH_all = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_api_dump_DASH_all.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(84), kw_column, int(7), kw_end_DASH_line, int(84), kw_end_DASH_column, int(14), kw_arglists, lang.NewList(lang.NewVector(sym_values)), kw_doc, "Dump a sequence of JSON-compatible Clojure values to a YAML stream.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(84), kw_column, int(7), kw_end_DASH_line, int(84), kw_end_DASH_column, int(14), kw_arglists, lang.NewList(lang.NewVector(sym_values)), kw_doc, "Dump a sequence of supported native values to a YAML stream.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
 		})
 	}
 }

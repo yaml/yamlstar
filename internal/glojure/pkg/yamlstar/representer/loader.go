@@ -116,22 +116,21 @@ func checkArityGTE(args []any, min int) {
 // LoadNS initializes the namespace "yamlstar.representer"
 func LoadNS() {
 	sym_clojure_DOT_core := lang.NewSymbolUnchecked("clojure.core")
+	sym_coll_QMARK_ := lang.NewSymbolUnchecked("coll?")
 	sym_ex_DASH_info := lang.NewSymbolUnchecked("ex-info")
 	sym_false_QMARK_ := lang.NewSymbolUnchecked("false?")
 	sym_integer_QMARK_ := lang.NewSymbolUnchecked("integer?")
+	sym_keyword_QMARK_ := lang.NewSymbolUnchecked("keyword?")
 	sym_map_QMARK_ := lang.NewSymbolUnchecked("map?")
 	sym_mapv := lang.NewSymbolUnchecked("mapv")
 	sym_number_QMARK_ := lang.NewSymbolUnchecked("number?")
-	sym_numbers := lang.NewSymbolUnchecked("numbers")
 	sym_represent := lang.NewSymbolUnchecked("represent")
-	sym_sequential_QMARK_ := lang.NewSymbolUnchecked("sequential?")
 	sym_str := lang.NewSymbolUnchecked("str")
 	sym_string_QMARK_ := lang.NewSymbolUnchecked("string?")
+	sym_subs := lang.NewSymbolUnchecked("subs")
 	sym_true_QMARK_ := lang.NewSymbolUnchecked("true?")
 	sym_type := lang.NewSymbolUnchecked("type")
-	sym_validate_DASH_safe_DASH_integer := lang.NewSymbolUnchecked("validate-safe-integer")
 	sym_value := lang.NewSymbolUnchecked("value")
-	sym_yamlstar_DOT_numbers := lang.NewSymbolUnchecked("yamlstar.numbers")
 	sym_yamlstar_DOT_representer := lang.NewSymbolUnchecked("yamlstar.representer")
 	kw_arglists := lang.NewKeyword("arglists")
 	kw_column := lang.NewKeyword("column")
@@ -139,8 +138,6 @@ func LoadNS() {
 	kw_end_DASH_column := lang.NewKeyword("end-column")
 	kw_end_DASH_line := lang.NewKeyword("end-line")
 	kw_file := lang.NewKeyword("file")
-	kw_key := lang.NewKeyword("key")
-	kw_key_DASH_type := lang.NewKeyword("key-type")
 	kw_kind := lang.NewKeyword("kind")
 	kw_line := lang.NewKeyword("line")
 	kw_mapping := lang.NewKeyword("mapping")
@@ -150,44 +147,47 @@ func LoadNS() {
 	kw_tag := lang.NewKeyword("tag")
 	kw_type := lang.NewKeyword("type")
 	kw_value := lang.NewKeyword("value")
+	// var clojure.core/coll?
+	var_clojure_DOT_core_coll_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_coll_QMARK_)
 	// var clojure.core/ex-info
 	var_clojure_DOT_core_ex_DASH_info := lang.InternVarName(sym_clojure_DOT_core, sym_ex_DASH_info)
 	// var clojure.core/false?
 	var_clojure_DOT_core_false_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_false_QMARK_)
 	// var clojure.core/integer?
 	var_clojure_DOT_core_integer_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_integer_QMARK_)
+	// var clojure.core/keyword?
+	var_clojure_DOT_core_keyword_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_keyword_QMARK_)
 	// var clojure.core/map?
 	var_clojure_DOT_core_map_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_map_QMARK_)
 	// var clojure.core/mapv
 	var_clojure_DOT_core_mapv := lang.InternVarName(sym_clojure_DOT_core, sym_mapv)
 	// var clojure.core/number?
 	var_clojure_DOT_core_number_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_number_QMARK_)
-	// var clojure.core/sequential?
-	var_clojure_DOT_core_sequential_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_sequential_QMARK_)
 	// var clojure.core/str
 	var_clojure_DOT_core_str := lang.InternVarName(sym_clojure_DOT_core, sym_str)
 	// var clojure.core/string?
 	var_clojure_DOT_core_string_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_string_QMARK_)
+	// var clojure.core/subs
+	var_clojure_DOT_core_subs := lang.InternVarName(sym_clojure_DOT_core, sym_subs)
 	// var clojure.core/true?
 	var_clojure_DOT_core_true_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_true_QMARK_)
 	// var clojure.core/type
 	var_clojure_DOT_core_type := lang.InternVarName(sym_clojure_DOT_core, sym_type)
-	// var yamlstar.numbers/validate-safe-integer
-	var_yamlstar_DOT_numbers_validate_DASH_safe_DASH_integer := lang.InternVarName(sym_yamlstar_DOT_numbers, sym_validate_DASH_safe_DASH_integer)
 	// var yamlstar.representer/represent
 	var_yamlstar_DOT_representer_represent := lang.InternVarName(sym_yamlstar_DOT_representer, sym_represent)
 	aotExternalFn0 := aotLinkFn1(var_clojure_DOT_core_true_QMARK_)
 	aotExternalFn1 := aotLinkFn1(var_clojure_DOT_core_false_QMARK_)
-	aotExternalFn10 := aotLinkFn2(var_clojure_DOT_core_ex_DASH_info)
-	aotExternalFn11 := aotLinkFn1(var_clojure_DOT_core_type)
-	aotExternalFn12 := aotLinkFn1(var_clojure_DOT_core_sequential_QMARK_)
+	aotExternalFn11 := aotLinkFn1(var_clojure_DOT_core_coll_QMARK_)
+	aotExternalFn12 := aotLinkFn2(var_clojure_DOT_core_ex_DASH_info)
+	aotExternalFn13 := aotLinkFn1(var_clojure_DOT_core_type)
 	aotExternalFn2 := aotLinkFn1(var_clojure_DOT_core_number_QMARK_)
 	aotExternalFn3 := aotLinkFn1(var_clojure_DOT_core_integer_QMARK_)
-	aotExternalFn4 := aotLinkFn1(var_yamlstar_DOT_numbers_validate_DASH_safe_DASH_integer)
-	aotExternalFn5 := aotLinkFn1(var_clojure_DOT_core_str)
-	aotExternalFn6 := aotLinkFn1(var_clojure_DOT_core_string_QMARK_)
-	aotExternalFn7 := aotLinkFn1(var_clojure_DOT_core_map_QMARK_)
-	aotExternalFn8 := aotLinkFn2(var_clojure_DOT_core_mapv)
+	aotExternalFn4 := aotLinkFn1(var_clojure_DOT_core_str)
+	aotExternalFn5 := aotLinkFn1(var_clojure_DOT_core_keyword_QMARK_)
+	aotExternalFn6 := aotLinkFn2(var_clojure_DOT_core_subs)
+	aotExternalFn7 := aotLinkFn1(var_clojure_DOT_core_string_QMARK_)
+	aotExternalFn8 := aotLinkFn1(var_clojure_DOT_core_map_QMARK_)
+	aotExternalFn9 := aotLinkFn2(var_clojure_DOT_core_mapv)
 	// reference fmt to avoid unused import error
 	_ = fmt.Printf
 	// reference reflect to avoid unused import error
@@ -270,7 +270,6 @@ func LoadNS() {
 			"throw-if",
 		})
 	}
-	ns.AddAlias(sym_numbers, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
 	// represent
 	{
 		tmp0 := sym_represent
@@ -302,87 +301,79 @@ func LoadNS() {
 							var tmp14 any
 							tmp15 := aotExternalFn3(v2)
 							if lang.IsTruthy(tmp15) {
-								tmp16 := aotExternalFn4(v2)
-								tmp14 = tmp16
+								tmp14 = "!!int"
 							} else {
+								tmp14 = "!!float"
 							}
-							_ = tmp14
-							var tmp17 any
-							tmp18 := aotExternalFn3(v2)
-							if lang.IsTruthy(tmp18) {
-								tmp17 = "!!int"
-							} else {
-								tmp17 = "!!float"
-							}
-							tmp19 := aotExternalFn5(v2)
-							tmp20 := lang.NewMap(kw_kind, kw_scalar, kw_tag, tmp17, kw_value, tmp19)
-							tmp12 = tmp20
+							tmp16 := aotExternalFn4(v2)
+							tmp17 := lang.NewMap(kw_kind, kw_scalar, kw_tag, tmp14, kw_value, tmp16)
+							tmp12 = tmp17
 						} else {
-							var tmp21 any
-							tmp22 := aotExternalFn6(v2)
-							if lang.IsTruthy(tmp22) {
-								tmp23 := lang.NewMap(kw_kind, kw_scalar, kw_tag, "!!str", kw_value, v2)
-								tmp21 = tmp23
+							var tmp18 any
+							tmp19 := aotExternalFn5(v2)
+							if lang.IsTruthy(tmp19) {
+								tmp20 := aotExternalFn4(v2)
+								tmp21 := aotExternalFn6(tmp20, int64(1))
+								tmp22 := lang.NewMap(kw_kind, kw_scalar, kw_tag, "!!str", kw_value, tmp21)
+								tmp18 = tmp22
 							} else {
-								var tmp24 any
-								tmp25 := aotExternalFn7(v2)
-								if lang.IsTruthy(tmp25) {
-									var tmp26 lang.FnFunc1
-									tmp26 = lang.FnFunc1(func(p0 any) any {
-										v27 := p0
-										_ = v27
-										var tmp28 any
-										{ // let
-											// let binding "vec__5"
-											var v29 any = v27
-											_ = v29
-											// let binding "k"
-											tmp30 := runtime.RT.NthDefault(v29, lang.IntCast(int64(0)), nil)
-											var v31 any = tmp30
-											_ = v31
-											// let binding "v"
-											tmp32 := runtime.RT.NthDefault(v29, lang.IntCast(int64(1)), nil)
-											var v33 any = tmp32
-											_ = v33
-											var tmp34 any
-											tmp35 := aotExternalFn6(v31)
-											if lang.IsTruthy(tmp35) {
-											} else {
-												tmp36 := aotExternalFn11(v31)
-												tmp37 := lang.NewMap(kw_key, v31, kw_key_DASH_type, tmp36)
-												tmp38 := aotExternalFn10("YAMLStar dump only supports string map keys", tmp37)
-												panic(tmp38)
-											}
-											_ = tmp34
-											tmp39 := aotDirectFn0(v31)
-											tmp40 := aotDirectFn0(v33)
-											tmp41 := lang.NewVector(tmp39, tmp40)
-											tmp28 = tmp41
-										} // end let
-										return tmp28
-									})
-									tmp27 := aotExternalFn8(tmp26, v2)
-									tmp28 := lang.NewMap(kw_kind, kw_mapping, kw_tag, "!!map", kw_value, tmp27)
-									tmp24 = tmp28
+								var tmp23 any
+								tmp24 := aotExternalFn7(v2)
+								if lang.IsTruthy(tmp24) {
+									tmp25 := lang.NewMap(kw_kind, kw_scalar, kw_tag, "!!str", kw_value, v2)
+									tmp23 = tmp25
 								} else {
-									var tmp29 any
-									tmp30 := aotExternalFn12(v2)
-									if lang.IsTruthy(tmp30) {
-										tmp31 := checkDerefVar(var_yamlstar_DOT_representer_represent)
-										tmp32 := aotExternalFn8(tmp31, v2)
-										tmp33 := lang.NewMap(kw_kind, kw_sequence, kw_tag, "!!seq", kw_value, tmp32)
-										tmp29 = tmp33
+									var tmp26 any
+									tmp27 := aotExternalFn8(v2)
+									if lang.IsTruthy(tmp27) {
+										var tmp28 lang.FnFunc1
+										tmp28 = lang.FnFunc1(func(p0 any) any {
+											v29 := p0
+											_ = v29
+											var tmp30 any
+											{ // let
+												// let binding "vec__297"
+												var v31 any = v29
+												_ = v31
+												// let binding "k"
+												tmp32 := runtime.RT.NthDefault(v31, lang.IntCast(int64(0)), nil)
+												var v33 any = tmp32
+												_ = v33
+												// let binding "v"
+												tmp34 := runtime.RT.NthDefault(v31, lang.IntCast(int64(1)), nil)
+												var v35 any = tmp34
+												_ = v35
+												tmp36 := aotDirectFn0(v33)
+												tmp37 := aotDirectFn0(v35)
+												tmp38 := lang.NewVector(tmp36, tmp37)
+												tmp30 = tmp38
+											} // end let
+											return tmp30
+										})
+										tmp29 := aotExternalFn9(tmp28, v2)
+										tmp30 := lang.NewMap(kw_kind, kw_mapping, kw_tag, "!!map", kw_value, tmp29)
+										tmp26 = tmp30
 									} else {
-										tmp34 := aotExternalFn11(v2)
-										tmp35 := lang.NewMap(kw_value, v2, kw_type, tmp34)
-										tmp36 := aotExternalFn10("YAMLStar dump only supports JSON-compatible values", tmp35)
-										panic(tmp36)
+										var tmp31 any
+										tmp32 := aotExternalFn11(v2)
+										if lang.IsTruthy(tmp32) {
+											tmp33 := checkDerefVar(var_yamlstar_DOT_representer_represent)
+											tmp34 := aotExternalFn9(tmp33, v2)
+											tmp35 := lang.NewMap(kw_kind, kw_sequence, kw_tag, "!!seq", kw_value, tmp34)
+											tmp31 = tmp35
+										} else {
+											tmp36 := aotExternalFn13(v2)
+											tmp37 := lang.NewMap(kw_value, v2, kw_type, tmp36)
+											tmp38 := aotExternalFn12("YAMLStar dump does not support this value", tmp37)
+											panic(tmp38)
+										}
+										tmp26 = tmp31
 									}
-									tmp24 = tmp29
+									tmp23 = tmp26
 								}
-								tmp21 = tmp24
+								tmp18 = tmp23
 							}
-							tmp12 = tmp21
+							tmp12 = tmp18
 						}
 						tmp9 = tmp12
 					}
@@ -395,7 +386,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_representer_represent = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_representer_represent.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/representer.glj", kw_line, int(6), kw_column, int(7), kw_end_DASH_line, int(6), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_doc, "Represent a JSON-compatible native value as a YAMLStar node tree.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_representer))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/representer.glj", kw_line, int(5), kw_column, int(7), kw_end_DASH_line, int(5), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_doc, "Represent a native value as a YAMLStar node tree.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_representer))
 		})
 	}
 }

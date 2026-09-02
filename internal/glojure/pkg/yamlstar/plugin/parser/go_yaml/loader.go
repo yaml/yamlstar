@@ -11,61 +11,8 @@ import (
 	sync "sync"
 )
 
-var aotDirectFn0 lang.FnFunc1
-var aotDirectFn1 lang.FnFunc2
-var aotDirectFn2 lang.FnFunc0
-
-func aotLinkFn1(vr *lang.Var) lang.FnFunc1 {
-	if vr.IsBound() {
-		return aotLinkBoundFn1(vr)
-	}
-	var once sync.Once
-	var linked lang.FnFunc1
-	return func(p0 any) any {
-		if !vr.IsBound() {
-			return lang.Apply1(checkDerefVar(vr), p0)
-		}
-		once.Do(func() { linked = aotLinkBoundFn1(vr) })
-		return linked(p0)
-	}
-}
-
-func aotLinkBoundFn1(vr *lang.Var) lang.FnFunc1 {
-	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc1); ok {
-		return direct
-	}
-	if fixed, ok := fn.(lang.FixedArityFn1); ok {
-		return fixed.Invoke1
-	}
-	return func(p0 any) any { return lang.Apply1(fn, p0) }
-}
-
-func aotLinkFn2(vr *lang.Var) lang.FnFunc2 {
-	if vr.IsBound() {
-		return aotLinkBoundFn2(vr)
-	}
-	var once sync.Once
-	var linked lang.FnFunc2
-	return func(p0 any, p1 any) any {
-		if !vr.IsBound() {
-			return lang.Apply2(checkDerefVar(vr), p0, p1)
-		}
-		once.Do(func() { linked = aotLinkBoundFn2(vr) })
-		return linked(p0, p1)
-	}
-}
-
-func aotLinkBoundFn2(vr *lang.Var) lang.FnFunc2 {
-	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc2); ok {
-		return direct
-	}
-	if fixed, ok := fn.(lang.FixedArityFn2); ok {
-		return fixed.Invoke2
-	}
-	return func(p0 any, p1 any) any { return lang.Apply2(fn, p0, p1) }
-}
+var aotDirectFn0 lang.FnFunc2
+var aotDirectFn1 lang.FnFunc0
 
 func aotLinkFn3(vr *lang.Var) lang.FnFunc3 {
 	if vr.IsBound() {
@@ -120,27 +67,12 @@ func checkArityGTE(args []any, min int) {
 func LoadNS() {
 	sym__config := lang.NewSymbolUnchecked("_config")
 	sym_clojure_DOT_core := lang.NewSymbolUnchecked("clojure.core")
-	sym_clojure_DOT_string := lang.NewSymbolUnchecked("clojure.string")
-	sym_into := lang.NewSymbolUnchecked("into")
-	sym_json := lang.NewSymbolUnchecked("json")
-	sym_keyword := lang.NewSymbolUnchecked("keyword")
-	sym_keywordize_DASH_event_DASH_keys := lang.NewSymbolUnchecked("keywordize-event-keys")
-	sym_load := lang.NewSymbolUnchecked("load")
-	sym_map := lang.NewSymbolUnchecked("map")
-	sym_map_QMARK_ := lang.NewSymbolUnchecked("map?")
-	sym_mapv := lang.NewSymbolUnchecked("mapv")
-	sym_name := lang.NewSymbolUnchecked("name")
 	sym_parse := lang.NewSymbolUnchecked("parse")
 	sym_plugin := lang.NewSymbolUnchecked("plugin")
-	sym_replace := lang.NewSymbolUnchecked("replace")
 	sym_require_DASH_glojure_DASH_runtime := lang.NewSymbolUnchecked("require-glojure-runtime")
-	sym_str := lang.NewSymbolUnchecked("str")
-	sym_vector_QMARK_ := lang.NewSymbolUnchecked("vector?")
-	sym_x := lang.NewSymbolUnchecked("x")
 	sym_yaml_DASH_str := lang.NewSymbolUnchecked("yaml-str")
 	sym_yamlstar_DOT_plugin := lang.NewSymbolUnchecked("yamlstar.plugin")
 	sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml := lang.NewSymbolUnchecked("yamlstar.plugin.parser.go-yaml")
-	sym_ys_DOT_json := lang.NewSymbolUnchecked("ys.json")
 	kw_arglists := lang.NewKeyword("arglists")
 	kw_column := lang.NewKeyword("column")
 	kw_default_DASH_config := lang.NewKeyword("default-config")
@@ -153,41 +85,12 @@ func LoadNS() {
 	kw_ns := lang.NewKeyword("ns")
 	kw_parse := lang.NewKeyword("parse")
 	kw_private := lang.NewKeyword("private")
-	// var clojure.core/into
-	var_clojure_DOT_core_into := lang.InternVarName(sym_clojure_DOT_core, sym_into)
-	// var clojure.core/keyword
-	var_clojure_DOT_core_keyword := lang.InternVarName(sym_clojure_DOT_core, sym_keyword)
-	// var clojure.core/map
-	var_clojure_DOT_core_map := lang.InternVarName(sym_clojure_DOT_core, sym_map)
-	// var clojure.core/map?
-	var_clojure_DOT_core_map_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_map_QMARK_)
-	// var clojure.core/mapv
-	var_clojure_DOT_core_mapv := lang.InternVarName(sym_clojure_DOT_core, sym_mapv)
-	// var clojure.core/name
-	var_clojure_DOT_core_name := lang.InternVarName(sym_clojure_DOT_core, sym_name)
-	// var clojure.core/vector?
-	var_clojure_DOT_core_vector_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_vector_QMARK_)
-	// var clojure.string/replace
-	var_clojure_DOT_string_replace := lang.InternVarName(sym_clojure_DOT_string, sym_replace)
-	// var yamlstar.plugin.parser.go-yaml/keywordize-event-keys
-	var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_keywordize_DASH_event_DASH_keys := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml, sym_keywordize_DASH_event_DASH_keys)
 	// var yamlstar.plugin.parser.go-yaml/parse
 	var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_parse := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml, sym_parse)
 	// var yamlstar.plugin.parser.go-yaml/plugin
 	var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_plugin := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml, sym_plugin)
 	// var yamlstar.plugin.parser.go-yaml/require-glojure-runtime
 	var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_require_DASH_glojure_DASH_runtime := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml, sym_require_DASH_glojure_DASH_runtime)
-	// var ys.json/load
-	var_ys_DOT_json_load := lang.InternVarName(sym_ys_DOT_json, sym_load)
-	aotExternalFn0 := aotLinkFn1(var_clojure_DOT_core_map_QMARK_)
-	aotExternalFn1 := aotLinkFn3(var_clojure_DOT_core_into)
-	aotExternalFn2 := aotLinkFn1(var_clojure_DOT_core_map)
-	aotExternalFn4 := aotLinkFn1(var_clojure_DOT_core_keyword)
-	aotExternalFn5 := aotLinkFn3(var_clojure_DOT_string_replace)
-	aotExternalFn6 := aotLinkFn1(var_clojure_DOT_core_name)
-	aotExternalFn7 := aotLinkFn1(var_clojure_DOT_core_vector_QMARK_)
-	aotExternalFn8 := aotLinkFn2(var_clojure_DOT_core_mapv)
-	aotExternalFn9 := aotLinkFn1(var_ys_DOT_json_load)
 	// reference fmt to avoid unused import error
 	_ = fmt.Printf
 	// reference reflect to avoid unused import error
@@ -270,69 +173,7 @@ func LoadNS() {
 			"throw-if",
 		})
 	}
-	ns.AddAlias(sym_str, lang.FindOrCreateNamespace(sym_clojure_DOT_string))
 	ns.AddAlias(sym_plugin, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
-	ns.AddAlias(sym_json, lang.FindOrCreateNamespace(sym_ys_DOT_json))
-	// keywordize-event-keys
-	{
-		tmp0 := sym_keywordize_DASH_event_DASH_keys
-		var tmp1 lang.FnFunc1
-		tmp1 = lang.FnFunc1(func(p0 any) any {
-			v2 := p0
-			_ = v2
-			var tmp3 any
-			tmp4 := aotExternalFn0(v2)
-			if lang.IsTruthy(tmp4) {
-				tmp5 := lang.NewMap()
-				var tmp6 lang.FnFunc1
-				tmp6 = lang.FnFunc1(func(p0 any) any {
-					v7 := p0
-					_ = v7
-					var tmp8 any
-					{ // let
-						// let binding "vec__26"
-						var v9 any = v7
-						_ = v9
-						// let binding "k"
-						tmp10 := runtime.RT.NthDefault(v9, lang.IntCast(int64(0)), nil)
-						var v11 any = tmp10
-						_ = v11
-						// let binding "v"
-						tmp12 := runtime.RT.NthDefault(v9, lang.IntCast(int64(1)), nil)
-						var v13 any = tmp12
-						_ = v13
-						tmp14 := aotExternalFn6(v11)
-						tmp15 := aotExternalFn5(tmp14, "_", "-")
-						tmp16 := aotExternalFn4(tmp15)
-						tmp17 := aotDirectFn0(v13)
-						tmp18 := lang.NewVector(tmp16, tmp17)
-						tmp8 = tmp18
-					} // end let
-					return tmp8
-				})
-				tmp7 := aotExternalFn2(tmp6)
-				tmp8 := aotExternalFn1(tmp5, tmp7, v2)
-				tmp3 = tmp8
-			} else {
-				var tmp9 any
-				tmp10 := aotExternalFn7(v2)
-				if lang.IsTruthy(tmp10) {
-					tmp11 := checkDerefVar(var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_keywordize_DASH_event_DASH_keys)
-					tmp12 := aotExternalFn8(tmp11, v2)
-					tmp9 = tmp12
-				} else {
-					tmp9 = v2
-				}
-				tmp3 = tmp9
-			}
-			return tmp3
-		})
-		aotDirectFn0 = tmp1
-		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_keywordize_DASH_event_DASH_keys = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_keywordize_DASH_event_DASH_keys.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser/go_yaml.glj", kw_line, int(18), kw_column, int(8), kw_end_DASH_line, int(18), kw_end_DASH_column, int(28), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_x)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
-		})
-	}
 	// parse
 	{
 		tmp0 := sym_parse
@@ -342,11 +183,11 @@ func LoadNS() {
 			_ = v2
 			v3 := p1
 			_ = v3
-			tmp4 := aotDirectFn2()
+			tmp4 := aotDirectFn1()
 			_ = tmp4
 			var tmp5 any
 			{ // let
-				// let binding "vec__29"
+				// let binding "vec__300"
 				var tmp6 any
 				{ // let
 					// let binding "or__0__auto__"
@@ -363,7 +204,7 @@ func LoadNS() {
 				tmp7 := lang.Apply1(goyamlparser4.ParseYAMLStarEvents, tmp6)
 				var v8 any = tmp7
 				_ = v8
-				// let binding "events-json"
+				// let binding "events"
 				tmp9 := runtime.RT.NthDefault(v8, lang.IntCast(int64(0)), nil)
 				var v10 any = tmp9
 				_ = v10
@@ -374,9 +215,7 @@ func LoadNS() {
 				var tmp13 any
 				tmp14 := lang.Identical(v12, nil)
 				if lang.IsTruthy(tmp14) {
-					tmp15 := aotExternalFn9(v10)
-					tmp16 := aotDirectFn0(tmp15)
-					tmp13 = tmp16
+					tmp13 = v10
 				} else {
 					panic(v12)
 				}
@@ -384,10 +223,10 @@ func LoadNS() {
 			} // end let
 			return tmp5
 		})
-		aotDirectFn1 = tmp1
+		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_parse = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_parse.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser/go_yaml.glj", kw_line, int(29), kw_column, int(7), kw_end_DASH_line, int(29), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str, sym__config)), kw_doc, "Parse a YAML string into a YAMLStar event stream using go-yaml.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser/go_yaml.glj", kw_line, int(16), kw_column, int(7), kw_end_DASH_line, int(16), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str, sym__config)), kw_doc, "Parse a YAML string into a YAMLStar event stream using go-yaml.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
 		})
 	}
 	// plugin
@@ -399,11 +238,11 @@ func LoadNS() {
 			_ = v2
 			v3 := p1
 			_ = v3
-			tmp4 := aotDirectFn2()
+			tmp4 := aotDirectFn1()
 			_ = tmp4
 			var tmp5 any
 			{ // let
-				// let binding "vec__29"
+				// let binding "vec__300"
 				var tmp6 any
 				{ // let
 					// let binding "or__0__auto__"
@@ -420,7 +259,7 @@ func LoadNS() {
 				tmp7 := lang.Apply1(goyamlparser4.ParseYAMLStarEvents, tmp6)
 				var v8 any = tmp7
 				_ = v8
-				// let binding "events-json"
+				// let binding "events"
 				tmp9 := runtime.RT.NthDefault(v8, lang.IntCast(int64(0)), nil)
 				var v10 any = tmp9
 				_ = v10
@@ -431,9 +270,7 @@ func LoadNS() {
 				var tmp13 any
 				tmp14 := lang.Identical(v12, nil)
 				if lang.IsTruthy(tmp14) {
-					tmp15 := aotExternalFn9(v10)
-					tmp16 := aotDirectFn0(tmp15)
-					tmp13 = tmp16
+					tmp13 = v10
 				} else {
 					panic(v12)
 				}
@@ -443,7 +280,7 @@ func LoadNS() {
 		})
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_plugin = ns.InternWithValue(tmp0, lang.NewMap(kw_name, "go-yaml", kw_parse, tmp1, kw_default_DASH_config, lang.NewMap()), true)
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_plugin.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/plugin/parser/go_yaml.glj", kw_line, int(45), kw_column, int(6), kw_end_DASH_line, int(45), kw_end_DASH_column, int(11), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
+			return lang.NewMap(kw_file, "yamlstar/plugin/parser/go_yaml.glj", kw_line, int(32), kw_column, int(6), kw_end_DASH_line, int(32), kw_end_DASH_column, int(11), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
 		})
 	}
 	// require-glojure-runtime
@@ -453,10 +290,10 @@ func LoadNS() {
 		tmp1 = lang.FnFunc0(func() any {
 			return nil
 		})
-		aotDirectFn2 = tmp1
+		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_require_DASH_glojure_DASH_runtime = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_require_DASH_glojure_DASH_runtime.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser/go_yaml.glj", kw_line, int(11), kw_column, int(8), kw_end_DASH_line, int(11), kw_end_DASH_column, int(30), kw_private, true, kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser/go_yaml.glj", kw_line, int(9), kw_column, int(8), kw_end_DASH_line, int(9), kw_end_DASH_column, int(30), kw_private, true, kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
 		})
 	}
 }

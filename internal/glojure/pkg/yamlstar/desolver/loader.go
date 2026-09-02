@@ -318,7 +318,7 @@ func LoadNS() {
 		closed5 = regexp4.MustCompile("\\.nan|\\.NaN|\\.NAN")
 	}
 	{
-		closed6 = regexp4.MustCompile("[#\\[\\]\\{\\},&*?:|>'\\\"%@`]")
+		closed6 = regexp4.MustCompile("[!#\\[\\]\\{\\},&*?:|>'\\\"%@`]")
 	}
 	{
 		closed7 = regexp4.MustCompile("^\\s|\\s$")
@@ -336,7 +336,7 @@ func LoadNS() {
 		tmp1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := lang.NewSet("tag:yaml.org,2002:int", "tag:yaml.org,2002:str", "tag:yaml.org,2002:float", "!!int", "tag:yaml.org,2002:bool", "!!null", "tag:yaml.org,2002:null", "!!bool", "!!str", "!!float")
+			tmp3 := lang.NewSet("tag:yaml.org,2002:int", "tag:yaml.org,2002:str", "tag:yaml.org,2002:float", "tag:yaml.org,2002:seq", "!!int", "tag:yaml.org,2002:bool", "!!null", "!!seq", "tag:yaml.org,2002:null", "!!bool", "!!str", "!!float", "tag:yaml.org,2002:map", "!!map")
 			tmp4 := aotExternalFn0(tmp3, v2)
 			return tmp4
 		})
@@ -359,7 +359,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_desolver_desolve = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_desolver_desolve.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/desolver.glj", kw_line, int(72), kw_column, int(7), kw_end_DASH_line, int(72), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_doc, "Prepare a represented node tree for serialization.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_desolver))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/desolver.glj", kw_line, int(75), kw_column, int(7), kw_end_DASH_line, int(75), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_doc, "Prepare a represented node tree for serialization.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_desolver))
 		})
 	}
 	// desolve-node
@@ -373,7 +373,7 @@ func LoadNS() {
 			if lang.IsTruthy(v2) {
 				var tmp4 any
 				{ // let
-					// let binding "G__100"
+					// let binding "G__355"
 					tmp5 := kw_kind.Invoke1(v2)
 					var v6 any = tmp5
 					_ = v6
@@ -386,14 +386,14 @@ func LoadNS() {
 						if v6 == kw_mapping {
 							var tmp9 any
 							{ // let
-								// let binding "G__101"
+								// let binding "G__356"
 								var tmp10 lang.FnFunc1
 								tmp10 = lang.FnFunc1(func(p0 any) any {
 									v11 := p0
 									_ = v11
 									var tmp12 any
 									{ // let
-										// let binding "vec__103"
+										// let binding "vec__358"
 										var v13 any = v11
 										_ = v13
 										// let binding "k"
@@ -416,7 +416,7 @@ func LoadNS() {
 								tmp13 := lang.NewMap(kw_kind, kw_mapping, kw_value, tmp12)
 								var v14 any = tmp13
 								_ = v14
-								// let binding "G__101"
+								// let binding "G__356"
 								var tmp15 any
 								tmp16 := kw_anchor.Invoke1(v2)
 								if lang.IsTruthy(tmp16) {
@@ -429,7 +429,7 @@ func LoadNS() {
 								}
 								var v19 any = tmp15
 								_ = v19
-								// let binding "G__101"
+								// let binding "G__356"
 								var tmp20 any
 								tmp21 := kw_flow.Invoke1(v2)
 								if lang.IsTruthy(tmp21) {
@@ -479,14 +479,14 @@ func LoadNS() {
 						if v6 == kw_sequence {
 							var tmp10 any
 							{ // let
-								// let binding "G__106"
+								// let binding "G__361"
 								tmp11 := checkDerefVar(var_yamlstar_DOT_desolver_desolve_DASH_node)
 								tmp12 := kw_value.Invoke1(v2)
 								tmp13 := aotExternalFn1(tmp11, tmp12)
 								tmp14 := lang.NewMap(kw_kind, kw_sequence, kw_value, tmp13)
 								var v15 any = tmp14
 								_ = v15
-								// let binding "G__106"
+								// let binding "G__361"
 								var tmp16 any
 								tmp17 := kw_anchor.Invoke1(v2)
 								if lang.IsTruthy(tmp17) {
@@ -499,7 +499,7 @@ func LoadNS() {
 								}
 								var v20 any = tmp16
 								_ = v20
-								// let binding "G__106"
+								// let binding "G__361"
 								var tmp21 any
 								tmp22 := kw_flow.Invoke1(v2)
 								if lang.IsTruthy(tmp22) {
@@ -559,11 +559,11 @@ func LoadNS() {
 								_ = v15
 								var tmp16 any
 								{ // let
-									// let binding "G__107"
+									// let binding "G__362"
 									tmp17 := lang.NewMap(kw_kind, kw_scalar, kw_value, v13)
 									var v18 any = tmp17
 									_ = v18
-									// let binding "G__107"
+									// let binding "G__362"
 									var tmp19 any
 									tmp20 := aotDirectFn6(v13, v15)
 									if lang.IsTruthy(tmp20) {
@@ -620,7 +620,7 @@ func LoadNS() {
 		aotDirectFn3 = tmp1
 		var_yamlstar_DOT_desolver_desolve_DASH_node = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_desolver_desolve_DASH_node.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/desolver.glj", kw_line, int(43), kw_column, int(7), kw_end_DASH_line, int(43), kw_end_DASH_column, int(18), kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_doc, "Remove implicit tags and add style hints where needed.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_desolver))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/desolver.glj", kw_line, int(46), kw_column, int(7), kw_end_DASH_line, int(46), kw_end_DASH_column, int(18), kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_doc, "Remove implicit tags and add style hints where needed.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_desolver))
 		})
 	}
 	// implicit-string?
@@ -810,53 +810,54 @@ func LoadNS() {
 			v3 := p1
 			_ = v3
 			var tmp4 any
-			tmp5 := aotExternalFn4(v3, "!!str")
-			if lang.IsTruthy(tmp5) {
-				var tmp6 any
+			tmp5 := lang.NewSet("tag:yaml.org,2002:str", "!!str")
+			tmp6 := aotExternalFn0(tmp5, v3)
+			if lang.IsTruthy(tmp6) {
+				var tmp7 any
 				{ // let
 					// let binding "newline-count"
-					tmp7 := lang.NewSet(lang.NewChar(10))
-					tmp8 := aotExternalFn8(tmp7, v2)
-					tmp9 := lang.Count(tmp8)
-					var v10 any = tmp9
-					_ = v10
-					var tmp11 any
-					tmp12 := aotDirectFn5(v2)
-					if lang.IsTruthy(tmp12) {
+					tmp8 := lang.NewSet(lang.NewChar(10))
+					tmp9 := aotExternalFn8(tmp8, v2)
+					tmp10 := lang.Count(tmp9)
+					var v11 any = tmp10
+					_ = v11
+					var tmp12 any
+					tmp13 := aotDirectFn5(v2)
+					if lang.IsTruthy(tmp13) {
 					} else {
-						var tmp13 any
 						var tmp14 any
+						var tmp15 any
 						{ // let
 							// let binding "and__0__auto__"
-							tmp15 := aotExternalFn4(int64(1), v10)
-							var v16 any = tmp15
-							_ = v16
-							var tmp17 any
-							if lang.IsTruthy(v16) {
-								tmp18 := aotExternalFn9(v2, "\n")
-								tmp17 = tmp18
+							tmp16 := aotExternalFn4(int64(1), v11)
+							var v17 any = tmp16
+							_ = v17
+							var tmp18 any
+							if lang.IsTruthy(v17) {
+								tmp19 := aotExternalFn9(v2, "\n")
+								tmp18 = tmp19
 							} else {
-								tmp17 = v16
+								tmp18 = v17
 							}
-							tmp14 = tmp17
+							tmp15 = tmp18
 						} // end let
-						if lang.IsTruthy(tmp14) {
-							tmp13 = "double"
+						if lang.IsTruthy(tmp15) {
+							tmp14 = "double"
 						} else {
-							var tmp15 any
-							tmp16 := lang.Numbers.IsPos(v10)
-							if lang.IsTruthy(tmp16) {
-								tmp15 = "literal"
+							var tmp16 any
+							tmp17 := lang.Numbers.IsPos(v11)
+							if lang.IsTruthy(tmp17) {
+								tmp16 = "literal"
 							} else {
-								tmp15 = "single"
+								tmp16 = "single"
 							}
-							tmp13 = tmp15
+							tmp14 = tmp16
 						}
-						tmp11 = tmp13
+						tmp12 = tmp14
 					}
-					tmp6 = tmp11
+					tmp7 = tmp12
 				} // end let
-				tmp4 = tmp6
+				tmp4 = tmp7
 			} else {
 			}
 			return tmp4
@@ -864,7 +865,7 @@ func LoadNS() {
 		aotDirectFn6 = tmp1
 		var_yamlstar_DOT_desolver_scalar_DASH_style = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_desolver_scalar_DASH_style.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/desolver.glj", kw_line, int(34), kw_column, int(8), kw_end_DASH_line, int(34), kw_end_DASH_column, int(19), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_value, sym_tag)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_desolver))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/desolver.glj", kw_line, int(37), kw_column, int(8), kw_end_DASH_line, int(37), kw_end_DASH_column, int(19), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_value, sym_tag)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_desolver))
 		})
 	}
 	// string-tag?
@@ -881,7 +882,7 @@ func LoadNS() {
 		aotDirectFn7 = tmp1
 		var_yamlstar_DOT_desolver_string_DASH_tag_QMARK_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_desolver_string_DASH_tag_QMARK_.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/desolver.glj", kw_line, int(31), kw_column, int(8), kw_end_DASH_line, int(31), kw_end_DASH_column, int(18), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_tag)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_desolver))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/desolver.glj", kw_line, int(34), kw_column, int(8), kw_end_DASH_line, int(34), kw_end_DASH_column, int(18), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_tag)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_desolver))
 		})
 	}
 	// desolve-all
@@ -898,7 +899,7 @@ func LoadNS() {
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_desolver_desolve_DASH_all = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_desolver_desolve_DASH_all.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/desolver.glj", kw_line, int(77), kw_column, int(7), kw_end_DASH_line, int(77), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_nodes)), kw_doc, "Prepare represented node trees for serialization.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_desolver))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/desolver.glj", kw_line, int(80), kw_column, int(7), kw_end_DASH_line, int(80), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_nodes)), kw_doc, "Prepare represented node trees for serialization.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_desolver))
 		})
 	}
 }

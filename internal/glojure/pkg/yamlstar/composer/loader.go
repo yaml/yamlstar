@@ -397,7 +397,7 @@ func LoadNS() {
 							_ = v26
 							var tmp27 any
 							{ // let
-								// let binding "G__6"
+								// let binding "G__301"
 								var v28 any = v24
 								_ = v28
 								// case
@@ -581,7 +581,7 @@ func LoadNS() {
 									if lang.Equals(v28, "mapping_end") {
 										var tmp61 any
 										{ // let
-											// let binding "vec__7"
+											// let binding "vec__302"
 											var tmp62 any
 											{ // let
 												// let binding "pairs"
@@ -944,7 +944,7 @@ func LoadNS() {
 									if lang.Equals(v28, "sequence_end") {
 										var tmp107 any
 										{ // let
-											// let binding "vec__10"
+											// let binding "vec__305"
 											var tmp108 any
 											{ // let
 												// let binding "items"
@@ -1198,11 +1198,11 @@ func LoadNS() {
 			_ = v5
 			var tmp6 any
 			{ // let
-				// let binding "G__4"
+				// let binding "G__299"
 				tmp7 := lang.NewMap(kw_kind, kw_mapping)
 				var v8 any = tmp7
 				_ = v8
-				// let binding "G__4"
+				// let binding "G__299"
 				var tmp9 any
 				if lang.IsTruthy(v3) {
 					var tmp10 any = v8
@@ -1213,7 +1213,7 @@ func LoadNS() {
 				}
 				var v11 any = tmp9
 				_ = v11
-				// let binding "G__4"
+				// let binding "G__299"
 				var tmp12 any
 				if lang.IsTruthy(v4) {
 					var tmp13 any = v11
@@ -1224,7 +1224,7 @@ func LoadNS() {
 				}
 				var v14 any = tmp12
 				_ = v14
-				// let binding "G__4"
+				// let binding "G__299"
 				var tmp15 any
 				if lang.IsTruthy(v5) {
 					var tmp16 any = v14
@@ -1256,10 +1256,10 @@ func LoadNS() {
 			_ = v2
 			var tmp3 any
 			{ // let
-				// let binding "map__2"
+				// let binding "map__297"
 				var v4 any = v2
 				_ = v4
-				// let binding "map__2"
+				// let binding "map__297"
 				var tmp5 any
 				tmp6 := aotExternalFn11(v4)
 				if lang.IsTruthy(tmp6) {
@@ -1305,11 +1305,11 @@ func LoadNS() {
 				_ = v23
 				var tmp24 any
 				{ // let
-					// let binding "G__3"
+					// let binding "G__298"
 					tmp25 := lang.NewMap(kw_kind, kw_scalar)
 					var v26 any = tmp25
 					_ = v26
-					// let binding "G__3"
+					// let binding "G__298"
 					var tmp27 any
 					tmp28 := aotExternalFn14(v19, "plain")
 					if lang.IsTruthy(tmp28) {
@@ -1321,7 +1321,7 @@ func LoadNS() {
 					}
 					var v30 any = tmp27
 					_ = v30
-					// let binding "G__3"
+					// let binding "G__298"
 					var tmp31 any
 					if lang.IsTruthy(v21) {
 						var tmp32 any = v30
@@ -1332,7 +1332,7 @@ func LoadNS() {
 					}
 					var v33 any = tmp31
 					_ = v33
-					// let binding "G__3"
+					// let binding "G__298"
 					var tmp34 any
 					if lang.IsTruthy(v23) {
 						var tmp35 any = v33
@@ -1372,11 +1372,11 @@ func LoadNS() {
 			_ = v5
 			var tmp6 any
 			{ // let
-				// let binding "G__5"
+				// let binding "G__300"
 				tmp7 := lang.NewMap(kw_kind, kw_sequence)
 				var v8 any = tmp7
 				_ = v8
-				// let binding "G__5"
+				// let binding "G__300"
 				var tmp9 any
 				if lang.IsTruthy(v3) {
 					var tmp10 any = v8
@@ -1387,7 +1387,7 @@ func LoadNS() {
 				}
 				var v11 any = tmp9
 				_ = v11
-				// let binding "G__5"
+				// let binding "G__300"
 				var tmp12 any
 				if lang.IsTruthy(v4) {
 					var tmp13 any = v11
@@ -1398,7 +1398,7 @@ func LoadNS() {
 				}
 				var v14 any = tmp12
 				_ = v14
-				// let binding "G__5"
+				// let binding "G__300"
 				var tmp15 any
 				if lang.IsTruthy(v5) {
 					var tmp16 any = v14

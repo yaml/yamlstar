@@ -1,11 +1,11 @@
 (ns libyamlstar
   "Shared library bridge - Gloat EXPORT-based C API for YAMLStar"
-  (:require [clojure.string :as str]
+  (:require [clojure.data.json :as json]
+            [clojure.string :as str]
             [yamlstar.api :as yaml]
             [yamlstar.parser :as parser]
             [yamlstar.plugin.parser.reference]
-            [yamlstar.plugin.parser.go-yaml]
-            [ys.json :as json]))
+            [yamlstar.plugin.parser.go-yaml]))
 
 (parser/register-reference-parser!)
 (parser/set-default-parser! "go-yaml")
@@ -67,16 +67,16 @@
   Returns nil for nil/blank/empty opts (the fast path)."
   [opts-json]
   (when-not (or (nil? opts-json) (str/blank? opts-json))
-    (not-empty (normalize-keys (json/load opts-json)))))
+    (not-empty (normalize-keys (json/read-str opts-json)))))
 
 (defn yamlstar-load
   "Load YAML string, return JSON string with {:data ...} or {:error ...}"
   [_thread yaml-str opts-json]
   (try
     (let [result (yaml/load yaml-str (parse-opts opts-json))]
-      (json/dump {:data (nil-keys->string result)}))
+      (json/write-str {:data (nil-keys->string result)}))
     (catch #?(:glj go/any :lg Exception) e
-      (json/dump
+      (json/write-str
        {:error
         #?(:glj {:cause (fmt.Sprintf "%v" e)
                  :type (fmt.Sprintf "%T" e)}
@@ -88,21 +88,21 @@
   [_thread yaml-str opts-json]
   (try
     (let [result (yaml/load-all yaml-str (parse-opts opts-json))]
-      (json/dump {:data (nil-keys->string result)}))
+      (json/write-str {:data (nil-keys->string result)}))
     (catch #?(:glj go/any :lg Exception) e
-      (json/dump {:error {:cause (str e)
-                          :type "Exception"
-                          :message (str e)}}))))
+      (json/write-str {:error {:cause (str e)
+                               :type "Exception"
+                               :message (str e)}}))))
 
 (defn yamlstar-dump
   "Dump one JSON-encoded value to YAML, return JSON string with {:data ...} or {:error ...}"
   [_thread data-json opts-json]
   (try
     (let [_ (parse-opts opts-json)
-          result (yaml/dump (json/load data-json))]
-      (json/dump {:data result}))
+          result (yaml/dump (json/read-str data-json))]
+      (json/write-str {:data result}))
     (catch #?(:glj go/any :lg Exception) e
-      (json/dump
+      (json/write-str
        {:error
         #?(:glj {:cause (fmt.Sprintf "%v" e)
                  :type (fmt.Sprintf "%T" e)}
@@ -114,12 +114,12 @@
   [_thread data-json opts-json]
   (try
     (let [_ (parse-opts opts-json)
-          result (yaml/dump-all (json/load data-json))]
-      (json/dump {:data result}))
+          result (yaml/dump-all (json/read-str data-json))]
+      (json/write-str {:data result}))
     (catch #?(:glj go/any :lg Exception) e
-      (json/dump {:error {:cause (str e)
-                          :type "Exception"
-                          :message (str e)}}))))
+      (json/write-str {:error {:cause (str e)
+                               :type "Exception"
+                               :message (str e)}}))))
 
 (defn yamlstar-version
   "Return the YAMLStar version string"

@@ -25,18 +25,6 @@
              StreamStartEvent
              StreamEndEvent)))
 
-(defn- in-graalvm-native-image?
-  []
-  (= "runtime" (System/getProperty "org.graalvm.nativeimage.imagecode")))
-
-(defn- require-graalvm-shared-lib
-  "Fail unless this call is running inside a GraalVM native image."
-  []
-  (when-not (in-graalvm-native-image?)
-    (throw (ex-info (str "SnakeYAML parser plugin is only available through "
-                         "the GraalVM libyamlstar shared library")
-                    {:parser "snakeyaml"}))))
-
 (defn- optional-str
   "Return the string form of a non-empty Optional value, else nil."
   [^Optional o]
@@ -110,7 +98,6 @@
   The input is normalized to end with a newline, matching the reference
   parser, so both parsers produce identical event streams."
   [yaml-str _config]
-  (require-graalvm-shared-lib)
   (let [yaml-str (or yaml-str "")
         yaml-str (if (or (= "" yaml-str)
                          (.endsWith ^String yaml-str "\n"))

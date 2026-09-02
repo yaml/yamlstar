@@ -444,7 +444,7 @@ func LoadNS() {
 					} else {
 						var tmp18 any
 						{ // let
-							// let binding "vec__4"
+							// let binding "vec__299"
 							tmp19 := lang.Apply2(strconv5.ParseFloat, v7, int64(64))
 							var v20 any = tmp19
 							_ = v20
@@ -544,7 +544,7 @@ func LoadNS() {
 					} else {
 						var tmp25 any
 						{ // let
-							// let binding "vec__4"
+							// let binding "vec__299"
 							tmp26 := lang.Apply2(strconv5.ParseFloat, v14, int64(64))
 							var v27 any = tmp26
 							_ = v27
@@ -587,7 +587,7 @@ func LoadNS() {
 					// let binding "result"
 					var tmp6 any
 					{ // let
-						// let binding "G__7"
+						// let binding "G__302"
 						tmp7 := kw_kind.Invoke1(v2)
 						var v8 any = tmp7
 						_ = v8
@@ -679,7 +679,7 @@ func LoadNS() {
 										_ = v26
 										var tmp27 any
 										{ // let
-											// let binding "vec__9"
+											// let binding "vec__304"
 											var v28 any = v26
 											_ = v28
 											// let binding "key-node"

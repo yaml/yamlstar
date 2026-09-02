@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"sync"
 
-	_ "github.com/gloathub/gloat/ys/pkg/ys/json"
+	_ "github.com/gloathub/ys-v0-glj/clojure/data/json"
 	"github.com/glojurelang/glojure/pkg/glj"
 	"github.com/glojurelang/glojure/pkg/lang"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/libyamlstar"
@@ -32,6 +32,7 @@ import (
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/parser"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/parser/go_yaml"
+	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/parser/reference"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/representer"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/resolver"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/serializer"
@@ -136,7 +137,7 @@ var (
 )
 
 var namespaces = []string{
-	"ys.json",
+	"clojure.data.json",
 	"yamlstar.numbers",
 	"yaml-parser.prelude",
 	"yaml-parser.core",
@@ -146,6 +147,7 @@ var namespaces = []string{
 	"yamlstar.desolver",
 	"libyamlstar",
 	"yamlstar.plugin",
+	"yamlstar.plugin.parser.reference",
 	"yamlstar.plugin.parser.go-yaml",
 	"yaml-parser.parser",
 	"yamlstar.composer",

@@ -24,12 +24,12 @@
    (api/load-all yaml-str opts)))
 
 (defn dump
-  "Dump a JSON-compatible Clojure value to a YAML string."
+  "Dump a supported Clojure value to a YAML string."
   [value]
   (api/dump value))
 
 (defn dump-all
-  "Dump a sequence of JSON-compatible Clojure values to a YAML stream."
+  "Dump a sequence of supported Clojure values to a YAML stream."
   [values]
   (api/dump-all values))
 

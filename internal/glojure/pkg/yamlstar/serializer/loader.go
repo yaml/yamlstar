@@ -327,7 +327,7 @@ func LoadNS() {
 			_ = v2
 			var tmp3 any
 			{ // let
-				// let binding "G__1"
+				// let binding "G__296"
 				tmp4 := kw_kind.Invoke1(v2)
 				var v5 any = tmp4
 				_ = v5
@@ -352,12 +352,12 @@ func LoadNS() {
 					if v5 == kw_scalar {
 						var tmp13 any
 						{ // let
-							// let binding "G__2"
+							// let binding "G__297"
 							tmp14 := kw_value.Invoke1(v2)
 							tmp15 := lang.NewMap(kw_event, "scalar", kw_value, tmp14)
 							var v16 any = tmp15
 							_ = v16
-							// let binding "G__2"
+							// let binding "G__297"
 							var tmp17 any
 							tmp18 := kw_anchor.Invoke1(v2)
 							if lang.IsTruthy(tmp18) {
@@ -370,7 +370,7 @@ func LoadNS() {
 							}
 							var v21 any = tmp17
 							_ = v21
-							// let binding "G__2"
+							// let binding "G__297"
 							var tmp22 any
 							tmp23 := kw_tag.Invoke1(v2)
 							if lang.IsTruthy(tmp23) {
@@ -407,11 +407,11 @@ func LoadNS() {
 					if v5 == kw_mapping {
 						var tmp17 any
 						{ // let
-							// let binding "G__3"
+							// let binding "G__298"
 							tmp18 := lang.NewMap(kw_event, "mapping_start")
 							var v19 any = tmp18
 							_ = v19
-							// let binding "G__3"
+							// let binding "G__298"
 							var tmp20 any
 							tmp21 := kw_anchor.Invoke1(v2)
 							if lang.IsTruthy(tmp21) {
@@ -424,7 +424,7 @@ func LoadNS() {
 							}
 							var v24 any = tmp20
 							_ = v24
-							// let binding "G__3"
+							// let binding "G__298"
 							var tmp25 any
 							tmp26 := kw_tag.Invoke1(v2)
 							if lang.IsTruthy(tmp26) {
@@ -456,7 +456,7 @@ func LoadNS() {
 							_ = v20
 							var tmp21 any
 							{ // let
-								// let binding "vec__5"
+								// let binding "vec__300"
 								var v22 any = v20
 								_ = v22
 								// let binding "k"
@@ -491,11 +491,11 @@ func LoadNS() {
 					if v5 == kw_sequence {
 						var tmp28 any
 						{ // let
-							// let binding "G__8"
+							// let binding "G__303"
 							tmp29 := lang.NewMap(kw_event, "sequence_start")
 							var v30 any = tmp29
 							_ = v30
-							// let binding "G__8"
+							// let binding "G__303"
 							var tmp31 any
 							tmp32 := kw_anchor.Invoke1(v2)
 							if lang.IsTruthy(tmp32) {
@@ -508,7 +508,7 @@ func LoadNS() {
 							}
 							var v35 any = tmp31
 							_ = v35
-							// let binding "G__8"
+							// let binding "G__303"
 							var tmp36 any
 							tmp37 := kw_tag.Invoke1(v2)
 							if lang.IsTruthy(tmp37) {

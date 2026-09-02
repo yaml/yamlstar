@@ -167,7 +167,8 @@ test-examples:
 	$(MAKE) --no-pr -C example test
 
 go-generate: $(GLOAT)
-	$(MAKE) -C libyamlstar generate-go
+	$(MAKE) -C libyamlstar generate-go \
+	  YAMLSTAR_ENGINE=glojure GOROOT=
 
 go-generate-check: go-generate
 	git diff --exit-code -- internal/glojure/

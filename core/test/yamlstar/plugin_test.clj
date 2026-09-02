@@ -5,7 +5,10 @@
             [yamlstar.plugin :as plugin]))
 
 (deftest registry-test
-  (testing "reference parser is registered by default"
+  (testing "reference parser is registered lazily"
+    (plugin/unregister-parser! "reference")
+    (is (not (some #{"reference"} (plugin/registered-parsers))))
+    (is (= "reference" (:name (parser/register-reference-parser!))))
     (is (some #{"reference"} (plugin/registered-parsers))))
 
   (testing "register, resolve, and unregister a parser"

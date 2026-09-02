@@ -227,7 +227,7 @@ func LoadNS() {
 			_ = v2
 			var tmp3 any
 			{ // let
-				// let binding "vec__1"
+				// let binding "vec__296"
 				tmp4 := lang.Apply3(strconv4.ParseInt, v2, int64(10), int64(64))
 				var v5 any = tmp4
 				_ = v5
