@@ -1,3 +1,11 @@
+- version: 0.1.19
+  date:    Wed Sep  2 11:18:56 AM EDT 2026
+  changes:
+  - Add parser plugin API with SnakeYAML plugin
+  - Add parser options and dual engine ABI
+  - Use Glojure go-yaml interop
+  - Add reference parser namespace
+  - Ship engine-specific release artifacts
 - version: 0.1.18
   date:    Mon Jul 27 12:17:13 PM EDT 2026
   changes:

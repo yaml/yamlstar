@@ -396,7 +396,7 @@ func LoadNS() {
 		tmp0 := sym_version
 		var tmp1 lang.FnFunc0
 		tmp1 = lang.FnFunc0(func() any {
-			return "0.1.18-SNAPSHOT"
+			return "0.1.19-SNAPSHOT"
 		})
 		aotDirectFn4 = tmp1
 		var_yamlstar_DOT_api_version = ns.InternWithValue(tmp0, tmp1, true)

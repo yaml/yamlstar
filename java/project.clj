@@ -1,4 +1,4 @@
-(defproject com.yaml/yamlstar "0.1.18"
+(defproject com.yaml/yamlstar "0.1.19"
   :description "YAMLStar - YAML 1.2 loader for Java"
   :url "https://github.com/yaml/yamlstar"
 

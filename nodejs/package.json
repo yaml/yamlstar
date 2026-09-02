@@ -1,6 +1,6 @@
 {
   "name": "yamlstar",
-  "version": "0.1.18",
+  "version": "0.1.19",
   "description": "YAML 1.2 loader - Node.js bindings",
   "main": "lib/yamlstar/index.js",
   "author": "Ingy döt Net",
