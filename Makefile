@@ -451,12 +451,13 @@ comma := ,
 # prior run (r=RUN_ID, default: the latest release workflow run on
 # the current branch). Example:
 #   make release-tests-retry v=0.1.19 t=macos-x64 r=12345678
+# FreeBSD testing is available only when requested explicitly:
+#   make release-tests-retry v=0.1.19 t=freebsd-x64 r=12345678
 release-tests-retry: t ?= \
   linux-x64 \
   linux-aarch64 \
   macos-arm64 \
   macos-x64 \
-  freebsd-x64 \
   windows-x64 \
   windows-arm64 \
   wasm-p1

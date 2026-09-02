@@ -38,6 +38,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - dyalog/Makefile
     - dyalog/apl-package.json
     - dyalog/src/YAMLStar.apln
+    - dyalog/src/yamlstar_dyalog.c
     - elixir/c_src/yamlstar_nif.c
     - elixir/doc/readme.md
     - elixir/mix.exs

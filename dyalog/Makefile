@@ -162,13 +162,14 @@ LIBYS-LOCAL := ../libyamlstar/lib/libyamlstar.so.$(YAMLSTAR_VERSION)
 $(LIBYS):
 	mkdir -p lib
 	if [[ -e $(LIBYS-LOCAL) ]]; then \
-	  cp -pP ../libyamlstar/lib/libyamlstar.so* lib/; \
+	  cp -pL $(LIBYS-LOCAL) $(LIBYS); \
 	else \
 	  mkdir -p .cache/libyamlstar && \
 	  curl -fsSL $(LIBYS-URL) -o .cache/$(LIBYS-ARCHIVE) && \
 	  tar -C .cache/libyamlstar --strip-components=1 \
 	    -xf .cache/$(LIBYS-ARCHIVE) && \
-	  cp -pP .cache/libyamlstar/libyamlstar.so* lib/; \
+	  cp -pL .cache/libyamlstar/libyamlstar.so.$(YAMLSTAR_VERSION) \
+	    $(LIBYS); \
 	fi
 
 .cache/image: dyalog.dockerfile

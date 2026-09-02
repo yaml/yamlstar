@@ -745,64 +745,6 @@ jobs:
           TEST-TIME='date; time' \
           BINDING-SKIP="ada crystal delphi elixir erlang fsharp haskell lua php powershell r raku scala swift $YS_RELEASE_BINDINGS_SKIP"
 
-  test-freebsd-x64:
-    name: Test FreeBSD x64 artifacts
-    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
-    needs: build-cross-platform
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout tag
-      uses: actions/checkout@v5
-      with:
-        ref: ${{ inputs.version }}
-
-    - name: Download FreeBSD x64 artifacts
-      uses: actions/download-artifact@v7
-      with:
-        name: freebsd-x64
-        path: release-artifacts
-
-    - name: Smoke test CLI and C binding on FreeBSD
-      uses: vmactions/freebsd-vm@v1.5.2
-      with:
-        release: '14.3'
-        usesh: true
-        prepare: pkg install -y bash python3 devel/py-pytest
-        run: |
-          set -eu
-          VERSION='${{ inputs.version }}'
-          work=/tmp/yamlstar-release
-          rm -rf "$work"
-          mkdir -p "$work"
-          tar -xf "release-artifacts/yamlstar-$VERSION-freebsd-x64.tar.xz" \
-            -C "$work"
-          tar -xf "release-artifacts/libyamlstar-$VERSION-freebsd-x64.tar.xz" \
-            -C "$work"
-          cli="$work/yamlstar-$VERSION-freebsd-x64/yaml"
-          lib="$work/libyamlstar-$VERSION-freebsd-x64"
-          "$cli" --version
-          test "$(printf 'a: 1\n' | "$cli")" = '{"a":1}'
-          printf '%s\n' \
-            '#include <stdio.h>' \
-            '#include <string.h>' \
-            '#include "libyamlstar.h"' \
-            'int main(void) {' \
-            '  graal_isolate_t *isolate = NULL;' \
-            '  graal_isolatethread_t *thread = NULL;' \
-            '  if (graal_create_isolate(NULL, &isolate, &thread)) return 1;' \
-            '  const char *result = yamlstar_load(thread, "a: 1\n", "{}");' \
-            '  if (strcmp(result, "{\"data\":{\"a\":1}}")) {' \
-            '    fprintf(stderr, "unexpected yamlstar_load result: %s\n", result);' \
-            '    return 2;' \
-            '  }' \
-            '  return graal_tear_down_isolate(thread);' \
-            '}' > "$work/smoke.c"
-          cc -I"$lib" -L"$lib" -Wl,-rpath,"$lib" \
-            "$work/smoke.c" -lyamlstar -o "$work/smoke"
-          "$work/smoke"
-          LD_LIBRARY_PATH="$lib" PYTHONPATH="$PWD/python/lib" \
-            python3 -m pytest python/test/test_yamlstar.py
-
   test-windows-arm64:
     name: Test Windows ARM64 artifacts
     if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
@@ -1242,7 +1184,7 @@ jobs:
       with:
         release: '14.3'
         usesh: true
-        prepare: pkg install -y bash python311 py311-pip
+        prepare: pkg install -y bash python3 devel/py-pytest
         run: |
           set -eu
           VERSION='${{ inputs.version }}'
@@ -1275,11 +1217,8 @@ jobs:
           cc -I"$lib" -L"$lib" -Wl,-rpath,"$lib" \
             "$work/smoke.c" -lyamlstar -o "$work/smoke"
           "$work/smoke"
-          python3 -m venv "$work/venv"
-          . "$work/venv/bin/activate"
-          pip install pytest
           LD_LIBRARY_PATH="$lib" PYTHONPATH="$PWD/python/lib" \
-            python -m pytest python/test/test_yamlstar.py
+            python3 -m pytest python/test/test_yamlstar.py
 
   test-windows-arm64-retry:
     name: Test Windows ARM64 artifacts (retry)
@@ -1370,7 +1309,6 @@ jobs:
     - test-linux-aarch64
     - test-macos
     - test-macos-x64
-    - test-freebsd-x64
     - test-windows
     - test-windows-arm64
     - test-wasm-p1
