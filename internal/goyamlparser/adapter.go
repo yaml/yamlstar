@@ -1,69 +1,3 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-src=${1:?source go-yaml directory required}
-dst=${2:?destination package directory required}
-perl=${PERL:-perl}
-
-pkg_src=$src/internal/libyaml
-for file in yaml.go errors.go reader.go scanner.go parser.go; do
-  test -f "$pkg_src/$file"
-done
-test -f "$src/LICENSE"
-test -f "$src/NOTICE"
-
-rm -rf "$dst"
-mkdir -p "$dst"
-
-cp "$src/LICENSE" "$src/NOTICE" "$dst/"
-
-for file in yaml.go errors.go reader.go scanner.go parser.go; do
-  "$perl" -0pe 's/\bpackage libyaml\b/package goyamlparser/' \
-    < "$pkg_src/$file" > "$dst/$file"
-done
-
-cat > "$dst/support.go" <<'GO'
-package goyamlparser
-
-import "fmt"
-
-type Style uint32
-
-type DepthKind string
-
-const (
-	DepthKindFlow  DepthKind = "flow"
-	DepthKindBlock DepthKind = "block"
-)
-
-type DepthContext struct {
-	Kind DepthKind
-}
-
-func DefaultDepthCheck(depth int, ctx *DepthContext) error {
-	const maxDepth = 10000
-	if depth > maxDepth {
-		return fmt.Errorf("exceeded max depth of %d", maxDepth)
-	}
-	return nil
-}
-
-type Composer struct {
-	Parser Parser
-}
-
-func NewComposer(in []byte, options any) *Composer {
-	parser := NewParser()
-	parser.SetInputString(in)
-	return &Composer{Parser: parser}
-}
-
-func (c *Composer) Destroy() {}
-
-func (e *Event) Delete() {}
-GO
-
-cat > "$dst/adapter.go" <<'GO'
 package goyamlparser
 
 import (
@@ -206,6 +140,3 @@ func normalizeTag(tag string) string {
 	}
 	return tag
 }
-GO
-
-touch "$dst/.generated"

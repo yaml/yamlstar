@@ -371,11 +371,11 @@ func LoadNS() {
 			_ = v4
 			var tmp5 any
 			{ // let
-				// let binding "map__299"
+				// let binding "map__4"
 				tmp6 := aotDirectFn4(v2)
 				var v7 any = tmp6
 				_ = v7
-				// let binding "map__299"
+				// let binding "map__4"
 				var tmp8 any
 				tmp9 := aotExternalFn0(v7)
 				if lang.IsTruthy(tmp9) {
@@ -485,7 +485,7 @@ func LoadNS() {
 							}()
 							var tmp11 any
 							{ // let
-								// let binding "G__298"
+								// let binding "G__3"
 								tmp12 := aotExternalFn20("yamlstar.plugin.parser.", v2)
 								tmp13 := aotExternalFn19(tmp12, "plugin")
 								tmp14 := aotExternalFn18(tmp13)
@@ -682,10 +682,10 @@ func LoadNS() {
 			_ = v2
 			var tmp3 any
 			{ // let
-				// let binding "map__297"
+				// let binding "map__2"
 				var v4 any = v2
 				_ = v4
-				// let binding "map__297"
+				// let binding "map__2"
 				var tmp5 any
 				tmp6 := aotExternalFn0(v4)
 				if lang.IsTruthy(tmp6) {

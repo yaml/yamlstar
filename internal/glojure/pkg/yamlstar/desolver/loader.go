@@ -373,7 +373,7 @@ func LoadNS() {
 			if lang.IsTruthy(v2) {
 				var tmp4 any
 				{ // let
-					// let binding "G__355"
+					// let binding "G__60"
 					tmp5 := kw_kind.Invoke1(v2)
 					var v6 any = tmp5
 					_ = v6
@@ -386,14 +386,14 @@ func LoadNS() {
 						if v6 == kw_mapping {
 							var tmp9 any
 							{ // let
-								// let binding "G__356"
+								// let binding "G__61"
 								var tmp10 lang.FnFunc1
 								tmp10 = lang.FnFunc1(func(p0 any) any {
 									v11 := p0
 									_ = v11
 									var tmp12 any
 									{ // let
-										// let binding "vec__358"
+										// let binding "vec__63"
 										var v13 any = v11
 										_ = v13
 										// let binding "k"
@@ -416,7 +416,7 @@ func LoadNS() {
 								tmp13 := lang.NewMap(kw_kind, kw_mapping, kw_value, tmp12)
 								var v14 any = tmp13
 								_ = v14
-								// let binding "G__356"
+								// let binding "G__61"
 								var tmp15 any
 								tmp16 := kw_anchor.Invoke1(v2)
 								if lang.IsTruthy(tmp16) {
@@ -429,7 +429,7 @@ func LoadNS() {
 								}
 								var v19 any = tmp15
 								_ = v19
-								// let binding "G__356"
+								// let binding "G__61"
 								var tmp20 any
 								tmp21 := kw_flow.Invoke1(v2)
 								if lang.IsTruthy(tmp21) {
@@ -479,14 +479,14 @@ func LoadNS() {
 						if v6 == kw_sequence {
 							var tmp10 any
 							{ // let
-								// let binding "G__361"
+								// let binding "G__66"
 								tmp11 := checkDerefVar(var_yamlstar_DOT_desolver_desolve_DASH_node)
 								tmp12 := kw_value.Invoke1(v2)
 								tmp13 := aotExternalFn1(tmp11, tmp12)
 								tmp14 := lang.NewMap(kw_kind, kw_sequence, kw_value, tmp13)
 								var v15 any = tmp14
 								_ = v15
-								// let binding "G__361"
+								// let binding "G__66"
 								var tmp16 any
 								tmp17 := kw_anchor.Invoke1(v2)
 								if lang.IsTruthy(tmp17) {
@@ -499,7 +499,7 @@ func LoadNS() {
 								}
 								var v20 any = tmp16
 								_ = v20
-								// let binding "G__361"
+								// let binding "G__66"
 								var tmp21 any
 								tmp22 := kw_flow.Invoke1(v2)
 								if lang.IsTruthy(tmp22) {
@@ -559,11 +559,11 @@ func LoadNS() {
 								_ = v15
 								var tmp16 any
 								{ // let
-									// let binding "G__362"
+									// let binding "G__67"
 									tmp17 := lang.NewMap(kw_kind, kw_scalar, kw_value, v13)
 									var v18 any = tmp17
 									_ = v18
-									// let binding "G__362"
+									// let binding "G__67"
 									var tmp19 any
 									tmp20 := aotDirectFn6(v13, v15)
 									if lang.IsTruthy(tmp20) {

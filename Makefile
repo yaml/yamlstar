@@ -171,7 +171,7 @@ go-generate: $(GLOAT)
 	  YAMLSTAR_ENGINE=glojure GOROOT=
 
 go-generate-check: go-generate
-	git diff --exit-code -- internal/glojure/
+	git diff --exit-code -- internal/glojure/ internal/goyamlparser/
 
 go-test: $(GO)
 	go test ./...

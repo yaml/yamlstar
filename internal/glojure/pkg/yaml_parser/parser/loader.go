@@ -1060,11 +1060,11 @@ func LoadNS() {
 								if lang.IsTruthy(tmp15) {
 									var tmp16 any
 									{ // let
-										// let binding "map__308"
+										// let binding "map__13"
 										tmp17 := runtime.RT.Nth(v6, lang.IntCast(v10))
 										var v18 any = tmp17
 										_ = v18
-										// let binding "map__308"
+										// let binding "map__13"
 										var tmp19 any
 										tmp20 := aotExternalFn55(v18)
 										if lang.IsTruthy(tmp20) {
@@ -4073,7 +4073,7 @@ func LoadNS() {
 									if lang.IsTruthy(v22) {
 										var tmp24 any
 										{ // let
-											// let binding "vec__300"
+											// let binding "vec__5"
 											var v25 any = v22
 											_ = v25
 											// let binding "_"
@@ -5082,11 +5082,11 @@ func LoadNS() {
 					tmp24 := aotExternalFn7(tmp23)
 					var v25 any = tmp24
 					_ = v25
-					// let binding "map__315"
+					// let binding "map__20"
 					tmp26 := aotDirectFn16(v25)
 					var v27 any = tmp26
 					_ = v27
-					// let binding "map__315"
+					// let binding "map__20"
 					var tmp28 any
 					tmp29 := aotExternalFn55(v27)
 					if lang.IsTruthy(tmp29) {
@@ -5139,7 +5139,7 @@ func LoadNS() {
 					var tmp52 any
 					var tmp53 any
 					{ // let
-						// let binding "G__316"
+						// let binding "G__21"
 						tmp54 := kw_in_DASH_scalar.Invoke1(v25)
 						var v55 any = tmp54
 						_ = v55
@@ -8100,7 +8100,7 @@ func LoadNS() {
 				} // end let
 				var v20 any = tmp19
 				_ = v20
-				// let binding "vec__312"
+				// let binding "vec__17"
 				var tmp21 any
 				if lang.IsTruthy(v20) {
 					var tmp22 any
@@ -8327,7 +8327,7 @@ func LoadNS() {
 				} // end let
 				var v18 any = tmp17
 				_ = v18
-				// let binding "vec__309"
+				// let binding "vec__14"
 				var tmp19 any
 				{ // let
 					// let binding "line-start"
@@ -8680,7 +8680,7 @@ func LoadNS() {
 								_ = tmp39
 								var tmp40 any
 								{ // let
-									// let binding "G__303"
+									// let binding "G__8"
 									var v41 any = v36
 									_ = v41
 									// case
@@ -8713,7 +8713,7 @@ func LoadNS() {
 							_ = tmp37
 							var tmp42 any
 							{ // let
-								// let binding "G__304"
+								// let binding "G__9"
 								var v43 any = v36
 								_ = v43
 								// case
@@ -8870,7 +8870,7 @@ func LoadNS() {
 																if lang.IsTruthy(v75) {
 																	var tmp77 any
 																	{ // let
-																		// let binding "G__305"
+																		// let binding "G__10"
 																		tmp78 := kw_callback.Invoke1(v63)
 																		var v79 any = tmp78
 																		_ = v79
@@ -9041,7 +9041,7 @@ func LoadNS() {
 														} else {
 															var tmp104 any
 															{ // let
-																// let binding "G__306"
+																// let binding "G__11"
 																tmp105 := lang.Count(v55)
 																var v106 any = tmp105
 																_ = v106
@@ -9302,7 +9302,7 @@ func LoadNS() {
 												} else {
 													var tmp61 any
 													{ // let
-														// let binding "G__307"
+														// let binding "G__12"
 														tmp62 := lang.Count(v56)
 														var v63 any = tmp62
 														_ = v63
@@ -9538,7 +9538,7 @@ func LoadNS() {
 																if lang.IsTruthy(v79) {
 																	var tmp81 any
 																	{ // let
-																		// let binding "G__305"
+																		// let binding "G__10"
 																		tmp82 := kw_callback.Invoke1(v67)
 																		var v83 any = tmp82
 																		_ = v83
@@ -9709,7 +9709,7 @@ func LoadNS() {
 														} else {
 															var tmp108 any
 															{ // let
-																// let binding "G__306"
+																// let binding "G__11"
 																tmp109 := lang.Count(v59)
 																var v110 any = tmp109
 																_ = v110
@@ -10003,7 +10003,7 @@ func LoadNS() {
 															if lang.IsTruthy(v82) {
 																var tmp84 any
 																{ // let
-																	// let binding "G__305"
+																	// let binding "G__10"
 																	tmp85 := kw_callback.Invoke1(v70)
 																	var v86 any = tmp85
 																	_ = v86
@@ -10174,7 +10174,7 @@ func LoadNS() {
 													} else {
 														var tmp111 any
 														{ // let
-															// let binding "G__306"
+															// let binding "G__11"
 															tmp112 := lang.Count(v62)
 															var v113 any = tmp112
 															_ = v113

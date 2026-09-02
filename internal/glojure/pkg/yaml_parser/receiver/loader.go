@@ -625,10 +625,10 @@ func LoadNS() {
 				if lang.IsTruthy(tmp6) {
 					var tmp7 any
 					{ // let
-						// let binding "G__323"
+						// let binding "G__28"
 						var v8 any = v3
 						_ = v8
-						// let binding "G__323"
+						// let binding "G__28"
 						var tmp9 any
 						tmp10 := kw_anchor.Invoke1(v2)
 						tmp11 := aotExternalFn0(tmp10)
@@ -741,17 +741,17 @@ func LoadNS() {
 				_ = tmp15
 				var tmp16 any
 				{ // let
-					// let binding "seq_324"
+					// let binding "seq_29"
 					tmp17 := lang.Seq(v8)
 					var v18 any = tmp17
 					_ = v18
-					// let binding "chunk_325"
+					// let binding "chunk_30"
 					var v19 any = nil
 					_ = v19
-					// let binding "count_326"
+					// let binding "count_31"
 					var v20 any = int64(0)
 					_ = v20
-					// let binding "i_327"
+					// let binding "i_32"
 					var v21 any = int64(0)
 					_ = v21
 					for {
@@ -789,7 +789,7 @@ func LoadNS() {
 								if lang.IsTruthy(v27) {
 									var tmp29 any
 									{ // let
-										// let binding "seq_324"
+										// let binding "seq_29"
 										var v30 any = v27
 										_ = v30
 										var tmp31 any
@@ -1144,7 +1144,7 @@ func LoadNS() {
 			_ = v2
 			var tmp3 any
 			{ // let
-				// let binding "G__321"
+				// let binding "G__26"
 				tmp4 := lang.NewMap(kw_event, "document_end")
 				var v5 any = tmp4
 				_ = v5
@@ -1196,11 +1196,11 @@ func LoadNS() {
 			_ = v3
 			var tmp4 any
 			{ // let
-				// let binding "G__320"
+				// let binding "G__25"
 				tmp5 := lang.NewMap(kw_event, "document_start")
 				var v6 any = tmp5
 				_ = v6
-				// let binding "G__320"
+				// let binding "G__25"
 				var tmp7 any
 				if lang.IsTruthy(v2) {
 					var tmp8 any = v6
@@ -1247,7 +1247,7 @@ func LoadNS() {
 			_ = v2
 			var tmp3 any
 			{ // let
-				// let binding "vec__317"
+				// let binding "vec__22"
 				tmp4 := lang.Apply3(strconv4.ParseInt, v2, int64(16), int64(32))
 				var v5 any = tmp4
 				_ = v5
@@ -1397,7 +1397,7 @@ func LoadNS() {
 			_ = v3
 			var tmp4 any
 			{ // let
-				// let binding "G__322"
+				// let binding "G__27"
 				tmp5 := lang.NewMap(kw_event, "scalar", kw_value, v3)
 				var v6 any = tmp5
 				_ = v6
@@ -1986,7 +1986,7 @@ func LoadNS() {
 					if lang.IsTruthy(tmp33) {
 						var tmp34 any
 						{ // let
-							// let binding "vec__337"
+							// let binding "vec__42"
 							tmp35 := aotExternalFn27(closed8, v24)
 							var v36 any = tmp35
 							_ = v36
@@ -2020,7 +2020,7 @@ func LoadNS() {
 						if lang.IsTruthy(tmp36) {
 							var tmp37 any
 							{ // let
-								// let binding "vec__340"
+								// let binding "vec__45"
 								tmp38 := aotExternalFn17(closed10, v24)
 								var v39 any = tmp38
 								_ = v39
@@ -2076,7 +2076,7 @@ func LoadNS() {
 					_ = v45
 					var tmp46 any
 					{ // let
-						// let binding "vec__344"
+						// let binding "vec__49"
 						var v47 any = v45
 						_ = v47
 						// let binding "_"
@@ -2251,7 +2251,7 @@ func LoadNS() {
 					_ = v36
 					var tmp37 any
 					{ // let
-						// let binding "vec__348"
+						// let binding "vec__53"
 						var v38 any = v36
 						_ = v38
 						// let binding "_"
@@ -2468,7 +2468,7 @@ func LoadNS() {
 					_ = v49
 					var tmp50 any
 					{ // let
-						// let binding "vec__352"
+						// let binding "vec__57"
 						var v51 any = v49
 						_ = v51
 						// let binding "_"
@@ -2762,7 +2762,7 @@ func LoadNS() {
 						if lang.IsTruthy(tmp19) {
 							var tmp20 any
 							{ // let
-								// let binding "vec__328"
+								// let binding "vec__33"
 								tmp21 := aotExternalFn30("\\\\x(", v4, "{2})")
 								tmp22 := aotExternalFn35(tmp21)
 								tmp23 := aotExternalFn27(tmp22, v15)
@@ -2788,7 +2788,7 @@ func LoadNS() {
 							if lang.IsTruthy(tmp24) {
 								var tmp25 any
 								{ // let
-									// let binding "vec__331"
+									// let binding "vec__36"
 									tmp26 := aotExternalFn30("\\\\u(", v4, "{4})")
 									tmp27 := aotExternalFn35(tmp26)
 									tmp28 := aotExternalFn27(tmp27, v15)
@@ -2814,7 +2814,7 @@ func LoadNS() {
 								if lang.IsTruthy(tmp29) {
 									var tmp30 any
 									{ // let
-										// let binding "vec__334"
+										// let binding "vec__39"
 										tmp31 := aotExternalFn30("\\\\U(", v4, "{8})")
 										tmp32 := aotExternalFn35(tmp31)
 										tmp33 := aotExternalFn27(tmp32, v15)

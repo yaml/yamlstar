@@ -790,7 +790,7 @@ jobs:
             '  graal_isolate_t *isolate = NULL;' \
             '  graal_isolatethread_t *thread = NULL;' \
             '  if (graal_create_isolate(NULL, &isolate, &thread)) return 1;' \
-            '  const char *result = yamlstar_load(thread, "a: 1\n");' \
+            '  const char *result = yamlstar_load(thread, "a: 1\n", "{}");' \
             '  if (strcmp(result, "{\"data\":{\"a\":1}}")) {' \
             '    fprintf(stderr, "unexpected yamlstar_load result: %s\n", result);' \
             '    return 2;' \
@@ -1265,7 +1265,7 @@ jobs:
             '  graal_isolate_t *isolate = NULL;' \
             '  graal_isolatethread_t *thread = NULL;' \
             '  if (graal_create_isolate(NULL, &isolate, &thread)) return 1;' \
-            '  const char *result = yamlstar_load(thread, "a: 1\n");' \
+            '  const char *result = yamlstar_load(thread, "a: 1\n", "{}");' \
             '  if (strcmp(result, "{\"data\":{\"a\":1}}")) {' \
             '    fprintf(stderr, "unexpected yamlstar_load result: %s\n", result);' \
             '    return 2;' \

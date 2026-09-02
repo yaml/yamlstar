@@ -332,7 +332,7 @@ func LoadNS() {
 											_ = v29
 											var tmp30 any
 											{ // let
-												// let binding "vec__297"
+												// let binding "vec__2"
 												var v31 any = v29
 												_ = v31
 												// let binding "k"

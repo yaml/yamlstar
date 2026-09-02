@@ -248,7 +248,12 @@ def test_load_with_snakeyaml_parser(ys):
     """Test loading with the snakeyaml parser plugin."""
     yaml_str = "a: [1, {b: two}]\nc: |\n  text\n"
     opts = yamlstar.Options().plugin(yamlstar.parser('snakeyaml'))
-    snakeyaml = yamlstar.YAMLStar(opts, so='libyamlstar-graalvm')
+    try:
+        snakeyaml = yamlstar.YAMLStar(opts, so='libyamlstar-graalvm')
+    except Exception as error:
+        if 'not found' not in str(error):
+            raise
+        pytest.skip('SnakeYAML parser library is not available')
     assert snakeyaml.load(yaml_str) == ys.load(yaml_str)
     assert snakeyaml.load_all("---\ndoc1\n---\ndoc2") == ["doc1", "doc2"]
 

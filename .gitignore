@@ -22,7 +22,7 @@ META-INF/
 /test-libyamlstar.sh
 /time-parser-plugins.sh
 /*.tar.*
-/internal/goyamlparser/
+/internal/goyamlparser/.generated
 
 target/
 classes/

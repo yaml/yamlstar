@@ -49,6 +49,19 @@ lib_zip=$(
   find_artifact "libyamlstar-$version-$platform.zip"
 )
 
+lib_archives=$(
+  {
+    find "$artifact_dir" -type f \
+      -name "libyamlstar-$version-$platform.tar.xz"
+    find "$artifact_dir" -type f \
+      -name "libyamlstar-$version-$platform-*.tar.xz"
+    find "$artifact_dir" -type f \
+      -name "libyamlstar-$version-$platform.zip"
+    find "$artifact_dir" -type f \
+      -name "libyamlstar-$version-$platform-*.zip"
+  } | LC_ALL=C sort -u
+)
+
 if [[ -z "$cli_tar" && -z "$cli_zip" ]]; then
   cli_tar=$(find_artifact "yamlstar-$version-*.tar.xz")
   cli_zip=$(find_artifact "yamlstar-$version-*.zip")
@@ -57,9 +70,17 @@ fi
 if [[ -z "$lib_tar" && -z "$lib_zip" ]]; then
   lib_tar=$(find_artifact "libyamlstar-$version-*.tar.xz")
   lib_zip=$(find_artifact "libyamlstar-$version-*.zip")
+  lib_archives=$(
+    {
+      find "$artifact_dir" -type f \
+        -name "libyamlstar-$version-*.tar.xz"
+      find "$artifact_dir" -type f \
+        -name "libyamlstar-$version-*.zip"
+    } | LC_ALL=C sort -u
+  )
 fi
 
-if [[ -z "$lib_tar" && -z "$lib_zip" ]]; then
+if [[ -z "$lib_archives" ]]; then
   echo "ERROR: No libyamlstar release artifact found in $artifact_dir" >&2
   exit 1
 fi
@@ -78,18 +99,29 @@ else
   unzip -q "$cli_zip" -d "$work_dir"
 fi
 
-if [[ $lib_tar ]]; then
-  tar -C "$work_dir" -xf "$lib_tar"
-else
-  unzip -q "$lib_zip" -d "$work_dir"
-fi
+while IFS= read -r lib_archive; do
+  case "$lib_archive" in
+    *.tar.xz) tar -C "$work_dir" -xf "$lib_archive" ;;
+    *.zip) unzip -q "$lib_archive" -d "$work_dir" ;;
+  esac
+done <<< "$lib_archives"
+
+lib_dirs=$(
+  find "$work_dir" -type d \
+    -name "libyamlstar-$version-*" |
+    LC_ALL=C sort
+)
 
 lib_dir=$(
   find "$work_dir" -type d \
-    -name "libyamlstar-$version-*" |
+    -name "libyamlstar-$version-$platform" |
     LC_ALL=C sort |
   head -n1
 )
+
+if [[ -z "$lib_dir" ]]; then
+  lib_dir=$(printf '%s\n' "$lib_dirs" | head -n1)
+fi
 
 cli_dir=$(
   find "$work_dir" -type d \
@@ -122,9 +154,24 @@ mkdir -p libyamlstar/lib
 rm -f libyamlstar/lib/libyamlstar*
 cp -pP "$lib_dir"/libyamlstar* libyamlstar/lib/
 cp -pP "$lib_dir"/*.h libyamlstar/lib/
+while IFS= read -r extra_lib_dir; do
+  [[ $extra_lib_dir == "$lib_dir" ]] && continue
+  for lib_file in \
+    "$extra_lib_dir"/libyamlstar-glojure.* \
+    "$extra_lib_dir"/libyamlstar-graalvm.*; do
+    [[ -e "$lib_file" || -L "$lib_file" ]] || continue
+    cp -pP "$lib_file" libyamlstar/lib/
+  done
+done <<< "$lib_dirs"
 if [[ -f libyamlstar/lib/libyamlstar.dll ]]; then
   cp -pP libyamlstar/lib/libyamlstar.dll \
     "libyamlstar/lib/libyamlstar.dll.$version"
+elif [[ -e libyamlstar/lib/libyamlstar.dylib ]]; then
+  ln -fs libyamlstar.dylib \
+    "libyamlstar/lib/libyamlstar.dylib.$version"
+elif [[ -e libyamlstar/lib/libyamlstar.so ]]; then
+  ln -fs libyamlstar.so \
+    "libyamlstar/lib/libyamlstar.so.$version"
 fi
 find cli/bin libyamlstar/lib -type f -exec touch {} +
 

@@ -10720,7 +10720,7 @@ func LoadNS() {
 				_ = tmp4
 				var tmp7 any
 				{ // let
-					// let binding "G__317"
+					// let binding "G__22"
 					var v8 any = v3
 					_ = v8
 					// case

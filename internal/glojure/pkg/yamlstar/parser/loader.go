@@ -285,7 +285,7 @@ func LoadNS() {
 			_ = v3
 			var tmp4 any
 			{ // let
-				// let binding "vec__300"
+				// let binding "vec__5"
 				var tmp5 any
 				{ // let
 					// let binding "or__0__auto__"
