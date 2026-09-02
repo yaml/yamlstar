@@ -19,7 +19,9 @@ PARSER-NAME := $(if $(filter ref,$(PARSER)),reference,$(if $(filter snake,$(PARS
 YAMLSTAR_ENGINE ?= $(if $(filter graal,$(RT)),graalvm,glojure)
 CLI-NAME ?= yaml-$(RT)-$(PARSER)
 CLI-DEFAULT-REQUIRE := $(strip \
-  $(if $(filter graal,$(RT)),[yamlstar.plugin.parser.snakeyaml], \
+  $(if $(filter graal,$(RT)), \
+    [yamlstar.plugin.parser.reference] \
+    [yamlstar.plugin.parser.snakeyaml], \
     $(if $(filter glj,$(RT)),[yamlstar.plugin.parser.go-yaml])))
 CLI-GRAALVM-NAME := yaml-graalvm
 CLI-GLOJURE-NAME := yaml-glojure
@@ -253,7 +255,7 @@ $(GLOAT-CLI-OPTIONS-SRC): $(GLOAT-CORE)/cli_options.cljc
 	@mkdir -p $(dir $@)
 	ln -sf $(abspath $<) $@
 
-$(CLI-DEFAULT-SRC):
+$(CLI-DEFAULT-SRC): Makefile
 	@mkdir -p $(dir $@)
 	@if test -n '$(CLI-DEFAULT-REQUIRE)'; then \
 	  printf '%s\n' \
