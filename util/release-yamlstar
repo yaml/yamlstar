@@ -367,7 +367,7 @@ defn do-commit(new):
   when verbose:
     run:: git -P diff --stat HEAD
 
-  run: "git commit -a -m 'release: $new'"
+  run: "git commit -a -m 'Release $new'"
   say: "✓ Committed changes for release $new"
 
 

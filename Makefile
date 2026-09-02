@@ -497,7 +497,7 @@ endif
 	  echo "Deleting existing GitHub release $(v)"; \
 	  gh release delete $(v) --repo yaml/yamlstar --yes; \
 	fi
-	git push origin HEAD:$$(git branch --show-current)
+	git push --force-with-lease origin HEAD:$$(git branch --show-current)
 	git tag -f $(v) HEAD
 	git tag -f v$(v) HEAD
 	git push -f origin $(v) v$(v)
