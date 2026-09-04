@@ -10,6 +10,12 @@
   (is (= #{"reference" "snakeyaml"}
          (set (plugin/registered-parsers)))))
 
+(deftest version-output
+  (is (= (str "yaml v"
+              (clojure.string/replace cli/version #"-SNAPSHOT$" "")
+              "\n")
+         (with-out-str (cli/print-version)))))
+
 (deftest yaml-event-node-yaml-chain
   (let [events (cli/convert-input sample {:event true} {})
         nodes (cli/convert-input events {:NODE true} {})

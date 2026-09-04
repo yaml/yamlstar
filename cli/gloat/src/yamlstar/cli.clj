@@ -57,6 +57,10 @@ Options:
          (println (str "Error: " message)))
        (System/exit 1))))
 
+(defn display-version
+  []
+  (str "yaml v" (str/replace (yaml/version) #"-SNAPSHOT$" "")))
+
 (defn parse-args [argv]
   (loop [args argv
          opts {}
@@ -322,7 +326,7 @@ Options:
   (let [opts (parse-args argv)]
     (cond
       (:help opts) (println usage-text)
-      (:version opts) (println (str "yamlstar version " (yaml/version)))
+      (:version opts) (println (display-version))
       :else
       (try
         (let [runtime-opts (runtime/runtime-options opts)]

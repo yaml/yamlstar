@@ -16,6 +16,10 @@
 
 (def version "0.1.19-SNAPSHOT")
 
+(defn display-version
+  []
+  (str "yaml v" (str/replace version #"-SNAPSHOT$" "")))
+
 (defmacro with-timing [stage-name & body]
   `(let [start# (System/nanoTime)
          result# (do ~@body)
@@ -92,7 +96,7 @@ Options:")
   (println options-summary))
 
 (defn print-version []
-  (println (str "yamlstar version " version)))
+  (println (display-version)))
 
 ;;; Debug functions
 
