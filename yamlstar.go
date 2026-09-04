@@ -171,7 +171,7 @@ func initialize() error {
 		for _, namespace := range namespaces {
 			require.Invoke(lang.NewSymbol(namespace))
 		}
-		glj.Var("yamlstar.parser", "register-reference-parser!").Invoke()
+		glj.Var("yamlstar.parser", "register-parsers!").Invoke("reference", "go-yaml")
 		glj.Var("yamlstar.parser", "set-default-parser!").Invoke("go-yaml")
 	})
 	return initializeErr

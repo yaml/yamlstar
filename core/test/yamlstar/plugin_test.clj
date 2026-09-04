@@ -11,6 +11,13 @@
     (is (= "reference" (:name (parser/register-reference-parser!))))
     (is (some #{"reference"} (plugin/registered-parsers))))
 
+  (testing "register-parsers! registers several plugins by name"
+    (plugin/unregister-parser! "reference")
+    (is (= ["reference"]
+           (mapv :name (parser/register-parsers! "reference"))))
+    (is (some #{"reference"} (plugin/registered-parsers)))
+    (is (thrown? Exception (parser/register-parsers! "no-such-parser"))))
+
   (testing "register, resolve, and unregister a parser"
     (let [p {:name "test-parser"
              :parse (fn [_ _] [{:event "stream_start"}

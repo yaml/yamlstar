@@ -15,8 +15,9 @@ var aotDirectFn0 lang.FnFunc0
 var aotDirectFn1 lang.ArityFn
 var aotDirectFn1Arity1 lang.FnFunc1
 var aotDirectFn1Arity2 lang.FnFunc2
-var aotDirectFn2 lang.FnFunc0
-var aotDirectFn3 lang.FnFunc1
+var aotDirectFn2 lang.ArityFn
+var aotDirectFn3 lang.FnFunc0
+var aotDirectFn4 lang.FnFunc1
 
 func aotLinkFn1(vr *lang.Var) lang.FnFunc1 {
 	if vr.IsBound() {
@@ -121,17 +122,21 @@ func checkArityGTE(args []any, min int) {
 
 // LoadNS initializes the namespace "yamlstar.parser"
 func LoadNS() {
+	sym__AMP_ := lang.NewSymbolUnchecked("&")
 	sym_clojure_DOT_core := lang.NewSymbolUnchecked("clojure.core")
 	sym_current_DASH_default_DASH_parser := lang.NewSymbolUnchecked("current-default-parser")
 	sym_deref := lang.NewSymbolUnchecked("deref")
 	sym_fallback_DASH_default_DASH_parser := lang.NewSymbolUnchecked("fallback-default-parser")
+	sym_mapv := lang.NewSymbolUnchecked("mapv")
 	sym_name := lang.NewSymbolUnchecked("name")
+	sym_names := lang.NewSymbolUnchecked("names")
 	sym_opts := lang.NewSymbolUnchecked("opts")
 	sym_parse := lang.NewSymbolUnchecked("parse")
 	sym_parse_DASH_with := lang.NewSymbolUnchecked("parse-with")
 	sym_parser_DASH_opts := lang.NewSymbolUnchecked("parser-opts")
 	sym_plugin := lang.NewSymbolUnchecked("plugin")
 	sym_register_DASH_parser_BANG_ := lang.NewSymbolUnchecked("register-parser!")
+	sym_register_DASH_parsers_BANG_ := lang.NewSymbolUnchecked("register-parsers!")
 	sym_register_DASH_reference_DASH_parser_BANG_ := lang.NewSymbolUnchecked("register-reference-parser!")
 	sym_reset_BANG_ := lang.NewSymbolUnchecked("reset!")
 	sym_resolve_DASH_parser := lang.NewSymbolUnchecked("resolve-parser")
@@ -150,6 +155,8 @@ func LoadNS() {
 	kw_private := lang.NewKeyword("private")
 	// var clojure.core/deref
 	var_clojure_DOT_core_deref := lang.InternVarName(sym_clojure_DOT_core, sym_deref)
+	// var clojure.core/mapv
+	var_clojure_DOT_core_mapv := lang.InternVarName(sym_clojure_DOT_core, sym_mapv)
 	// var clojure.core/reset!
 	var_clojure_DOT_core_reset_BANG_ := lang.InternVarName(sym_clojure_DOT_core, sym_reset_BANG_)
 	// var yamlstar.parser/current-default-parser
@@ -158,6 +165,8 @@ func LoadNS() {
 	var_yamlstar_DOT_parser_fallback_DASH_default_DASH_parser := lang.InternVarName(sym_yamlstar_DOT_parser, sym_fallback_DASH_default_DASH_parser)
 	// var yamlstar.parser/parse
 	var_yamlstar_DOT_parser_parse := lang.InternVarName(sym_yamlstar_DOT_parser, sym_parse)
+	// var yamlstar.parser/register-parsers!
+	var_yamlstar_DOT_parser_register_DASH_parsers_BANG_ := lang.InternVarName(sym_yamlstar_DOT_parser, sym_register_DASH_parsers_BANG_)
 	// var yamlstar.parser/register-reference-parser!
 	var_yamlstar_DOT_parser_register_DASH_reference_DASH_parser_BANG_ := lang.InternVarName(sym_yamlstar_DOT_parser, sym_register_DASH_reference_DASH_parser_BANG_)
 	// var yamlstar.parser/set-default-parser!
@@ -173,9 +182,10 @@ func LoadNS() {
 	aotExternalFn0 := aotLinkFn1(var_clojure_DOT_core_deref)
 	aotExternalFn1 := aotLinkFn1(var_yamlstar_DOT_plugin_parser_DASH_opts)
 	aotExternalFn3 := aotLinkFn3(var_yamlstar_DOT_plugin_parse_DASH_with)
-	aotExternalFn4 := aotLinkFn1(var_yamlstar_DOT_plugin_register_DASH_parser_BANG_)
-	aotExternalFn5 := aotLinkFn1(var_yamlstar_DOT_plugin_resolve_DASH_parser)
-	aotExternalFn6 := aotLinkFn2(var_clojure_DOT_core_reset_BANG_)
+	aotExternalFn4 := aotLinkFn2(var_clojure_DOT_core_mapv)
+	aotExternalFn5 := aotLinkFn1(var_yamlstar_DOT_plugin_register_DASH_parser_BANG_)
+	aotExternalFn6 := aotLinkFn1(var_yamlstar_DOT_plugin_resolve_DASH_parser)
+	aotExternalFn8 := aotLinkFn2(var_clojure_DOT_core_reset_BANG_)
 	// reference fmt to avoid unused import error
 	_ = fmt.Printf
 	// reference reflect to avoid unused import error
@@ -265,7 +275,7 @@ func LoadNS() {
 		tmp1 := lang.NewAtom("reference")
 		var_yamlstar_DOT_parser_fallback_DASH_default_DASH_parser = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_parser_fallback_DASH_default_DASH_parser.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/parser.glj", kw_line, int(18), kw_column, int(6), kw_end_DASH_line, int(18), kw_end_DASH_column, int(38), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
+			return lang.NewMap(kw_file, "yamlstar/parser.glj", kw_line, int(28), kw_column, int(6), kw_end_DASH_line, int(28), kw_end_DASH_column, int(38), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
 		})
 	}
 	// parse
@@ -330,7 +340,39 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_parser_parse = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_parser_parse.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/parser.glj", kw_line, int(35), kw_column, int(7), kw_end_DASH_line, int(35), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str), lang.NewVector(sym_yaml_DASH_str, sym_opts)), kw_doc, "Parse a YAML string into an event stream.\n\n  Args:\n    yaml-str: A string containing YAML content\n    opts: (optional) Options map; {:plugin {:parser {:name \"name\"}}}\n          selects a parser plugin\n\n  Returns:\n    A sequence of event maps representing the YAML structure\n\n  Example event:\n    {:event \"scalar\" :value \"hello\" :style \"plain\"}\n    {:event \"mapping_start\" :flow false}", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/parser.glj", kw_line, int(45), kw_column, int(7), kw_end_DASH_line, int(45), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str), lang.NewVector(sym_yaml_DASH_str, sym_opts)), kw_doc, "Parse a YAML string into an event stream.\n\n  Args:\n    yaml-str: A string containing YAML content\n    opts: (optional) Options map; {:plugin {:parser {:name \"name\"}}}\n          selects a parser plugin\n\n  Returns:\n    A sequence of event maps representing the YAML structure\n\n  Example event:\n    {:event \"scalar\" :value \"hello\" :style \"plain\"}\n    {:event \"mapping_start\" :flow false}", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
+		})
+	}
+	// register-parsers!
+	{
+		tmp0 := sym_register_DASH_parsers_BANG_
+		var tmp1 lang.ArityFn
+		tmp1 = lang.NewArityFn(
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			lang.NewVariadicFn(0, func(args []any, rest lang.ISeq) any {
+				var v2 any = rest
+				_ = v2
+				var tmp3 lang.FnFunc1
+				tmp3 = lang.FnFunc1(func(p0 any) any {
+					v4 := p0
+					_ = v4
+					tmp5 := aotExternalFn6(v4)
+					tmp6 := aotExternalFn5(tmp5)
+					return tmp6
+				})
+				tmp4 := aotExternalFn4(tmp3, v2)
+				return tmp4
+			}),
+			0,
+		)
+		aotDirectFn2 = tmp1
+		var_yamlstar_DOT_parser_register_DASH_parsers_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
+		var_yamlstar_DOT_parser_register_DASH_parsers_BANG_.SetMetaLazy(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/parser.glj", kw_line, int(11), kw_column, int(7), kw_end_DASH_line, int(11), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym__AMP_, sym_names)), kw_doc, "Register the named parser plugins whose namespaces are already loaded.\n\n  Each plugin namespace self-registers with a top-level form, but AOT\n  compiled runtimes (Glojure) drop top-level side effects, so generated\n  runtimes call this explicitly after loading their plugin namespaces.\n  Returns the registered plugin maps in the given order.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
 		})
 	}
 	// register-reference-parser!
@@ -338,14 +380,14 @@ func LoadNS() {
 		tmp0 := sym_register_DASH_reference_DASH_parser_BANG_
 		var tmp1 lang.FnFunc0
 		tmp1 = lang.FnFunc0(func() any {
-			tmp2 := aotExternalFn5("reference")
-			tmp3 := aotExternalFn4(tmp2)
+			tmp2 := aotDirectFn2.Invoke1("reference")
+			tmp3 := lang.First(tmp2)
 			return tmp3
 		})
-		aotDirectFn2 = tmp1
+		aotDirectFn3 = tmp1
 		var_yamlstar_DOT_parser_register_DASH_reference_DASH_parser_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_parser_register_DASH_reference_DASH_parser_BANG_.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/parser.glj", kw_line, int(11), kw_column, int(7), kw_end_DASH_line, int(11), kw_end_DASH_column, int(32), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Register the built-in reference parser plugin.\n\n  Generated runtimes call this after loading their reference parser plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/parser.glj", kw_line, int(21), kw_column, int(7), kw_end_DASH_line, int(21), kw_end_DASH_column, int(32), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Register the built-in reference parser plugin.\n\n  Generated runtimes call this after loading their reference parser plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
 		})
 	}
 	// set-default-parser!
@@ -356,14 +398,14 @@ func LoadNS() {
 			v2 := p0
 			_ = v2
 			tmp3 := checkDerefVar(var_yamlstar_DOT_parser_fallback_DASH_default_DASH_parser)
-			tmp4 := aotExternalFn6(tmp3, v2)
+			tmp4 := aotExternalFn8(tmp3, v2)
 			_ = tmp4
 			return v2
 		})
-		aotDirectFn3 = tmp1
+		aotDirectFn4 = tmp1
 		var_yamlstar_DOT_parser_set_DASH_default_DASH_parser_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_parser_set_DASH_default_DASH_parser_BANG_.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/parser.glj", kw_line, int(20), kw_column, int(7), kw_end_DASH_line, int(20), kw_end_DASH_column, int(25), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Set the runtime fallback parser name.\n\n  YAMLSTAR_PARSER still has precedence over this fallback, and per-call\n  options still have precedence over both.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/parser.glj", kw_line, int(30), kw_column, int(7), kw_end_DASH_line, int(30), kw_end_DASH_column, int(25), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Set the runtime fallback parser name.\n\n  YAMLSTAR_PARSER still has precedence over this fallback, and per-call\n  options still have precedence over both.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
 		})
 	}
 	// current-default-parser
@@ -405,7 +447,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_parser_current_DASH_default_DASH_parser = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_parser_current_DASH_default_DASH_parser.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/parser.glj", kw_line, int(29), kw_column, int(8), kw_end_DASH_line, int(29), kw_end_DASH_column, int(29), kw_private, true, kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/parser.glj", kw_line, int(39), kw_column, int(8), kw_end_DASH_line, int(39), kw_end_DASH_column, int(29), kw_private, true, kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
 		})
 	}
 }

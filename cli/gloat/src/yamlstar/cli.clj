@@ -322,6 +322,7 @@ Options:
   (write-output (convert-input (read-input opts) opts runtime-opts) opts))
 
 (defn -main [& argv]
+  (parser/register-parsers! "reference" cli-default/default-parser)
   (parser/set-default-parser! cli-default/default-parser)
   (let [opts (parse-args argv)]
     (cond

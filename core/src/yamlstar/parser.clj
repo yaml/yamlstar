@@ -8,12 +8,22 @@
   set-default-parser!."
   (:require [yamlstar.plugin :as plugin]))
 
+(defn register-parsers!
+  "Register the named parser plugins whose namespaces are already loaded.
+
+  Each plugin namespace self-registers with a top-level form, but AOT
+  compiled runtimes (Glojure) drop top-level side effects, so generated
+  runtimes call this explicitly after loading their plugin namespaces.
+  Returns the registered plugin maps in the given order."
+  [& names]
+  (mapv #(plugin/register-parser! (plugin/resolve-parser %)) names))
+
 (defn register-reference-parser!
   "Register the built-in reference parser plugin.
 
   Generated runtimes call this after loading their reference parser plugin."
   []
-  (plugin/register-parser! (plugin/resolve-parser "reference")))
+  (first (register-parsers! "reference")))
 
 (def ^:private fallback-default-parser (atom "reference"))
 

@@ -7,7 +7,7 @@
             [yamlstar.plugin.parser.reference]
             [yamlstar.plugin.parser.go-yaml]))
 
-(parser/register-reference-parser!)
+(parser/register-parsers! "reference" "go-yaml")
 (parser/set-default-parser! "go-yaml")
 
 (def EXPORT
