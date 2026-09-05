@@ -160,16 +160,29 @@ Options:
           :else
           (recur more opts (conj positional arg)))))))
 
-(defn nil-keys->string [x]
+(defn- nil-key? [x]
+  (cond
+    (map? x) (boolean (some (fn [[k v]]
+                              (or (nil? k) (nil-key? k) (nil-key? v)))
+                            x))
+    (sequential? x) (boolean (some nil-key? x))
+    :else false))
+
+(defn- nil-keys->string* [x]
   (cond
     (map? x) (apply array-map
                     (mapcat (fn [[k v]]
-                              [(if (nil? k) "null" (nil-keys->string k))
-                               (nil-keys->string v)])
+                              [(if (nil? k) "null" (nil-keys->string* k))
+                               (nil-keys->string* v)])
                             x))
-    (vector? x) (mapv nil-keys->string x)
-    (sequential? x) (map nil-keys->string x)
+    (vector? x) (mapv nil-keys->string* x)
+    (sequential? x) (map nil-keys->string* x)
     :else x))
+
+(defn nil-keys->string [x]
+  (if (nil-key? x)
+    (nil-keys->string* x)
+    x))
 
 (defn do-debug-parse [yaml-str runtime-opts]
   (let [events (with-timing "parse"

@@ -7,8 +7,28 @@
   - Output: Node tree with all tags resolved"
   (:refer-clojure :exclude [resolve]))
 
+(defn- infer-number-tag
+  "Infer !!int, !!float or !!str for a value starting with a sign, a dot
+  or a digit"
+  [value]
+  (cond
+    ;; integers (decimal only for now)
+    (re-matches #"[-+]?[0-9]+" value) "!!int"
+
+    ;; floats (including special values)
+    (or (re-matches #"[-+]?(\.[0-9]+|[0-9]+(\.[0-9]*)?)([eE][-+]?[0-9]+)?"
+                    value)
+        (re-matches #"[+-]?(\.inf|\.Inf|\.INF)" value)
+        (re-matches #"\.nan|\.NaN|\.NAN" value))
+    "!!float"
+
+    :else "!!str"))
+
 (defn infer-scalar-tag
   "Infer the tag for an untagged scalar based on YAML 1.2 core schema.
+
+  Only the patterns that can start with the first character are tried:
+  null and bool words, or the numeric forms.
 
   Args:
     value: The string value of the scalar
@@ -16,25 +36,22 @@
   Returns:
     A tag string (!!null, !!bool, !!int, !!float, or !!str)"
   [value]
-  (cond
-    ;; null values
-    (or (= value "")
-        (re-matches #"null|Null|NULL|~" value)) "!!null"
+  (if (= value "")
+    "!!null"
+    (case (nth value 0)
+      (\n \N \~)
+      (if (re-matches #"null|Null|NULL|~" value) "!!null" "!!str")
 
-    ;; booleans
-    (re-matches #"true|True|TRUE|false|False|FALSE" value) "!!bool"
+      (\t \T \f \F)
+      (if (re-matches #"true|True|TRUE|false|False|FALSE" value)
+        "!!bool"
+        "!!str")
 
-    ;; integers (decimal only for now)
-    (re-matches #"[-+]?[0-9]+" value) "!!int"
+      (\- \+ \. \0 \1 \2 \3 \4 \5 \6 \7 \8 \9)
+      (infer-number-tag value)
 
-    ;; floats (including special values)
-    (or (re-matches #"[-+]?(\.[0-9]+|[0-9]+(\.[0-9]*)?)([eE][-+]?[0-9]+)?" value)
-        (re-matches #"[+-]?(\.inf|\.Inf|\.INF)" value)
-        (re-matches #"\.nan|\.NaN|\.NAN" value))
-    "!!float"
-
-    ;; default to string
-    :else "!!str"))
+      ;; default to string
+      "!!str")))
 
 (defn resolve-node
   "Add resolved tag to a node.
@@ -53,12 +70,13 @@
   (when node
     (case (:kind node)
       :scalar
-      (let [tag (cond
-                  (= "!" (:tag node)) "!!str"
-                  (:tag node) (:tag node)
-                  (:style node) "!!str"
-                  :else (infer-scalar-tag (:value node)))]
-        (assoc node :tag tag))
+      (if-let [tag (:tag node)]
+        (if (= "!" tag)
+          (assoc node :tag "!!str")
+          node)
+        (assoc node :tag (if (:style node)
+                           "!!str"
+                           (infer-scalar-tag (:value node)))))
 
       :mapping
       (let [tag (if (= "!" (:tag node))
