@@ -264,6 +264,12 @@ def test_load_with_options_dict(ys):
     assert yamlstar.YAMLStar(options).load("key: value") == {"key": "value"}
 
 
+def test_json_comments_options():
+    """Test the JSON comments plugin option helper."""
+    assert yamlstar.json_comments() == {
+        'json-comments': {'name': 'json-comments'}}
+
+
 def test_load_with_reference_parser(ys):
     """Test explicitly selecting the reference parser."""
     opts = yamlstar.Options().plugin(yamlstar.parser('reference'))

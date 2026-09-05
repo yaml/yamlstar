@@ -70,8 +70,6 @@
   (testing "malformed opts are rejected"
     (is (thrown-with-msg? Exception #":plugin must be a map"
                           (plugin/parser-opts {:plugin "nope"})))
-    (is (thrown-with-msg? Exception #"Unknown plugin type"
-                          (plugin/parser-opts {:plugin {:emitter {}}})))
     (is (thrown-with-msg? Exception #":parser must be a map"
                           (plugin/parser-opts {:plugin {:parser "nope"}})))
     (is (thrown-with-msg? Exception #":name must be a string"
@@ -127,3 +125,56 @@
       (is (= (parser/parse yaml)
              (parser/parse yaml nil)
              (parser/parse yaml {}))))))
+
+(def fixed-events
+  [{:event "stream_start"}
+   {:event "document_start"}
+   {:event "scalar" :value "from plugin"}
+   {:event "document_end"}
+   {:event "stream_end"}])
+
+(deftest event-source-test
+  (let [source {:api "json-comments"
+                :name "json-comments"
+                :requires {:parser "reference"}
+                :parse (fn [_ _] fixed-events)}]
+    (try
+      (plugin/register-event-source! source)
+      (is (= "from plugin"
+             (yaml/load "ignored" {:plugin {:json-comments {}}})))
+      (is (= "from plugin"
+             (yaml/load "ignored"
+                        {:plugin {:parser {:name "reference"}
+                                  :json-comments {}}})))
+      (is (thrown-with-msg?
+           Exception #"requires parser reference"
+           (yaml/load "ignored"
+                      {:plugin {:parser {:name "other"}
+                                :json-comments {}}})))
+      (is (thrown-with-msg?
+           Exception #"Only one event-source"
+           (yaml/load "ignored"
+                      {:plugin {:json-comments {}
+                                :another {}}})))
+      (finally
+        (plugin/unregister-event-source! "json-comments"
+                                         "json-comments")))))
+
+(deftest event-source-loader-test
+  (try
+    (plugin/set-event-source-loader!
+     (fn [api name]
+       {:api api :name name :parse (fn [_ _] fixed-events)}))
+    (is (= "from plugin"
+           (yaml/load "ignored" {:plugin {:external {}}})))
+    (finally
+      (plugin/unregister-event-source! "external" "external")
+      (plugin/set-event-source-loader! nil))))
+
+(deftest event-source-validation-test
+  (is (thrown-with-msg?
+       Exception #"result must be a vector"
+       (plugin/validate-events (seq fixed-events))))
+  (is (thrown-with-msg?
+       Exception #"invalid event"
+       (plugin/validate-events [{:event "bogus"}]))))

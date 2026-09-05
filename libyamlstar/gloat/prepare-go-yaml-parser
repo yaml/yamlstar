@@ -12,8 +12,21 @@ done
 test -f "$src/LICENSE"
 test -f "$src/NOTICE"
 
-rm -rf "$dst"
 mkdir -p "$dst"
+
+# Keep hand-written subpackages beside the generated parser package.
+# Gloat copies this complete tree into native builds.
+rm -f \
+  "$dst/LICENSE" \
+  "$dst/NOTICE" \
+  "$dst/yaml.go" \
+  "$dst/errors.go" \
+  "$dst/reader.go" \
+  "$dst/scanner.go" \
+  "$dst/parser.go" \
+  "$dst/support.go" \
+  "$dst/adapter.go" \
+  "$dst/.generated"
 
 cp "$src/LICENSE" "$src/NOTICE" "$dst/"
 

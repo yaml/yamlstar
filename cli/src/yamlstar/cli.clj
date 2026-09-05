@@ -9,6 +9,7 @@
             [yamlstar.cli-default :as cli-default]
             [yamlstar.contract :as contract]
             [yamlstar.parser :as parser]
+            [yamlstar.plugin.shared-host-java :as shared-host]
             [yamlstar.composer :as composer]
             [yamlstar.resolver :as resolver]
             [yamlstar.constructor :as constructor])
@@ -60,7 +61,7 @@
    ["-s" "--stream" "Output all documents"]
    [nil "--config CONFIG" "YAMLStar options file or inline YAML mapping"]
    [nil "--parser NAME" "YAML parser plugin name"]
-   [nil "--plugin API=NAME" "YAMLStar plugin selector"
+   [nil "--plugin SPEC" "YAMLStar plugin selector (NAME or API=NAME)"
     :assoc-fn (fn [m k v] (update m k (fnil conj []) v))]
    ["-d" "--debug" "Debug all stages"]
    ["-D" "--debug-stage STAGE" "Debug specific stage: parse, compose, resolve, construct"
@@ -285,8 +286,9 @@ Options:")
           (.printStackTrace e)))
       1)))
 
-(defn -main [& args]
+(defn main-status [& args]
   (parser/set-default-parser! cli-default/default-parser)
+  (shared-host/install!)
   (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)]
     (cond
       ;; Help
@@ -336,3 +338,9 @@ Options:")
             (when (:stack-trace options)
               (.printStackTrace e)))
           1)))))
+
+(defn -main [& args]
+  (let [status (apply main-status args)]
+    (when (System/getProperty "org.graalvm.nativeimage.imagecode")
+      (System/exit status))
+    status))

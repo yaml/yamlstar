@@ -3,6 +3,7 @@
 
 package libyamlstar;
 
+import clojure.java.api.Clojure;
 import org.graalvm.nativeimage.c.function.CEntryPoint;
 import org.graalvm.nativeimage.c.type.CCharPointer;
 import org.graalvm.nativeimage.c.type.CTypeConversion;
@@ -34,7 +35,8 @@ public final class API {
         debug("API - java input string: " + yaml);
         debug("API - java options string: " + opts);
 
-        String json = libyamlstar.core.loadYaml(yaml, opts);
+        String json = (String) Clojure.var(
+            "libyamlstar.core", "-loadYaml").invoke(yaml, opts);
         debug("API - java response string: " + json);
 
         try (CTypeConversion.CCharPointerHolder holder =
@@ -65,7 +67,8 @@ public final class API {
         debug("API - java input string: " + yaml);
         debug("API - java options string: " + opts);
 
-        String json = libyamlstar.core.loadYamlAll(yaml, opts);
+        String json = (String) Clojure.var(
+            "libyamlstar.core", "-loadYamlAll").invoke(yaml, opts);
         debug("API - java response string: " + json);
 
         try (CTypeConversion.CCharPointerHolder holder =
@@ -97,7 +100,8 @@ public final class API {
         debug("API - java input string: " + data);
         debug("API - java options string: " + opts);
 
-        String json = libyamlstar.core.dumpYaml(data, opts);
+        String json = (String) Clojure.var(
+            "libyamlstar.core", "-dumpYaml").invoke(data, opts);
         debug("API - java response string: " + json);
 
         try (CTypeConversion.CCharPointerHolder holder =
@@ -129,7 +133,8 @@ public final class API {
         debug("API - java input string: " + data);
         debug("API - java options string: " + opts);
 
-        String json = libyamlstar.core.dumpYamlAll(data, opts);
+        String json = (String) Clojure.var(
+            "libyamlstar.core", "-dumpYamlAll").invoke(data, opts);
         debug("API - java response string: " + json);
 
         try (CTypeConversion.CCharPointerHolder holder =
@@ -148,7 +153,8 @@ public final class API {
     public static @CConst CCharPointer version(
         @CEntryPoint.IsolateThreadContext long isolateId
     ) {
-        String ver = libyamlstar.core.version();
+        String ver = (String) Clojure.var(
+            "libyamlstar.core", "-version").invoke();
 
         try (CTypeConversion.CCharPointerHolder holder =
                 CTypeConversion.toCString(ver)) {

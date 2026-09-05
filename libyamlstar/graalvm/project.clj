@@ -8,9 +8,9 @@
                  [org.clojure/clojure "1.12.0"]
                  [org.clojure/data.json "2.5.0"]]
 
-  :prep-tasks [["compile"] ["javac"]]
+  :prep-tasks [["javac"] ["compile"]]
 
-  :java-source-paths ["src"]
+  :java-source-paths ["src" "../../core/native"]
 
   :profiles
   {:uberjar

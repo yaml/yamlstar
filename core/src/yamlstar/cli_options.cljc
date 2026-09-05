@@ -65,9 +65,10 @@
 
 (defn plugin-options
   [spec]
-  (let [[api name extra] (str/split spec #"=" 3)]
+  (let [[api explicit-name extra] (str/split spec #"=" 3)
+        name (or explicit-name api)]
     (when (or (str/blank? api) (str/blank? name) extra)
-      (throw (ex-info "Plugin option must be API=NAME"
+      (throw (ex-info "Plugin option must be NAME or API=NAME"
                       {:plugin spec})))
     {:plugin {(normalize-key api) {:name name}}}))
 

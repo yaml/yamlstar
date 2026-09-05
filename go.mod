@@ -3,6 +3,7 @@ module github.com/yaml/yamlstar
 go 1.24
 
 require (
+	github.com/ebitengine/purego v0.10.2
 	github.com/gloathub/ys-v0-glj v0.1.3
 	github.com/glojurelang/glojure v0.7.15
 )

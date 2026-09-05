@@ -3,6 +3,7 @@
   (:require [clojure.data.json :as json]
             [clojure.string :as str]
             [yamlstar.api :as yaml]
+            [yamlstar.plugin.shared-host-java :as shared-host]
             [yamlstar.plugin.parser.snakeyaml])
   (:gen-class
    :methods [^:static [loadYaml [String String] String]
@@ -10,6 +11,8 @@
              ^:static [dumpYaml [String String] String]
              ^:static [dumpYamlAll [String String] String]
              ^:static [version [] String]]))
+
+(shared-host/install!)
 
 (declare json-write-str error-map debug)
 
@@ -38,6 +41,7 @@
 (defn -loadYaml
   "Load a single YAML document, return JSON string with result or error"
   [^String yaml-str ^String opts-json]
+  (shared-host/install!)
   (debug "libyamlstar load - input:" yaml-str)
   (debug "libyamlstar load - options:" opts-json)
   (let [resp (try
@@ -53,6 +57,7 @@
 (defn -loadYamlAll
   "Load all YAML documents, return JSON string with result or error"
   [^String yaml-str ^String opts-json]
+  (shared-host/install!)
   (debug "libyamlstar load-all - input:" yaml-str)
   (debug "libyamlstar load-all - options:" opts-json)
   (let [resp (try

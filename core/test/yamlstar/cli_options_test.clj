@@ -46,12 +46,14 @@
 
   (testing "generic plugin flag options"
     (is (= {:plugin {:parser {:name "reference"}}}
-           (opts/plugin-options "parser=reference"))))
+           (opts/plugin-options "parser=reference")))
+    (is (= {:plugin {:json-comments {:name "json-comments"}}}
+           (opts/plugin-options "json-comments"))))
 
   (testing "malformed plugin option"
     (is (thrown-with-msg?
-          Exception #"Plugin option must be API=NAME"
-          (opts/plugin-options "parser")))))
+          Exception #"Plugin option must be NAME or API=NAME"
+          (opts/plugin-options "parser=")))))
 
 (deftest runtime-options-precedence-test
   (testing "cli parser beats cli config, env config, and env parser"

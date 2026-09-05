@@ -101,6 +101,11 @@ def parser(name):
   return {'parser': {'name': name}}
 
 
+def json_comments(name='json-comments'):
+  """Return a JSON comments event-source plugin option fragment."""
+  return {'json-comments': {'name': name}}
+
+
 def _options_dict(options):
   if options is None:
     return {}

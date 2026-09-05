@@ -4,11 +4,18 @@
             [clojure.string :as str]
             [yamlstar.api :as yaml]
             [yamlstar.parser :as parser]
+            [yamlstar.plugin.shared-host :as shared-host]
             [yamlstar.plugin.parser.reference]
             [yamlstar.plugin.parser.go-yaml]))
 
 (parser/register-parsers! "reference" "go-yaml")
 (parser/set-default-parser! "go-yaml")
+
+(defn install-shared-host! []
+  (when (bound? #'shared-host/install!)
+    (shared-host/install!)))
+
+(install-shared-host!)
 
 (def EXPORT
   {"graal-create-isolate"     [:int :int :int :int]
@@ -72,6 +79,7 @@
 (defn yamlstar-load
   "Load YAML string, return JSON string with {:data ...} or {:error ...}"
   [_thread yaml-str opts-json]
+  (install-shared-host!)
   (try
     (let [result (yaml/load yaml-str (parse-opts opts-json))]
       (json/write-str {:data (nil-keys->string result)}))
@@ -86,6 +94,7 @@
 (defn yamlstar-load-all
   "Load all YAML documents, return JSON string with {:data [...]} or {:error ...}"
   [_thread yaml-str opts-json]
+  (install-shared-host!)
   (try
     (let [result (yaml/load-all yaml-str (parse-opts opts-json))]
       (json/write-str {:data (nil-keys->string result)}))

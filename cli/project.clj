@@ -11,6 +11,8 @@
 
   :main yamlstar.cli
   :aot [yamlstar.cli]
+  :java-source-paths ["../core/native"]
+  :prep-tasks [["javac"] ["compile"]]
 
   :profiles {:uberjar {:aot :all
                        :global-vars {*assert* false

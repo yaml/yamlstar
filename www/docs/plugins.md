@@ -7,8 +7,9 @@ bindings.
 ## Overview
 
 Plugins can customize internal processing during loading and dumping.
-The first supported plugin type is the **parser plugin**, which replaces
-the entire YAML parser.
+Parser plugins replace the YAML parser.
+Event-source plugins produce the complete parser event stream and can be
+distributed as shared libraries.
 
 Every load operation accepts an options structure that selects plugins
 and configures them.
@@ -40,14 +41,66 @@ release artifacts.
 
 Options are a nested mapping.
 The `plugin` key holds a map of plugin type to plugin configuration.
-For parser plugins, `use` names the parser and any sibling keys are
+For parser plugins, `name` names the parser and any sibling keys are
 passed to it as configuration:
 
 ```yaml
 plugin:
   parser:
-    use: snakeyaml
+    name: snakeyaml
 ```
+
+## Shared Event-Source Plugins
+
+The native `yaml` CLIs and both native `libyamlstar` implementations can
+load an event-source plugin from a Unix shared library.
+The JVM library and the pure Go package do not load shared plugins.
+
+Select the JSON comments plugin with either of these equivalent forms:
+
+```bash
+yaml --plugin=json-comments
+yaml --plugin=json-comments=json-comments
+```
+
+Only one event-source plugin can be active for a load operation.
+An event-source plugin supersedes the default parser.
+It can coexist with an explicit `reference` parser selection, but a
+different explicitly selected parser is a configuration error.
+
+YAMLStar searches for
+`libyamlstar-plugin-json-comments.so` on Linux and FreeBSD, or the
+corresponding `.dylib` on macOS, in this order:
+
+1. Directories in `YAMLSTAR_PLUGIN_PATH`.
+2. `yamlstar/plugins` beside the hosting `libyamlstar` library.
+3. `../lib/yamlstar/plugins` relative to the CLI executable.
+4. `$HOME/.local/lib/yamlstar/plugins`.
+5. `/usr/local/lib/yamlstar/plugins`.
+6. `/usr/lib/yamlstar/plugins`.
+
+The current working directory is never searched.
+YAMLStar does not download or install a missing plugin.
+
+The version 1 shared-plugin ABI uses raw UTF-8 input and EDN output.
+The plugin manifest declares its API, independent version, plugin kind,
+required parser, and event format.
+Returned buffers are owned by the plugin and must be released through its
+exported free function.
+
+```c
+uint64_t yamlstar_plugin_v1_abi(void);
+int32_t yamlstar_plugin_v1_manifest(
+    uint8_t **output, size_t *output_length);
+int32_t yamlstar_plugin_v1_parse(
+    const uint8_t *input, size_t input_length,
+    const uint8_t *options_edn, size_t options_length,
+    uint8_t **output, size_t *output_length);
+void yamlstar_plugin_v1_free(uint8_t *output);
+```
+
+Status `0` is success, `1` is a plugin parse or configuration error, and
+`2` is an ABI or internal failure.
 
 ## Using Parser Plugins
 

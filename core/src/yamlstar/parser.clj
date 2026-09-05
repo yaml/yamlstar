@@ -59,7 +59,9 @@
   ([yaml-str]
    (parse yaml-str nil))
   ([yaml-str opts]
-   (let [[pname config]
-         (or (plugin/parser-opts opts)
-             [(current-default-parser) {}])]
-     (plugin/parse-with pname config yaml-str))))
+   (if-let [source (plugin/event-source-opts opts)]
+     (plugin/parse-with-event-source source yaml-str)
+     (let [[pname config]
+           (or (plugin/parser-opts opts)
+               [(current-default-parser) {}])]
+       (plugin/parse-with pname config yaml-str)))))

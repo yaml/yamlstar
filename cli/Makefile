@@ -46,6 +46,7 @@ endif
 
 ifeq ($(YAMLSTAR_ENGINE),glojure)
 include $M/gloat.mk
+include $M/go.mk
 include $M/lein.mk
 else ifeq ($(YAMLSTAR_ENGINE),graalvm)
 include $M/graalvm.mk
@@ -109,10 +110,13 @@ GLOAT-CACHE := ../libyamlstar/cache/gloat-srcs
 GLOAT-CORE := ../core/src/yamlstar
 GLOAT-GO-YAML-SRC := $(GLOAT-CACHE)/plugin/parser/go_yaml.clj
 GLOAT-CLI-OPTIONS-SRC := $(GLOAT-CACHE)/cli_options.clj
+GLOAT-SHARED-PLUGIN-SRC := $(GLOAT-CACHE)/plugin/shared.clj
+GLOAT-SHARED-HOST-SRC := $(GLOAT-CACHE)/plugin/shared_host.clj
 CORE-SRCS := \
   $(wildcard $(GLOAT-CORE)/*.clj) \
   $(wildcard $(GLOAT-CORE)/*.cljc) \
   $(wildcard $(GLOAT-CORE)/plugin/*.clj) \
+  $(wildcard $(GLOAT-CORE)/plugin/*.cljc) \
   $(wildcard $(GLOAT-CORE)/plugin/parser/*.clj) \
   $(wildcard $(GLOAT-CORE)/plugin/parser/*.cljc)
 GLOAT-CLI-SRCS := \
@@ -126,6 +130,8 @@ GLOAT-CLI-SRCS := \
   $(GLOAT-CORE)/plugin/parser.clj \
   $(GLOAT-CORE)/plugin/parser/reference.clj \
   $(if $(filter glj,$(RT)),$(GLOAT-GO-YAML-SRC)) \
+  $(GLOAT-SHARED-PLUGIN-SRC) \
+  $(GLOAT-SHARED-HOST-SRC) \
   $(GLOAT-CORE)/parser.clj \
   $(GLOAT-CORE)/composer.clj \
   $(GLOAT-CORE)/resolver.clj \
@@ -233,6 +239,8 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
   $(GLOAT-CORE)/plugin/parser.clj \
   $(GLOAT-CORE)/plugin/parser/reference.clj \
   $(if $(filter glj,$(RT)),$(GLOAT-GO-YAML-SRC)) \
+  $(GLOAT-SHARED-PLUGIN-SRC) \
+  $(GLOAT-SHARED-HOST-SRC) \
   $(GLOAT-CORE)/parser.clj \
   $(GLOAT-CORE)/composer.clj \
   $(GLOAT-CORE)/resolver.clj \
@@ -243,6 +251,8 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
 	mkdir -p $(dir $@)
 	</dev/null env -u GOROOT $(GLOAT-GLOJURE-ENV) \
 	  GLOAT_MODULE=github.com/yaml/yamlstar \
+	  GLOAT_GO=$(GO) \
+	  GLOAT_GLJDEPS=$(abspath ../gljdeps.edn) \
 	  GLOAT_EXTRA_GO_DIR=$(abspath ../internal/goyamlparser) \
 	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
 	  $(if $(LET_GO_SRC),LET_GO_SRC=$(abspath $(LET_GO_SRC))) \
@@ -273,7 +283,19 @@ $(CLI-DEFAULT-SRC): Makefile
 	fi
 
 ifeq ($(YAMLSTAR_ENGINE),graalvm)
-$(CLI-JAR): $(CORE-JAR) $(LEIN) $(CLI-DEFAULT-SRC) src/yamlstar/cli.clj
+PLUGIN-HOST-DIR := cache/plugin-host
+PLUGIN-HOST-LIB := $(PLUGIN-HOST-DIR)/libyamlstar_plugin_host.a
+
+$(PLUGIN-HOST-LIB): ../core/native/yamlstar_plugin_host.c \
+  ../core/native/yamlstar_plugin_host.h
+	mkdir -p $(PLUGIN-HOST-DIR)
+	$(CC) -O2 -fPIC -c $< -o $(PLUGIN-HOST-DIR)/yamlstar_plugin_host.o
+	$(AR) rcs $@ $(PLUGIN-HOST-DIR)/yamlstar_plugin_host.o
+
+$(CLI-JAR): $(CORE-JAR) $(LEIN) $(CLI-DEFAULT-SRC) \
+  src/yamlstar/cli.clj \
+  ../core/native/yamlstar/plugin/SharedPluginHost.java \
+  ../core/native/yamlstar_plugin_host.h
 	$(LEIN) update-in :source-paths conj '"$(CLI-DEFAULT-DIR)"' -- uberjar
 	cp $(CLI-UBERJAR) $@
 endif
@@ -282,10 +304,12 @@ $(CORE-JAR): $(CORE-SRCS)
 	$(MAKE) -C ../core install
 
 ifeq ($(YAMLSTAR_ENGINE),graalvm)
-$(CLI-BIN): $(CLI-JAR) $(GRAALVM)
+$(CLI-BIN): $(CLI-JAR) $(GRAALVM) $(PLUGIN-HOST-LIB)
 	mkdir -p $(dir $@)
 	$(NATIVE-IMAGE) \
 	  $(NATIVE-OPTS) \
+	  -J-Dyamlstar.plugin.include=$(abspath ../core/native) \
+	  -J-Dyamlstar.plugin.library=$(abspath $(PLUGIN-HOST-DIR)) \
 	  -jar $< \
 	  -o $(CLI-OUT)
 	test -f $@

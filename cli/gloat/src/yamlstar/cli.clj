@@ -8,6 +8,7 @@
             [yamlstar.contract :as contract]
             [yamlstar.constructor :as constructor]
             [yamlstar.parser :as parser]
+            [yamlstar.plugin.shared-host :as shared-host]
             [yamlstar.resolver :as resolver]
             [ys.json :as json]))
 
@@ -32,7 +33,7 @@ Options:
   -s, --stream       Load all YAML documents
       --config CONF  YAMLStar options file or inline YAML mapping
       --parser NAME  YAML parser plugin name
-      --plugin API=NAME
+      --plugin SPEC   Plugin selector: NAME or API=NAME
   -d, --debug        Debug all stages
   -D, --debug-stage  Debug specific stage: parse, compose, resolve, construct
   -v, --version      Print version
@@ -120,10 +121,18 @@ Options:
 
           (= arg "--plugin")
           (if (empty? more)
-            (die (str arg " requires API=NAME"))
+            (die (str arg " requires NAME or API=NAME"))
             (recur (rest more)
                    (update opts :plugin (fnil conj []) (first more))
                    positional))
+
+          (str/starts-with? arg "--plugin=")
+          (let [spec (subs arg (count "--plugin="))]
+            (if (str/blank? spec)
+              (die "--plugin requires NAME or API=NAME")
+              (recur more
+                     (update opts :plugin (fnil conj []) spec)
+                     positional)))
 
           (or (= arg "-d") (= arg "--debug"))
           (recur more (assoc opts :debug true) positional)
@@ -337,6 +346,7 @@ Options:
 (defn -main [& argv]
   (parser/register-parsers! "reference" cli-default/default-parser)
   (parser/set-default-parser! cli-default/default-parser)
+  (shared-host/install!)
   (let [opts (parse-args argv)]
     (cond
       (:help opts) (println usage-text)

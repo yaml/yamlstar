@@ -28,6 +28,7 @@ MAKES-CLEAN := \
   cache/go-yaml-* \
   cache/libyamlstar-glojure-abi-* \
   cache/gloat-srcs \
+  cache/plugin-host \
   ../internal/goyamlparser/.generated \
   lib/ \
 
@@ -159,6 +160,15 @@ $(GLOAT-LINK-DIR)/plugin/parser/go_yaml.clj: $(CORE-YAMLSTAR)/plugin/parser/go_y
 	@mkdir -p $(dir $@)
 	ln -sf $(abspath $<) $@
 
+$(GLOAT-LINK-DIR)/plugin/shared.clj: $(CORE-YAMLSTAR)/plugin/shared.cljc
+	@mkdir -p $(dir $@)
+	ln -sf $(abspath $<) $@
+
+$(GLOAT-LINK-DIR)/plugin/shared_host.clj: \
+  $(CORE-YAMLSTAR)/plugin/shared_host.cljc
+	@mkdir -p $(dir $@)
+	ln -sf $(abspath $<) $@
+
 $(GO-YAML-STAMP):
 	rm -rf '$(GO-YAML-SRC-DIR).tmp'
 	mkdir -p cache
@@ -200,6 +210,8 @@ GLOAT-LINKS := \
   $(GLOAT-LINK-DIR)/serializer.clj \
   $(GLOAT-LINK-DIR)/emitter.clj \
   $(GLOAT-LINK-DIR)/plugin/parser/go_yaml.clj \
+  $(GLOAT-LINK-DIR)/plugin/shared.clj \
+  $(GLOAT-LINK-DIR)/plugin/shared_host.clj \
 
 # Clojure source files compiled by gloat (order matters for namespaces)
 GLOAT-SRCS := \
@@ -213,6 +225,8 @@ GLOAT-SRCS := \
   $(CORE-YAMLSTAR)/plugin/parser.clj \
   $(CORE-YAMLSTAR)/plugin/parser/reference.clj \
   $(GLOAT-LINK-DIR)/plugin/parser/go_yaml.clj \
+  $(GLOAT-LINK-DIR)/plugin/shared.clj \
+  $(GLOAT-LINK-DIR)/plugin/shared_host.clj \
   $(CORE-YAMLSTAR)/parser.clj \
   $(CORE-YAMLSTAR)/composer.clj \
   $(CORE-YAMLSTAR)/resolver.clj \
@@ -237,11 +251,14 @@ endif
 generate-go: prepare-gloat $(GLOAT)
 	rm -rf $(GO-GENERATED-WORK)
 	mkdir -p $(GO-GENERATED-WORK)
-	$(GLOAT) --force \
+	env -u GOROOT \
+	  GLOAT_GLJDEPS=$(abspath ../gljdeps.edn) \
+	  $(GLOAT) --force \
 	  --module $(GO-GENERATED-MODULE) \
 	  -o $(GO-GENERATED-WORK)/ \
 	  $(GLOAT-SRCS)
 	test -f $(GO-GENERATED-WORK)/pkg/yamlstar/api/loader.go
+	rm -rf $(GO-GENERATED-WORK)/pkg/glj
 	rm -rf $(GO-GENERATED-DIR)
 	mkdir -p $(GO-GENERATED-DIR)
 	cp -R $(GO-GENERATED-WORK)/pkg $(GO-GENERATED-DIR)/
@@ -347,6 +364,7 @@ $(LIB-SO-GLOAT): $(GLOAT-SRCS) $(GLOAT-LINKS) $(GO-YAML-GENERATED-STAMP) \
 	mkdir -p $(LIB-DIR)
 	</dev/null env -u GOROOT \
 	  GLOAT_MODULE=github.com/yaml/yamlstar \
+	  GLOAT_GLJDEPS=$(abspath ../gljdeps.edn) \
 	  GLOAT_EXTRA_GO_DIR=$(abspath $(GO-YAML-GENERATED-DIR)) \
 	  $(if $(GLOAT_PATH),PATH='$(GLOAT_PATH)') \
 	  $(GLOAT-GLOJURE-ENV) \
@@ -360,15 +378,28 @@ $(CORE-JAR): $(CORE-SRCS)
 	$(MAKE) -C ../core install
 endif
 
-$(LIB-JAR): $(CORE-JAR) $(LEIN)
+PLUGIN-HOST-DIR := cache/plugin-host
+PLUGIN-HOST-LIB := $(PLUGIN-HOST-DIR)/libyamlstar_plugin_host.a
+
+$(PLUGIN-HOST-LIB): ../core/native/yamlstar_plugin_host.c \
+  ../core/native/yamlstar_plugin_host.h
+	mkdir -p $(PLUGIN-HOST-DIR)
+	$(CC) -O2 -fPIC -c $< -o $(PLUGIN-HOST-DIR)/yamlstar_plugin_host.o
+	$(AR) rcs $@ $(PLUGIN-HOST-DIR)/yamlstar_plugin_host.o
+
+$(LIB-JAR): $(CORE-JAR) $(LEIN) \
+  ../core/native/yamlstar/plugin/SharedPluginHost.java \
+  ../core/native/yamlstar_plugin_host.h
 	cd graalvm && $(LEIN) $(LEIN-YAML-PARSER) uberjar
 
 ifeq ($(YAMLSTAR_ENGINE),graalvm)
-$(LIB-SO): $(LIB-JAR) $(REFLECTION-JSON) $(GRAALVM)
+$(LIB-SO): $(LIB-JAR) $(REFLECTION-JSON) $(GRAALVM) $(PLUGIN-HOST-LIB)
 	@echo "Building GraalVM shared library..."
 	mkdir -p $(LIB-DIR)
 	$(NATIVE-IMAGE) \
 	  $(NATIVE-OPTS) \
+	  -J-Dyamlstar.plugin.include=$(abspath ../core/native) \
+	  -J-Dyamlstar.plugin.library=$(abspath $(PLUGIN-HOST-DIR)) \
 	  --shared \
 	  -jar $< \
 	  -o $(LIB-DIR)/$(LIB-NAME)
