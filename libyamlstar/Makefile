@@ -87,7 +87,8 @@ GO-YAML-GENERATED-DIR := ../internal/goyamlparser
 GO-YAML-GENERATED-STAMP := $(GO-YAML-GENERATED-DIR)/.generated
 GO-YAML-PREPARE := gloat/prepare-go-yaml-parser
 GLOAT-GO-YAML-PATCH := gloat/patch-gloat-extra-go-dir
-GLOAT-GO-YAML-PATCH-STAMP := $(GLOAT-DIR)/.yamlstar-go-yaml-extra-patched
+GLOAT-GO-YAML-PATCH-STAMP := \
+  $(LOCAL-CACHE)/gloat-patch/$(subst /,_,$(abspath $(GLOAT-DIR))).stamp
 
 ifdef YAML-PARSER-DIR
 YAML-PARSER-SRC-DIR := $(abspath $(YAML-PARSER-DIR))/src
@@ -177,8 +178,10 @@ $(GO-YAML-GENERATED-STAMP): $(GO-YAML-STAMP) $(GO-YAML-PREPARE) $(PERL)
 
 prepare-go-yaml-parser: $(GO-YAML-GENERATED-STAMP)
 
-$(GLOAT-GO-YAML-PATCH-STAMP): $(GLOAT) $(GLOAT-GO-YAML-PATCH)
+$(GLOAT-GO-YAML-PATCH-STAMP): $(GLOAT) $(GLOAT-GO-YAML-PATCH) \
+  $(GLOAT-DIR)/src/gloat.clj
 	bash $(GLOAT-GO-YAML-PATCH) $(GLOAT-DIR)/src/gloat.clj
+	mkdir -p $(dir $@)
 	touch $@
 
 patch-gloat-go-yaml: $(GLOAT-GO-YAML-PATCH-STAMP)
