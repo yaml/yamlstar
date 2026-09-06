@@ -504,6 +504,38 @@ endif
 	git push -f origin $(v) v$(v)
 	$(MAKE) release-build-github v=$(v)
 
+# Rerun the failed jobs of a release workflow run (r=RUN_ID, default:
+# the latest release workflow run on the current branch) and the jobs
+# after them, reusing the build artifacts already attached to the run.
+# The tags are moved to HEAD first so the rerun jobs check out the fix.
+# Use this when only a test or publish job failed; use release-retry
+# when the build itself must be redone. Example:
+#   make release-rerun v=0.1.20 r=12345678
+release-rerun: $(GH)
+ifndef v
+	$(error 'make release-rerun' requires v=NEW_VERSION)
+endif
+	@set -e; \
+	  branch=$$(git branch --show-current); \
+	  run_id='$(r)'; \
+	  if [[ -z "$$run_id" ]]; then \
+	    run_id=$$(gh run list --workflow=release.yaml \
+	      --repo yaml/yamlstar --branch $$branch --limit=1 \
+	      --json databaseId --jq '.[0].databaseId'); \
+	  fi; \
+	  test -n "$$run_id"; \
+	  gh run view $$run_id --repo yaml/yamlstar \
+	    --json databaseId --jq .databaseId > /dev/null || { \
+	    echo "ERROR: run id '$$run_id' not found"; exit 1; }; \
+	  git push --force-with-lease origin HEAD:$$branch; \
+	  git tag -f $(v) HEAD; \
+	  git tag -f v$(v) HEAD; \
+	  git push -f origin $(v) v$(v); \
+	  echo "Rerunning failed jobs of run $$run_id"; \
+	  gh run rerun $$run_id --failed --repo yaml/yamlstar; \
+	  gh run watch $$run_id --repo yaml/yamlstar \
+	    --exit-status --interval=10
+
 release-bindings: $(YS)
 ifndef v
 	$(error 'make release-bindings' requires v=NEW_VERSION)
