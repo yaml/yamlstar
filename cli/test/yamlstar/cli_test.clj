@@ -12,9 +12,9 @@
 
 (deftest version-output
   (is (= (str "yaml v"
-              (clojure.string/replace cli/version #"-SNAPSHOT$" "")
-              "\n")
-         (with-out-str (cli/print-version)))))
+              (clojure.string/replace cli/version #"-SNAPSHOT$" ""))
+         (clojure.string/trim-newline
+          (with-out-str (cli/print-version))))))
 
 (deftest yaml-event-node-yaml-chain
   (let [events (cli/convert-input sample {:event true} {})
