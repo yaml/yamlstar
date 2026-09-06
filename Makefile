@@ -450,9 +450,9 @@ comma := ,
 # Rerun tests for the platforms in t= using build artifacts from a
 # prior run (r=RUN_ID, default: the latest release workflow run on
 # the current branch). Example:
-#   make release-tests-retry v=0.1.19 t=macos-x64 r=12345678
+#   make release-tests-retry v=0.1.20 t=macos-x64 r=12345678
 # FreeBSD testing is available only when requested explicitly:
-#   make release-tests-retry v=0.1.19 t=freebsd-x64 r=12345678
+#   make release-tests-retry v=0.1.20 t=freebsd-x64 r=12345678
 release-tests-retry: t ?= \
   linux-x64 \
   linux-aarch64 \

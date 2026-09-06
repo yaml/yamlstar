@@ -1,3 +1,14 @@
+- version: 0.1.20
+  date:    Sun Sep  6 12:58:30 PM EDT 2026
+  changes:
+  - Shorten CLI version output
+  - Register parser plugins in Glojure runtimes
+  - Cut per-event allocations in the go-yaml path
+  - Skip the gloat patch when the hook is present
+  - Keep the gloat patch stamp out of the gloat tree
+  - Disable GraalVM release artifacts
+  - Bump gloat, glojure and yaml-parser pins
+  - Keep clean and regeneration off adapter.go edits
 - version: 0.1.19
   date:    Wed Sep  2 11:18:56 AM EDT 2026
   changes:

@@ -1,6 +1,6 @@
 {application, yamlstar, [
   {description, "YAMLStar language binding for Erlang"},
-  {vsn, "0.1.19"},
+  {vsn, "0.1.20"},
   {pkg_name, yamlstar_erlang},
   {licenses, ["MIT"]},
   {links, [

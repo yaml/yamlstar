@@ -10,7 +10,7 @@ import json
 import os
 import sys
 
-yamlstar_version = '0.1.19'
+yamlstar_version = '0.1.20'
 
 assert sys.version_info >= (3, 6), \
   "Python 3.6 or greater required for 'yamlstar'."
