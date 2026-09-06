@@ -44,6 +44,11 @@ on:
         default: false
         required: false
         type: boolean
+      graalvm:
+        description: 'Also build the -graalvm CLI and library assets'
+        default: false
+        required: false
+        type: boolean
 
 defaults:
   run:
@@ -117,6 +122,7 @@ jobs:
         ref: ${{ inputs.version }}
 
     - name: Set up GraalVM
+      if: ${{ inputs.graalvm }}
       uses: graalvm/setup-graalvm@v1
       with:
         java-version: ${{ env.JAVA_VERSION }}
@@ -147,6 +153,10 @@ jobs:
         make release-lib VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
         make release-cli VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
         make -C python wheel VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
+
+    - name: Build GraalVM release archives
+      if: ${{ inputs.graalvm }}
+      run: |
         make release-lib VERSION="$VERSION" YAMLSTAR_ENGINE=graalvm
         make release-cli VERSION="$VERSION" YAMLSTAR_ENGINE=graalvm
 
@@ -185,6 +195,7 @@ jobs:
         git rev-parse --git-common-dir
 
     - name: Set up GraalVM
+      if: ${{ inputs.graalvm }}
       uses: graalvm/setup-graalvm@v1
       with:
         java-version: ${{ env.JAVA_VERSION }}
@@ -219,6 +230,10 @@ jobs:
       run: |
         make release-lib VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
         make release-cli VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
+
+    - name: Build GraalVM release archives
+      if: ${{ inputs.graalvm }}
+      run: |
         make release-lib VERSION="$VERSION" YAMLSTAR_ENGINE=graalvm
         make release-cli VERSION="$VERSION" YAMLSTAR_ENGINE=graalvm
 
@@ -245,6 +260,7 @@ jobs:
         ref: ${{ inputs.version }}
 
     - name: Set up GraalVM
+      if: ${{ inputs.graalvm }}
       uses: graalvm/setup-graalvm@v1
       with:
         java-version: ${{ env.JAVA_VERSION }}
@@ -275,6 +291,10 @@ jobs:
         make release-lib VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
         make release-cli VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
         make -C python wheel VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
+
+    - name: Build GraalVM release archives
+      if: ${{ inputs.graalvm }}
+      run: |
         make release-lib VERSION="$VERSION" YAMLSTAR_ENGINE=graalvm
         make release-cli VERSION="$VERSION" YAMLSTAR_ENGINE=graalvm
 
@@ -302,6 +322,7 @@ jobs:
         ref: ${{ inputs.version }}
 
     - name: Set up GraalVM
+      if: ${{ inputs.graalvm }}
       uses: graalvm/setup-graalvm@v1
       with:
         java-version: ${{ env.JAVA_VERSION }}

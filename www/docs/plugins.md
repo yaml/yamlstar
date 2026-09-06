@@ -20,12 +20,21 @@ to each language.
 | Name | Description |
 |------|-------------|
 | `reference` | The pure Clojure YAML 1.2 reference parser (default) |
-| `snakeyaml` | The SnakeYAML Engine parser (used by YAMLScript) |
+| `go-yaml` | The go-yaml parser (Glojure runtime only) |
+| `snakeyaml` | The SnakeYAML Engine parser (JVM only) |
 
-Both parsers produce identical results for conforming YAML documents.
+All parsers produce identical results for conforming YAML documents.
 SnakeYAML rejects some edge cases that the reference parser accepts
 (tabs in certain positions, multiline flow mapping keys, and other
 yaml-test-suite corner cases).
+
+Not every parser is available in every binding.
+The released `yaml` CLI and the `libyamlstar` shared library are built
+with Glojure and bundle the `reference` and `go-yaml` parsers.
+The `snakeyaml` parser needs a JVM, so it is only available from the
+Clojure and Java bindings.
+The GraalVM native build that included it is no longer part of the
+release artifacts.
 
 ## Options Shape
 
@@ -61,14 +70,12 @@ plugin:
 ```python
 import yamlstar
 
-opts = yamlstar.Options().plugin(yamlstar.parser('snakeyaml'))
-ys = yamlstar.YAMLStar(opts, so='libyamlstar-graalvm')
+opts = yamlstar.Options().plugin(yamlstar.parser('go-yaml'))
+ys = yamlstar.YAMLStar(opts)
 data = ys.load("key: value")
 
 # Full options form:
-ys = yamlstar.YAMLStar(
-    {'plugin': {'parser': {'name': 'snakeyaml'}}},
-    so='libyamlstar-graalvm')
+ys = yamlstar.YAMLStar({'plugin': {'parser': {'name': 'go-yaml'}}})
 data = ys.load("key: value")
 ```
 

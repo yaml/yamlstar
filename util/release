@@ -558,29 +558,34 @@ do-check-release() (
     die "ERROR: Release $VERSION not found"
   echo 'Checking for required assets...'
   assets=$(gh release view "$VERSION" --json assets --jq '.assets[].name')
-  for asset in \
-    "yamlstar-$VERSION-linux-aarch64.tar.xz" \
-    "yamlstar-$VERSION-linux-aarch64-graalvm.tar.xz" \
-    "yamlstar-$VERSION-linux-x64.tar.xz" \
-    "yamlstar-$VERSION-linux-x64-graalvm.tar.xz" \
-    "yamlstar-$VERSION-freebsd-x64.tar.xz" \
-    "yamlstar-$VERSION-macos-arm64.tar.xz" \
-    "yamlstar-$VERSION-macos-arm64-graalvm.tar.xz" \
-    "yamlstar-$VERSION-macos-x64.tar.xz" \
-    "yamlstar-$VERSION-wasm-p1.tar.xz" \
-    "yamlstar-$VERSION-windows-arm64.zip" \
-    "yamlstar-$VERSION-windows-x64.zip" \
-    "libyamlstar-$VERSION-linux-aarch64.tar.xz" \
-    "libyamlstar-$VERSION-linux-aarch64-graalvm.tar.xz" \
-    "libyamlstar-$VERSION-linux-x64.tar.xz" \
-    "libyamlstar-$VERSION-linux-x64-graalvm.tar.xz" \
-    "libyamlstar-$VERSION-freebsd-x64.tar.xz" \
-    "libyamlstar-$VERSION-macos-arm64.tar.xz" \
-    "libyamlstar-$VERSION-macos-arm64-graalvm.tar.xz" \
-    "libyamlstar-$VERSION-macos-x64.tar.xz" \
-    "libyamlstar-$VERSION-windows-arm64.zip" \
+  required=(
+    "yamlstar-$VERSION-linux-aarch64.tar.xz"
+    "yamlstar-$VERSION-linux-x64.tar.xz"
+    "yamlstar-$VERSION-freebsd-x64.tar.xz"
+    "yamlstar-$VERSION-macos-arm64.tar.xz"
+    "yamlstar-$VERSION-macos-x64.tar.xz"
+    "yamlstar-$VERSION-wasm-p1.tar.xz"
+    "yamlstar-$VERSION-windows-arm64.zip"
+    "yamlstar-$VERSION-windows-x64.zip"
+    "libyamlstar-$VERSION-linux-aarch64.tar.xz"
+    "libyamlstar-$VERSION-linux-x64.tar.xz"
+    "libyamlstar-$VERSION-freebsd-x64.tar.xz"
+    "libyamlstar-$VERSION-macos-arm64.tar.xz"
+    "libyamlstar-$VERSION-macos-x64.tar.xz"
+    "libyamlstar-$VERSION-windows-arm64.zip"
     "libyamlstar-$VERSION-windows-x64.zip"
-  do
+  )
+  if [[ ${YS_RELEASE_GRAALVM:-} ]]; then
+    required+=(
+      "yamlstar-$VERSION-linux-aarch64-graalvm.tar.xz"
+      "yamlstar-$VERSION-linux-x64-graalvm.tar.xz"
+      "yamlstar-$VERSION-macos-arm64-graalvm.tar.xz"
+      "libyamlstar-$VERSION-linux-aarch64-graalvm.tar.xz"
+      "libyamlstar-$VERSION-linux-x64-graalvm.tar.xz"
+      "libyamlstar-$VERSION-macos-arm64-graalvm.tar.xz"
+    )
+  fi
+  for asset in "${required[@]}"; do
     grep -qx "$asset" <<<"$assets" ||
       die "ERROR: Missing $asset"
   done
