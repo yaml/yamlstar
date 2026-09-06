@@ -4,26 +4,21 @@ set -euo pipefail
 gloat_src=${1:?gloat.clj path required}
 tmp="$gloat_src.tmp.$$"
 
-perl -0pe '
-  my $old = qr{    \(when-let \[extra-go-dir \(System/getenv "GLOAT_EXTRA_GO_DIR"\)\]\n      \(when \(fs/exists\? extra-go-dir\)\n        \(doseq \[file \(fs/glob extra-go-dir "\*\*/\*"\)\]\n          \(when \(fs/regular-file\? file\)\n            \(let \[rel-path \(str \(fs/relativize extra-go-dir file\)\)\n                  target \(str output-dir "/internal/goyamlparser/" rel-path\)\]\n              \(fs/create-dirs \(fs/parent target\)\)\n              \(fs/copy file target \{:replace-existing true\}\)\)\)\)\)\)};
-  my $new = q{    (when-let [extra-go-dir (System/getenv "GLOAT_EXTRA_GO_DIR")]
-      (when (fs/exists? extra-go-dir)
-        (let [target (str output-dir "/internal/goyamlparser")]
-          (fs/delete-tree target)
-          (fs/create-dirs (fs/parent target))
-          (process/shell "cp" "-R" extra-go-dir target))))};
+# Newer gloat checkouts ship the hook, so leave those alone.
+if grep -q GLOAT_EXTRA_GO_DIR "$gloat_src"; then
+  exit 0
+fi
 
-  if (!s/$old/$new/) {
-    my $needle = quotemeta(q{    (fs/create-dirs output-dir)});
-    $new = q{    (fs/create-dirs output-dir)
+perl -0pe '
+  my $needle = quotemeta(q{    (fs/create-dirs output-dir)});
+  my $new = q{    (fs/create-dirs output-dir)
     (when-let [extra-go-dir (System/getenv "GLOAT_EXTRA_GO_DIR")]
       (when (fs/exists? extra-go-dir)
         (let [target (str output-dir "/internal/goyamlparser")]
           (fs/delete-tree target)
           (fs/create-dirs (fs/parent target))
           (process/shell "cp" "-R" extra-go-dir target))))};
-    s/$needle/$new/ or die "patch target not found\n";
-  }
+  s/$needle/$new/ or die "patch target not found\n";
 ' "$gloat_src" > "$tmp"
 
 mv "$tmp" "$gloat_src"
