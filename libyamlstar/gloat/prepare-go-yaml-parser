@@ -78,13 +78,56 @@ var (
 	kwEvent    = lang.NewKeyword("event")
 	kwExplicit = lang.NewKeyword("explicit")
 	kwVersion  = lang.NewKeyword("version")
-	kwFlow     = lang.NewKeyword("flow")
-	kwValue    = lang.NewKeyword("value")
-	kwStyle    = lang.NewKeyword("style")
 	kwName     = lang.NewKeyword("name")
-	kwAnchor   = lang.NewKeyword("anchor")
-	kwTag      = lang.NewKeyword("tag")
 )
+
+// Shape masks for node start events. The key order of every event map is
+// event, anchor, tag, then value and style for scalars or flow for
+// collections, so one shape per present-key combination keeps the maps
+// keyword-shaped (one allocation, keyword lookups hit the shape cache in
+// the composer) without adding nil-valued keys.
+const (
+	maskAnchor = 1
+	maskTag    = 2
+	maskExtra  = 4
+)
+
+var (
+	scalarShapes     = makeShapes("value", "style")
+	collectionShapes = makeShapes("", "flow")
+
+	streamStartEvent   = lang.NewMap(kwEvent, "stream_start")
+	streamEndEvent     = lang.NewMap(kwEvent, "stream_end")
+	documentStartEvent = lang.NewMap(kwEvent, "document_start")
+	documentEndEvent   = lang.NewMap(kwEvent, "document_end")
+	mappingEndEvent    = lang.NewMap(kwEvent, "mapping_end")
+	sequenceEndEvent   = lang.NewMap(kwEvent, "sequence_end")
+	aliasShape         = lang.NewKeywordMapShape("event", "name")
+)
+
+// makeShapes builds the eight shapes for one event kind. The fixed key is
+// always present after the optional anchor and tag; the extra key is
+// present when maskExtra is set.
+func makeShapes(fixed, extra string) [8]*lang.KeywordMapShape {
+	var shapes [8]*lang.KeywordMapShape
+	for mask := range shapes {
+		names := []string{"event"}
+		if mask&maskAnchor != 0 {
+			names = append(names, "anchor")
+		}
+		if mask&maskTag != 0 {
+			names = append(names, "tag")
+		}
+		if fixed != "" {
+			names = append(names, fixed)
+		}
+		if mask&maskExtra != 0 {
+			names = append(names, extra)
+		}
+		shapes[mask] = lang.NewKeywordMapShape(names...)
+	}
+	return shapes
+}
 
 func ParseYAMLStarEvents(input string) (any, error) {
 	if input == "" {
@@ -97,7 +140,7 @@ func ParseYAMLStarEvents(input string) (any, error) {
 	parser.SetInputString([]byte(input))
 	defer parser.Delete()
 
-	events := []any{}
+	events := make([]any, 0, len(input)/8+8)
 	for {
 		var event Event
 		err := parser.Parse(&event)
@@ -121,15 +164,19 @@ func ParseYAMLStarEvents(input string) (any, error) {
 func yamlstarEvent(event *Event) any {
 	switch event.Type {
 	case STREAM_START_EVENT:
-		return lang.NewMap(kwEvent, "stream_start")
+		return streamStartEvent
 	case STREAM_END_EVENT:
-		return lang.NewMap(kwEvent, "stream_end")
+		return streamEndEvent
 	case DOCUMENT_START_EVENT:
+		version := event.GetVersionDirective()
+		if event.Implicit && version == nil {
+			return documentStartEvent
+		}
 		values := []any{kwEvent, "document_start"}
 		if !event.Implicit {
 			values = append(values, kwExplicit, true)
 		}
-		if version := event.GetVersionDirective(); version != nil {
+		if version != nil {
 			values = append(
 				values,
 				kwVersion,
@@ -138,50 +185,64 @@ func yamlstarEvent(event *Event) any {
 		}
 		return lang.NewMap(values...)
 	case DOCUMENT_END_EVENT:
-		values := []any{kwEvent, "document_end"}
-		if !event.Implicit {
-			values = append(values, kwExplicit, true)
+		if event.Implicit {
+			return documentEndEvent
 		}
-		return lang.NewMap(values...)
+		return lang.NewMap(kwEvent, "document_end", kwExplicit, true)
 	case MAPPING_START_EVENT:
-		item := nodeStartEvent("mapping_start", event)
-		if event.MappingStyle() == FLOW_MAPPING_STYLE {
-			item = item.Assoc(kwFlow, true).(lang.IPersistentMap)
-		}
-		return item
+		flow := event.MappingStyle() == FLOW_MAPPING_STYLE
+		return nodeStartEvent("mapping_start", event, flow)
 	case MAPPING_END_EVENT:
-		return lang.NewMap(kwEvent, "mapping_end")
+		return mappingEndEvent
 	case SEQUENCE_START_EVENT:
-		item := nodeStartEvent("sequence_start", event)
-		if event.SequenceStyle() == FLOW_SEQUENCE_STYLE {
-			item = item.Assoc(kwFlow, true).(lang.IPersistentMap)
-		}
-		return item
+		flow := event.SequenceStyle() == FLOW_SEQUENCE_STYLE
+		return nodeStartEvent("sequence_start", event, flow)
 	case SEQUENCE_END_EVENT:
-		return lang.NewMap(kwEvent, "sequence_end")
+		return sequenceEndEvent
 	case SCALAR_EVENT:
-		item := nodeStartEvent("scalar", event)
-		item = item.Assoc(kwValue, string(event.Value)).(lang.IPersistentMap)
-		if style := scalarStyle(event.ScalarStyle()); style != "" {
-			item = item.Assoc(kwStyle, style).(lang.IPersistentMap)
-		}
-		return item
+		return scalarEvent(event)
 	case ALIAS_EVENT:
-		return lang.NewMap(kwEvent, "alias", kwName, string(event.Anchor))
+		return lang.NewStaticKeywordMap(
+			aliasShape, "alias", string(event.Anchor))
 	default:
 		return nil
 	}
 }
 
-func nodeStartEvent(name string, event *Event) lang.IPersistentMap {
-	values := []any{kwEvent, name}
+// nodeValues starts the value slice of a node event with the event name
+// and the optional anchor and tag, returning the shape mask so far.
+func nodeValues(name string, event *Event, extra int) ([]any, int) {
+	values := make([]any, 0, 3+extra)
+	values = append(values, name)
+	mask := 0
 	if len(event.Anchor) > 0 {
-		values = append(values, kwAnchor, string(event.Anchor))
+		values = append(values, string(event.Anchor))
+		mask |= maskAnchor
 	}
 	if tag := normalizeTag(string(event.Tag)); tag != "" {
-		values = append(values, kwTag, tag)
+		values = append(values, tag)
+		mask |= maskTag
 	}
-	return lang.NewMap(values...)
+	return values, mask
+}
+
+func nodeStartEvent(name string, event *Event, flow bool) any {
+	values, mask := nodeValues(name, event, 1)
+	if flow {
+		values = append(values, true)
+		mask |= maskExtra
+	}
+	return lang.NewStaticKeywordMap(collectionShapes[mask], values...)
+}
+
+func scalarEvent(event *Event) any {
+	values, mask := nodeValues("scalar", event, 2)
+	values = append(values, string(event.Value))
+	if style := scalarStyle(event.ScalarStyle()); style != "" {
+		values = append(values, style)
+		mask |= maskExtra
+	}
+	return lang.NewStaticKeywordMap(scalarShapes[mask], values...)
 }
 
 func scalarStyle(style ScalarStyle) string {

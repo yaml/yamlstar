@@ -28,7 +28,7 @@ MAKES-CLEAN := \
   cache/go-yaml-* \
   cache/libyamlstar-glojure-abi-* \
   cache/gloat-srcs \
-  ../internal/goyamlparser \
+  ../internal/goyamlparser/.generated \
   lib/ \
 
 MAKES-REALCLEAN := \
