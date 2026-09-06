@@ -34,6 +34,9 @@ Options:
       --config CONF  YAMLStar options file or inline YAML mapping
       --parser NAME  YAML parser plugin name
       --plugin SPEC   Plugin selector: NAME or API=NAME
+      --path[=PATH]   Print defaults or set the shared library path
+      --no-plugin-install
+                       Do not install missing shared plugins
   -d, --debug        Debug all stages
   -D, --debug-stage  Debug specific stage: parse, compose, resolve, construct
   -v, --version      Print version
@@ -76,6 +79,15 @@ Options:
 
           (or (= arg "-v") (= arg "--version"))
           (recur more (assoc opts :version true) positional)
+
+          (= arg "--path")
+          (recur more (assoc opts :print-path true) positional)
+
+          (str/starts-with? arg "--path=")
+          (recur more
+                 (assoc opts :library-path
+                        (subs arg (count "--path=")))
+                 positional)
 
           (or (= arg "-j") (= arg "--json"))
           (recur more (assoc opts :json true) positional)
@@ -133,6 +145,9 @@ Options:
               (recur more
                      (update opts :plugin (fnil conj []) spec)
                      positional)))
+
+          (= arg "--no-plugin-install")
+          (recur more (assoc opts :no-plugin-install true) positional)
 
           (or (= arg "-d") (= arg "--debug"))
           (recur more (assoc opts :debug true) positional)
@@ -343,6 +358,17 @@ Options:
 (defn run [opts runtime-opts]
   (write-output (convert-input (read-input opts) opts runtime-opts) opts))
 
+(defn default-library-path []
+  #?(:glj
+     (github.com:yaml:yamlstar:internal:goyamlparser:pluginloader.DefaultPath)
+     :lg ""))
+
+(defn set-library-path! [path]
+  #?(:glj
+     (when-let [error (os.Setenv "YAMLSTAR_LIBRARY_PATH" path)]
+       (throw error))
+     :lg nil))
+
 (defn -main [& argv]
   (parser/register-parsers! "reference" cli-default/default-parser)
   (parser/set-default-parser! cli-default/default-parser)
@@ -351,8 +377,11 @@ Options:
     (cond
       (:help opts) (println usage-text)
       (:version opts) (println (display-version))
+      (:print-path opts) (println (default-library-path))
       :else
       (try
+        (when (contains? opts :library-path)
+          (set-library-path! (:library-path opts)))
         (let [runtime-opts (runtime/runtime-options opts)]
           (cond
             (:debug opts)

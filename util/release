@@ -254,6 +254,9 @@ do-release-lib() (
   cp libyamlstar/lib/libyamlstar.h \
     libyamlstar/lib/graal_isolate.h \
     "$RELEASE_PATH/"
+  if [[ $OS_NAME != windows ]]; then
+    cp util/yamlstar-plugin "$RELEASE_PATH/"
+  fi
 
   # Create installation Makefile
   cat > "$RELEASE_PATH/Makefile" <<'...'
@@ -278,6 +281,12 @@ ifneq (,$(LIBYAMLSTAR))
 	cp -pP libyamlstar-graalvm.EXT_PLACEHOLDER* $(PREFIX)/lib/ 2>/dev/null || true
 	mkdir -p $(PREFIX)/include/libyamlstar-$(YAMLSTAR_VERSION)
 	cp -pP *.h $(PREFIX)/include/libyamlstar-$(YAMLSTAR_VERSION)/
+	@if test -x yamlstar-plugin; then \
+	  mkdir -p $(PREFIX)/libexec/yamlstar $(PREFIX)/bin; \
+	  cp -p yamlstar-plugin $(PREFIX)/libexec/yamlstar/; \
+	  ln -sf ../libexec/yamlstar/yamlstar-plugin \
+	    $(PREFIX)/bin/yamlstar-plugin; \
+	fi
 	@echo 'Installed $(PREFIX)/lib/$(LIBYAMLSTAR_ENGINE) - version $(YAMLSTAR_VERSION)'
 else
 	$(error Weird! Nothing to install in this directory.)
@@ -301,6 +310,7 @@ YAMLStar VERSION_PLACEHOLDER for PLATFORM_PLACEHOLDER
 - `libyamlstar.EXT_PLACEHOLDER.0` - Symlink for API version compatibility
 - `libyamlstar.h` - Main library header
 - `graal_isolate.h` - Compatibility lifecycle API header
+- `yamlstar-plugin` - Shared plugin installer on Unix platforms
 - `Makefile` - Installation script
 
 ## Installation
@@ -426,6 +436,9 @@ do-release-cli() (
   rm -rf "$RELEASE_PATH"
   mkdir -p "$RELEASE_PATH"
   cp "$cli_source" "$RELEASE_PATH/$cli_build_file"
+  if [[ $OS_NAME != windows ]]; then
+    cp util/yamlstar-plugin "$RELEASE_PATH/"
+  fi
   if [[ $OS_NAME == windows ]]; then
     cp "$RELEASE_PATH/$cli_build_file" "$RELEASE_PATH/$cli_file"
   else
@@ -448,6 +461,12 @@ install:
 ifneq (,$(YAMLSTAR))
 	mkdir -p $(PREFIX)/bin
 	cp -pP $(YAMLSTAR) $(PREFIX)/bin/
+	@if test -x yamlstar-plugin; then \
+	  mkdir -p $(PREFIX)/libexec/yamlstar; \
+	  cp -p yamlstar-plugin $(PREFIX)/libexec/yamlstar/; \
+	  ln -sf ../libexec/yamlstar/yamlstar-plugin \
+	    $(PREFIX)/bin/yamlstar-plugin; \
+	fi
 	@echo 'Installed YAMLStar CLI - version $(YAMLSTAR_VERSION)'
 else
 	$(error Weird! Nothing to install in this directory.)
@@ -465,6 +484,7 @@ YAMLStar VERSION_PLACEHOLDER for PLATFORM_PLACEHOLDER
 
 - `CLI_BUILD_FILE_PLACEHOLDER` - Engine command-line loader
 - `CLI_FILE_PLACEHOLDER` - Compatibility command name
+- `yamlstar-plugin` - Shared plugin installer on Unix platforms
 - `Makefile` - Installation script
 
 ## Installation

@@ -13,11 +13,11 @@
 
 (deftest shared-loader-test
   (let [loader (shared/make-loader
-                (fn [_ _] (pr-str manifest))
+                (fn [_ _ _] (pr-str manifest))
                 (fn [_ _ _ _]
                   [0 (pr-str [{:event "stream_start"}
                               {:event "stream_end"}])]))
-        plugin (loader "json-comments" "json-comments")]
+        plugin (loader "json-comments" "json-comments" false)]
     (is (= manifest (:manifest plugin)))
     (is (= {:parser "reference"} (:requires plugin)))
     (is (= [{:event "stream_start"} {:event "stream_end"}]
@@ -36,11 +36,11 @@
 
 (deftest shared-error-test
   (let [loader (shared/make-loader
-                (fn [_ _] (pr-str manifest))
+                (fn [_ _ _] (pr-str manifest))
                 (fn [_ _ _ _]
                   [1 (pr-str {:error {:type "parse"
                                       :message "bad input"
                                       :data {:position 4}}})]))
-        plugin (loader "json-comments" "json-comments")]
+        plugin (loader "json-comments" "json-comments" false)]
     (is (thrown-with-msg? Exception #"bad input"
                           ((:parse plugin) "x" {})))))

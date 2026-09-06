@@ -48,12 +48,12 @@
 (defn make-loader
   "Create a YAMLStar event-source loader from native host functions.
 
-  manifest-fn receives api and name and returns manifest EDN.
+  manifest-fn receives api, name, and install? and returns manifest EDN.
   parse-fn receives api, name, input, and options EDN and returns
   [status output-edn]."
   [manifest-fn parse-fn]
-  (fn [api name]
-    (let [manifest (-> (manifest-fn api name)
+  (fn [api name install?]
+    (let [manifest (-> (manifest-fn api name install?)
                        (read-edn "manifest")
                        (validate-manifest api name))]
       {:api api

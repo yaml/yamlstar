@@ -11,12 +11,12 @@
                   {}))))
 
 (defn- manifest
-  [api name]
+  [api name install?]
   (require-glojure-runtime)
   #?(:glj
      (let [[text error]
            (github.com:yaml:yamlstar:internal:goyamlparser:pluginloader.Manifest
-            api name)]
+            api name install?)]
        (if (nil? error) text (throw error)))
      :clj nil))
 

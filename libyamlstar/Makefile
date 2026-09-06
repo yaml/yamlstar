@@ -43,6 +43,7 @@ LIB-NAME-GLOAT ?= libyamlstar-glojure
 LIB-SO-GLOAT := $(LIB-DIR)/$(LIB-NAME-GLOAT).$(SO)
 LIB-SO-GLOAT-DEFAULT := $(LIB-DIR)/libyamlstar.$(SO)
 LIB-SO := $(LIB-DIR)/$(LIB-NAME).$(SO)
+PLUGIN-INSTALLER := $(LIB-DIR)/yamlstar-plugin
 LIBYAMLSTAR-GLOAT-ABI := export-load-opts-v2
 LIBYAMLSTAR-GLOAT-ABI-STAMP := cache/libyamlstar-glojure-abi-$(LIBYAMLSTAR-GLOAT-ABI).stamp
 GLOAT-PLATFORM-OPT := \
@@ -303,7 +304,7 @@ LIB-HEADER-GLOAT := $(LIB-DIR)/$(LIB-NAME-GLOAT).h
 
 build: build-graalvm build-glojure
 
-build-glojure:
+build-glojure: $(if $(filter-out windows,$(OS-NAME)),$(PLUGIN-INSTALLER))
 	$(MAKE) _build-glojure YAMLSTAR_ENGINE=glojure
 
 _build-glojure: $(LIB-SO-GLOAT)
@@ -326,7 +327,7 @@ ifeq (,$(GLOAT-WINDOWS-TARGET))
 endif
 endif
 
-build-graalvm:
+build-graalvm: $(if $(filter-out windows,$(OS-NAME)),$(PLUGIN-INSTALLER))
 	$(MAKE) _build-graalvm YAMLSTAR_ENGINE=graalvm
 
 _build-graalvm: $(LIB-SO)
@@ -355,6 +356,16 @@ endif
 install:
 	mkdir -p $(PREFIX)/lib/
 	install -m 644 $(INSTALL-LIB) $(PREFIX)/lib/
+ifneq ($(OS-NAME),windows)
+	mkdir -p $(PREFIX)/libexec/yamlstar $(PREFIX)/bin
+	install -m 755 $(PLUGIN-INSTALLER) $(PREFIX)/libexec/yamlstar/
+	ln -sf ../libexec/yamlstar/yamlstar-plugin \
+	  $(PREFIX)/bin/yamlstar-plugin
+endif
+
+$(PLUGIN-INSTALLER): ../util/yamlstar-plugin
+	mkdir -p $(dir $@)
+	cp -p $< $@
 
 ifeq ($(YAMLSTAR_ENGINE),glojure)
 $(LIB-SO-GLOAT): $(GLOAT-SRCS) $(GLOAT-LINKS) $(GO-YAML-GENERATED-STAMP) \

@@ -14,14 +14,15 @@ public final class SharedPluginHost {
     private SharedPluginHost() {
     }
 
-    public static String manifest(String api, String name) {
+    public static String manifest(String api, String name, boolean install) {
         try (CTypeConversion.CCharPointerHolder apiPointer =
                  CTypeConversion.toCString(api);
              CTypeConversion.CCharPointerHolder namePointer =
                  CTypeConversion.toCString(name)) {
             CIntPointer status = StackValue.get(CIntPointer.class);
             CCharPointer output = manifestNative(
-                apiPointer.get(), namePointer.get(), status);
+                apiPointer.get(), namePointer.get(), install ? 1 : 0,
+                status);
             String text = takeOutput(output);
             if (status.read() != 0) {
                 throw new IllegalArgumentException(text);
@@ -72,6 +73,7 @@ public final class SharedPluginHost {
     private static native CCharPointer manifestNative(
         CCharPointer api,
         CCharPointer name,
+        int install,
         CIntPointer status
     );
 

@@ -79,6 +79,9 @@ $(WHEEL-LIB): $(PYTHON-SO)
 	mkdir -p $(dir $@)
 	cp -pL $(dir $<)/$(WHEEL-LIB-ENGINE).$(SO)* $(WHEEL-LIB-DIR)/
 	cp -pL $(dir $<)/libyamlstar.$(SO)* $(WHEEL-LIB-DIR)/
+ifneq ($(OS-NAME),windows)
+	cp -p ../util/yamlstar-plugin $(WHEEL-LIB-DIR)/
+endif
 	touch $@
 
 wheels-from-release: $(PYTHON-VENV) MANIFEST.in Meta
@@ -113,6 +116,9 @@ wheels-from-release: $(PYTHON-VENV) MANIFEST.in Meta
 	    printf '%s\n' "$$libs" | while IFS= read -r lib; do \
 	      cp -pL "$$lib" $(WHEEL-LIB-DIR)/; \
 	    done; \
+	    if [[ $$relplat != windows-x64 ]]; then \
+	      cp -p ../util/yamlstar-plugin $(WHEEL-LIB-DIR)/; \
+	    fi; \
 	    echo "Building Python wheel for $$relplat"; \
 	    $(VENV) && python setup.py bdist_wheel --plat-name "$$plat"; \
 	    rm -rf "$$tmp"; \

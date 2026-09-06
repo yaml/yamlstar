@@ -286,15 +286,20 @@ Each binding directory contains its own `ReadMe.md` with detailed installation a
 
 YAMLStar has a plugin system that can swap internal processing
 components per load operation.
-The first plugin type is the parser plugin; the pure Clojure reference
-parser is the default and a SnakeYAML based parser is included:
+Parser plugins select a parser implementation.
+Shared event-source plugins can add syntax such as comments in JSON:
 
-```python
-data = ys.load('key: value', parser='snakeyaml')
+```bash
+printf '%s\n' '{"a": true // comment}' |
+  yaml --plugin=json-comments
 ```
 
+The native CLI installs a missing official shared plugin automatically.
+Language bindings require an explicit opt-in before `libyamlstar` installs
+a missing plugin.
+
 See [Plugins](https://yamlstar.org/plugins/) for the full options
-format, all bindings, and how to write a parser plugin.
+format, installation policy, and plugin ABI.
 
 ## Comparison to YAMLScript
 

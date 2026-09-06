@@ -5,8 +5,13 @@ package pluginloader
 
 import "fmt"
 
+// DefaultPath reports no shared plugin path on unsupported platforms.
+func DefaultPath() string {
+	return ""
+}
+
 // Manifest reports that shared plugins are not supported on this platform.
-func Manifest(api, name string) (string, error) {
+func Manifest(api, name string, _ bool) (string, error) {
 	return "", unsupported(api, name)
 }
 

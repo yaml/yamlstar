@@ -462,112 +462,114 @@ func LoadNS() {
 			_ = v2
 			v3 := p1
 			_ = v3
-			var tmp4 lang.FnFunc2
-			tmp4 = lang.FnFunc2(func(p0, p1 any) any {
+			var tmp4 lang.FnFunc3
+			tmp4 = lang.FnFunc3(func(p0, p1, p2 any) any {
 				v5 := p0
 				_ = v5
 				v6 := p1
 				_ = v6
-				var tmp7 any
+				v7 := p2
+				_ = v7
+				var tmp8 any
 				{ // let
 					// let binding "manifest"
-					tmp8 := lang.Apply2(v2, v5, v6)
-					tmp9 := aotDirectFn2(tmp8, "manifest")
-					tmp10 := aotDirectFn4(tmp9, v5, v6)
-					var v11 any = tmp10
-					_ = v11
-					tmp12 := aotKeywordSite0.Get(kw_requires, v11, nil)
-					tmp13 := lang.NewMap()
-					var tmp14 lang.FnFunc2
-					tmp14 = lang.FnFunc2(func(p0, p1 any) any {
-						v15 := p0
-						_ = v15
-						v16 := p1
+					tmp9 := lang.Apply3(v2, v5, v6, v7)
+					tmp10 := aotDirectFn2(tmp9, "manifest")
+					tmp11 := aotDirectFn4(tmp10, v5, v6)
+					var v12 any = tmp11
+					_ = v12
+					tmp13 := aotKeywordSite0.Get(kw_requires, v12, nil)
+					tmp14 := lang.NewMap()
+					var tmp15 lang.FnFunc2
+					tmp15 = lang.FnFunc2(func(p0, p1 any) any {
+						v16 := p0
 						_ = v16
-						var tmp17 any
+						v17 := p1
+						_ = v17
+						var tmp18 any
 						{ // let
 							// let binding "vec__25"
-							var tmp18 any
+							var tmp19 any
 							{ // let
 								// let binding "or__0__auto__"
-								var v19 any = v15
-								_ = v19
-								var tmp20 any
-								if lang.IsTruthy(v19) {
-									tmp20 = v19
+								var v20 any = v16
+								_ = v20
+								var tmp21 any
+								if lang.IsTruthy(v20) {
+									tmp21 = v20
 								} else {
-									tmp20 = ""
+									tmp21 = ""
 								}
-								tmp18 = tmp20
+								tmp19 = tmp21
 							} // end let
-							tmp19 := aotExternalFn0(v16)
-							tmp20 := lang.Apply4(v3, v5, v6, tmp18, tmp19)
-							var v21 any = tmp20
-							_ = v21
+							tmp20 := aotExternalFn0(v17)
+							tmp21 := lang.Apply4(v3, v5, v6, tmp19, tmp20)
+							var v22 any = tmp21
+							_ = v22
 							// let binding "status"
-							tmp22 := runtime.RT.NthDefault(v21, lang.IntCast(int64(0)), nil)
-							var v23 any = tmp22
-							_ = v23
+							tmp23 := runtime.RT.NthDefault(v22, lang.IntCast(int64(0)), nil)
+							var v24 any = tmp23
+							_ = v24
 							// let binding "output"
-							tmp24 := runtime.RT.NthDefault(v21, lang.IntCast(int64(1)), nil)
-							var v25 any = tmp24
-							_ = v25
+							tmp25 := runtime.RT.NthDefault(v22, lang.IntCast(int64(1)), nil)
+							var v26 any = tmp25
+							_ = v26
 							// let binding "response"
-							tmp26 := aotDirectFn2(v25, "parse response")
-							var v27 any = tmp26
-							_ = v27
-							var tmp28 any
+							tmp27 := aotDirectFn2(v26, "parse response")
+							var v28 any = tmp27
+							_ = v28
+							var tmp29 any
 							{ // let
 								// let binding "G__28"
-								tmp29 := lang.LongCastBoxed(v23)
-								var v30 any = tmp29
-								_ = v30
+								tmp30 := lang.LongCastBoxed(v24)
+								var v31 any = tmp30
+								_ = v31
 								// case
-								var tmp31 any
-								var tmp32 int64
-								switch v := v30.(type) {
+								var tmp32 any
+								var tmp33 int64
+								switch v := v31.(type) {
 								case int64:
-									tmp32 = v
+									tmp33 = v
 								case int:
-									tmp32 = int64(v)
+									tmp33 = int64(v)
 								case int32:
-									tmp32 = int64(v)
+									tmp33 = int64(v)
 								case int16:
-									tmp32 = int64(v)
+									tmp33 = int64(v)
 								case int8:
-									tmp32 = int64(v)
+									tmp33 = int64(v)
 								default:
-									tmp32 = -1 // won't match any case
+									tmp33 = -1 // won't match any case
 								}
 								// case entry 0 (key=0, collision=false)
-								if tmp32 == 0 {
-									tmp31 = v27
+								if tmp33 == 0 {
+									tmp32 = v28
 									// case entry 1 (key=1, collision=false)
-								} else if tmp32 == 1 {
-									tmp33 := aotDirectFn1(v27)
-									panic(tmp33)
+								} else if tmp33 == 1 {
+									tmp34 := aotDirectFn1(v28)
+									panic(tmp34)
 								} else {
-									tmp34 := aotKeywordMapNew0(v5, v6, v23, v27)
-									tmp35 := aotExternalFn3("Shared plugin ABI call failed", tmp34)
-									panic(tmp35)
+									tmp35 := aotKeywordMapNew0(v5, v6, v24, v28)
+									tmp36 := aotExternalFn3("Shared plugin ABI call failed", tmp35)
+									panic(tmp36)
 								}
-								tmp28 = tmp31
+								tmp29 = tmp32
 							} // end let
-							tmp17 = tmp28
+							tmp18 = tmp29
 						} // end let
-						return tmp17
+						return tmp18
 					})
-					tmp15 := aotKeywordMapNew1(v5, v6, v11, tmp12, tmp13, tmp14)
-					tmp7 = tmp15
+					tmp16 := aotKeywordMapNew1(v5, v6, v12, tmp13, tmp14, tmp15)
+					tmp8 = tmp16
 				} // end let
-				return tmp7
+				return tmp8
 			})
 			return tmp4
 		})
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_make_DASH_loader = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_make_DASH_loader.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.glj", kw_line, int(48), kw_column, int(7), kw_end_DASH_line, int(48), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_manifest_DASH_fn, sym_parse_DASH_fn)), kw_doc, "Create a YAMLStar event-source loader from native host functions.\n\n  manifest-fn receives api and name and returns manifest EDN.\n  parse-fn receives api, name, input, and options EDN and returns\n  [status output-edn].", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.glj", kw_line, int(48), kw_column, int(7), kw_end_DASH_line, int(48), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_manifest_DASH_fn, sym_parse_DASH_fn)), kw_doc, "Create a YAMLStar event-source loader from native host functions.\n\n  manifest-fn receives api, name, and install? and returns manifest EDN.\n  parse-fn receives api, name, input, and options EDN and returns\n  [status output-edn].", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
 		}, false)
 	}
 	// plugin-error

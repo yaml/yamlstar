@@ -74,10 +74,13 @@
 
 (defn cli-plugin-options
   [opts]
-  (apply deep-merge
-         (concat
-           (map plugin-options (:plugin opts))
-           [(parser-options (:parser opts))])))
+  (deep-merge
+   (apply deep-merge
+          (concat
+            (map plugin-options (:plugin opts))
+            [(parser-options (:parser opts))]))
+   (when (:no-plugin-install opts)
+     {:plugin-install false})))
 
 (defn env-options
   ([]
@@ -92,6 +95,7 @@
    (runtime-options opts #(System/getenv %)))
   ([opts getenv]
    (deep-merge
+     {:plugin-install true}
      (env-options getenv)
      (config-options (:config opts))
      (cli-plugin-options opts))))

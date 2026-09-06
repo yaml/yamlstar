@@ -75,6 +75,7 @@ else
 CLI-BIN := bin/$(CLI-NAME)
 CLI-COMPAT := bin/yaml
 CLI-GRAALVM-BIN := bin/$(CLI-GRAALVM-NAME)
+PLUGIN-INSTALLER := bin/yamlstar-plugin
 endif
 CLI-OUT := bin/$(CLI-NAME)
 CLI-UBERJAR := target/cli-$(LIBYAMLSTAR-VERSION)-SNAPSHOT-standalone.jar
@@ -193,7 +194,7 @@ jar: $(CLI-JAR)
 
 install:
 
-build-graalvm:
+build-graalvm: $(if $(filter-out windows,$(OS-NAME)),$(PLUGIN-INSTALLER))
 	$(MAKE) _build-selected \
 	  RT=graal \
 	  PARSER=snake \
@@ -205,7 +206,7 @@ else
 	ln -sf $(notdir $(CLI-GRAALVM-BIN)) $(CLI-COMPAT)
 endif
 
-build-glojure:
+build-glojure: $(if $(filter-out windows,$(OS-NAME)),$(PLUGIN-INSTALLER))
 	$(MAKE) _build-gloat \
 	  RT=glj \
 	  PARSER=go \
@@ -221,6 +222,10 @@ ifeq ($(OS-NAME),windows)
 else
 	ln -sf $(notdir $(BUILD-GLOAT-BIN)) $(CLI-COMPAT)
 endif
+
+$(PLUGIN-INSTALLER): ../util/yamlstar-plugin
+	mkdir -p $(dir $@)
+	cp -p $< $@
 
 _build-gloat: $(CLI-BIN-GLOAT)
 

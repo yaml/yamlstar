@@ -184,6 +184,7 @@ shellcheck: $(SHELLCHECK)
 	$(SHELLCHECK) -x \
 	  -e SC1091,SC2030,SC2031,SC2034,SC2086,SC2154,SC2155,SC2162,SC2231 \
 	  util/release \
+	  util/yamlstar-plugin \
 	  util/release-repo.bash \
 	  util/release-binding-published \
 	  util/cli-local-source \

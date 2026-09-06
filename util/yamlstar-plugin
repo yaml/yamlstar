@@ -1,0 +1,283 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+program=${0##*/}
+temporary=
+staged=
+
+die() {
+  printf '%s: %s\n' "$program" "$*" >&2
+  exit 1
+}
+
+usage() {
+  cat >&2 <<EOF
+Usage: $program install NAME
+       $program install API=NAME
+       $program install API NAME
+EOF
+  exit 2
+}
+
+cleanup() {
+  if [[ -n $staged && -e $staged ]]; then
+    rm -f -- "$staged"
+  fi
+  if [[ -n $temporary && -d $temporary ]]; then
+    rm -rf -- "$temporary"
+  fi
+}
+
+valid_name() {
+  [[ $1 =~ ^[A-Za-z0-9_-]+$ ]]
+}
+
+require_command() {
+  command -v "$1" >/dev/null 2>&1 ||
+    die "automatic plugin installation requires '$1'"
+}
+
+installer_directory() {
+  local path=$0
+  if [[ $path != */* ]]; then
+    path=$(command -v "$path") || return 1
+  fi
+  (cd -P -- "${path%/*}" && pwd)
+}
+
+default_install_directories() {
+  local directory prefix home library
+  directory=$(installer_directory) || directory=
+  case $directory in
+    */bin)
+      prefix=$(cd -P -- "$directory/.." && pwd)
+      printf '%s\n' "$prefix/lib"
+      ;;
+    */libexec/yamlstar)
+      prefix=$(cd -P -- "$directory/../.." && pwd)
+      printf '%s\n' "$prefix/lib"
+      ;;
+    *)
+      for library in \
+        "$directory"/libyamlstar*.so* \
+        "$directory"/libyamlstar*.dylib*; do
+        if [[ -f $library ]]; then
+          printf '%s\n' "$directory"
+          break
+        fi
+      done
+      ;;
+  esac
+
+  home=${HOME-}
+  if [[ -n $home ]]; then
+    printf '%s\n' "$home/.local/lib"
+  fi
+  printf '%s\n' /usr/local/lib /usr/lib
+}
+
+select_install_directory() {
+  local candidate
+  local -a candidates=()
+
+  if [[ ${YAMLSTAR_LIBRARY_PATH+x} ]]; then
+    IFS=: read -r -a candidates <<< "$YAMLSTAR_LIBRARY_PATH"
+  else
+    while IFS= read -r candidate; do
+      candidates+=("$candidate")
+    done < <(default_install_directories)
+  fi
+
+  for candidate in "${candidates[@]}"; do
+    [[ -n $candidate ]] || continue
+    if mkdir -p "$candidate" 2>/dev/null && [[ -w $candidate ]]; then
+      install_directory=$candidate
+      return
+    fi
+  done
+  die 'no writable YAMLStar plugin directory was found'
+}
+
+detect_platform() {
+  local system machine
+  system=$(uname -s)
+  machine=$(uname -m)
+
+  case $system in
+    Linux) platform_os=linux ;;
+    Darwin) platform_os=macos ;;
+    *) die "automatic plugin installation is unsupported on $system" ;;
+  esac
+
+  case $machine in
+    x86_64 | amd64) platform_arch=x64 ;;
+    arm64) platform_arch=arm64 ;;
+    aarch64)
+      if [[ $platform_os == linux ]]; then
+        platform_arch=aarch64
+      else
+        platform_arch=arm64
+      fi
+      ;;
+    *) die "automatic plugin installation is unsupported on $machine" ;;
+  esac
+}
+
+read_selector() {
+  case $# in
+    1)
+      if [[ $1 == *=* ]]; then
+        plugin_api=${1%%=*}
+        plugin_name=${1#*=}
+      else
+        plugin_api=$1
+        plugin_name=$1
+      fi
+      ;;
+    2)
+      plugin_api=$1
+      plugin_name=$2
+      ;;
+    *) usage ;;
+  esac
+
+  valid_name "$plugin_api" || die "invalid plugin API '$plugin_api'"
+  valid_name "$plugin_name" || die "invalid plugin name '$plugin_name'"
+}
+
+find_checksum() {
+  local checksum filename
+  expected_checksum=
+  while read -r checksum filename _; do
+    filename=${filename#\*}
+    filename=${filename#./}
+    if [[ $filename == "$archive_name" ]]; then
+      expected_checksum=$checksum
+      break
+    fi
+  done < "$checksums_file"
+
+  [[ $expected_checksum =~ ^[0-9a-f]{64}$ ]] ||
+    die "SHA256SUMS has no checksum for $archive_name"
+}
+
+calculate_checksum() {
+  local output
+  if command -v sha256sum >/dev/null 2>&1; then
+    output=$(sha256sum "$archive_file")
+  elif command -v shasum >/dev/null 2>&1; then
+    output=$(shasum -a 256 "$archive_file")
+  else
+    die "automatic plugin installation requires 'sha256sum' or 'shasum'"
+  fi
+  actual_checksum=${output%%[[:space:]]*}
+}
+
+validate_archive() {
+  local entry line kind
+  tar -tf "$archive_file" > "$temporary/archive.list" ||
+    die "cannot read plugin archive $archive_name"
+  while IFS= read -r entry; do
+    [[ -n $entry ]] || continue
+    [[ $entry != /* ]] || die "plugin archive contains an absolute path"
+    case /$entry/ in
+      */../*) die "plugin archive contains a parent path" ;;
+    esac
+  done < "$temporary/archive.list"
+
+  tar -tvf "$archive_file" > "$temporary/archive.verbose" ||
+    die "cannot inspect plugin archive $archive_name"
+  while IFS= read -r line; do
+    [[ -n $line ]] || continue
+    kind=${line:0:1}
+    [[ $kind == - || $kind == d ]] ||
+      die "plugin archive contains a link or special file"
+  done < "$temporary/archive.verbose"
+}
+
+install_plugin() {
+  local repository releases_api release_data line tag_pattern version
+  local platform
+  local release_name
+  local library_name library_source temporary_library
+
+  read_selector "$@"
+  detect_platform
+
+  select_install_directory
+  case $platform_os in
+    linux) library_name=libyamlstar-plugin-$plugin_name.so ;;
+    macos) library_name=libyamlstar-plugin-$plugin_name.dylib ;;
+  esac
+  installed_library=$install_directory/$library_name
+  [[ -f $installed_library ]] && return
+
+  require_command curl
+  require_command tar
+  require_command mktemp
+
+  repository=https://github.com/yamlstar/yamlstar-plugin-$plugin_name
+  releases_api=https://api.github.com/repos/yamlstar
+  releases_api=$releases_api/yamlstar-plugin-$plugin_name/releases
+  release_data=$(curl -fsSL "$releases_api?per_page=1") ||
+    die "cannot find a published release for $plugin_name"
+  version=
+  tag_pattern='"tag_name"[[:space:]]*:[[:space:]]*"([A-Za-z0-9._-]+)"'
+  while IFS= read -r line; do
+    if [[ $line =~ $tag_pattern ]]; then
+      version=${BASH_REMATCH[1]}
+      break
+    fi
+  done <<< "$release_data"
+  [[ $version =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] ||
+    die "invalid release version '$version' for $plugin_name"
+
+  platform=$platform_os-$platform_arch
+  release_name=yamlstar-plugin-$plugin_name-$version-$platform
+  archive_name=$release_name.tar.xz
+
+  temporary=$(mktemp -d \
+    "$install_directory/.yamlstar-plugin-$plugin_name.XXXXXX")
+  trap cleanup EXIT HUP INT TERM
+
+  checksums_file=$temporary/SHA256SUMS
+  archive_file=$temporary/$archive_name
+  curl -fsSL -o "$checksums_file" \
+    "$repository/releases/download/$version/SHA256SUMS" ||
+    die "cannot download SHA256SUMS for $plugin_name $version"
+  curl -fsSL -o "$archive_file" \
+    "$repository/releases/download/$version/$archive_name" ||
+    die "no $platform release is available for $plugin_name $version"
+
+  find_checksum
+  calculate_checksum
+  [[ $actual_checksum == "$expected_checksum" ]] ||
+    die "checksum verification failed for $archive_name"
+  validate_archive
+
+  mkdir "$temporary/extract"
+  tar -xf "$archive_file" -C "$temporary/extract" ||
+    die "cannot extract plugin archive $archive_name"
+  library_source=$temporary/extract/$release_name/lib/$library_name
+  if [[ ! -f $library_source ]]; then
+    library_source=$temporary/extract/$release_name/lib/yamlstar/plugins
+    library_source=$library_source/$library_name
+  fi
+  [[ -f $library_source && ! -L $library_source ]] ||
+    die "plugin archive does not contain $library_name"
+
+  printf 'Installing YAMLStar plugin %s=%s %s\n' \
+    "$plugin_api" "$plugin_name" "$version" >&2
+  temporary_library=$install_directory/.$library_name.$$
+  staged=$temporary_library
+  cp "$library_source" "$temporary_library"
+  chmod 755 "$temporary_library"
+  mv -f "$temporary_library" "$installed_library"
+  staged=
+  printf 'Installed YAMLStar plugin at %s\n' "$installed_library" >&2
+}
+
+[[ ${1-} == install ]] || usage
+shift
+install_plugin "$@"

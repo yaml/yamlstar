@@ -68,19 +68,93 @@ An event-source plugin supersedes the default parser.
 It can coexist with an explicit `reference` parser selection, but a
 different explicitly selected parser is a configuration error.
 
-YAMLStar searches for
+When `YAMLSTAR_LIBRARY_PATH` is set, YAMLStar searches only its
+colon-separated directories, in order.
+Empty entries are ignored.
+Otherwise, YAMLStar searches for
 `libyamlstar-plugin-json-comments.so` on Linux and FreeBSD, or the
-corresponding `.dylib` on macOS, in this order:
+corresponding `.dylib` on macOS, in these default locations:
 
-1. Directories in `YAMLSTAR_PLUGIN_PATH`.
-2. `yamlstar/plugins` beside the hosting `libyamlstar` library.
-3. `../lib/yamlstar/plugins` relative to the CLI executable.
-4. `$HOME/.local/lib/yamlstar/plugins`.
-5. `/usr/local/lib/yamlstar/plugins`.
-6. `/usr/lib/yamlstar/plugins`.
+1. Beside the hosting `libyamlstar` library.
+2. `../lib` relative to the CLI executable.
+3. `$HOME/.local/lib`.
+4. `/usr/local/lib`.
+5. `/usr/lib`.
 
-The current working directory is never searched.
-YAMLStar does not download or install a missing plugin.
+Print the default path in colon-separated form with:
+
+```bash
+yaml --path
+```
+
+For example, this adds `foo` ahead of the default path:
+
+```bash
+YAMLSTAR_LIBRARY_PATH=foo:$(yaml --path) yaml file.yaml
+```
+
+The same override can be scoped to one invocation:
+
+```bash
+yaml --path=foo --plugin=json-comments file.yaml
+yaml --path=foo:$(yaml --path) --plugin=json-comments file.yaml
+```
+
+The current working directory is never searched by default.
+
+### Installing Missing Plugins
+
+The native `yaml` command automatically installs a missing official
+plugin before loading the input:
+
+```bash
+printf '%s\n' '{"a": true // comment}' |
+  yaml --plugin=json-comments
+```
+
+Use `--no-plugin-install` when network access or filesystem changes are
+not wanted.
+An installed plugin is never checked for updates during loading.
+
+Automatic installation maps plugin name `NAME` to the GitHub repository
+`yamlstar/yamlstar-plugin-NAME` and selects its newest published release.
+It supports Linux x64 and aarch64 and macOS x64 and arm64 when the release
+contains the corresponding asset.
+The installer requires `curl`, `tar`, and either `sha256sum` or `shasum`.
+It verifies `SHA256SUMS` before installing the library atomically in the
+first writable plugin path.
+When `YAMLSTAR_LIBRARY_PATH` is set, only its directories are considered.
+Otherwise, the default path printed by `yaml --path` is used.
+
+The `libyamlstar` API does not install plugins unless the caller opts in:
+
+```json
+{
+  "plugin": {
+    "json-comments": {
+      "name": "json-comments"
+    }
+  },
+  "plugin-install": true
+}
+```
+
+Python provides a convenience argument for the same option:
+
+```python
+opts = yamlstar.Options().plugin(yamlstar.json_comments())
+ys = yamlstar.YAMLStar(opts, install_plugins=True)
+```
+
+The installer can also be run directly:
+
+```bash
+yamlstar-plugin install json-comments
+```
+
+Set `YAMLSTAR_PLUGIN_INSTALLER` to an alternate installer executable.
+Third-party plugins continue to use manual installation or
+`YAMLSTAR_LIBRARY_PATH`.
 
 The version 1 shared-plugin ABI uses raw UTF-8 input and EDN output.
 The plugin manifest declares its API, independent version, plugin kind,

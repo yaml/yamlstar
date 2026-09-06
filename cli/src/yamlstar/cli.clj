@@ -63,6 +63,7 @@
    [nil "--parser NAME" "YAML parser plugin name"]
    [nil "--plugin SPEC" "YAMLStar plugin selector (NAME or API=NAME)"
     :assoc-fn (fn [m k v] (update m k (fnil conj []) v))]
+   [nil "--no-plugin-install" "Do not install missing shared plugins"]
    ["-d" "--debug" "Debug all stages"]
    ["-D" "--debug-stage STAGE" "Debug specific stage: parse, compose, resolve, construct"
     :validate [#{"parse" "compose" "resolve" "construct"} "Must be: parse, compose, resolve, construct"]]
@@ -88,6 +89,7 @@ Examples:
   cat f.yaml | yaml -J       # stdin → pretty JSON
   yaml -D parse config.yaml  # Debug parser stage
   yaml --parser reference f.yaml
+  yaml --plugin=json-comments f.yaml
   yaml --config '{plugin: {parser: {name: reference}}}' f.yaml
 
 Options:")

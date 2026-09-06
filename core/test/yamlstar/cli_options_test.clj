@@ -57,7 +57,8 @@
 
 (deftest runtime-options-precedence-test
   (testing "cli parser beats cli config, env config, and env parser"
-    (is (= {:plugin {:parser {:name "reference"}}}
+    (is (= {:plugin-install true
+            :plugin {:parser {:name "reference"}}}
            (opts/runtime-options
              {:config "{plugin: {parser: {name: snakeyaml}}}"
               :parser "reference"}
@@ -66,7 +67,8 @@
                    "{plugin: {parser: {name: go-yaml}}}"})))))
 
   (testing "cli config beats environment config and parser"
-    (is (= {:plugin {:parser {:name "snakeyaml"}}}
+    (is (= {:plugin-install true
+            :plugin {:parser {:name "snakeyaml"}}}
            (opts/runtime-options
              {:config "{plugin: {parser: {name: snakeyaml}}}"}
              (env {"YAMLSTAR_PARSER" "env-parser"
@@ -74,7 +76,8 @@
                    "{plugin: {parser: {name: go-yaml}}}"})))))
 
   (testing "environment config beats YAMLSTAR_PARSER"
-    (is (= {:plugin {:parser {:name "go-yaml"}}}
+    (is (= {:plugin-install true
+            :plugin {:parser {:name "go-yaml"}}}
            (opts/runtime-options
              {}
              (env {"YAMLSTAR_PARSER" "env-parser"
@@ -82,8 +85,21 @@
                    "{plugin: {parser: {name: go-yaml}}}"})))))
 
   (testing "--parser beats --plugin parser=NAME"
-    (is (= {:plugin {:parser {:name "reference"}}}
+    (is (= {:plugin-install true
+            :plugin {:parser {:name "reference"}}}
            (opts/runtime-options
              {:plugin ["parser=go-yaml"]
-              :parser "reference"}
-             (env {}))))))
+             :parser "reference"}
+             (env {})))))
+
+  (testing "config can disable automatic plugin installation"
+    (is (= {:plugin-install false}
+           (opts/runtime-options
+            {:config "{plugin_install: false}"}
+            (env {})))))
+
+  (testing "CLI flag disables automatic plugin installation"
+    (is (= {:plugin-install false}
+           (opts/runtime-options
+            {:no-plugin-install true}
+            (env {}))))))

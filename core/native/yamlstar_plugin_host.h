@@ -6,6 +6,7 @@
 #endif
 
 #include <dlfcn.h>
+#include <errno.h>
 #include <limits.h>
 #include <pthread.h>
 #include <stdarg.h>
@@ -13,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 #if defined(__APPLE__)
@@ -142,6 +144,134 @@ static inline int yamlstar_host_append(
     return 1;
 }
 
+static inline int yamlstar_host_installer_candidate(
+    char *result,
+    size_t result_size,
+    const char *directory,
+    const char *suffix
+) {
+    if (!yamlstar_host_append(result, result_size, directory, suffix)) {
+        return 0;
+    }
+    return access(result, X_OK) == 0;
+}
+
+static inline int yamlstar_host_find_installer(
+    char *result,
+    size_t result_size
+) {
+    const char *configured = getenv("YAMLSTAR_PLUGIN_INSTALLER");
+    if (configured != NULL && *configured != '\0') {
+        snprintf(result, result_size, "%s", configured);
+        return access(result, X_OK) == 0 ? 1 : -1;
+    }
+
+    Dl_info info;
+    if (dladdr((void *) &yamlstar_host_find_installer, &info) != 0
+        && info.dli_fname != NULL) {
+        char host[PATH_MAX];
+        snprintf(host, sizeof(host), "%s", info.dli_fname);
+        yamlstar_host_dirname(host);
+        if (yamlstar_host_installer_candidate(
+                result, result_size, host, "/yamlstar-plugin")
+            || yamlstar_host_installer_candidate(
+                result, result_size, host,
+                "/../libexec/yamlstar/yamlstar-plugin")) {
+            return 1;
+        }
+    }
+
+    char executable[PATH_MAX] = "";
+#if defined(__APPLE__)
+    uint32_t executable_size = sizeof(executable);
+    if (_NSGetExecutablePath(executable, &executable_size) != 0) {
+        executable[0] = '\0';
+    }
+#elif defined(__linux__) || defined(__FreeBSD__)
+    ssize_t executable_size = readlink(
+        "/proc/self/exe", executable, sizeof(executable) - 1);
+    if (executable_size > 0) {
+        executable[executable_size] = '\0';
+    }
+#endif
+    if (*executable != '\0') {
+        yamlstar_host_dirname(executable);
+        if (yamlstar_host_installer_candidate(
+                result, result_size, executable, "/yamlstar-plugin")
+            || yamlstar_host_installer_candidate(
+                result, result_size, executable,
+                "/../libexec/yamlstar/yamlstar-plugin")) {
+            return 1;
+        }
+    }
+
+    snprintf(result, result_size, "%s", "yamlstar-plugin");
+    return 0;
+}
+
+static inline int yamlstar_host_install(
+    const char *api,
+    const char *name,
+    char **error
+) {
+    char installer[PATH_MAX];
+    int found = yamlstar_host_find_installer(
+        installer, sizeof(installer));
+    if (found < 0) {
+        *error = yamlstar_host_error(
+            "YAMLSTAR_PLUGIN_INSTALLER is not executable: %s", installer);
+        return 0;
+    }
+
+    pid_t child = fork();
+    if (child < 0) {
+        *error = yamlstar_host_error(
+            "Failed to start YAMLStar plugin installer: %s",
+            strerror(errno));
+        return 0;
+    }
+    if (child == 0) {
+        if (found == 1) {
+            execl(installer, installer, "install", api, name, NULL);
+        } else {
+            execlp(installer, installer, "install", api, name, NULL);
+        }
+        _exit(127);
+    }
+
+    int status = 0;
+    while (waitpid(child, &status, 0) < 0) {
+        if (errno == EINTR) {
+            continue;
+        }
+        *error = yamlstar_host_error(
+            "Failed to wait for YAMLStar plugin installer: %s",
+            strerror(errno));
+        return 0;
+    }
+    if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
+        return 1;
+    }
+    if (WIFEXITED(status) && WEXITSTATUS(status) == 127) {
+        *error = yamlstar_host_error(
+            "YAMLStar plugin installer was not found; searched beside "
+            "the host and in PATH");
+        return 0;
+    }
+    if (WIFEXITED(status)) {
+        *error = yamlstar_host_error(
+            "YAMLStar plugin installer failed with status %d",
+            WEXITSTATUS(status));
+    } else if (WIFSIGNALED(status)) {
+        *error = yamlstar_host_error(
+            "YAMLStar plugin installer was terminated by signal %d",
+            WTERMSIG(status));
+    } else {
+        *error = strdup("YAMLStar plugin installer failed");
+    }
+    return 0;
+}
+
 static inline int yamlstar_host_find(
     const char *name,
     char *result,
@@ -154,23 +284,26 @@ static inline int yamlstar_host_find(
              "libyamlstar-plugin-%s%s",
              name, YAMLSTAR_PLUGIN_EXTENSION);
 
-    const char *configured = getenv("YAMLSTAR_PLUGIN_PATH");
-    if (configured != NULL && *configured != '\0') {
-        char *paths = strdup(configured);
-        if (paths != NULL) {
-            char *state = NULL;
-            for (char *directory = strtok_r(paths, ":", &state);
-                 directory != NULL;
-                 directory = strtok_r(NULL, ":", &state)) {
-                if (yamlstar_host_candidate(
-                        result, result_size, searched, searched_size,
-                        directory, filename)) {
-                    free(paths);
-                    return 1;
+    const char *configured = getenv("YAMLSTAR_LIBRARY_PATH");
+    if (configured != NULL) {
+        if (*configured != '\0') {
+            char *paths = strdup(configured);
+            if (paths != NULL) {
+                char *state = NULL;
+                for (char *directory = strtok_r(paths, ":", &state);
+                     directory != NULL;
+                     directory = strtok_r(NULL, ":", &state)) {
+                    if (yamlstar_host_candidate(
+                            result, result_size, searched, searched_size,
+                            directory, filename)) {
+                        free(paths);
+                        return 1;
+                    }
                 }
+                free(paths);
             }
-            free(paths);
         }
+        return 0;
     }
 
     Dl_info info;
@@ -179,12 +312,9 @@ static inline int yamlstar_host_find(
         char host[PATH_MAX];
         snprintf(host, sizeof(host), "%s", info.dli_fname);
         yamlstar_host_dirname(host);
-        char directory[PATH_MAX];
-        if (yamlstar_host_append(
-                directory, sizeof(directory), host, "/yamlstar/plugins")
-            && yamlstar_host_candidate(
+        if (yamlstar_host_candidate(
                 result, result_size, searched, searched_size,
-                directory, filename)) {
+                host, filename)) {
             return 1;
         }
     }
@@ -207,7 +337,7 @@ static inline int yamlstar_host_find(
         char directory[PATH_MAX];
         if (yamlstar_host_append(
                 directory, sizeof(directory), executable,
-                "/../lib/yamlstar/plugins")
+                "/../lib")
             && yamlstar_host_candidate(
                 result, result_size, searched, searched_size,
                 directory, filename)) {
@@ -219,7 +349,7 @@ static inline int yamlstar_host_find(
     if (home != NULL && *home != '\0') {
         char directory[PATH_MAX];
         snprintf(directory, sizeof(directory),
-                 "%s/.local/lib/yamlstar/plugins", home);
+                 "%s/.local/lib", home);
         if (yamlstar_host_candidate(
                 result, result_size, searched, searched_size,
                 directory, filename)) {
@@ -228,12 +358,12 @@ static inline int yamlstar_host_find(
     }
     if (yamlstar_host_candidate(
             result, result_size, searched, searched_size,
-            "/usr/local/lib/yamlstar/plugins", filename)) {
+            "/usr/local/lib", filename)) {
         return 1;
     }
     return yamlstar_host_candidate(
         result, result_size, searched, searched_size,
-        "/usr/lib/yamlstar/plugins", filename);
+        "/usr/lib", filename);
 }
 
 static inline int yamlstar_host_symbol(
@@ -254,6 +384,7 @@ static inline int yamlstar_host_symbol(
 static inline struct yamlstar_host_library *yamlstar_host_load(
     const char *api,
     const char *name,
+    int install,
     char **error
 ) {
     if (!yamlstar_host_valid_name(api) || !yamlstar_host_valid_name(name)) {
@@ -263,8 +394,17 @@ static inline struct yamlstar_host_library *yamlstar_host_load(
     }
     char path[PATH_MAX];
     char searched[YAMLSTAR_SEARCH_LIMIT] = "";
-    if (!yamlstar_host_find(name, path, sizeof(path), searched,
-                            sizeof(searched))) {
+    int plugin_found = yamlstar_host_find(
+        name, path, sizeof(path), searched, sizeof(searched));
+    if (!plugin_found && install) {
+        if (!yamlstar_host_install(api, name, error)) {
+            return NULL;
+        }
+        searched[0] = '\0';
+        plugin_found = yamlstar_host_find(
+            name, path, sizeof(path), searched, sizeof(searched));
+    }
+    if (!plugin_found) {
         *error = yamlstar_host_error(
             "YAMLStar plugin %s=%s "
             "(libyamlstar-plugin-%s%s) was not found; searched: %s",
@@ -363,11 +503,12 @@ static inline char *yamlstar_host_copy_output(
 YAMLSTAR_PLUGIN_HOST_LINKAGE char *yamlstar_host_plugin_manifest(
     const char *api,
     const char *name,
+    int32_t install,
     int32_t *status
 ) {
     char *error = NULL;
     struct yamlstar_host_library *library =
-        yamlstar_host_load(api, name, &error);
+        yamlstar_host_load(api, name, install != 0, &error);
     if (library == NULL) {
         *status = 2;
         return error;
@@ -387,7 +528,7 @@ YAMLSTAR_PLUGIN_HOST_LINKAGE char *yamlstar_host_plugin_parse(
 ) {
     char *error = NULL;
     struct yamlstar_host_library *library =
-        yamlstar_host_load(api, name, &error);
+        yamlstar_host_load(api, name, 0, &error);
     if (library == NULL) {
         *status = 2;
         return error;

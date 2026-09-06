@@ -34,8 +34,8 @@ var libraries = struct {
 }{byPath: map[string]*library{}}
 
 // Manifest returns the EDN manifest for the requested plugin.
-func Manifest(api, name string) (string, error) {
-	library, err := load(api, name)
+func Manifest(api, name string, install bool) (string, error) {
+	library, err := load(api, name, install)
 	if err != nil {
 		return "", err
 	}
@@ -44,7 +44,7 @@ func Manifest(api, name string) (string, error) {
 
 // Parse invokes a plugin and returns its EDN response and status code.
 func Parse(api, name, input, options string) (string, int64, error) {
-	library, err := load(api, name)
+	library, err := load(api, name, false)
 	if err != nil {
 		return "", 2, err
 	}
@@ -52,7 +52,7 @@ func Parse(api, name, input, options string) (string, int64, error) {
 	return output, int64(status), err
 }
 
-func load(api, name string) (*library, error) {
+func load(api, name string, install bool) (*library, error) {
 	if err := validateName(api); err != nil {
 		return nil, fmt.Errorf("invalid plugin API %q: %w", api, err)
 	}
@@ -60,6 +60,12 @@ func load(api, name string) (*library, error) {
 		return nil, fmt.Errorf("invalid plugin name %q: %w", name, err)
 	}
 	path, searched, err := findLibrary(name)
+	if err != nil && install {
+		if installErr := installPlugin(api, name, searched); installErr != nil {
+			return nil, installErr
+		}
+		path, searched, err = findLibrary(name)
+	}
 	if err != nil {
 		return nil, fmt.Errorf(
 			"YAMLStar plugin %s=%s (%s) was not found; searched: %s",
@@ -77,6 +83,84 @@ func load(api, name string) (*library, error) {
 	}
 	libraries.byPath[path] = loaded
 	return loaded, nil
+}
+
+func installPlugin(api, name string, searched []string) error {
+	installer, err := findInstaller()
+	if err != nil {
+		return err
+	}
+	environment := os.Environ()
+	if _, present := os.LookupEnv("YAMLSTAR_LIBRARY_PATH"); !present {
+		environment = append(environment, "YAMLSTAR_LIBRARY_PATH="+
+			strings.Join(searched, string(os.PathListSeparator)))
+	}
+	process, err := os.StartProcess(installer,
+		[]string{installer, "install", api, name},
+		&os.ProcAttr{
+			Env:   environment,
+			Files: []*os.File{os.Stdin, os.Stdout, os.Stderr},
+		})
+	if err != nil {
+		return fmt.Errorf("start YAMLStar plugin installer: %w", err)
+	}
+	state, err := process.Wait()
+	if err != nil {
+		return fmt.Errorf("wait for YAMLStar plugin installer: %w", err)
+	}
+	if !state.Success() {
+		return fmt.Errorf("YAMLStar plugin installer failed: %s", state)
+	}
+	return nil
+}
+
+func findInstaller() (string, error) {
+	if configured := os.Getenv("YAMLSTAR_PLUGIN_INSTALLER"); configured != "" {
+		if executableFile(configured) {
+			return configured, nil
+		}
+		return "", fmt.Errorf(
+			"YAMLSTAR_PLUGIN_INSTALLER is not executable: %s", configured)
+	}
+
+	var candidates []string
+	for _, host := range hostLibraryDirectories() {
+		candidates = append(candidates,
+			filepath.Join(host, "yamlstar-plugin"),
+			filepath.Join(host, "..", "libexec", "yamlstar",
+				"yamlstar-plugin"))
+	}
+	if executable, err := os.Executable(); err == nil {
+		directory := filepath.Dir(executable)
+		candidates = append(candidates,
+			filepath.Join(directory, "yamlstar-plugin"),
+			filepath.Join(directory, "..", "libexec", "yamlstar",
+				"yamlstar-plugin"))
+	}
+	for _, directory := range filepath.SplitList(os.Getenv("PATH")) {
+		if directory != "" {
+			candidates = append(candidates,
+				filepath.Join(directory, "yamlstar-plugin"))
+		}
+	}
+	for _, candidate := range candidates {
+		if executableFile(candidate) {
+			absolute, err := filepath.Abs(candidate)
+			if err != nil {
+				return "", err
+			}
+			return absolute, nil
+		}
+	}
+	return "", errors.New(
+		"YAMLStar plugin installer was not found; searched beside " +
+			"the host and in PATH")
+}
+
+func executableFile(path string) bool {
+	info, err := os.Stat(path)
+	return err == nil && info.Mode().IsRegular() &&
+		info.Mode().Perm()&0111 != 0
 }
 
 func open(path string) (loaded *library, err error) {
@@ -193,24 +277,38 @@ func findLibrary(name string) (string, []string, error) {
 }
 
 func searchDirectories() []string {
-	directories := filepath.SplitList(os.Getenv("YAMLSTAR_PLUGIN_PATH"))
+	if configured, present := os.LookupEnv("YAMLSTAR_LIBRARY_PATH"); present {
+		return uniqueDirectories(filepath.SplitList(configured))
+	}
+	return defaultSearchDirectories()
+}
+
+// DefaultPath returns the platform's standard plugin search path.
+func DefaultPath() string {
+	return strings.Join(defaultSearchDirectories(),
+		string(os.PathListSeparator))
+}
+
+func defaultSearchDirectories() []string {
+	var directories []string
 	for _, host := range hostLibraryDirectories() {
-		directories = append(directories, filepath.Join(host,
-			"yamlstar", "plugins"))
+		directories = append(directories, host)
 	}
 	if executable, err := os.Executable(); err == nil {
 		directories = append(directories,
-			filepath.Join(filepath.Dir(executable), "..", "lib",
-				"yamlstar", "plugins"))
+			filepath.Join(filepath.Dir(executable), "..", "lib"))
 	}
 	if home, err := os.UserHomeDir(); err == nil {
 		directories = append(directories,
-			filepath.Join(home, ".local", "lib", "yamlstar", "plugins"))
+			filepath.Join(home, ".local", "lib"))
 	}
 	directories = append(directories,
-		"/usr/local/lib/yamlstar/plugins",
-		"/usr/lib/yamlstar/plugins")
+		"/usr/local/lib",
+		"/usr/lib")
+	return uniqueDirectories(directories)
+}
 
+func uniqueDirectories(directories []string) []string {
 	seen := map[string]bool{}
 	unique := make([]string, 0, len(directories))
 	for _, directory := range directories {

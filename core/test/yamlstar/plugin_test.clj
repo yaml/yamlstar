@@ -163,13 +163,35 @@
 (deftest event-source-loader-test
   (try
     (plugin/set-event-source-loader!
-     (fn [api name]
+     (fn [api name _]
        {:api api :name name :parse (fn [_ _] fixed-events)}))
     (is (= "from plugin"
            (yaml/load "ignored" {:plugin {:external {}}})))
     (finally
       (plugin/unregister-event-source! "external" "external")
       (plugin/set-event-source-loader! nil))))
+
+(deftest event-source-install-option-test
+  (let [install-values (atom [])]
+    (try
+      (plugin/set-event-source-loader!
+       (fn [api name install?]
+         (swap! install-values conj install?)
+         {:api api :name name :parse (fn [_ _] fixed-events)}))
+      (is (= "from plugin"
+             (yaml/load "ignored"
+                        {:plugin {:external-no-install {}}})))
+      (is (= "from plugin"
+             (yaml/load "ignored"
+                        {:plugin {:external-install {}}
+                         :plugin-install true})))
+      (is (= [false true] @install-values))
+      (finally
+        (plugin/unregister-event-source! "external-no-install"
+                                         "external-no-install")
+        (plugin/unregister-event-source! "external-install"
+                                         "external-install")
+        (plugin/set-event-source-loader! nil)))))
 
 (deftest event-source-validation-test
   (is (thrown-with-msg?

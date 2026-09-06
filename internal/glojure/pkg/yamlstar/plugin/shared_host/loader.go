@@ -12,7 +12,7 @@ import (
 )
 
 var aotDirectFn0 lang.FnFunc0
-var aotDirectFn1 lang.FnFunc2
+var aotDirectFn1 lang.FnFunc3
 var aotDirectFn2 lang.FnFunc4
 var aotDirectFn3 lang.FnFunc0
 
@@ -132,6 +132,7 @@ func LoadNS() {
 	sym_clojure_DOT_core := lang.NewSymbolUnchecked("clojure.core")
 	sym_input := lang.NewSymbolUnchecked("input")
 	sym_install_BANG_ := lang.NewSymbolUnchecked("install!")
+	sym_install_QMARK_ := lang.NewSymbolUnchecked("install?")
 	sym_make_DASH_loader := lang.NewSymbolUnchecked("make-loader")
 	sym_manifest := lang.NewSymbolUnchecked("manifest")
 	sym_name := lang.NewSymbolUnchecked("name")
@@ -254,43 +255,45 @@ func LoadNS() {
 	// manifest
 	{
 		tmp0 := sym_manifest
-		var tmp1 lang.FnFunc2
-		tmp1 = lang.FnFunc2(func(p0, p1 any) any {
+		var tmp1 lang.FnFunc3
+		tmp1 = lang.FnFunc3(func(p0, p1, p2 any) any {
 			v2 := p0
 			_ = v2
 			v3 := p1
 			_ = v3
-			tmp4 := aotDirectFn3()
-			_ = tmp4
-			var tmp5 any
+			v4 := p2
+			_ = v4
+			tmp5 := aotDirectFn3()
+			_ = tmp5
+			var tmp6 any
 			{ // let
 				// let binding "vec__29"
-				tmp6 := lang.Apply2(pluginloader4.Manifest, v2, v3)
-				var v7 any = tmp6
-				_ = v7
+				tmp7 := lang.Apply3(pluginloader4.Manifest, v2, v3, v4)
+				var v8 any = tmp7
+				_ = v8
 				// let binding "text"
-				tmp8 := runtime.RT.NthDefault(v7, lang.IntCast(int64(0)), nil)
-				var v9 any = tmp8
-				_ = v9
+				tmp9 := runtime.RT.NthDefault(v8, lang.IntCast(int64(0)), nil)
+				var v10 any = tmp9
+				_ = v10
 				// let binding "error"
-				tmp10 := runtime.RT.NthDefault(v7, lang.IntCast(int64(1)), nil)
-				var v11 any = tmp10
-				_ = v11
-				var tmp12 any
-				tmp13 := lang.Identical(v11, nil)
-				if lang.IsTruthy(tmp13) {
-					tmp12 = v9
+				tmp11 := runtime.RT.NthDefault(v8, lang.IntCast(int64(1)), nil)
+				var v12 any = tmp11
+				_ = v12
+				var tmp13 any
+				tmp14 := lang.Identical(v12, nil)
+				if lang.IsTruthy(tmp14) {
+					tmp13 = v10
 				} else {
-					panic(v11)
+					panic(v12)
 				}
-				tmp5 = tmp12
+				tmp6 = tmp13
 			} // end let
-			return tmp5
+			return tmp6
 		})
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_manifest = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_manifest.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared_host.glj", kw_line, int(13), kw_column, int(8), kw_end_DASH_line, int(13), kw_end_DASH_column, int(15), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_api, sym_name)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared_host.glj", kw_line, int(13), kw_column, int(8), kw_end_DASH_line, int(13), kw_end_DASH_column, int(15), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_api, sym_name, sym_install_QMARK_)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host))
 		}, false)
 	}
 	// parse

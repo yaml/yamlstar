@@ -270,6 +270,20 @@ def test_json_comments_options():
         'json-comments': {'name': 'json-comments'}}
 
 
+def test_plugin_install_options():
+    """Test the shared plugin installation option helpers."""
+    opts = yamlstar.Options().plugin_install()
+    assert opts.to_dict()['plugin-install'] is True
+    opts.plugin_install(False)
+    assert opts.to_dict()['plugin-install'] is False
+
+
+def test_plugin_install_constructor_option():
+    """Test that the Python convenience option reaches libyamlstar."""
+    installed = yamlstar.YAMLStar(install_plugins=True)
+    assert installed._options['plugin-install'] is True
+
+
 def test_load_with_reference_parser(ys):
     """Test explicitly selecting the reference parser."""
     opts = yamlstar.Options().plugin(yamlstar.parser('reference'))

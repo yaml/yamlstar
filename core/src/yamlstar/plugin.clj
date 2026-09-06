@@ -94,8 +94,9 @@
 (defn set-event-source-loader!
   "Install the native host's lazy shared-library loader.
 
-  The loader receives api and name strings and returns an event-source
-  plugin map. Passing nil disables external plugin loading."
+  The loader receives api and name strings plus an install? boolean and
+  returns an event-source plugin map. Passing nil disables external plugin
+  loading."
   [loader]
   (when-not (or (nil? loader) (fn? loader))
     (throw (ex-info "Event-source loader must be a function or nil"
@@ -105,14 +106,16 @@
 
 (defn resolve-event-source
   "Resolve an event-source by API and name, loading it on first use."
-  [api name]
-  (or (get @event-source-registry [api name])
-      (when-let [loader @event-source-loader]
-        (when-let [loaded (loader api name)]
-          (register-event-source! loaded)))
-      (throw (ex-info
-              (str "Unknown YAMLStar event-source plugin: " api "=" name)
-              {:api api :name name :kind "event-source"}))))
+  ([api name]
+   (resolve-event-source api name false))
+  ([api name install?]
+   (or (get @event-source-registry [api name])
+       (when-let [loader @event-source-loader]
+         (when-let [loaded (loader api name install?)]
+           (register-event-source! loaded)))
+       (throw (ex-info
+               (str "Unknown YAMLStar event-source plugin: " api "=" name)
+               {:api api :name name :kind "event-source"})))))
 
 (defn resolve-parser
   "Look up a parser plugin by name.
@@ -187,7 +190,9 @@
           (when-not (string? plugin-name)
             (throw (ex-info "Event-source plugin :name must be a string"
                             {:api api-name :name plugin-name})))
-          (let [source (resolve-event-source api-name plugin-name)
+          (let [source (resolve-event-source
+                        api-name plugin-name
+                        (true? (:plugin-install opts)))
                 required-parser (get-in source [:requires :parser])
                 parser-name (first (parser-opts opts))]
             (when (and required-parser parser-name

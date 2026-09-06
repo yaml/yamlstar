@@ -29,7 +29,12 @@ setup(
     license = 'MIT',
     packages = ['yamlstar'],
     package_dir = {'': 'lib'},
-    package_data = {'yamlstar': ['libyamlstar/libyamlstar*']},
+    package_data = {
+        'yamlstar': [
+            'libyamlstar/libyamlstar*',
+            'libyamlstar/yamlstar-plugin',
+        ],
+    },
     include_package_data = True,
     python_requires = '>=3.6, <4',
     install_requires = [],

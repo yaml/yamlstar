@@ -9,8 +9,11 @@ import ctypes
 import json
 import os
 import sys
+import threading
 
 yamlstar_version = '0.1.20'
+
+_plugin_installer_lock = threading.Lock()
 
 assert sys.version_info >= (3, 6), \
   "Python 3.6 or greater required for 'yamlstar'."
@@ -92,6 +95,11 @@ class Options:
     self._options['plugin'] = plugin
     return self
 
+  def plugin_install(self, enabled=True):
+    """Enable or disable installation of missing shared plugins."""
+    self._options['plugin-install'] = bool(enabled)
+    return self
+
   def to_dict(self):
     return dict(self._options)
 
@@ -121,9 +129,14 @@ def _bytes(text):
 class YAMLStar():
   """Interface with a YAMLStar shared library."""
 
-  def __init__(self, options=None, so='libyamlstar'):
+  def __init__(self, options=None, so='libyamlstar',
+               install_plugins=None):
     self._options = _options_dict(options)
+    if install_plugins is not None:
+      self._options['plugin-install'] = bool(install_plugins)
     self._libyamlstar_path = find_libyamlstar(so)
+    self._plugin_installer_path = os.path.join(
+      os.path.dirname(self._libyamlstar_path), 'yamlstar-plugin')
     self._libyamlstar = ctypes.CDLL(self._libyamlstar_path)
     self._configure_functions()
 
@@ -164,10 +177,30 @@ class YAMLStar():
 
   def _call(self, function, input_text):
     self.error = None
-    data_json = function(
-      self._isolatethread,
-      _bytes(input_text),
-      self._opts_bytes()).decode()
+    def call_native():
+      return function(
+        self._isolatethread,
+        _bytes(input_text),
+        self._opts_bytes()).decode()
+
+    install = self._options.get(
+      'plugin-install', self._options.get('plugin_install'))
+    installer = self._plugin_installer_path
+    if (install is True and os.path.isfile(installer) and
+        os.access(installer, os.X_OK) and
+        not os.environ.get('YAMLSTAR_PLUGIN_INSTALLER')):
+      with _plugin_installer_lock:
+        previous = os.environ.get('YAMLSTAR_PLUGIN_INSTALLER')
+        os.environ['YAMLSTAR_PLUGIN_INSTALLER'] = installer
+        try:
+          data_json = call_native()
+        finally:
+          if previous is None:
+            del os.environ['YAMLSTAR_PLUGIN_INSTALLER']
+          else:
+            os.environ['YAMLSTAR_PLUGIN_INSTALLER'] = previous
+    else:
+      data_json = call_native()
 
     resp = json.loads(data_json)
     self.error = resp.get('error')

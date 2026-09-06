@@ -20,6 +20,6 @@
   (when (native-image?)
     (plugin/set-event-source-loader!
      (shared/make-loader
-      (fn [api name]
-        (yamlstar.plugin.SharedPluginHost/manifest api name))
+      (fn [api name install?]
+        (yamlstar.plugin.SharedPluginHost/manifest api name install?))
       parse))))
