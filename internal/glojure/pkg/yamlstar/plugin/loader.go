@@ -7,7 +7,7 @@ import (
 	lang "github.com/glojurelang/glojure/pkg/lang"
 	runtime "github.com/glojurelang/glojure/pkg/runtime"
 	reflect "reflect"
-	sync "sync"
+	atomic "sync/atomic"
 )
 
 var aotDirectFn0 lang.FnFunc3
@@ -17,24 +17,114 @@ var aotDirectFn3 lang.FnFunc0
 var aotDirectFn4 lang.FnFunc1
 var aotDirectFn5 lang.FnFunc1
 
+var aotKeywordSite0 lang.KeywordSite
+var aotKeywordMapShape0 = lang.NewKeywordMapShape("plugin")
+
+type aotKeywordMapStorage0 struct {
+	lang.Map
+	values [1]any
+}
+
+func aotKeywordMapNew0(v0 any) *lang.Map {
+	storage := &aotKeywordMapStorage0{}
+	storage.values = [1]any{v0}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape0,
+		storage.values[:],
+	)
+}
+
+var aotKeywordMapShape1 = lang.NewKeywordMapShape("unknown")
+
+type aotKeywordMapStorage1 struct {
+	lang.Map
+	values [1]any
+}
+
+func aotKeywordMapNew1(v0 any) *lang.Map {
+	storage := &aotKeywordMapStorage1{}
+	storage.values = [1]any{v0}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape1,
+		storage.values[:],
+	)
+}
+
+var aotKeywordSite1 lang.KeywordSite
+var aotKeywordMapShape2 = lang.NewKeywordMapShape("parser")
+
+type aotKeywordMapStorage2 struct {
+	lang.Map
+	values [1]any
+}
+
+func aotKeywordMapNew2(v0 any) *lang.Map {
+	storage := &aotKeywordMapStorage2{}
+	storage.values = [1]any{v0}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape2,
+		storage.values[:],
+	)
+}
+
+var aotKeywordSite2 lang.KeywordSite
+var aotKeywordMapShape3 = lang.NewKeywordMapShape("name")
+
+type aotKeywordMapStorage3 struct {
+	lang.Map
+	values [1]any
+}
+
+func aotKeywordMapNew3(v0 any) *lang.Map {
+	storage := &aotKeywordMapStorage3{}
+	storage.values = [1]any{v0}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape3,
+		storage.values[:],
+	)
+}
+
+var aotKeywordMapShape4 = lang.NewKeywordMapShape("parser", "available")
+
+type aotKeywordMapStorage4 struct {
+	lang.Map
+	values [2]any
+}
+
+func aotKeywordMapNew4(v0 any, v1 any) *lang.Map {
+	storage := &aotKeywordMapStorage4{}
+	storage.values = [2]any{v0, v1}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape4,
+		storage.values[:],
+	)
+}
 func aotLinkFn1(vr *lang.Var) lang.FnFunc1 {
 	if vr.IsBound() {
 		return aotLinkBoundFn1(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc1
+	var linked atomic.Pointer[lang.FnFunc1]
 	return func(p0 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0)
+		}
 		if !vr.IsBound() {
 			return lang.Apply1(checkDerefVar(vr), p0)
 		}
-		once.Do(func() { linked = aotLinkBoundFn1(vr) })
-		return linked(p0)
+		fn := aotLinkBoundFn1(vr)
+		linked.Store(&fn)
+		return fn(p0)
 	}
 }
 
 func aotLinkBoundFn1(vr *lang.Var) lang.FnFunc1 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc1); ok {
+	if direct, ok := lang.DirectFn1(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn1); ok {
@@ -47,20 +137,23 @@ func aotLinkFn2(vr *lang.Var) lang.FnFunc2 {
 	if vr.IsBound() {
 		return aotLinkBoundFn2(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc2
+	var linked atomic.Pointer[lang.FnFunc2]
 	return func(p0 any, p1 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1)
+		}
 		if !vr.IsBound() {
 			return lang.Apply2(checkDerefVar(vr), p0, p1)
 		}
-		once.Do(func() { linked = aotLinkBoundFn2(vr) })
-		return linked(p0, p1)
+		fn := aotLinkBoundFn2(vr)
+		linked.Store(&fn)
+		return fn(p0, p1)
 	}
 }
 
 func aotLinkBoundFn2(vr *lang.Var) lang.FnFunc2 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc2); ok {
+	if direct, ok := lang.DirectFn2(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn2); ok {
@@ -73,20 +166,23 @@ func aotLinkFn3(vr *lang.Var) lang.FnFunc3 {
 	if vr.IsBound() {
 		return aotLinkBoundFn3(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc3
+	var linked atomic.Pointer[lang.FnFunc3]
 	return func(p0 any, p1 any, p2 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1, p2)
+		}
 		if !vr.IsBound() {
 			return lang.Apply3(checkDerefVar(vr), p0, p1, p2)
 		}
-		once.Do(func() { linked = aotLinkBoundFn3(vr) })
-		return linked(p0, p1, p2)
+		fn := aotLinkBoundFn3(vr)
+		linked.Store(&fn)
+		return fn(p0, p1, p2)
 	}
 }
 
 func aotLinkBoundFn3(vr *lang.Var) lang.FnFunc3 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc3); ok {
+	if direct, ok := lang.DirectFn3(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn3); ok {
@@ -99,20 +195,23 @@ func aotLinkFn4(vr *lang.Var) lang.FnFunc4 {
 	if vr.IsBound() {
 		return aotLinkBoundFn4(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc4
+	var linked atomic.Pointer[lang.FnFunc4]
 	return func(p0 any, p1 any, p2 any, p3 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1, p2, p3)
+		}
 		if !vr.IsBound() {
 			return lang.Apply4(checkDerefVar(vr), p0, p1, p2, p3)
 		}
-		once.Do(func() { linked = aotLinkBoundFn4(vr) })
-		return linked(p0, p1, p2, p3)
+		fn := aotLinkBoundFn4(vr)
+		linked.Store(&fn)
+		return fn(p0, p1, p2, p3)
 	}
 }
 
 func aotLinkBoundFn4(vr *lang.Var) lang.FnFunc4 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc4); ok {
+	if direct, ok := lang.DirectFn4(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn4); ok {
@@ -150,14 +249,11 @@ func LoadNS() {
 	sym_clojure_DOT_core := lang.NewSymbolUnchecked("clojure.core")
 	sym_clojure_DOT_string := lang.NewSymbolUnchecked("clojure.string")
 	sym_config := lang.NewSymbolUnchecked("config")
-	sym_deref := lang.NewSymbolUnchecked("deref")
 	sym_dissoc := lang.NewSymbolUnchecked("dissoc")
 	sym_ex_DASH_info := lang.NewSymbolUnchecked("ex-info")
-	sym_fn_QMARK_ := lang.NewSymbolUnchecked("fn?")
 	sym_join := lang.NewSymbolUnchecked("join")
 	sym_key := lang.NewSymbolUnchecked("key")
 	sym_keys := lang.NewSymbolUnchecked("keys")
-	sym_map_QMARK_ := lang.NewSymbolUnchecked("map?")
 	sym_mapv := lang.NewSymbolUnchecked("mapv")
 	sym_merge := lang.NewSymbolUnchecked("merge")
 	sym_name := lang.NewSymbolUnchecked("name")
@@ -175,7 +271,6 @@ func LoadNS() {
 	sym_seq_QMARK_ := lang.NewSymbolUnchecked("seq?")
 	sym_sort := lang.NewSymbolUnchecked("sort")
 	sym_str := lang.NewSymbolUnchecked("str")
-	sym_string_QMARK_ := lang.NewSymbolUnchecked("string?")
 	sym_swap_BANG_ := lang.NewSymbolUnchecked("swap!")
 	sym_symbol := lang.NewSymbolUnchecked("symbol")
 	sym_to_DASH_array := lang.NewSymbolUnchecked("to-array")
@@ -184,7 +279,6 @@ func LoadNS() {
 	sym_yamlstar_DOT_plugin := lang.NewSymbolUnchecked("yamlstar.plugin")
 	kw_arglists := lang.NewKeyword("arglists")
 	kw_as := lang.NewKeyword("as")
-	kw_available := lang.NewKeyword("available")
 	kw_column := lang.NewKeyword("column")
 	kw_default_DASH_config := lang.NewKeyword("default-config")
 	kw_doc := lang.NewKeyword("doc")
@@ -199,23 +293,17 @@ func LoadNS() {
 	kw_parser := lang.NewKeyword("parser")
 	kw_plugin := lang.NewKeyword("plugin")
 	kw_private := lang.NewKeyword("private")
-	kw_unknown := lang.NewKeyword("unknown")
+	builtin_any := lang.Builtins["any"]
 	// var clojure.core/assoc
 	var_clojure_DOT_core_assoc := lang.InternVarName(sym_clojure_DOT_core, sym_assoc)
-	// var clojure.core/deref
-	var_clojure_DOT_core_deref := lang.InternVarName(sym_clojure_DOT_core, sym_deref)
 	// var clojure.core/dissoc
 	var_clojure_DOT_core_dissoc := lang.InternVarName(sym_clojure_DOT_core, sym_dissoc)
 	// var clojure.core/ex-info
 	var_clojure_DOT_core_ex_DASH_info := lang.InternVarName(sym_clojure_DOT_core, sym_ex_DASH_info)
-	// var clojure.core/fn?
-	var_clojure_DOT_core_fn_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_fn_QMARK_)
 	// var clojure.core/key
 	var_clojure_DOT_core_key := lang.InternVarName(sym_clojure_DOT_core, sym_key)
 	// var clojure.core/keys
 	var_clojure_DOT_core_keys := lang.InternVarName(sym_clojure_DOT_core, sym_keys)
-	// var clojure.core/map?
-	var_clojure_DOT_core_map_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_map_QMARK_)
 	// var clojure.core/mapv
 	var_clojure_DOT_core_mapv := lang.InternVarName(sym_clojure_DOT_core, sym_mapv)
 	// var clojure.core/merge
@@ -230,8 +318,6 @@ func LoadNS() {
 	var_clojure_DOT_core_sort := lang.InternVarName(sym_clojure_DOT_core, sym_sort)
 	// var clojure.core/str
 	var_clojure_DOT_core_str := lang.InternVarName(sym_clojure_DOT_core, sym_str)
-	// var clojure.core/string?
-	var_clojure_DOT_core_string_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_string_QMARK_)
 	// var clojure.core/swap!
 	var_clojure_DOT_core_swap_BANG_ := lang.InternVarName(sym_clojure_DOT_core, sym_swap_BANG_)
 	// var clojure.core/symbol
@@ -257,12 +343,9 @@ func LoadNS() {
 	aotExternalFn0 := aotLinkFn1(var_clojure_DOT_core_seq_QMARK_)
 	aotExternalFn10 := aotLinkFn1(var_clojure_DOT_core_pr_DASH_str)
 	aotExternalFn11 := aotLinkFn2(var_clojure_DOT_core_mapv)
-	aotExternalFn12 := aotLinkFn1(var_clojure_DOT_core_string_QMARK_)
-	aotExternalFn13 := aotLinkFn1(var_clojure_DOT_core_fn_QMARK_)
 	aotExternalFn14 := aotLinkFn4(var_clojure_DOT_core_swap_BANG_)
 	aotExternalFn15 := aotLinkFn1(var_clojure_DOT_core_sort)
 	aotExternalFn16 := aotLinkFn1(var_clojure_DOT_core_keys)
-	aotExternalFn17 := aotLinkFn1(var_clojure_DOT_core_deref)
 	aotExternalFn18 := aotLinkFn1(var_clojure_DOT_core_requiring_DASH_resolve)
 	aotExternalFn19 := aotLinkFn2(var_clojure_DOT_core_symbol)
 	aotExternalFn2 := aotLinkFn1(var_clojure_DOT_core_to_DASH_array)
@@ -271,7 +354,6 @@ func LoadNS() {
 	aotExternalFn22 := aotLinkFn2(var_clojure_DOT_string_join)
 	aotExternalFn23 := aotLinkFn3(var_clojure_DOT_core_swap_BANG_)
 	aotExternalFn5 := aotLinkFn2(var_clojure_DOT_core_merge)
-	aotExternalFn6 := aotLinkFn1(var_clojure_DOT_core_map_QMARK_)
 	aotExternalFn7 := aotLinkFn2(var_clojure_DOT_core_ex_DASH_info)
 	aotExternalFn8 := aotLinkFn2(var_clojure_DOT_core_dissoc)
 	aotExternalFn9 := aotLinkFn3(var_clojure_DOT_core_str)
@@ -419,18 +501,18 @@ func LoadNS() {
 		})
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_plugin_parse_DASH_with = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_parse_DASH_with.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_plugin_parse_DASH_with.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.glj", kw_line, int(110), kw_column, int(7), kw_end_DASH_line, int(110), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_name, sym_config, sym_yaml_DASH_str)), kw_doc, "Resolve the named parser plugin and parse yaml-str with it.\n\n  config is merged over the plugin's :default-config.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
-		})
+		}, false)
 	}
 	// parser-registry
 	{
 		tmp0 := sym_parser_DASH_registry
 		tmp1 := lang.NewAtom(lang.NewMap())
 		var_yamlstar_DOT_plugin_parser_DASH_registry = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_parser_DASH_registry.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_plugin_parser_DASH_registry.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yamlstar/plugin.glj", kw_line, int(26), kw_column, int(10), kw_end_DASH_line, int(26), kw_end_DASH_column, int(34), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
-		})
+		}, false)
 	}
 	// registered-parsers
 	{
@@ -438,16 +520,16 @@ func LoadNS() {
 		var tmp1 lang.FnFunc0
 		tmp1 = lang.FnFunc0(func() any {
 			tmp2 := checkDerefVar(var_yamlstar_DOT_plugin_parser_DASH_registry)
-			tmp3 := aotExternalFn17(tmp2)
+			tmp3 := lang.DerefValue(tmp2)
 			tmp4 := aotExternalFn16(tmp3)
 			tmp5 := aotExternalFn15(tmp4)
 			return tmp5
 		})
 		aotDirectFn3 = tmp1
 		var_yamlstar_DOT_plugin_registered_DASH_parsers = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_registered_DASH_parsers.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_plugin_registered_DASH_parsers.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.glj", kw_line, int(52), kw_column, int(7), kw_end_DASH_line, int(52), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Return a sorted sequence of registered parser plugin names.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
-		})
+		}, false)
 	}
 	// resolve-parser
 	{
@@ -460,7 +542,7 @@ func LoadNS() {
 			{ // let
 				// let binding "or__0__auto__"
 				tmp4 := checkDerefVar(var_yamlstar_DOT_plugin_parser_DASH_registry)
-				tmp5 := aotExternalFn17(tmp4)
+				tmp5 := lang.DerefValue(tmp4)
 				tmp6 := runtime.RT.Get(tmp5, v2)
 				var v7 any = tmp6
 				_ = v7
@@ -475,7 +557,7 @@ func LoadNS() {
 						func() {
 							defer func() {
 								if r := recover(); r != nil {
-									if lang.CatchMatches(r, lang.Builtins["any"]) {
+									if lang.CatchMatches(r, builtin_any) {
 										v11 := r
 										_ = v11
 									} else {
@@ -495,7 +577,7 @@ func LoadNS() {
 								tmp17 := lang.Identical(v15, nil)
 								if lang.IsTruthy(tmp17) {
 								} else {
-									tmp18 := aotExternalFn17(v15)
+									tmp18 := lang.DerefValue(v15)
 									tmp16 = tmp18
 								}
 								tmp11 = tmp16
@@ -533,7 +615,7 @@ func LoadNS() {
 							} // end let
 							tmp15 := aotExternalFn21("Unknown YAML parser plugin: ", v2, ". Available: ", tmp14)
 							tmp16 := aotDirectFn3()
-							tmp17 := lang.NewMap(kw_parser, v2, kw_available, tmp16)
+							tmp17 := aotKeywordMapNew4(v2, tmp16)
 							tmp18 := aotExternalFn7(tmp15, tmp17)
 							panic(tmp18)
 						}
@@ -547,9 +629,9 @@ func LoadNS() {
 		})
 		aotDirectFn4 = tmp1
 		var_yamlstar_DOT_plugin_resolve_DASH_parser = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_resolve_DASH_parser.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_plugin_resolve_DASH_parser.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.glj", kw_line, int(57), kw_column, int(7), kw_end_DASH_line, int(57), kw_end_DASH_column, int(20), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Look up a parser plugin by name.\n\n  If the name is not registered, tries to load the namespace\n  yamlstar.plugin.parser.<name> and use its `plugin` var (which is expected\n  to self-register). Throws if no plugin can be found.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
-		})
+		}, false)
 	}
 	// parser-opts
 	{
@@ -561,7 +643,7 @@ func LoadNS() {
 			var tmp3 any
 			{ // let
 				// let binding "temp__0__auto__"
-				tmp4 := kw_plugin.Invoke1(v2)
+				tmp4 := aotKeywordSite0.Get(kw_plugin, v2, nil)
 				var v5 any = tmp4
 				_ = v5
 				var tmp6 any
@@ -572,10 +654,10 @@ func LoadNS() {
 						var v8 any = v5
 						_ = v8
 						var tmp9 any
-						tmp10 := aotExternalFn6(v8)
-						if lang.IsTruthy(tmp10) {
+						tmp10 := lang.IsMap(v8)
+						if tmp10 {
 						} else {
-							tmp11 := lang.NewMap(kw_plugin, v8)
+							tmp11 := aotKeywordMapNew0(v8)
 							tmp12 := aotExternalFn7("Option :plugin must be a map", tmp11)
 							panic(tmp12)
 						}
@@ -600,7 +682,7 @@ func LoadNS() {
 									tmp23 := aotExternalFn9("Unknown plugin type(s): ", tmp22, ". Supported: [:parser]")
 									tmp24 := checkDerefVar(var_clojure_DOT_core_key)
 									tmp25 := aotExternalFn11(tmp24, v19)
-									tmp26 := lang.NewMap(kw_unknown, tmp25)
+									tmp26 := aotKeywordMapNew1(tmp25)
 									tmp27 := aotExternalFn7(tmp23, tmp26)
 									panic(tmp27)
 								} // end let
@@ -613,7 +695,7 @@ func LoadNS() {
 						var tmp14 any
 						{ // let
 							// let binding "temp__0__auto__"
-							tmp15 := kw_parser.Invoke1(v8)
+							tmp15 := aotKeywordSite1.Get(kw_parser, v8, nil)
 							var v16 any = tmp15
 							_ = v16
 							var tmp17 any
@@ -624,10 +706,10 @@ func LoadNS() {
 									var v19 any = v16
 									_ = v19
 									var tmp20 any
-									tmp21 := aotExternalFn6(v19)
-									if lang.IsTruthy(tmp21) {
+									tmp21 := lang.IsMap(v19)
+									if tmp21 {
 									} else {
-										tmp22 := lang.NewMap(kw_parser, v19)
+										tmp22 := aotKeywordMapNew2(v19)
 										tmp23 := aotExternalFn7("Plugin config :parser must be a map", tmp22)
 										panic(tmp23)
 									}
@@ -635,14 +717,14 @@ func LoadNS() {
 									var tmp24 any
 									{ // let
 										// let binding "name"
-										tmp25 := kw_name.Invoke1(v19)
+										tmp25 := aotKeywordSite2.Get(kw_name, v19, nil)
 										var v26 any = tmp25
 										_ = v26
 										var tmp27 any
-										tmp28 := aotExternalFn12(v26)
-										if lang.IsTruthy(tmp28) {
+										tmp28 := lang.IsString(v26)
+										if tmp28 {
 										} else {
-											tmp29 := lang.NewMap(kw_name, v26)
+											tmp29 := aotKeywordMapNew3(v26)
 											tmp30 := aotExternalFn7("Parser plugin :name must be a string name", tmp29)
 											panic(tmp30)
 										}
@@ -669,9 +751,9 @@ func LoadNS() {
 		})
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_plugin_parser_DASH_opts = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_parser_DASH_opts.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_plugin_parser_DASH_opts.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.glj", kw_line, int(78), kw_column, int(7), kw_end_DASH_line, int(78), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_opts)), kw_doc, "Extract [parser-name config] from a load opts map.\n\n  Returns nil when opts selects no parser plugin (the fast path).\n  The config is the :parser map without :name, merged over the plugin's\n  :default-config by the caller.\n\n  Throws on malformed opts:\n  - :plugin value is not a map\n  - a plugin type other than :parser is configured\n  - :parser value is not a map\n  - :name value is not a string", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
-		})
+		}, false)
 	}
 	// register-parser!
 	{
@@ -725,19 +807,19 @@ func LoadNS() {
 				var v20 any = tmp19
 				_ = v20
 				var tmp21 any
-				tmp22 := aotExternalFn12(v18)
-				if lang.IsTruthy(tmp22) {
+				tmp22 := lang.IsString(v18)
+				if tmp22 {
 				} else {
-					tmp23 := lang.NewMap(kw_plugin, v16)
+					tmp23 := aotKeywordMapNew0(v16)
 					tmp24 := aotExternalFn7("Parser plugin :name must be a string", tmp23)
 					panic(tmp24)
 				}
 				_ = tmp21
 				var tmp25 any
-				tmp26 := aotExternalFn13(v20)
-				if lang.IsTruthy(tmp26) {
+				tmp26 := lang.IsFn(v20)
+				if tmp26 {
 				} else {
-					tmp27 := lang.NewMap(kw_plugin, v16)
+					tmp27 := aotKeywordMapNew0(v16)
 					tmp28 := aotExternalFn7("Parser plugin :parse must be a function", tmp27)
 					panic(tmp28)
 				}
@@ -752,9 +834,9 @@ func LoadNS() {
 		})
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_plugin_register_DASH_parser_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_register_DASH_parser_BANG_.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_plugin_register_DASH_parser_BANG_.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.glj", kw_line, int(28), kw_column, int(7), kw_end_DASH_line, int(28), kw_end_DASH_column, int(22), kw_arglists, lang.NewList(lang.NewVector(lang.NewMap(kw_keys, lang.NewVector(sym_name, sym_parse), kw_as, sym_plugin))), kw_doc, "Register a parser plugin map under its :name.\n\n  Required keys: :name (string), :parse (fn [yaml-str config]).\n  Optional keys: :default-config (map).\n\n  Re-registering a name replaces the previous plugin.\n  Returns the plugin map.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
-		})
+		}, false)
 	}
 	// unregister-parser!
 	{
@@ -771,8 +853,8 @@ func LoadNS() {
 		})
 		aotDirectFn5 = tmp1
 		var_yamlstar_DOT_plugin_unregister_DASH_parser_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_unregister_DASH_parser_BANG_.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_plugin_unregister_DASH_parser_BANG_.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.glj", kw_line, int(46), kw_column, int(7), kw_end_DASH_line, int(46), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Remove the parser plugin registered under name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
-		})
+		}, false)
 	}
 }

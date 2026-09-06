@@ -7,35 +7,100 @@ import (
 	lang "github.com/glojurelang/glojure/pkg/lang"
 	runtime "github.com/glojurelang/glojure/pkg/runtime"
 	reflect "reflect"
-	sync "sync"
+	atomic "sync/atomic"
 )
 
 var aotDirectFn0 lang.FnFunc1
 var aotDirectFn1 lang.FnFunc1
 var aotDirectFn2 lang.FnFunc1
-var aotDirectFn3 lang.FnFunc1
-var aotDirectFn4 lang.FnFunc4
+var aotDirectFn3 lang.FnFunc2
+var aotDirectFn4 lang.FnFunc2
 var aotDirectFn5 lang.FnFunc1
 var aotDirectFn6 lang.FnFunc4
+var aotDirectFn7 lang.FnFunc1
+var aotDirectFn8 lang.FnFunc4
+var aotDirectFn9 lang.FnFunc2
+var aotDirectFn10 lang.FnFunc1
 
+var aotKeywordSite0 lang.KeywordSite
+var aotKeywordSite1 lang.KeywordSite
+var aotKeywordSite2 lang.KeywordSite
+var aotKeywordSite3 lang.KeywordSite
+var aotKeywordSite4 lang.KeywordSite
+var aotKeywordSite5 lang.KeywordSite
+var aotKeywordSite6 lang.KeywordSite
+var aotKeywordSite7 lang.KeywordSite
+var aotKeywordMapShape0 = lang.NewKeywordMapShape("kind", "name")
+
+type aotKeywordMapStorage0 struct {
+	lang.Map
+	values [2]any
+}
+
+func aotKeywordMapNew0(v0 any, v1 any) *lang.Map {
+	storage := &aotKeywordMapStorage0{}
+	storage.values = [2]any{v0, v1}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape0,
+		storage.values[:],
+	)
+}
+
+var aotKeywordMapShape1 = lang.NewKeywordMapShape("kind")
+
+type aotKeywordMapStorage1 struct {
+	lang.Map
+	values [1]any
+}
+
+func aotKeywordMapNew1(v0 any) *lang.Map {
+	storage := &aotKeywordMapStorage1{}
+	storage.values = [1]any{v0}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape1,
+		storage.values[:],
+	)
+}
+
+var aotKeywordMapShape2 = lang.NewKeywordMapShape("kind", "value")
+
+type aotKeywordMapStorage2 struct {
+	lang.Map
+	values [2]any
+}
+
+func aotKeywordMapNew2(v0 any, v1 any) *lang.Map {
+	storage := &aotKeywordMapStorage2{}
+	storage.values = [2]any{v0, v1}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape2,
+		storage.values[:],
+	)
+}
 func aotLinkFn1(vr *lang.Var) lang.FnFunc1 {
 	if vr.IsBound() {
 		return aotLinkBoundFn1(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc1
+	var linked atomic.Pointer[lang.FnFunc1]
 	return func(p0 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0)
+		}
 		if !vr.IsBound() {
 			return lang.Apply1(checkDerefVar(vr), p0)
 		}
-		once.Do(func() { linked = aotLinkBoundFn1(vr) })
-		return linked(p0)
+		fn := aotLinkBoundFn1(vr)
+		linked.Store(&fn)
+		return fn(p0)
 	}
 }
 
 func aotLinkBoundFn1(vr *lang.Var) lang.FnFunc1 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc1); ok {
+	if direct, ok := lang.DirectFn1(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn1); ok {
@@ -48,52 +113,29 @@ func aotLinkFn2(vr *lang.Var) lang.FnFunc2 {
 	if vr.IsBound() {
 		return aotLinkBoundFn2(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc2
+	var linked atomic.Pointer[lang.FnFunc2]
 	return func(p0 any, p1 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1)
+		}
 		if !vr.IsBound() {
 			return lang.Apply2(checkDerefVar(vr), p0, p1)
 		}
-		once.Do(func() { linked = aotLinkBoundFn2(vr) })
-		return linked(p0, p1)
+		fn := aotLinkBoundFn2(vr)
+		linked.Store(&fn)
+		return fn(p0, p1)
 	}
 }
 
 func aotLinkBoundFn2(vr *lang.Var) lang.FnFunc2 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc2); ok {
+	if direct, ok := lang.DirectFn2(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn2); ok {
 		return fixed.Invoke2
 	}
 	return func(p0 any, p1 any) any { return lang.Apply2(fn, p0, p1) }
-}
-
-func aotLinkFn3(vr *lang.Var) lang.FnFunc3 {
-	if vr.IsBound() {
-		return aotLinkBoundFn3(vr)
-	}
-	var once sync.Once
-	var linked lang.FnFunc3
-	return func(p0 any, p1 any, p2 any) any {
-		if !vr.IsBound() {
-			return lang.Apply3(checkDerefVar(vr), p0, p1, p2)
-		}
-		once.Do(func() { linked = aotLinkBoundFn3(vr) })
-		return linked(p0, p1, p2)
-	}
-}
-
-func aotLinkBoundFn3(vr *lang.Var) lang.FnFunc3 {
-	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc3); ok {
-		return direct
-	}
-	if fixed, ok := fn.(lang.FixedArityFn3); ok {
-		return fixed.Invoke3
-	}
-	return func(p0 any, p1 any, p2 any) any { return lang.Apply3(fn, p0, p1, p2) }
 }
 
 func init() {
@@ -121,12 +163,14 @@ func checkArityGTE(args []any, min int) {
 
 // LoadNS initializes the namespace "yamlstar.composer"
 func LoadNS() {
-	sym__EQ_ := lang.NewSymbolUnchecked("=")
 	sym_anchor := lang.NewSymbolUnchecked("anchor")
 	sym_clojure_DOT_core := lang.NewSymbolUnchecked("clojure.core")
 	sym_compose := lang.NewSymbolUnchecked("compose")
 	sym_compose_DASH_all := lang.NewSymbolUnchecked("compose-all")
 	sym_compose_DASH_events := lang.NewSymbolUnchecked("compose-events")
+	sym_conj_BANG_ := lang.NewSymbolUnchecked("conj!")
+	sym_end_DASH_mapping := lang.NewSymbolUnchecked("end-mapping")
+	sym_end_DASH_sequence := lang.NewSymbolUnchecked("end-sequence")
 	sym_events := lang.NewSymbolUnchecked("events")
 	sym_flow := lang.NewSymbolUnchecked("flow")
 	sym_items := lang.NewSymbolUnchecked("items")
@@ -137,12 +181,17 @@ func LoadNS() {
 	sym_name := lang.NewSymbolUnchecked("name")
 	sym_not_EQ_ := lang.NewSymbolUnchecked("not=")
 	sym_pairs := lang.NewSymbolUnchecked("pairs")
-	sym_rest := lang.NewSymbolUnchecked("rest")
-	sym_reverse := lang.NewSymbolUnchecked("reverse")
+	sym_persistent_BANG_ := lang.NewSymbolUnchecked("persistent!")
+	sym_pop_BANG_ := lang.NewSymbolUnchecked("pop!")
+	sym_pop_DASH_children := lang.NewSymbolUnchecked("pop-children")
 	sym_seq_QMARK_ := lang.NewSymbolUnchecked("seq?")
+	sym_stack := lang.NewSymbolUnchecked("stack")
+	sym_start := lang.NewSymbolUnchecked("start")
 	sym_style := lang.NewSymbolUnchecked("style")
 	sym_tag := lang.NewSymbolUnchecked("tag")
 	sym_to_DASH_array := lang.NewSymbolUnchecked("to-array")
+	sym_top := lang.NewSymbolUnchecked("top")
+	sym_transient := lang.NewSymbolUnchecked("transient")
 	sym_value := lang.NewSymbolUnchecked("value")
 	sym_vec := lang.NewSymbolUnchecked("vec")
 	sym_yamlstar_DOT_composer := lang.NewSymbolUnchecked("yamlstar.composer")
@@ -157,31 +206,30 @@ func LoadNS() {
 	kw_file := lang.NewKeyword("file")
 	kw_flow := lang.NewKeyword("flow")
 	kw_keys := lang.NewKeyword("keys")
-	kw_kind := lang.NewKeyword("kind")
 	kw_line := lang.NewKeyword("line")
 	kw_mapping := lang.NewKeyword("mapping")
-	kw_mapping_DASH_start := lang.NewKeyword("mapping-start")
 	kw_name := lang.NewKeyword("name")
 	kw_ns := lang.NewKeyword("ns")
-	kw_or := lang.NewKeyword("or")
+	kw_private := lang.NewKeyword("private")
 	kw_scalar := lang.NewKeyword("scalar")
 	kw_sequence := lang.NewKeyword("sequence")
-	kw_sequence_DASH_start := lang.NewKeyword("sequence-start")
 	kw_style := lang.NewKeyword("style")
 	kw_tag := lang.NewKeyword("tag")
 	kw_value := lang.NewKeyword("value")
-	// var clojure.core/=
-	var_clojure_DOT_core__EQ_ := lang.InternVarName(sym_clojure_DOT_core, sym__EQ_)
+	// var clojure.core/conj!
+	var_clojure_DOT_core_conj_BANG_ := lang.InternVarName(sym_clojure_DOT_core, sym_conj_BANG_)
 	// var clojure.core/not=
 	var_clojure_DOT_core_not_EQ_ := lang.InternVarName(sym_clojure_DOT_core, sym_not_EQ_)
-	// var clojure.core/rest
-	var_clojure_DOT_core_rest := lang.InternVarName(sym_clojure_DOT_core, sym_rest)
-	// var clojure.core/reverse
-	var_clojure_DOT_core_reverse := lang.InternVarName(sym_clojure_DOT_core, sym_reverse)
+	// var clojure.core/persistent!
+	var_clojure_DOT_core_persistent_BANG_ := lang.InternVarName(sym_clojure_DOT_core, sym_persistent_BANG_)
+	// var clojure.core/pop!
+	var_clojure_DOT_core_pop_BANG_ := lang.InternVarName(sym_clojure_DOT_core, sym_pop_BANG_)
 	// var clojure.core/seq?
 	var_clojure_DOT_core_seq_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_seq_QMARK_)
 	// var clojure.core/to-array
 	var_clojure_DOT_core_to_DASH_array := lang.InternVarName(sym_clojure_DOT_core, sym_to_DASH_array)
+	// var clojure.core/transient
+	var_clojure_DOT_core_transient := lang.InternVarName(sym_clojure_DOT_core, sym_transient)
 	// var clojure.core/vec
 	var_clojure_DOT_core_vec := lang.InternVarName(sym_clojure_DOT_core, sym_vec)
 	// var yamlstar.composer/compose
@@ -190,6 +238,10 @@ func LoadNS() {
 	var_yamlstar_DOT_composer_compose_DASH_all := lang.InternVarName(sym_yamlstar_DOT_composer, sym_compose_DASH_all)
 	// var yamlstar.composer/compose-events
 	var_yamlstar_DOT_composer_compose_DASH_events := lang.InternVarName(sym_yamlstar_DOT_composer, sym_compose_DASH_events)
+	// var yamlstar.composer/end-mapping
+	var_yamlstar_DOT_composer_end_DASH_mapping := lang.InternVarName(sym_yamlstar_DOT_composer, sym_end_DASH_mapping)
+	// var yamlstar.composer/end-sequence
+	var_yamlstar_DOT_composer_end_DASH_sequence := lang.InternVarName(sym_yamlstar_DOT_composer, sym_end_DASH_sequence)
 	// var yamlstar.composer/make-alias-node
 	var_yamlstar_DOT_composer_make_DASH_alias_DASH_node := lang.InternVarName(sym_yamlstar_DOT_composer, sym_make_DASH_alias_DASH_node)
 	// var yamlstar.composer/make-mapping-node
@@ -198,13 +250,18 @@ func LoadNS() {
 	var_yamlstar_DOT_composer_make_DASH_scalar_DASH_node := lang.InternVarName(sym_yamlstar_DOT_composer, sym_make_DASH_scalar_DASH_node)
 	// var yamlstar.composer/make-sequence-node
 	var_yamlstar_DOT_composer_make_DASH_sequence_DASH_node := lang.InternVarName(sym_yamlstar_DOT_composer, sym_make_DASH_sequence_DASH_node)
-	aotExternalFn10 := aotLinkFn1(var_clojure_DOT_core_reverse)
-	aotExternalFn11 := aotLinkFn1(var_clojure_DOT_core_seq_QMARK_)
-	aotExternalFn13 := aotLinkFn1(var_clojure_DOT_core_to_DASH_array)
-	aotExternalFn14 := aotLinkFn2(var_clojure_DOT_core_not_EQ_)
-	aotExternalFn5 := aotLinkFn1(var_clojure_DOT_core_rest)
-	aotExternalFn7 := aotLinkFn2(var_clojure_DOT_core__EQ_)
-	aotExternalFn9 := aotLinkFn1(var_clojure_DOT_core_vec)
+	// var yamlstar.composer/pop-children
+	var_yamlstar_DOT_composer_pop_DASH_children := lang.InternVarName(sym_yamlstar_DOT_composer, sym_pop_DASH_children)
+	// var yamlstar.composer/top
+	var_yamlstar_DOT_composer_top := lang.InternVarName(sym_yamlstar_DOT_composer, sym_top)
+	aotExternalFn11 := aotLinkFn1(var_clojure_DOT_core_persistent_BANG_)
+	aotExternalFn12 := aotLinkFn1(var_clojure_DOT_core_seq_QMARK_)
+	aotExternalFn14 := aotLinkFn1(var_clojure_DOT_core_to_DASH_array)
+	aotExternalFn16 := aotLinkFn2(var_clojure_DOT_core_not_EQ_)
+	aotExternalFn2 := aotLinkFn1(var_clojure_DOT_core_vec)
+	aotExternalFn4 := aotLinkFn1(var_clojure_DOT_core_transient)
+	aotExternalFn7 := aotLinkFn1(var_clojure_DOT_core_pop_BANG_)
+	aotExternalFn8 := aotLinkFn2(var_clojure_DOT_core_conj_BANG_)
 	// reference fmt to avoid unused import error
 	_ = fmt.Printf
 	// reference reflect to avoid unused import error
@@ -300,9 +357,9 @@ func LoadNS() {
 		})
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_composer_compose = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_composer_compose.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(175), kw_column, int(7), kw_end_DASH_line, int(175), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector(sym_events)), kw_doc, "Compose event stream into a single document node tree.\n\n  Args:\n    events: Sequence of event maps from parser\n\n  Returns:\n    A node tree representing the first YAML document", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
-		})
+		var_yamlstar_DOT_composer_compose.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(174), kw_column, int(7), kw_end_DASH_line, int(174), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector(sym_events)), kw_doc, "Compose event stream into a single document node tree.\n\n  Args:\n    events: Sequence of event maps from parser\n\n  Returns:\n    A node tree representing the first YAML document", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+		}, false)
 	}
 	// compose-all
 	{
@@ -316,9 +373,9 @@ func LoadNS() {
 		})
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_composer_compose_DASH_all = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_composer_compose_DASH_all.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(186), kw_column, int(7), kw_end_DASH_line, int(186), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_events)), kw_doc, "Compose event stream into multiple document node trees.\n\n  Args:\n    events: Sequence of event maps from parser\n\n  Returns:\n    A sequence of node trees, one per YAML document", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
-		})
+		var_yamlstar_DOT_composer_compose_DASH_all.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(185), kw_column, int(7), kw_end_DASH_line, int(185), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_events)), kw_doc, "Compose event stream into multiple document node trees.\n\n  Args:\n    events: Sequence of event maps from parser\n\n  Returns:\n    A sequence of node trees, one per YAML document", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+		}, false)
 	}
 	// compose-events
 	{
@@ -330,842 +387,636 @@ func LoadNS() {
 			var tmp3 any
 			{ // let
 				// let binding "events"
-				var v4 any = v2
-				_ = v4
-				// let binding "node-stack"
-				tmp5 := lang.NewVector()
-				var v6 any = tmp5
-				_ = v6
-				// let binding "anchor-stack"
-				tmp7 := lang.NewVector()
-				var v8 any = tmp7
-				_ = v8
-				// let binding "current-anchor"
-				var v9 any = nil
-				_ = v9
-				// let binding "current-tag"
-				var v10 any = nil
-				_ = v10
-				// let binding "documents"
-				tmp11 := lang.NewVector()
-				var v12 any = tmp11
-				_ = v12
-				// let binding "in-document"
-				var v13 any = false
-				_ = v13
-				for {
-					var tmp14 any
-					tmp15 := lang.IsEmpty(v4)
-					if lang.IsTruthy(tmp15) {
-						var tmp16 any
-						var tmp17 any
-						{ // let
-							// let binding "and__0__auto__"
-							var v18 any = v13
-							_ = v18
-							var tmp19 any
-							if lang.IsTruthy(v18) {
-								tmp20 := lang.Seq(v6)
-								tmp19 = tmp20
-							} else {
-								tmp19 = v18
-							}
-							tmp17 = tmp19
-						} // end let
-						if lang.IsTruthy(tmp17) {
-							tmp18 := runtime.RT.Peek(v6)
-							tmp19 := lang.ConjAny(v12, tmp18)
-							tmp16 = tmp19
-						} else {
-							tmp16 = v12
-						}
-						tmp14 = tmp16
-					} else {
-						var tmp20 any
-						{ // let
-							// let binding "event"
-							tmp21 := lang.First(v4)
-							var v22 any = tmp21
-							_ = v22
-							// let binding "event-type"
-							tmp23 := kw_event.Invoke1(v22)
-							var v24 any = tmp23
-							_ = v24
-							// let binding "rest-events"
-							tmp25 := aotExternalFn5(v4)
-							var v26 any = tmp25
-							_ = v26
-							var tmp27 any
-							{ // let
-								// let binding "G__6"
-								var v28 any = v24
-								_ = v28
-								// case
-								var tmp29 any
-								var tmp30 int64
-								tmp30 = int64(uint32(lang.Hash(v28)>>2) & uint32(31))
-								// case entry 0 (key=5, collision=false)
-								if tmp30 == 5 {
-									if lang.Equals(v28, "document_end") {
-										var tmp31 any
-										{ // let
-											// let binding "doc-node"
-											tmp32 := runtime.RT.Peek(v6)
-											var v33 any = tmp32
-											_ = v33
-											// let binding "new-stack"
-											tmp34 := runtime.RT.Pop(v6)
-											var v35 any = tmp34
-											_ = v35
-											var tmp36 any = v26
-											var tmp37 any = v35
-											var tmp38 any = v8
-											var tmp39 any = nil
-											var tmp40 any = nil
-											tmp42 := lang.ConjAny(v12, v33)
-											var tmp41 any = tmp42
-											var tmp43 any = false
-											v4 = tmp36
-											v6 = tmp37
-											v8 = tmp38
-											v9 = tmp39
-											v10 = tmp40
-											v12 = tmp41
-											v13 = tmp43
-											continue
-										} // end let
-										tmp29 = tmp31
-									} else {
-										var tmp32 any = v26
-										var tmp33 any = v6
-										var tmp34 any = v8
-										var tmp35 any = v9
-										var tmp36 any = v10
-										var tmp37 any = v12
-										var tmp38 any = v13
-										v4 = tmp32
-										v6 = tmp33
-										v8 = tmp34
-										v9 = tmp35
-										v10 = tmp36
-										v12 = tmp37
-										v13 = tmp38
-										continue
-									}
-									// case entry 1 (key=7, collision=false)
-								} else if tmp30 == 7 {
-									if lang.Equals(v28, "mapping_start") {
-										var tmp39 any
-										{ // let
-											// let binding "marker"
-											var tmp40 any
-											{ // let
-												// let binding "or__0__auto__"
-												var v41 any = v9
-												_ = v41
-												var tmp42 any
-												if lang.IsTruthy(v41) {
-													tmp42 = v41
-												} else {
-													tmp43 := kw_anchor.Invoke1(v22)
-													tmp42 = tmp43
-												}
-												tmp40 = tmp42
-											} // end let
-											var tmp41 any
-											{ // let
-												// let binding "or__0__auto__"
-												var v42 any = v10
-												_ = v42
-												var tmp43 any
-												if lang.IsTruthy(v42) {
-													tmp43 = v42
-												} else {
-													tmp44 := kw_tag.Invoke1(v22)
-													tmp43 = tmp44
-												}
-												tmp41 = tmp43
-											} // end let
-											var tmp42 any
-											{ // let
-												// let binding "or__0__auto__"
-												tmp43 := kw_flow.Invoke1(v22)
-												var v44 any = tmp43
-												_ = v44
-												var tmp45 any
-												if lang.IsTruthy(v44) {
-													tmp45 = v44
-												} else {
-													tmp45 = false
-												}
-												tmp42 = tmp45
-											} // end let
-											tmp43 := lang.NewMap(kw_kind, kw_mapping_DASH_start, kw_anchor, tmp40, kw_tag, tmp41, kw_flow, tmp42)
-											var v44 any = tmp43
-											_ = v44
-											// let binding "new-stack"
-											tmp45 := lang.ConjAny(v6, v44)
-											var v46 any = tmp45
-											_ = v46
-											var tmp47 any = v26
-											var tmp48 any = v46
-											var tmp49 any = v8
-											var tmp50 any = nil
-											var tmp51 any = nil
-											var tmp52 any = v12
-											var tmp53 any = v13
-											v4 = tmp47
-											v6 = tmp48
-											v8 = tmp49
-											v9 = tmp50
-											v10 = tmp51
-											v12 = tmp52
-											v13 = tmp53
-											continue
-										} // end let
-										tmp29 = tmp39
-									} else {
-										var tmp40 any = v26
-										var tmp41 any = v6
-										var tmp42 any = v8
-										var tmp43 any = v9
-										var tmp44 any = v10
-										var tmp45 any = v12
-										var tmp46 any = v13
-										v4 = tmp40
-										v6 = tmp41
-										v8 = tmp42
-										v9 = tmp43
-										v10 = tmp44
-										v12 = tmp45
-										v13 = tmp46
-										continue
-									}
-									// case entry 2 (key=8, collision=false)
-								} else if tmp30 == 8 {
-									if lang.Equals(v28, "document_start") {
-										var tmp47 any = v26
-										var tmp48 any = v6
-										var tmp49 any = v8
-										var tmp50 any = v9
-										var tmp51 any = v10
-										var tmp52 any = v12
-										var tmp53 any = true
-										v4 = tmp47
-										v6 = tmp48
-										v8 = tmp49
-										v9 = tmp50
-										v10 = tmp51
-										v12 = tmp52
-										v13 = tmp53
-										continue
-									} else {
-										var tmp54 any = v26
-										var tmp55 any = v6
-										var tmp56 any = v8
-										var tmp57 any = v9
-										var tmp58 any = v10
-										var tmp59 any = v12
-										var tmp60 any = v13
-										v4 = tmp54
-										v6 = tmp55
-										v8 = tmp56
-										v9 = tmp57
-										v10 = tmp58
-										v12 = tmp59
-										v13 = tmp60
-										continue
-									}
-									// case entry 3 (key=10, collision=false)
-								} else if tmp30 == 10 {
-									if lang.Equals(v28, "mapping_end") {
-										var tmp61 any
-										{ // let
-											// let binding "vec__7"
-											var tmp62 any
-											{ // let
-												// let binding "pairs"
-												tmp63 := lang.NewVector()
-												var v64 any = tmp63
-												_ = v64
-												// let binding "stack"
-												var v65 any = v6
-												_ = v65
-												for {
-													var tmp66 any
-													{ // let
-														// let binding "top"
-														tmp67 := runtime.RT.Peek(v65)
-														var v68 any = tmp67
-														_ = v68
-														var tmp69 any
-														tmp70 := kw_kind.Invoke1(v68)
-														tmp71 := aotExternalFn7(tmp70, kw_mapping_DASH_start)
-														if lang.IsTruthy(tmp71) {
-															tmp72 := lang.NewVector(v64, v65)
-															tmp69 = tmp72
-														} else {
-															var tmp73 any
-															{ // let
-																// let binding "value"
-																tmp74 := runtime.RT.Peek(v65)
-																var v75 any = tmp74
-																_ = v75
-																// let binding "key"
-																tmp76 := runtime.RT.Pop(v65)
-																tmp77 := runtime.RT.Peek(tmp76)
-																var v78 any = tmp77
-																_ = v78
-																// let binding "new-pairs"
-																tmp79 := lang.NewVector(v78, v75)
-																tmp80 := lang.ConjAny(v64, tmp79)
-																var v81 any = tmp80
-																_ = v81
-																// let binding "new-stack"
-																tmp82 := runtime.RT.Pop(v65)
-																tmp83 := runtime.RT.Pop(tmp82)
-																var v84 any = tmp83
-																_ = v84
-																var tmp85 any = v81
-																var tmp86 any = v84
-																v64 = tmp85
-																v65 = tmp86
-																continue
-															} // end let
-															tmp69 = tmp73
-														}
-														tmp66 = tmp69
-													} // end let
-													tmp62 = tmp66
-													break
-												}
-											} // end let
-											var v63 any = tmp62
-											_ = v63
-											// let binding "pairs"
-											tmp64 := runtime.RT.NthDefault(v63, lang.IntCast(int64(0)), nil)
-											var v65 any = tmp64
-											_ = v65
-											// let binding "final-stack"
-											tmp66 := runtime.RT.NthDefault(v63, lang.IntCast(int64(1)), nil)
-											var v67 any = tmp66
-											_ = v67
-											// let binding "marker"
-											tmp68 := runtime.RT.Peek(v67)
-											var v69 any = tmp68
-											_ = v69
-											// let binding "mapping"
-											tmp70 := aotExternalFn10(v65)
-											tmp71 := aotExternalFn9(tmp70)
-											tmp72 := kw_anchor.Invoke1(v69)
-											tmp73 := kw_tag.Invoke1(v69)
-											tmp74 := kw_flow.Invoke1(v69)
-											tmp75 := aotDirectFn4(tmp71, tmp72, tmp73, tmp74)
-											var v76 any = tmp75
-											_ = v76
-											// let binding "new-stack"
-											tmp77 := runtime.PrepareReplaceLast(v67)
-											tmp78 := tmp77.Finish(v76)
-											var v79 any = tmp78
-											_ = v79
-											var tmp80 any = v26
-											var tmp81 any = v79
-											var tmp82 any = v8
-											var tmp83 any = nil
-											var tmp84 any = nil
-											var tmp85 any = v12
-											var tmp86 any = v13
-											v4 = tmp80
-											v6 = tmp81
-											v8 = tmp82
-											v9 = tmp83
-											v10 = tmp84
-											v12 = tmp85
-											v13 = tmp86
-											continue
-										} // end let
-										tmp29 = tmp61
-									} else {
-										var tmp62 any = v26
-										var tmp63 any = v6
-										var tmp64 any = v8
-										var tmp65 any = v9
-										var tmp66 any = v10
-										var tmp67 any = v12
-										var tmp68 any = v13
-										v4 = tmp62
-										v6 = tmp63
-										v8 = tmp64
-										v9 = tmp65
-										v10 = tmp66
-										v12 = tmp67
-										v13 = tmp68
-										continue
-									}
-									// case entry 4 (key=15, collision=false)
-								} else if tmp30 == 15 {
-									if lang.Equals(v28, "stream_start") {
-										var tmp69 any = v26
-										var tmp70 any = v6
-										var tmp71 any = v8
-										var tmp72 any = v9
-										var tmp73 any = v10
-										var tmp74 any = v12
-										var tmp75 any = v13
-										v4 = tmp69
-										v6 = tmp70
-										v8 = tmp71
-										v9 = tmp72
-										v10 = tmp73
-										v12 = tmp74
-										v13 = tmp75
-										continue
-									} else {
-										var tmp76 any = v26
-										var tmp77 any = v6
-										var tmp78 any = v8
-										var tmp79 any = v9
-										var tmp80 any = v10
-										var tmp81 any = v12
-										var tmp82 any = v13
-										v4 = tmp76
-										v6 = tmp77
-										v8 = tmp78
-										v9 = tmp79
-										v10 = tmp80
-										v12 = tmp81
-										v13 = tmp82
-										continue
-									}
-									// case entry 5 (key=18, collision=false)
-								} else if tmp30 == 18 {
-									if lang.Equals(v28, "stream_end") {
-										var tmp83 any
-										{ // let
-											// let binding "final-docs"
-											var tmp84 any
-											var tmp85 any
-											{ // let
-												// let binding "and__0__auto__"
-												var v86 any = v13
-												_ = v86
-												var tmp87 any
-												if lang.IsTruthy(v86) {
-													tmp88 := lang.Seq(v6)
-													tmp87 = tmp88
-												} else {
-													tmp87 = v86
-												}
-												tmp85 = tmp87
-											} // end let
-											if lang.IsTruthy(tmp85) {
-												tmp86 := runtime.RT.Peek(v6)
-												tmp87 := lang.ConjAny(v12, tmp86)
-												tmp84 = tmp87
-											} else {
-												tmp84 = v12
-											}
-											var v88 any = tmp84
-											_ = v88
-											var tmp89 any = v26
-											tmp91 := lang.NewVector()
-											var tmp90 any = tmp91
-											var tmp92 any = v8
-											var tmp93 any = nil
-											var tmp94 any = nil
-											var tmp95 any = v88
-											var tmp96 any = false
-											v4 = tmp89
-											v6 = tmp90
-											v8 = tmp92
-											v9 = tmp93
-											v10 = tmp94
-											v12 = tmp95
-											v13 = tmp96
-											continue
-										} // end let
-										tmp29 = tmp83
-									} else {
-										var tmp84 any = v26
-										var tmp85 any = v6
-										var tmp86 any = v8
-										var tmp87 any = v9
-										var tmp88 any = v10
-										var tmp89 any = v12
-										var tmp90 any = v13
-										v4 = tmp84
-										v6 = tmp85
-										v8 = tmp86
-										v9 = tmp87
-										v10 = tmp88
-										v12 = tmp89
-										v13 = tmp90
-										continue
-									}
-									// case entry 6 (key=19, collision=false)
-								} else if tmp30 == 19 {
-									if lang.Equals(v28, "sequence_start") {
-										var tmp91 any
-										{ // let
-											// let binding "marker"
-											var tmp92 any
-											{ // let
-												// let binding "or__0__auto__"
-												var v93 any = v9
-												_ = v93
-												var tmp94 any
-												if lang.IsTruthy(v93) {
-													tmp94 = v93
-												} else {
-													tmp95 := kw_anchor.Invoke1(v22)
-													tmp94 = tmp95
-												}
-												tmp92 = tmp94
-											} // end let
-											var tmp93 any
-											{ // let
-												// let binding "or__0__auto__"
-												var v94 any = v10
-												_ = v94
-												var tmp95 any
-												if lang.IsTruthy(v94) {
-													tmp95 = v94
-												} else {
-													tmp96 := kw_tag.Invoke1(v22)
-													tmp95 = tmp96
-												}
-												tmp93 = tmp95
-											} // end let
-											var tmp94 any
-											{ // let
-												// let binding "or__0__auto__"
-												tmp95 := kw_flow.Invoke1(v22)
-												var v96 any = tmp95
-												_ = v96
-												var tmp97 any
-												if lang.IsTruthy(v96) {
-													tmp97 = v96
-												} else {
-													tmp97 = false
-												}
-												tmp94 = tmp97
-											} // end let
-											tmp95 := lang.NewMap(kw_kind, kw_sequence_DASH_start, kw_anchor, tmp92, kw_tag, tmp93, kw_flow, tmp94)
-											var v96 any = tmp95
-											_ = v96
-											// let binding "new-stack"
-											tmp97 := lang.ConjAny(v6, v96)
-											var v98 any = tmp97
-											_ = v98
-											var tmp99 any = v26
-											var tmp100 any = v98
-											var tmp101 any = v8
-											var tmp102 any = nil
-											var tmp103 any = nil
-											var tmp104 any = v12
-											var tmp105 any = v13
-											v4 = tmp99
-											v6 = tmp100
-											v8 = tmp101
-											v9 = tmp102
-											v10 = tmp103
-											v12 = tmp104
-											v13 = tmp105
-											continue
-										} // end let
-										tmp29 = tmp91
-									} else {
-										var tmp92 any = v26
-										var tmp93 any = v6
-										var tmp94 any = v8
-										var tmp95 any = v9
-										var tmp96 any = v10
-										var tmp97 any = v12
-										var tmp98 any = v13
-										v4 = tmp92
-										v6 = tmp93
-										v8 = tmp94
-										v9 = tmp95
-										v10 = tmp96
-										v12 = tmp97
-										v13 = tmp98
-										continue
-									}
-									// case entry 7 (key=21, collision=false)
-								} else if tmp30 == 21 {
-									if lang.Equals(v28, "alias") {
-										var tmp99 any
-										{ // let
-											// let binding "node"
-											tmp100 := kw_name.Invoke1(v22)
-											tmp101 := aotDirectFn3(tmp100)
-											var v102 any = tmp101
-											_ = v102
-											// let binding "new-stack"
-											tmp103 := lang.ConjAny(v6, v102)
-											var v104 any = tmp103
-											_ = v104
-											var tmp105 any = v26
-											var tmp106 any = v104
-											var tmp107 any = v8
-											var tmp108 any = nil
-											var tmp109 any = nil
-											var tmp110 any = v12
-											var tmp111 any = v13
-											v4 = tmp105
-											v6 = tmp106
-											v8 = tmp107
-											v9 = tmp108
-											v10 = tmp109
-											v12 = tmp110
-											v13 = tmp111
-											continue
-										} // end let
-										tmp29 = tmp99
-									} else {
-										var tmp100 any = v26
-										var tmp101 any = v6
-										var tmp102 any = v8
-										var tmp103 any = v9
-										var tmp104 any = v10
-										var tmp105 any = v12
-										var tmp106 any = v13
-										v4 = tmp100
-										v6 = tmp101
-										v8 = tmp102
-										v9 = tmp103
-										v10 = tmp104
-										v12 = tmp105
-										v13 = tmp106
-										continue
-									}
-									// case entry 8 (key=22, collision=false)
-								} else if tmp30 == 22 {
-									if lang.Equals(v28, "sequence_end") {
-										var tmp107 any
-										{ // let
-											// let binding "vec__10"
-											var tmp108 any
-											{ // let
-												// let binding "items"
-												tmp109 := lang.NewVector()
-												var v110 any = tmp109
-												_ = v110
-												// let binding "stack"
-												var v111 any = v6
-												_ = v111
-												for {
-													var tmp112 any
-													{ // let
-														// let binding "top"
-														tmp113 := runtime.RT.Peek(v111)
-														var v114 any = tmp113
-														_ = v114
-														var tmp115 any
-														tmp116 := kw_kind.Invoke1(v114)
-														tmp117 := aotExternalFn7(tmp116, kw_sequence_DASH_start)
-														if lang.IsTruthy(tmp117) {
-															tmp118 := lang.NewVector(v110, v111)
-															tmp115 = tmp118
-														} else {
-															var tmp119 any
-															{ // let
-																// let binding "new-items"
-																tmp120 := lang.ConjAny(v110, v114)
-																var v121 any = tmp120
-																_ = v121
-																// let binding "new-stack"
-																tmp122 := runtime.RT.Pop(v111)
-																var v123 any = tmp122
-																_ = v123
-																var tmp124 any = v121
-																var tmp125 any = v123
-																v110 = tmp124
-																v111 = tmp125
-																continue
-															} // end let
-															tmp115 = tmp119
-														}
-														tmp112 = tmp115
-													} // end let
-													tmp108 = tmp112
-													break
-												}
-											} // end let
-											var v109 any = tmp108
-											_ = v109
-											// let binding "items"
-											tmp110 := runtime.RT.NthDefault(v109, lang.IntCast(int64(0)), nil)
-											var v111 any = tmp110
-											_ = v111
-											// let binding "final-stack"
-											tmp112 := runtime.RT.NthDefault(v109, lang.IntCast(int64(1)), nil)
-											var v113 any = tmp112
-											_ = v113
-											// let binding "marker"
-											tmp114 := runtime.RT.Peek(v113)
-											var v115 any = tmp114
-											_ = v115
-											// let binding "sequence"
-											tmp116 := aotExternalFn10(v111)
-											tmp117 := aotExternalFn9(tmp116)
-											tmp118 := kw_anchor.Invoke1(v115)
-											tmp119 := kw_tag.Invoke1(v115)
-											tmp120 := kw_flow.Invoke1(v115)
-											tmp121 := aotDirectFn6(tmp117, tmp118, tmp119, tmp120)
-											var v122 any = tmp121
-											_ = v122
-											// let binding "new-stack"
-											tmp123 := runtime.PrepareReplaceLast(v113)
-											tmp124 := tmp123.Finish(v122)
-											var v125 any = tmp124
-											_ = v125
-											var tmp126 any = v26
-											var tmp127 any = v125
-											var tmp128 any = v8
-											var tmp129 any = nil
-											var tmp130 any = nil
-											var tmp131 any = v12
-											var tmp132 any = v13
-											v4 = tmp126
-											v6 = tmp127
-											v8 = tmp128
-											v9 = tmp129
-											v10 = tmp130
-											v12 = tmp131
-											v13 = tmp132
-											continue
-										} // end let
-										tmp29 = tmp107
-									} else {
-										var tmp108 any = v26
-										var tmp109 any = v6
-										var tmp110 any = v8
-										var tmp111 any = v9
-										var tmp112 any = v10
-										var tmp113 any = v12
-										var tmp114 any = v13
-										v4 = tmp108
-										v6 = tmp109
-										v8 = tmp110
-										v9 = tmp111
-										v10 = tmp112
-										v12 = tmp113
-										v13 = tmp114
-										continue
-									}
-									// case entry 9 (key=23, collision=false)
-								} else if tmp30 == 23 {
-									if lang.Equals(v28, "scalar") {
-										var tmp115 any
-										{ // let
-											// let binding "node"
-											var tmp116 any
-											{ // let
-												// let binding "or__0__auto__"
-												var v117 any = v9
-												_ = v117
-												var tmp118 any
-												if lang.IsTruthy(v117) {
-													tmp118 = v117
-												} else {
-													tmp119 := kw_anchor.Invoke1(v22)
-													tmp118 = tmp119
-												}
-												tmp116 = tmp118
-											} // end let
-											var tmp117 any
-											{ // let
-												// let binding "or__0__auto__"
-												var v118 any = v10
-												_ = v118
-												var tmp119 any
-												if lang.IsTruthy(v118) {
-													tmp119 = v118
-												} else {
-													tmp120 := kw_tag.Invoke1(v22)
-													tmp119 = tmp120
-												}
-												tmp117 = tmp119
-											} // end let
-											var tmp118 any = v22
-											tmp118 = lang.Assoc(tmp118, kw_anchor, tmp116)
-											tmp118 = lang.Assoc(tmp118, kw_tag, tmp117)
-											tmp119 := aotDirectFn5(tmp118)
-											var v120 any = tmp119
-											_ = v120
-											// let binding "new-stack"
-											tmp121 := lang.ConjAny(v6, v120)
-											var v122 any = tmp121
-											_ = v122
-											var tmp123 any = v26
-											var tmp124 any = v122
-											var tmp125 any = v8
-											var tmp126 any = nil
-											var tmp127 any = nil
-											var tmp128 any = v12
-											var tmp129 any = v13
-											v4 = tmp123
-											v6 = tmp124
-											v8 = tmp125
-											v9 = tmp126
-											v10 = tmp127
-											v12 = tmp128
-											v13 = tmp129
-											continue
-										} // end let
-										tmp29 = tmp115
-									} else {
-										var tmp116 any = v26
-										var tmp117 any = v6
-										var tmp118 any = v8
-										var tmp119 any = v9
-										var tmp120 any = v10
-										var tmp121 any = v12
-										var tmp122 any = v13
-										v4 = tmp116
-										v6 = tmp117
-										v8 = tmp118
-										v9 = tmp119
-										v10 = tmp120
-										v12 = tmp121
-										v13 = tmp122
-										continue
-									}
-								} else {
-									var tmp123 any = v26
-									var tmp124 any = v6
-									var tmp125 any = v8
-									var tmp126 any = v9
-									var tmp127 any = v10
-									var tmp128 any = v12
-									var tmp129 any = v13
-									v4 = tmp123
-									v6 = tmp124
-									v8 = tmp125
-									v9 = tmp126
-									v10 = tmp127
-									v12 = tmp128
-									v13 = tmp129
-									continue
-								}
-								tmp27 = tmp29
-							} // end let
-							tmp20 = tmp27
-						} // end let
-						tmp14 = tmp20
-					}
-					tmp3 = tmp14
-					break
+				var tmp4 any
+				tmp5 := lang.IsVector(v2)
+				if tmp5 {
+					tmp4 = v2
+				} else {
+					tmp6 := aotExternalFn2(v2)
+					tmp4 = tmp6
 				}
+				var v7 any = tmp4
+				_ = v7
+				// let binding "n"
+				tmp8 := lang.Count(v7)
+				var v9 any = tmp8
+				_ = v9
+				var tmp10 any
+				{ // let
+					// let binding "i"
+					var v11 any = int64(0)
+					_ = v11
+					// let binding "stack"
+					tmp12 := lang.NewVector()
+					tmp13 := aotExternalFn4(tmp12)
+					var v14 any = tmp13
+					_ = v14
+					// let binding "marks"
+					tmp15 := lang.NewVector()
+					var v16 any = tmp15
+					_ = v16
+					// let binding "documents"
+					tmp17 := lang.NewVector()
+					var v18 any = tmp17
+					_ = v18
+					// let binding "in-document"
+					var v19 any = false
+					_ = v19
+					for {
+						var tmp20 any
+						tmp21 := lang.Equals(v11, v9)
+						if tmp21 {
+							var tmp22 any
+							{ // let
+								// let binding "temp__0__auto__"
+								var tmp23 any
+								{ // let
+									// let binding "and__0__auto__"
+									var v24 any = v19
+									_ = v24
+									var tmp25 any
+									if lang.IsTruthy(v24) {
+										tmp26 := aotDirectFn10(v14)
+										tmp25 = tmp26
+									} else {
+										tmp25 = v24
+									}
+									tmp23 = tmp25
+								} // end let
+								var v24 any = tmp23
+								_ = v24
+								var tmp25 any
+								if lang.IsTruthy(v24) {
+									var tmp26 any
+									{ // let
+										// let binding "node"
+										var v27 any = v24
+										_ = v27
+										tmp28 := lang.ConjAny(v18, v27)
+										tmp26 = tmp28
+									} // end let
+									tmp25 = tmp26
+								} else {
+									tmp25 = v18
+								}
+								tmp22 = tmp25
+							} // end let
+							tmp20 = tmp22
+						} else {
+							var tmp23 any
+							{ // let
+								// let binding "event"
+								tmp24 := runtime.RT.Nth(v7, lang.IntCast(v11))
+								var v25 any = tmp24
+								_ = v25
+								// let binding "i"
+								tmp26 := lang.Numbers.Inc(v11)
+								var v27 any = tmp26
+								_ = v27
+								var tmp28 any
+								{ // let
+									// let binding "G__6"
+									tmp29 := aotKeywordSite0.Get(kw_event, v25, nil)
+									var v30 any = tmp29
+									_ = v30
+									// case
+									var tmp31 any
+									var tmp32 int64
+									tmp32 = int64(uint32(lang.Hash(v30)>>2) & uint32(31))
+									// case entry 0 (key=5, collision=false)
+									if tmp32 == 5 {
+										if lang.Equals(v30, "document_end") {
+											var tmp33 any
+											{ // let
+												// let binding "node"
+												tmp34 := aotDirectFn10(v14)
+												var v35 any = tmp34
+												_ = v35
+												var tmp36 any = v27
+												tmp38 := aotExternalFn7(v14)
+												var tmp37 any = tmp38
+												var tmp39 any = v16
+												tmp41 := lang.ConjAny(v18, v35)
+												var tmp40 any = tmp41
+												var tmp42 any = false
+												v11 = tmp36
+												v14 = tmp37
+												v16 = tmp39
+												v18 = tmp40
+												v19 = tmp42
+												continue
+											} // end let
+											tmp31 = tmp33
+										} else {
+											var tmp34 any = v27
+											var tmp35 any = v14
+											var tmp36 any = v16
+											var tmp37 any = v18
+											var tmp38 any = v19
+											v11 = tmp34
+											v14 = tmp35
+											v16 = tmp36
+											v18 = tmp37
+											v19 = tmp38
+											continue
+										}
+										// case entry 1 (key=7, collision=false)
+									} else if tmp32 == 7 {
+										if lang.Equals(v30, "mapping_start") {
+											var tmp39 any
+											{ // let
+												// let binding "mark"
+												tmp40 := lang.Count(v14)
+												var v41 any = tmp40
+												_ = v41
+												var tmp42 any = v27
+												tmp44 := aotExternalFn8(v14, v25)
+												var tmp43 any = tmp44
+												tmp46 := lang.ConjAny(v16, v41)
+												var tmp45 any = tmp46
+												var tmp47 any = v18
+												var tmp48 any = v19
+												v11 = tmp42
+												v14 = tmp43
+												v16 = tmp45
+												v18 = tmp47
+												v19 = tmp48
+												continue
+											} // end let
+											tmp31 = tmp39
+										} else {
+											var tmp40 any = v27
+											var tmp41 any = v14
+											var tmp42 any = v16
+											var tmp43 any = v18
+											var tmp44 any = v19
+											v11 = tmp40
+											v14 = tmp41
+											v16 = tmp42
+											v18 = tmp43
+											v19 = tmp44
+											continue
+										}
+										// case entry 2 (key=8, collision=false)
+									} else if tmp32 == 8 {
+										if lang.Equals(v30, "document_start") {
+											var tmp45 any = v27
+											var tmp46 any = v14
+											var tmp47 any = v16
+											var tmp48 any = v18
+											var tmp49 any = true
+											v11 = tmp45
+											v14 = tmp46
+											v16 = tmp47
+											v18 = tmp48
+											v19 = tmp49
+											continue
+										} else {
+											var tmp50 any = v27
+											var tmp51 any = v14
+											var tmp52 any = v16
+											var tmp53 any = v18
+											var tmp54 any = v19
+											v11 = tmp50
+											v14 = tmp51
+											v16 = tmp52
+											v18 = tmp53
+											v19 = tmp54
+											continue
+										}
+										// case entry 3 (key=10, collision=false)
+									} else if tmp32 == 10 {
+										if lang.Equals(v30, "mapping_end") {
+											var tmp55 any = v27
+											tmp57 := runtime.RT.Peek(v16)
+											tmp58 := aotDirectFn3(v14, tmp57)
+											var tmp56 any = tmp58
+											tmp60 := runtime.RT.Pop(v16)
+											var tmp59 any = tmp60
+											var tmp61 any = v18
+											var tmp62 any = v19
+											v11 = tmp55
+											v14 = tmp56
+											v16 = tmp59
+											v18 = tmp61
+											v19 = tmp62
+											continue
+										} else {
+											var tmp63 any = v27
+											var tmp64 any = v14
+											var tmp65 any = v16
+											var tmp66 any = v18
+											var tmp67 any = v19
+											v11 = tmp63
+											v14 = tmp64
+											v16 = tmp65
+											v18 = tmp66
+											v19 = tmp67
+											continue
+										}
+										// case entry 4 (key=15, collision=false)
+									} else if tmp32 == 15 {
+										if lang.Equals(v30, "stream_start") {
+											var tmp68 any = v27
+											var tmp69 any = v14
+											var tmp70 any = v16
+											var tmp71 any = v18
+											var tmp72 any = v19
+											v11 = tmp68
+											v14 = tmp69
+											v16 = tmp70
+											v18 = tmp71
+											v19 = tmp72
+											continue
+										} else {
+											var tmp73 any = v27
+											var tmp74 any = v14
+											var tmp75 any = v16
+											var tmp76 any = v18
+											var tmp77 any = v19
+											v11 = tmp73
+											v14 = tmp74
+											v16 = tmp75
+											v18 = tmp76
+											v19 = tmp77
+											continue
+										}
+										// case entry 5 (key=18, collision=false)
+									} else if tmp32 == 18 {
+										if lang.Equals(v30, "stream_end") {
+											var tmp78 any
+											{ // let
+												// let binding "documents"
+												var tmp79 any
+												{ // let
+													// let binding "temp__0__auto__"
+													var tmp80 any
+													{ // let
+														// let binding "and__0__auto__"
+														var v81 any = v19
+														_ = v81
+														var tmp82 any
+														if lang.IsTruthy(v81) {
+															tmp83 := aotDirectFn10(v14)
+															tmp82 = tmp83
+														} else {
+															tmp82 = v81
+														}
+														tmp80 = tmp82
+													} // end let
+													var v81 any = tmp80
+													_ = v81
+													var tmp82 any
+													if lang.IsTruthy(v81) {
+														var tmp83 any
+														{ // let
+															// let binding "node"
+															var v84 any = v81
+															_ = v84
+															tmp85 := lang.ConjAny(v18, v84)
+															tmp83 = tmp85
+														} // end let
+														tmp82 = tmp83
+													} else {
+														tmp82 = v18
+													}
+													tmp79 = tmp82
+												} // end let
+												var v80 any = tmp79
+												_ = v80
+												var tmp81 any = v27
+												tmp83 := lang.NewVector()
+												tmp84 := aotExternalFn4(tmp83)
+												var tmp82 any = tmp84
+												var tmp85 any = v16
+												var tmp86 any = v80
+												var tmp87 any = false
+												v11 = tmp81
+												v14 = tmp82
+												v16 = tmp85
+												v18 = tmp86
+												v19 = tmp87
+												continue
+											} // end let
+											tmp31 = tmp78
+										} else {
+											var tmp79 any = v27
+											var tmp80 any = v14
+											var tmp81 any = v16
+											var tmp82 any = v18
+											var tmp83 any = v19
+											v11 = tmp79
+											v14 = tmp80
+											v16 = tmp81
+											v18 = tmp82
+											v19 = tmp83
+											continue
+										}
+										// case entry 6 (key=19, collision=false)
+									} else if tmp32 == 19 {
+										if lang.Equals(v30, "sequence_start") {
+											var tmp84 any
+											{ // let
+												// let binding "mark"
+												tmp85 := lang.Count(v14)
+												var v86 any = tmp85
+												_ = v86
+												var tmp87 any = v27
+												tmp89 := aotExternalFn8(v14, v25)
+												var tmp88 any = tmp89
+												tmp91 := lang.ConjAny(v16, v86)
+												var tmp90 any = tmp91
+												var tmp92 any = v18
+												var tmp93 any = v19
+												v11 = tmp87
+												v14 = tmp88
+												v16 = tmp90
+												v18 = tmp92
+												v19 = tmp93
+												continue
+											} // end let
+											tmp31 = tmp84
+										} else {
+											var tmp85 any = v27
+											var tmp86 any = v14
+											var tmp87 any = v16
+											var tmp88 any = v18
+											var tmp89 any = v19
+											v11 = tmp85
+											v14 = tmp86
+											v16 = tmp87
+											v18 = tmp88
+											v19 = tmp89
+											continue
+										}
+										// case entry 7 (key=21, collision=false)
+									} else if tmp32 == 21 {
+										if lang.Equals(v30, "alias") {
+											var tmp90 any = v27
+											tmp92 := aotKeywordSite1.Get(kw_name, v25, nil)
+											tmp93 := aotDirectFn5(tmp92)
+											tmp94 := aotExternalFn8(v14, tmp93)
+											var tmp91 any = tmp94
+											var tmp95 any = v16
+											var tmp96 any = v18
+											var tmp97 any = v19
+											v11 = tmp90
+											v14 = tmp91
+											v16 = tmp95
+											v18 = tmp96
+											v19 = tmp97
+											continue
+										} else {
+											var tmp98 any = v27
+											var tmp99 any = v14
+											var tmp100 any = v16
+											var tmp101 any = v18
+											var tmp102 any = v19
+											v11 = tmp98
+											v14 = tmp99
+											v16 = tmp100
+											v18 = tmp101
+											v19 = tmp102
+											continue
+										}
+										// case entry 8 (key=22, collision=false)
+									} else if tmp32 == 22 {
+										if lang.Equals(v30, "sequence_end") {
+											var tmp103 any = v27
+											tmp105 := runtime.RT.Peek(v16)
+											tmp106 := aotDirectFn4(v14, tmp105)
+											var tmp104 any = tmp106
+											tmp108 := runtime.RT.Pop(v16)
+											var tmp107 any = tmp108
+											var tmp109 any = v18
+											var tmp110 any = v19
+											v11 = tmp103
+											v14 = tmp104
+											v16 = tmp107
+											v18 = tmp109
+											v19 = tmp110
+											continue
+										} else {
+											var tmp111 any = v27
+											var tmp112 any = v14
+											var tmp113 any = v16
+											var tmp114 any = v18
+											var tmp115 any = v19
+											v11 = tmp111
+											v14 = tmp112
+											v16 = tmp113
+											v18 = tmp114
+											v19 = tmp115
+											continue
+										}
+										// case entry 9 (key=23, collision=false)
+									} else if tmp32 == 23 {
+										if lang.Equals(v30, "scalar") {
+											var tmp116 any = v27
+											tmp118 := aotDirectFn7(v25)
+											tmp119 := aotExternalFn8(v14, tmp118)
+											var tmp117 any = tmp119
+											var tmp120 any = v16
+											var tmp121 any = v18
+											var tmp122 any = v19
+											v11 = tmp116
+											v14 = tmp117
+											v16 = tmp120
+											v18 = tmp121
+											v19 = tmp122
+											continue
+										} else {
+											var tmp123 any = v27
+											var tmp124 any = v14
+											var tmp125 any = v16
+											var tmp126 any = v18
+											var tmp127 any = v19
+											v11 = tmp123
+											v14 = tmp124
+											v16 = tmp125
+											v18 = tmp126
+											v19 = tmp127
+											continue
+										}
+									} else {
+										var tmp128 any = v27
+										var tmp129 any = v14
+										var tmp130 any = v16
+										var tmp131 any = v18
+										var tmp132 any = v19
+										v11 = tmp128
+										v14 = tmp129
+										v16 = tmp130
+										v18 = tmp131
+										v19 = tmp132
+										continue
+									}
+									tmp28 = tmp31
+								} // end let
+								tmp23 = tmp28
+							} // end let
+							tmp20 = tmp23
+						}
+						tmp10 = tmp20
+						break
+					}
+				} // end let
+				tmp3 = tmp10
 			} // end let
 			return tmp3
 		})
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_composer_compose_DASH_events = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_composer_compose_DASH_events.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(45), kw_column, int(7), kw_end_DASH_line, int(45), kw_end_DASH_column, int(20), kw_arglists, lang.NewList(lang.NewVector(sym_events)), kw_doc, "Compose events into a node tree using a stack-based approach.\n\n  The algorithm maintains:\n  - node-stack: stack of nodes being constructed\n  - anchor-stack: current anchor/tag properties\n  - documents: completed document nodes", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+		var_yamlstar_DOT_composer_compose_DASH_events.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(97), kw_column, int(7), kw_end_DASH_line, int(97), kw_end_DASH_column, int(20), kw_arglists, lang.NewList(lang.NewVector(sym_events)), kw_doc, "Compose events into a node tree using a stack-based approach.\n\n  The algorithm maintains:\n  - stack: transient stack of finished nodes and pending start events\n  - marks: indexes into stack of the pending mapping and sequence starts\n  - documents: completed document nodes", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+		}, false)
+	}
+	// end-mapping
+	{
+		tmp0 := sym_end_DASH_mapping
+		var tmp1 lang.FnFunc2
+		tmp1 = lang.FnFunc2(func(p0, p1 any) any {
+			v2 := p0
+			_ = v2
+			v3 := p1
+			_ = v3
+			var tmp4 any
+			{ // let
+				// let binding "event"
+				tmp5 := runtime.RT.Nth(v2, lang.IntCast(v3))
+				var v6 any = tmp5
+				_ = v6
+				// let binding "n"
+				tmp7 := lang.Count(v2)
+				var v8 any = tmp7
+				_ = v8
+				// let binding "pairs"
+				var tmp9 any
+				{ // let
+					// let binding "i"
+					tmp10 := lang.Numbers.Inc(v3)
+					var v11 any = tmp10
+					_ = v11
+					// let binding "pairs"
+					tmp12 := lang.NewVector()
+					tmp13 := aotExternalFn4(tmp12)
+					var v14 any = tmp13
+					_ = v14
+					for {
+						var tmp15 any
+						tmp16 := lang.Numbers.Lt(v11, v8)
+						if lang.IsTruthy(tmp16) {
+							tmp18 := lang.Numbers.Add(v11, int64(2))
+							var tmp17 any = tmp18
+							tmp20 := runtime.RT.Nth(v2, lang.IntCast(v11))
+							tmp21 := lang.Numbers.Inc(v11)
+							tmp22 := runtime.RT.Nth(v2, lang.IntCast(tmp21))
+							tmp23 := lang.NewVector(tmp20, tmp22)
+							tmp24 := aotExternalFn8(v14, tmp23)
+							var tmp19 any = tmp24
+							v11 = tmp17
+							v14 = tmp19
+							continue
+						} else {
+							tmp25 := aotExternalFn11(v14)
+							tmp15 = tmp25
+						}
+						tmp9 = tmp15
+						break
+					}
+				} // end let
+				var v10 any = tmp9
+				_ = v10
+				// let binding "node"
+				tmp11 := aotKeywordSite2.Get(kw_anchor, v6, nil)
+				tmp12 := aotKeywordSite3.Get(kw_tag, v6, nil)
+				tmp13 := aotKeywordSite4.Get(kw_flow, v6, nil)
+				tmp14 := aotDirectFn6(v10, tmp11, tmp12, tmp13)
+				var v15 any = tmp14
+				_ = v15
+				tmp16 := aotDirectFn9(v2, v3)
+				tmp17 := aotExternalFn8(tmp16, v15)
+				tmp4 = tmp17
+			} // end let
+			return tmp4
 		})
+		aotDirectFn3 = tmp1
+		var_yamlstar_DOT_composer_end_DASH_mapping = ns.InternWithValue(tmp0, tmp1, true)
+		var_yamlstar_DOT_composer_end_DASH_mapping.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(59), kw_column, int(8), kw_end_DASH_line, int(59), kw_end_DASH_column, int(18), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_stack, sym_start)), kw_doc, "Replace the mapping start event at index start and the nodes above it\n  with the finished mapping node", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+		}, false)
+	}
+	// end-sequence
+	{
+		tmp0 := sym_end_DASH_sequence
+		var tmp1 lang.FnFunc2
+		tmp1 = lang.FnFunc2(func(p0, p1 any) any {
+			v2 := p0
+			_ = v2
+			v3 := p1
+			_ = v3
+			var tmp4 any
+			{ // let
+				// let binding "event"
+				tmp5 := runtime.RT.Nth(v2, lang.IntCast(v3))
+				var v6 any = tmp5
+				_ = v6
+				// let binding "n"
+				tmp7 := lang.Count(v2)
+				var v8 any = tmp7
+				_ = v8
+				// let binding "items"
+				var tmp9 any
+				{ // let
+					// let binding "i"
+					tmp10 := lang.Numbers.Inc(v3)
+					var v11 any = tmp10
+					_ = v11
+					// let binding "items"
+					tmp12 := lang.NewVector()
+					tmp13 := aotExternalFn4(tmp12)
+					var v14 any = tmp13
+					_ = v14
+					for {
+						var tmp15 any
+						tmp16 := lang.Numbers.Lt(v11, v8)
+						if lang.IsTruthy(tmp16) {
+							tmp18 := lang.Numbers.Inc(v11)
+							var tmp17 any = tmp18
+							tmp20 := runtime.RT.Nth(v2, lang.IntCast(v11))
+							tmp21 := aotExternalFn8(v14, tmp20)
+							var tmp19 any = tmp21
+							v11 = tmp17
+							v14 = tmp19
+							continue
+						} else {
+							tmp22 := aotExternalFn11(v14)
+							tmp15 = tmp22
+						}
+						tmp9 = tmp15
+						break
+					}
+				} // end let
+				var v10 any = tmp9
+				_ = v10
+				// let binding "node"
+				tmp11 := aotKeywordSite5.Get(kw_anchor, v6, nil)
+				tmp12 := aotKeywordSite6.Get(kw_tag, v6, nil)
+				tmp13 := aotKeywordSite7.Get(kw_flow, v6, nil)
+				tmp14 := aotDirectFn8(v10, tmp11, tmp12, tmp13)
+				var v15 any = tmp14
+				_ = v15
+				tmp16 := aotDirectFn9(v2, v3)
+				tmp17 := aotExternalFn8(tmp16, v15)
+				tmp4 = tmp17
+			} // end let
+			return tmp4
+		})
+		aotDirectFn4 = tmp1
+		var_yamlstar_DOT_composer_end_DASH_sequence = ns.InternWithValue(tmp0, tmp1, true)
+		var_yamlstar_DOT_composer_end_DASH_sequence.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(75), kw_column, int(8), kw_end_DASH_line, int(75), kw_end_DASH_column, int(19), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_stack, sym_start)), kw_doc, "Replace the sequence start event at index start and the nodes above\n  it with the finished sequence node", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+		}, false)
 	}
 	// make-alias-node
 	{
@@ -1174,14 +1025,14 @@ func LoadNS() {
 		tmp1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := lang.NewMap(kw_kind, kw_alias, kw_name, v2)
+			tmp3 := aotKeywordMapNew0(kw_alias, v2)
 			return tmp3
 		})
-		aotDirectFn3 = tmp1
+		aotDirectFn5 = tmp1
 		var_yamlstar_DOT_composer_make_DASH_alias_DASH_node = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_composer_make_DASH_alias_DASH_node.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(39), kw_column, int(7), kw_end_DASH_line, int(39), kw_end_DASH_column, int(21), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Create an alias node (reference to an anchor)", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
-		})
+		var_yamlstar_DOT_composer_make_DASH_alias_DASH_node.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(45), kw_column, int(7), kw_end_DASH_line, int(45), kw_end_DASH_column, int(21), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Create an alias node (reference to an anchor)", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+		}, false)
 	}
 	// make-mapping-node
 	{
@@ -1197,55 +1048,88 @@ func LoadNS() {
 			v5 := p3
 			_ = v5
 			var tmp6 any
+			var tmp7 any
 			{ // let
-				// let binding "G__4"
-				tmp7 := lang.NewMap(kw_kind, kw_mapping)
-				var v8 any = tmp7
+				// let binding "or__0__auto__"
+				var v8 any = v3
 				_ = v8
-				// let binding "G__4"
 				var tmp9 any
-				if lang.IsTruthy(v3) {
-					var tmp10 any = v8
-					tmp10 = lang.Assoc(tmp10, kw_anchor, v3)
-					tmp9 = tmp10
-				} else {
+				if lang.IsTruthy(v8) {
 					tmp9 = v8
-				}
-				var v11 any = tmp9
-				_ = v11
-				// let binding "G__4"
-				var tmp12 any
-				if lang.IsTruthy(v4) {
-					var tmp13 any = v11
-					tmp13 = lang.Assoc(tmp13, kw_tag, v4)
-					tmp12 = tmp13
 				} else {
-					tmp12 = v11
+					var tmp10 any
+					{ // let
+						// let binding "or__0__auto__"
+						var v11 any = v4
+						_ = v11
+						var tmp12 any
+						if lang.IsTruthy(v11) {
+							tmp12 = v11
+						} else {
+							tmp12 = v5
+						}
+						tmp10 = tmp12
+					} // end let
+					tmp9 = tmp10
 				}
-				var v14 any = tmp12
-				_ = v14
-				// let binding "G__4"
-				var tmp15 any
-				if lang.IsTruthy(v5) {
-					var tmp16 any = v14
-					tmp16 = lang.Assoc(tmp16, kw_flow, v5)
-					tmp15 = tmp16
-				} else {
-					tmp15 = v14
-				}
-				var v17 any = tmp15
-				_ = v17
-				var tmp18 any = v17
-				tmp18 = lang.Assoc(tmp18, kw_value, v2)
-				tmp6 = tmp18
+				tmp7 = tmp9
 			} // end let
+			if lang.IsTruthy(tmp7) {
+				var tmp8 any
+				{ // let
+					// let binding "G__4"
+					tmp9 := aotKeywordMapNew1(kw_mapping)
+					var v10 any = tmp9
+					_ = v10
+					// let binding "G__4"
+					var tmp11 any
+					if lang.IsTruthy(v3) {
+						var tmp12 any = v10
+						tmp12 = lang.Assoc(tmp12, kw_anchor, v3)
+						tmp11 = tmp12
+					} else {
+						tmp11 = v10
+					}
+					var v13 any = tmp11
+					_ = v13
+					// let binding "G__4"
+					var tmp14 any
+					if lang.IsTruthy(v4) {
+						var tmp15 any = v13
+						tmp15 = lang.Assoc(tmp15, kw_tag, v4)
+						tmp14 = tmp15
+					} else {
+						tmp14 = v13
+					}
+					var v16 any = tmp14
+					_ = v16
+					// let binding "G__4"
+					var tmp17 any
+					if lang.IsTruthy(v5) {
+						var tmp18 any = v16
+						tmp18 = lang.Assoc(tmp18, kw_flow, v5)
+						tmp17 = tmp18
+					} else {
+						tmp17 = v16
+					}
+					var v19 any = tmp17
+					_ = v19
+					var tmp20 any = v19
+					tmp20 = lang.Assoc(tmp20, kw_value, v2)
+					tmp8 = tmp20
+				} // end let
+				tmp6 = tmp8
+			} else {
+				tmp9 := aotKeywordMapNew2(kw_mapping, v2)
+				tmp6 = tmp9
+			}
 			return tmp6
 		})
-		aotDirectFn4 = tmp1
+		aotDirectFn6 = tmp1
 		var_yamlstar_DOT_composer_make_DASH_mapping_DASH_node = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_composer_make_DASH_mapping_DASH_node.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(21), kw_column, int(7), kw_end_DASH_line, int(21), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym_pairs, sym_anchor, sym_tag, sym_flow)), kw_doc, "Create a mapping node", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
-		})
+		var_yamlstar_DOT_composer_make_DASH_mapping_DASH_node.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(23), kw_column, int(7), kw_end_DASH_line, int(23), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym_pairs, sym_anchor, sym_tag, sym_flow)), kw_doc, "Create a mapping node", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+		}, false)
 	}
 	// make-scalar-node
 	{
@@ -1261,12 +1145,12 @@ func LoadNS() {
 				_ = v4
 				// let binding "map__2"
 				var tmp5 any
-				tmp6 := aotExternalFn11(v4)
+				tmp6 := aotExternalFn12(v4)
 				if lang.IsTruthy(tmp6) {
 					var tmp7 any
 					tmp8 := lang.Next(v4)
 					if lang.IsTruthy(tmp8) {
-						tmp9 := aotExternalFn13(v4)
+						tmp9 := aotExternalFn14(v4)
 						tmp10 := lang.Apply1(lang.NewPersistentArrayMapAsIfByAssoc, tmp9)
 						tmp7 = tmp10
 					} else {
@@ -1292,7 +1176,7 @@ func LoadNS() {
 				var v17 any = tmp16
 				_ = v17
 				// let binding "style"
-				tmp18 := runtime.RT.Get(v15, kw_style, "plain")
+				tmp18 := runtime.RT.Get(v15, kw_style)
 				var v19 any = tmp18
 				_ = v19
 				// let binding "anchor"
@@ -1304,58 +1188,104 @@ func LoadNS() {
 				var v23 any = tmp22
 				_ = v23
 				var tmp24 any
+				var tmp25 any
 				{ // let
-					// let binding "G__3"
-					tmp25 := lang.NewMap(kw_kind, kw_scalar)
-					var v26 any = tmp25
+					// let binding "or__0__auto__"
+					var v26 any = v19
 					_ = v26
-					// let binding "G__3"
 					var tmp27 any
-					tmp28 := aotExternalFn14(v19, "plain")
-					if lang.IsTruthy(tmp28) {
-						var tmp29 any = v26
-						tmp29 = lang.Assoc(tmp29, kw_style, v19)
-						tmp27 = tmp29
-					} else {
+					if lang.IsTruthy(v26) {
 						tmp27 = v26
-					}
-					var v30 any = tmp27
-					_ = v30
-					// let binding "G__3"
-					var tmp31 any
-					if lang.IsTruthy(v21) {
-						var tmp32 any = v30
-						tmp32 = lang.Assoc(tmp32, kw_anchor, v21)
-						tmp31 = tmp32
 					} else {
-						tmp31 = v30
+						var tmp28 any
+						{ // let
+							// let binding "or__0__auto__"
+							var v29 any = v21
+							_ = v29
+							var tmp30 any
+							if lang.IsTruthy(v29) {
+								tmp30 = v29
+							} else {
+								tmp30 = v23
+							}
+							tmp28 = tmp30
+						} // end let
+						tmp27 = tmp28
 					}
-					var v33 any = tmp31
-					_ = v33
-					// let binding "G__3"
-					var tmp34 any
-					if lang.IsTruthy(v23) {
-						var tmp35 any = v33
-						tmp35 = lang.Assoc(tmp35, kw_tag, v23)
-						tmp34 = tmp35
-					} else {
-						tmp34 = v33
-					}
-					var v36 any = tmp34
-					_ = v36
-					var tmp37 any = v36
-					tmp37 = lang.Assoc(tmp37, kw_value, v17)
-					tmp24 = tmp37
+					tmp25 = tmp27
 				} // end let
+				if lang.IsTruthy(tmp25) {
+					var tmp26 any
+					{ // let
+						// let binding "G__3"
+						tmp27 := aotKeywordMapNew1(kw_scalar)
+						var v28 any = tmp27
+						_ = v28
+						// let binding "G__3"
+						var tmp29 any
+						var tmp30 any
+						{ // let
+							// let binding "and__0__auto__"
+							var v31 any = v19
+							_ = v31
+							var tmp32 any
+							if lang.IsTruthy(v31) {
+								tmp33 := aotExternalFn16(v19, "plain")
+								tmp32 = tmp33
+							} else {
+								tmp32 = v31
+							}
+							tmp30 = tmp32
+						} // end let
+						if lang.IsTruthy(tmp30) {
+							var tmp31 any = v28
+							tmp31 = lang.Assoc(tmp31, kw_style, v19)
+							tmp29 = tmp31
+						} else {
+							tmp29 = v28
+						}
+						var v32 any = tmp29
+						_ = v32
+						// let binding "G__3"
+						var tmp33 any
+						if lang.IsTruthy(v21) {
+							var tmp34 any = v32
+							tmp34 = lang.Assoc(tmp34, kw_anchor, v21)
+							tmp33 = tmp34
+						} else {
+							tmp33 = v32
+						}
+						var v35 any = tmp33
+						_ = v35
+						// let binding "G__3"
+						var tmp36 any
+						if lang.IsTruthy(v23) {
+							var tmp37 any = v35
+							tmp37 = lang.Assoc(tmp37, kw_tag, v23)
+							tmp36 = tmp37
+						} else {
+							tmp36 = v35
+						}
+						var v38 any = tmp36
+						_ = v38
+						var tmp39 any = v38
+						tmp39 = lang.Assoc(tmp39, kw_value, v17)
+						tmp26 = tmp39
+					} // end let
+					tmp24 = tmp26
+				} else {
+					tmp27 := aotKeywordMapNew2(kw_scalar, v17)
+					tmp24 = tmp27
+				}
 				tmp3 = tmp24
 			} // end let
 			return tmp3
 		})
-		aotDirectFn5 = tmp1
+		aotDirectFn7 = tmp1
 		var_yamlstar_DOT_composer_make_DASH_scalar_DASH_node = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_composer_make_DASH_scalar_DASH_node.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(12), kw_column, int(7), kw_end_DASH_line, int(12), kw_end_DASH_column, int(22), kw_arglists, lang.NewList(lang.NewVector(lang.NewMap(kw_keys, lang.NewVector(sym_value, sym_style, sym_anchor, sym_tag), kw_or, lang.NewMap(sym_style, "plain")))), kw_doc, "Create a scalar node from event data", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
-		})
+		var_yamlstar_DOT_composer_make_DASH_scalar_DASH_node.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(12), kw_column, int(7), kw_end_DASH_line, int(12), kw_end_DASH_column, int(22), kw_arglists, lang.NewList(lang.NewVector(lang.NewMap(kw_keys, lang.NewVector(sym_value, sym_style, sym_anchor, sym_tag)))), kw_doc, "Create a scalar node from event data", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+		}, false)
 	}
 	// make-sequence-node
 	{
@@ -1371,54 +1301,156 @@ func LoadNS() {
 			v5 := p3
 			_ = v5
 			var tmp6 any
+			var tmp7 any
 			{ // let
-				// let binding "G__5"
-				tmp7 := lang.NewMap(kw_kind, kw_sequence)
-				var v8 any = tmp7
+				// let binding "or__0__auto__"
+				var v8 any = v3
 				_ = v8
-				// let binding "G__5"
 				var tmp9 any
-				if lang.IsTruthy(v3) {
-					var tmp10 any = v8
-					tmp10 = lang.Assoc(tmp10, kw_anchor, v3)
-					tmp9 = tmp10
-				} else {
+				if lang.IsTruthy(v8) {
 					tmp9 = v8
-				}
-				var v11 any = tmp9
-				_ = v11
-				// let binding "G__5"
-				var tmp12 any
-				if lang.IsTruthy(v4) {
-					var tmp13 any = v11
-					tmp13 = lang.Assoc(tmp13, kw_tag, v4)
-					tmp12 = tmp13
 				} else {
-					tmp12 = v11
+					var tmp10 any
+					{ // let
+						// let binding "or__0__auto__"
+						var v11 any = v4
+						_ = v11
+						var tmp12 any
+						if lang.IsTruthy(v11) {
+							tmp12 = v11
+						} else {
+							tmp12 = v5
+						}
+						tmp10 = tmp12
+					} // end let
+					tmp9 = tmp10
 				}
-				var v14 any = tmp12
-				_ = v14
-				// let binding "G__5"
-				var tmp15 any
-				if lang.IsTruthy(v5) {
-					var tmp16 any = v14
-					tmp16 = lang.Assoc(tmp16, kw_flow, v5)
-					tmp15 = tmp16
-				} else {
-					tmp15 = v14
-				}
-				var v17 any = tmp15
-				_ = v17
-				var tmp18 any = v17
-				tmp18 = lang.Assoc(tmp18, kw_value, v2)
-				tmp6 = tmp18
+				tmp7 = tmp9
 			} // end let
+			if lang.IsTruthy(tmp7) {
+				var tmp8 any
+				{ // let
+					// let binding "G__5"
+					tmp9 := aotKeywordMapNew1(kw_sequence)
+					var v10 any = tmp9
+					_ = v10
+					// let binding "G__5"
+					var tmp11 any
+					if lang.IsTruthy(v3) {
+						var tmp12 any = v10
+						tmp12 = lang.Assoc(tmp12, kw_anchor, v3)
+						tmp11 = tmp12
+					} else {
+						tmp11 = v10
+					}
+					var v13 any = tmp11
+					_ = v13
+					// let binding "G__5"
+					var tmp14 any
+					if lang.IsTruthy(v4) {
+						var tmp15 any = v13
+						tmp15 = lang.Assoc(tmp15, kw_tag, v4)
+						tmp14 = tmp15
+					} else {
+						tmp14 = v13
+					}
+					var v16 any = tmp14
+					_ = v16
+					// let binding "G__5"
+					var tmp17 any
+					if lang.IsTruthy(v5) {
+						var tmp18 any = v16
+						tmp18 = lang.Assoc(tmp18, kw_flow, v5)
+						tmp17 = tmp18
+					} else {
+						tmp17 = v16
+					}
+					var v19 any = tmp17
+					_ = v19
+					var tmp20 any = v19
+					tmp20 = lang.Assoc(tmp20, kw_value, v2)
+					tmp8 = tmp20
+				} // end let
+				tmp6 = tmp8
+			} else {
+				tmp9 := aotKeywordMapNew2(kw_sequence, v2)
+				tmp6 = tmp9
+			}
 			return tmp6
 		})
-		aotDirectFn6 = tmp1
+		aotDirectFn8 = tmp1
 		var_yamlstar_DOT_composer_make_DASH_sequence_DASH_node = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_composer_make_DASH_sequence_DASH_node.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(30), kw_column, int(7), kw_end_DASH_line, int(30), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector(sym_items, sym_anchor, sym_tag, sym_flow)), kw_doc, "Create a sequence node", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+		var_yamlstar_DOT_composer_make_DASH_sequence_DASH_node.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(34), kw_column, int(7), kw_end_DASH_line, int(34), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector(sym_items, sym_anchor, sym_tag, sym_flow)), kw_doc, "Create a sequence node", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+		}, false)
+	}
+	// pop-children
+	{
+		tmp0 := sym_pop_DASH_children
+		var tmp1 lang.FnFunc2
+		tmp1 = lang.FnFunc2(func(p0, p1 any) any {
+			v2 := p0
+			_ = v2
+			v3 := p1
+			_ = v3
+			var tmp4 any
+			{ // let
+				// let binding "stack"
+				var v5 any = v2
+				_ = v5
+				for {
+					var tmp6 any
+					tmp7 := lang.Count(v5)
+					tmp8 := lang.Numbers.Gt(tmp7, v3)
+					if lang.IsTruthy(tmp8) {
+						tmp10 := aotExternalFn7(v5)
+						var tmp9 any = tmp10
+						v5 = tmp9
+						continue
+					} else {
+						tmp6 = v5
+					}
+					tmp4 = tmp6
+					break
+				}
+			} // end let
+			return tmp4
 		})
+		aotDirectFn9 = tmp1
+		var_yamlstar_DOT_composer_pop_DASH_children = ns.InternWithValue(tmp0, tmp1, true)
+		var_yamlstar_DOT_composer_pop_DASH_children.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(51), kw_column, int(8), kw_end_DASH_line, int(51), kw_end_DASH_column, int(19), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_stack, sym_start)), kw_doc, "Pop the nodes above index start off the transient stack", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+		}, false)
+	}
+	// top
+	{
+		tmp0 := sym_top
+		var tmp1 lang.FnFunc1
+		tmp1 = lang.FnFunc1(func(p0 any) any {
+			v2 := p0
+			_ = v2
+			var tmp3 any
+			{ // let
+				// let binding "n"
+				tmp4 := lang.Count(v2)
+				var v5 any = tmp4
+				_ = v5
+				var tmp6 any
+				tmp7 := lang.Numbers.IsPos(v5)
+				if lang.IsTruthy(tmp7) {
+					tmp8 := lang.Numbers.Dec(v5)
+					tmp9 := runtime.RT.Nth(v2, lang.IntCast(tmp8))
+					tmp6 = tmp9
+				} else {
+				}
+				tmp3 = tmp6
+			} // end let
+			return tmp3
+		})
+		aotDirectFn10 = tmp1
+		var_yamlstar_DOT_composer_top = ns.InternWithValue(tmp0, tmp1, true)
+		var_yamlstar_DOT_composer_top.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(90), kw_column, int(8), kw_end_DASH_line, int(90), kw_end_DASH_column, int(10), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_stack)), kw_doc, "The node on top of the transient stack, or nil when it is empty", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+		}, false)
 	}
 }

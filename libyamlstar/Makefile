@@ -75,10 +75,9 @@ CORE-SRCS := \
 
 # Gloat compiles Clojure sources directly, so use the sources shipped in the
 # exact yaml-parser artifact consumed by the JVM build.
-YAML-PARSER-VERSION := 0.2.3
+YAML-PARSER-VERSION := 0.2.4
 YAML-PARSER-JAR := cache/yaml-parser-$(YAML-PARSER-VERSION).jar
 YAML-PARSER-URL := https://repo.clojars.org/org/yamlstar/yaml-parser/$(YAML-PARSER-VERSION)/yaml-parser-$(YAML-PARSER-VERSION).jar
-YAML-PARSER-GLOAT-PREPARE := gloat/prepare-yaml-parser
 GO-YAML-REF ?= 643e93b9c9bec2be8ae2b842a3492c54532549c9
 GO-YAML-REPO ?= https://github.com/yaml/go-yaml
 GO-YAML-SRC-DIR := cache/go-yaml-$(GO-YAML-REF)
@@ -111,11 +110,9 @@ $(YAML-PARSER-JAR):
 	mv '$@.tmp' '$@'
 
 ifndef YAML-PARSER-DIR
-$(YAML-PARSER-SRC-STAMP): $(YAML-PARSER-JAR) $(YAML-PARSER-GLOAT-PREPARE) \
-  $(PERL)
+$(YAML-PARSER-SRC-STAMP): $(YAML-PARSER-JAR)
 	@mkdir -p $(YAML-PARSER-SRC-DIR)
 	unzip -oq $< 'yaml_parser/*.clj' 'yaml_parser/*.cljc' -d $(YAML-PARSER-SRC-DIR)
-	$(PERL) $(YAML-PARSER-GLOAT-PREPARE) $(YAML-PARSER-SRC-DIR)
 	touch $@
 endif
 

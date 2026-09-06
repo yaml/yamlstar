@@ -7,24 +7,30 @@ import (
 	lang "github.com/glojurelang/glojure/pkg/lang"
 	runtime "github.com/glojurelang/glojure/pkg/runtime"
 	reflect "reflect"
-	sync "sync"
+	atomic "sync/atomic"
 )
 
 var aotDirectFn0 lang.FnFunc1
 var aotDirectFn1 lang.FnFunc1
 
+var aotKeywordSite0 lang.KeywordSite
+var aotKeywordSite1 lang.KeywordSite
+
 func aotLinkFn0(vr *lang.Var) lang.FnFunc0 {
 	if vr.IsBound() {
 		return aotLinkBoundFn0(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc0
+	var linked atomic.Pointer[lang.FnFunc0]
 	return func() any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)()
+		}
 		if !vr.IsBound() {
 			return lang.Apply0(checkDerefVar(vr))
 		}
-		once.Do(func() { linked = aotLinkBoundFn0(vr) })
-		return linked()
+		fn := aotLinkBoundFn0(vr)
+		linked.Store(&fn)
+		return fn()
 	}
 }
 
@@ -43,20 +49,23 @@ func aotLinkFn1(vr *lang.Var) lang.FnFunc1 {
 	if vr.IsBound() {
 		return aotLinkBoundFn1(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc1
+	var linked atomic.Pointer[lang.FnFunc1]
 	return func(p0 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0)
+		}
 		if !vr.IsBound() {
 			return lang.Apply1(checkDerefVar(vr), p0)
 		}
-		once.Do(func() { linked = aotLinkBoundFn1(vr) })
-		return linked(p0)
+		fn := aotLinkBoundFn1(vr)
+		linked.Store(&fn)
+		return fn(p0)
 	}
 }
 
 func aotLinkBoundFn1(vr *lang.Var) lang.FnFunc1 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc1); ok {
+	if direct, ok := lang.DirectFn1(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn1); ok {
@@ -69,20 +78,23 @@ func aotLinkFn2(vr *lang.Var) lang.FnFunc2 {
 	if vr.IsBound() {
 		return aotLinkBoundFn2(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc2
+	var linked atomic.Pointer[lang.FnFunc2]
 	return func(p0 any, p1 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1)
+		}
 		if !vr.IsBound() {
 			return lang.Apply2(checkDerefVar(vr), p0, p1)
 		}
-		once.Do(func() { linked = aotLinkBoundFn2(vr) })
-		return linked(p0, p1)
+		fn := aotLinkBoundFn2(vr)
+		linked.Store(&fn)
+		return fn(p0, p1)
 	}
 }
 
 func aotLinkBoundFn2(vr *lang.Var) lang.FnFunc2 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc2); ok {
+	if direct, ok := lang.DirectFn2(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn2); ok {
@@ -117,7 +129,6 @@ func checkArityGTE(args []any, min int) {
 // LoadNS initializes the namespace "yaml-parser.core"
 func LoadNS() {
 	sym_clojure_DOT_core := lang.NewSymbolUnchecked("clojure.core")
-	sym_deref := lang.NewSymbolUnchecked("deref")
 	sym_make_DASH_parser := lang.NewSymbolUnchecked("make-parser")
 	sym_make_DASH_receiver_DASH_with_DASH_callbacks := lang.NewSymbolUnchecked("make-receiver-with-callbacks")
 	sym_parse := lang.NewSymbolUnchecked("parse")
@@ -137,8 +148,6 @@ func LoadNS() {
 	kw_file := lang.NewKeyword("file")
 	kw_line := lang.NewKeyword("line")
 	kw_ns := lang.NewKeyword("ns")
-	// var clojure.core/deref
-	var_clojure_DOT_core_deref := lang.InternVarName(sym_clojure_DOT_core, sym_deref)
 	// var yaml-parser.core/parse
 	var_yaml_DASH_parser_DOT_core_parse := lang.InternVarName(sym_yaml_DASH_parser_DOT_core, sym_parse)
 	// var yaml-parser.core/parse-yaml
@@ -152,7 +161,6 @@ func LoadNS() {
 	aotExternalFn0 := aotLinkFn0(var_yaml_DASH_parser_DOT_receiver_make_DASH_receiver_DASH_with_DASH_callbacks)
 	aotExternalFn1 := aotLinkFn1(var_yaml_DASH_parser_DOT_parser_make_DASH_parser)
 	aotExternalFn2 := aotLinkFn2(var_yaml_DASH_parser_DOT_parser_parse)
-	aotExternalFn3 := aotLinkFn1(var_clojure_DOT_core_deref)
 	// reference fmt to avoid unused import error
 	_ = fmt.Printf
 	// reference reflect to avoid unused import error
@@ -269,17 +277,17 @@ func LoadNS() {
 				} // end let
 				tmp9 := aotExternalFn2(v7, tmp8)
 				_ = tmp9
-				tmp10 := kw_events.Invoke1(v5)
-				tmp11 := aotExternalFn3(tmp10)
+				tmp10 := aotKeywordSite0.Get(kw_events, v5, nil)
+				tmp11 := lang.DerefValue(tmp10)
 				tmp3 = tmp11
 			} // end let
 			return tmp3
 		})
 		aotDirectFn0 = tmp1
 		var_yaml_DASH_parser_DOT_core_parse = ns.InternWithValue(tmp0, tmp1, true)
-		var_yaml_DASH_parser_DOT_core_parse.SetMetaLazy(func() lang.IPersistentMap {
+		var_yaml_DASH_parser_DOT_core_parse.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yaml_parser/core.glj", kw_line, int(7), kw_column, int(7), kw_end_DASH_line, int(7), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_yaml)), kw_doc, "Parse a YAML string and return a vector of YAML event maps.", kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_core))
-		})
+		}, false)
 	}
 	// parse-yaml
 	{
@@ -313,16 +321,16 @@ func LoadNS() {
 				} // end let
 				tmp9 := aotExternalFn2(v7, tmp8)
 				_ = tmp9
-				tmp10 := kw_events.Invoke1(v5)
-				tmp11 := aotExternalFn3(tmp10)
+				tmp10 := aotKeywordSite1.Get(kw_events, v5, nil)
+				tmp11 := lang.DerefValue(tmp10)
 				tmp3 = tmp11
 			} // end let
 			return tmp3
 		})
 		aotDirectFn1 = tmp1
 		var_yaml_DASH_parser_DOT_core_parse_DASH_yaml = ns.InternWithValue(tmp0, tmp1, true)
-		var_yaml_DASH_parser_DOT_core_parse_DASH_yaml.SetMetaLazy(func() lang.IPersistentMap {
+		var_yaml_DASH_parser_DOT_core_parse_DASH_yaml.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yaml_parser/core.glj", kw_line, int(15), kw_column, int(6), kw_end_DASH_line, int(15), kw_end_DASH_column, int(15), kw_doc, "Alias for parse, kept for compatibility with the original Clojure port.", kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_core))
-		})
+		}, false)
 	}
 }

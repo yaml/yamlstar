@@ -10,31 +10,105 @@ import (
 	reflect "reflect"
 	regexp6 "regexp"
 	strconv5 "strconv"
-	sync "sync"
+	atomic "sync/atomic"
 )
 
 var aotDirectFn0 lang.FnFunc1
 var aotDirectFn1 lang.FnFunc1
 var aotDirectFn2 lang.FnFunc2
 
+var aotKeywordSite0 lang.KeywordSite
+var aotKeywordSite1 lang.KeywordSite
+var aotKeywordMapShape0 = lang.NewKeywordMapShape("anchor", "node")
+
+type aotKeywordMapStorage0 struct {
+	lang.Map
+	values [2]any
+}
+
+func aotKeywordMapNew0(v0 any, v1 any) *lang.Map {
+	storage := &aotKeywordMapStorage0{}
+	storage.values = [2]any{v0, v1}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape0,
+		storage.values[:],
+	)
+}
+
+var aotKeywordSite2 lang.KeywordSite
+var aotKeywordMapShape1 = lang.NewKeywordMapShape("node")
+
+type aotKeywordMapStorage1 struct {
+	lang.Map
+	values [1]any
+}
+
+func aotKeywordMapNew1(v0 any) *lang.Map {
+	storage := &aotKeywordMapStorage1{}
+	storage.values = [1]any{v0}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape1,
+		storage.values[:],
+	)
+}
+
+var aotKeywordSite3 lang.KeywordSite
+var aotKeywordMapShape2 = lang.NewKeywordMapShape("tag", "node")
+
+type aotKeywordMapStorage2 struct {
+	lang.Map
+	values [2]any
+}
+
+func aotKeywordMapNew2(v0 any, v1 any) *lang.Map {
+	storage := &aotKeywordMapStorage2{}
+	storage.values = [2]any{v0, v1}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape2,
+		storage.values[:],
+	)
+}
+
+var aotKeywordSite4 lang.KeywordSite
+var aotKeywordSite5 lang.KeywordSite
+var aotKeywordSite6 lang.KeywordSite
+var aotKeywordSite7 lang.KeywordSite
+var aotKeywordSite8 lang.KeywordSite
+var aotKeywordSite9 lang.KeywordSite
+var aotKeywordSite10 lang.KeywordSite
+var aotKeywordSite11 lang.KeywordSite
+var aotKeywordSite12 lang.KeywordSite
+var aotKeywordSite13 lang.KeywordSite
+var aotKeywordSite14 lang.KeywordSite
+var aotKeywordSite15 lang.KeywordSite
+var aotKeywordSite16 lang.KeywordSite
+var aotKeywordSite17 lang.KeywordSite
+var aotKeywordSite18 lang.KeywordSite
+
 func aotLinkFn1(vr *lang.Var) lang.FnFunc1 {
 	if vr.IsBound() {
 		return aotLinkBoundFn1(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc1
+	var linked atomic.Pointer[lang.FnFunc1]
 	return func(p0 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0)
+		}
 		if !vr.IsBound() {
 			return lang.Apply1(checkDerefVar(vr), p0)
 		}
-		once.Do(func() { linked = aotLinkBoundFn1(vr) })
-		return linked(p0)
+		fn := aotLinkBoundFn1(vr)
+		linked.Store(&fn)
+		return fn(p0)
 	}
 }
 
 func aotLinkBoundFn1(vr *lang.Var) lang.FnFunc1 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc1); ok {
+	if direct, ok := lang.DirectFn1(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn1); ok {
@@ -47,20 +121,23 @@ func aotLinkFn2(vr *lang.Var) lang.FnFunc2 {
 	if vr.IsBound() {
 		return aotLinkBoundFn2(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc2
+	var linked atomic.Pointer[lang.FnFunc2]
 	return func(p0 any, p1 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1)
+		}
 		if !vr.IsBound() {
 			return lang.Apply2(checkDerefVar(vr), p0, p1)
 		}
-		once.Do(func() { linked = aotLinkBoundFn2(vr) })
-		return linked(p0, p1)
+		fn := aotLinkBoundFn2(vr)
+		linked.Store(&fn)
+		return fn(p0, p1)
 	}
 }
 
 func aotLinkBoundFn2(vr *lang.Var) lang.FnFunc2 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc2); ok {
+	if direct, ok := lang.DirectFn2(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn2); ok {
@@ -73,20 +150,23 @@ func aotLinkFn3(vr *lang.Var) lang.FnFunc3 {
 	if vr.IsBound() {
 		return aotLinkBoundFn3(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc3
+	var linked atomic.Pointer[lang.FnFunc3]
 	return func(p0 any, p1 any, p2 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1, p2)
+		}
 		if !vr.IsBound() {
 			return lang.Apply3(checkDerefVar(vr), p0, p1, p2)
 		}
-		once.Do(func() { linked = aotLinkBoundFn3(vr) })
-		return linked(p0, p1, p2)
+		fn := aotLinkBoundFn3(vr)
+		linked.Store(&fn)
+		return fn(p0, p1, p2)
 	}
 }
 
 func aotLinkBoundFn3(vr *lang.Var) lang.FnFunc3 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc3); ok {
+	if direct, ok := lang.DirectFn3(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn3); ok {
@@ -99,20 +179,23 @@ func aotLinkFn4(vr *lang.Var) lang.FnFunc4 {
 	if vr.IsBound() {
 		return aotLinkBoundFn4(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc4
+	var linked atomic.Pointer[lang.FnFunc4]
 	return func(p0 any, p1 any, p2 any, p3 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1, p2, p3)
+		}
 		if !vr.IsBound() {
 			return lang.Apply4(checkDerefVar(vr), p0, p1, p2, p3)
 		}
-		once.Do(func() { linked = aotLinkBoundFn4(vr) })
-		return linked(p0, p1, p2, p3)
+		fn := aotLinkBoundFn4(vr)
+		linked.Store(&fn)
+		return fn(p0, p1, p2, p3)
 	}
 }
 
 func aotLinkBoundFn4(vr *lang.Var) lang.FnFunc4 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc4); ok {
+	if direct, ok := lang.DirectFn4(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn4); ok {
@@ -146,7 +229,6 @@ func checkArityGTE(args []any, min int) {
 
 // LoadNS initializes the namespace "yamlstar.constructor"
 func LoadNS() {
-	sym__EQ_ := lang.NewSymbolUnchecked("=")
 	sym_anchors := lang.NewSymbolUnchecked("anchors")
 	sym_apply := lang.NewSymbolUnchecked("apply")
 	sym_array_DASH_map := lang.NewSymbolUnchecked("array-map")
@@ -159,7 +241,6 @@ func LoadNS() {
 	sym_construct_DASH_node := lang.NewSymbolUnchecked("construct-node")
 	sym_constructors := lang.NewSymbolUnchecked("constructors")
 	sym_contains_QMARK_ := lang.NewSymbolUnchecked("contains?")
-	sym_deref := lang.NewSymbolUnchecked("deref")
 	sym_ex_DASH_info := lang.NewSymbolUnchecked("ex-info")
 	sym_map := lang.NewSymbolUnchecked("map")
 	sym_mapv := lang.NewSymbolUnchecked("mapv")
@@ -185,14 +266,11 @@ func LoadNS() {
 	kw_line := lang.NewKeyword("line")
 	kw_mapping := lang.NewKeyword("mapping")
 	kw_name := lang.NewKeyword("name")
-	kw_node := lang.NewKeyword("node")
 	kw_ns := lang.NewKeyword("ns")
 	kw_scalar := lang.NewKeyword("scalar")
 	kw_sequence := lang.NewKeyword("sequence")
 	kw_tag := lang.NewKeyword("tag")
 	kw_value := lang.NewKeyword("value")
-	// var clojure.core/=
-	var_clojure_DOT_core__EQ_ := lang.InternVarName(sym_clojure_DOT_core, sym__EQ_)
 	// var clojure.core/apply
 	var_clojure_DOT_core_apply := lang.InternVarName(sym_clojure_DOT_core, sym_apply)
 	// var clojure.core/array-map
@@ -205,8 +283,6 @@ func LoadNS() {
 	var_clojure_DOT_core_conj := lang.InternVarName(sym_clojure_DOT_core, sym_conj)
 	// var clojure.core/contains?
 	var_clojure_DOT_core_contains_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_contains_QMARK_)
-	// var clojure.core/deref
-	var_clojure_DOT_core_deref := lang.InternVarName(sym_clojure_DOT_core, sym_deref)
 	// var clojure.core/ex-info
 	var_clojure_DOT_core_ex_DASH_info := lang.InternVarName(sym_clojure_DOT_core, sym_ex_DASH_info)
 	// var clojure.core/map
@@ -237,9 +313,7 @@ func LoadNS() {
 	aotExternalFn11 := aotLinkFn4(var_clojure_DOT_core_swap_BANG_)
 	aotExternalFn12 := aotLinkFn1(var_yamlstar_DOT_numbers_parse_DASH_safe_DASH_integer)
 	aotExternalFn13 := aotLinkFn2(var_clojure_DOT_core_re_DASH_matches)
-	aotExternalFn14 := aotLinkFn2(var_clojure_DOT_core__EQ_)
 	aotExternalFn2 := aotLinkFn2(var_clojure_DOT_core_contains_QMARK_)
-	aotExternalFn3 := aotLinkFn1(var_clojure_DOT_core_deref)
 	aotExternalFn4 := aotLinkFn2(var_clojure_DOT_core_ex_DASH_info)
 	aotExternalFn5 := aotLinkFn2(var_clojure_DOT_core_str)
 	aotExternalFn6 := aotLinkFn3(var_clojure_DOT_core_reduce)
@@ -357,9 +431,9 @@ func LoadNS() {
 		})
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_constructor_construct = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_constructor_construct.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_constructor_construct.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/constructor.glj", kw_line, int(102), kw_column, int(7), kw_end_DASH_line, int(102), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_doc, "Construct native data from a resolved node tree.\n\n  Args:\n    node: A resolved node tree\n\n  Returns:\n    Native Clojure data structure", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_constructor))
-		})
+		}, false)
 	}
 	// construct-all
 	{
@@ -389,9 +463,9 @@ func LoadNS() {
 		})
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_constructor_construct_DASH_all = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_constructor_construct_DASH_all.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_constructor_construct_DASH_all.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/constructor.glj", kw_line, int(114), kw_column, int(7), kw_end_DASH_line, int(114), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector(sym_nodes)), kw_doc, "Construct native data from multiple resolved node trees.\n\n  Args:\n    nodes: Sequence of resolved node trees\n\n  Returns:\n    Sequence of native Clojure data structures", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_constructor))
-		})
+		}, false)
 	}
 	// constructors
 	{
@@ -400,7 +474,7 @@ func LoadNS() {
 		tmp1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := kw_value.Invoke1(v2)
+			tmp3 := aotKeywordSite11.Get(kw_value, v2, nil)
 			tmp4 := aotExternalFn12(tmp3)
 			return tmp4
 		})
@@ -408,7 +482,7 @@ func LoadNS() {
 		tmp2 = lang.FnFunc1(func(p0 any) any {
 			v3 := p0
 			_ = v3
-			tmp4 := kw_value.Invoke1(v3)
+			tmp4 := aotKeywordSite12.Get(kw_value, v3, nil)
 			return tmp4
 		})
 		var tmp3 lang.FnFunc1
@@ -418,7 +492,7 @@ func LoadNS() {
 			var tmp5 any
 			{ // let
 				// let binding "value"
-				tmp6 := kw_value.Invoke1(v4)
+				tmp6 := aotKeywordSite13.Get(kw_value, v4, nil)
 				var v7 any = tmp6
 				_ = v7
 				var tmp8 any
@@ -426,8 +500,8 @@ func LoadNS() {
 				if lang.IsTruthy(tmp9) {
 					var tmp10 any
 					tmp11 := lang.First(v7)
-					tmp12 := aotExternalFn14(tmp11, lang.NewChar(45))
-					if lang.IsTruthy(tmp12) {
+					tmp12 := lang.Equals(tmp11, lang.NewChar(45))
+					if tmp12 {
 						tmp13 := lang.Apply1(math4.Inf, int64(-1))
 						tmp10 = tmp13
 					} else {
@@ -470,7 +544,7 @@ func LoadNS() {
 		tmp4 = lang.FnFunc1(func(p0 any) any {
 			v5 := p0
 			_ = v5
-			tmp6 := kw_value.Invoke1(v5)
+			tmp6 := aotKeywordSite14.Get(kw_value, v5, nil)
 			tmp7 := aotExternalFn12(tmp6)
 			return tmp7
 		})
@@ -479,7 +553,7 @@ func LoadNS() {
 			v6 := p0
 			_ = v6
 			tmp7 := lang.NewSet("True", "true", "TRUE")
-			tmp8 := kw_value.Invoke1(v6)
+			tmp8 := aotKeywordSite15.Get(kw_value, v6, nil)
 			tmp9 := aotExternalFn2(tmp7, tmp8)
 			return tmp9
 		})
@@ -500,7 +574,7 @@ func LoadNS() {
 			v9 := p0
 			_ = v9
 			tmp10 := lang.NewSet("True", "true", "TRUE")
-			tmp11 := kw_value.Invoke1(v9)
+			tmp11 := aotKeywordSite16.Get(kw_value, v9, nil)
 			tmp12 := aotExternalFn2(tmp10, tmp11)
 			return tmp12
 		})
@@ -508,7 +582,7 @@ func LoadNS() {
 		tmp9 = lang.FnFunc1(func(p0 any) any {
 			v10 := p0
 			_ = v10
-			tmp11 := kw_value.Invoke1(v10)
+			tmp11 := aotKeywordSite17.Get(kw_value, v10, nil)
 			return tmp11
 		})
 		var tmp10 lang.FnFunc1
@@ -518,7 +592,7 @@ func LoadNS() {
 			var tmp12 any
 			{ // let
 				// let binding "value"
-				tmp13 := kw_value.Invoke1(v11)
+				tmp13 := aotKeywordSite18.Get(kw_value, v11, nil)
 				var v14 any = tmp13
 				_ = v14
 				var tmp15 any
@@ -526,8 +600,8 @@ func LoadNS() {
 				if lang.IsTruthy(tmp16) {
 					var tmp17 any
 					tmp18 := lang.First(v14)
-					tmp19 := aotExternalFn14(tmp18, lang.NewChar(45))
-					if lang.IsTruthy(tmp19) {
+					tmp19 := lang.Equals(tmp18, lang.NewChar(45))
+					if tmp19 {
 						tmp20 := lang.Apply1(math4.Inf, int64(-1))
 						tmp17 = tmp20
 					} else {
@@ -567,9 +641,9 @@ func LoadNS() {
 			return tmp12
 		})
 		var_yamlstar_DOT_constructor_constructors = ns.InternWithValue(tmp0, lang.NewMapUniqueKeys("tag:yaml.org,2002:int", tmp1, "tag:yaml.org,2002:str", tmp2, "tag:yaml.org,2002:float", tmp3, "!!int", tmp4, "tag:yaml.org,2002:bool", tmp5, "!!null", tmp6, "tag:yaml.org,2002:null", tmp7, "!!bool", tmp8, "!!str", tmp9, "!!float", tmp10), true)
-		var_yamlstar_DOT_constructor_constructors.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_constructor_constructors.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yamlstar/constructor.glj", kw_line, int(8), kw_column, int(6), kw_end_DASH_line, int(8), kw_end_DASH_column, int(17), kw_doc, "Constructor functions for YAML core schema tags.\n\n  Each constructor takes a node and returns native Clojure data.\n  Supports both short form (!!null) and fully qualified (tag:yaml.org,2002:null) tags.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_constructor))
-		})
+		}, false)
 	}
 	// construct-node
 	{
@@ -588,7 +662,7 @@ func LoadNS() {
 					var tmp6 any
 					{ // let
 						// let binding "G__7"
-						tmp7 := kw_kind.Invoke1(v2)
+						tmp7 := aotKeywordSite0.Get(kw_kind, v2, nil)
 						var v8 any = tmp7
 						_ = v8
 						// case
@@ -601,19 +675,19 @@ func LoadNS() {
 								var tmp11 any
 								{ // let
 									// let binding "anchor-name"
-									tmp12 := kw_name.Invoke1(v2)
+									tmp12 := aotKeywordSite1.Get(kw_name, v2, nil)
 									var v13 any = tmp12
 									_ = v13
 									var tmp14 any
-									tmp15 := aotExternalFn3(v3)
+									tmp15 := lang.DerefValue(v3)
 									tmp16 := aotExternalFn2(tmp15, v13)
 									if lang.IsTruthy(tmp16) {
-										tmp17 := aotExternalFn3(v3)
+										tmp17 := lang.DerefValue(v3)
 										tmp18 := runtime.RT.Get(tmp17, v13)
 										tmp14 = tmp18
 									} else {
 										tmp19 := aotExternalFn5("Unknown anchor: ", v13)
-										tmp20 := lang.NewMap(kw_anchor, v13, kw_node, v2)
+										tmp20 := aotKeywordMapNew0(v13, v2)
 										tmp21 := aotExternalFn4(tmp19, tmp20)
 										panic(tmp21)
 									}
@@ -621,9 +695,9 @@ func LoadNS() {
 								} // end let
 								tmp9 = tmp11
 							} else {
-								tmp12 := kw_kind.Invoke1(v2)
+								tmp12 := aotKeywordSite2.Get(kw_kind, v2, nil)
 								tmp13 := aotExternalFn5("Unknown node kind: ", tmp12)
-								tmp14 := lang.NewMap(kw_node, v2)
+								tmp14 := aotKeywordMapNew1(v2)
 								tmp15 := aotExternalFn4(tmp13, tmp14)
 								panic(tmp15)
 							}
@@ -633,7 +707,7 @@ func LoadNS() {
 								var tmp16 any
 								{ // let
 									// let binding "tag"
-									tmp17 := kw_tag.Invoke1(v2)
+									tmp17 := aotKeywordSite3.Get(kw_tag, v2, nil)
 									var v18 any = tmp17
 									_ = v18
 									// let binding "constructor"
@@ -647,7 +721,7 @@ func LoadNS() {
 										tmp22 = tmp23
 									} else {
 										tmp24 := aotExternalFn5("Unknown tag: ", v18)
-										tmp25 := lang.NewMap(kw_tag, v18, kw_node, v2)
+										tmp25 := aotKeywordMapNew2(v18, v2)
 										tmp26 := aotExternalFn4(tmp24, tmp25)
 										panic(tmp26)
 									}
@@ -655,9 +729,9 @@ func LoadNS() {
 								} // end let
 								tmp9 = tmp16
 							} else {
-								tmp17 := kw_kind.Invoke1(v2)
+								tmp17 := aotKeywordSite4.Get(kw_kind, v2, nil)
 								tmp18 := aotExternalFn5("Unknown node kind: ", tmp17)
-								tmp19 := lang.NewMap(kw_node, v2)
+								tmp19 := aotKeywordMapNew1(v2)
 								tmp20 := aotExternalFn4(tmp18, tmp19)
 								panic(tmp20)
 							}
@@ -667,7 +741,7 @@ func LoadNS() {
 								var tmp21 any
 								{ // let
 									// let binding "pairs"
-									tmp22 := kw_value.Invoke1(v2)
+									tmp22 := aotKeywordSite5.Get(kw_value, v2, nil)
 									var v23 any = tmp22
 									_ = v23
 									// let binding "entries"
@@ -707,9 +781,9 @@ func LoadNS() {
 								} // end let
 								tmp9 = tmp21
 							} else {
-								tmp22 := kw_kind.Invoke1(v2)
+								tmp22 := aotKeywordSite6.Get(kw_kind, v2, nil)
 								tmp23 := aotExternalFn5("Unknown node kind: ", tmp22)
-								tmp24 := lang.NewMap(kw_node, v2)
+								tmp24 := aotKeywordMapNew1(v2)
 								tmp25 := aotExternalFn4(tmp23, tmp24)
 								panic(tmp25)
 							}
@@ -719,7 +793,7 @@ func LoadNS() {
 								var tmp26 any
 								{ // let
 									// let binding "items"
-									tmp27 := kw_value.Invoke1(v2)
+									tmp27 := aotKeywordSite7.Get(kw_value, v2, nil)
 									var v28 any = tmp27
 									_ = v28
 									var tmp29 lang.FnFunc1
@@ -734,16 +808,16 @@ func LoadNS() {
 								} // end let
 								tmp9 = tmp26
 							} else {
-								tmp27 := kw_kind.Invoke1(v2)
+								tmp27 := aotKeywordSite8.Get(kw_kind, v2, nil)
 								tmp28 := aotExternalFn5("Unknown node kind: ", tmp27)
-								tmp29 := lang.NewMap(kw_node, v2)
+								tmp29 := aotKeywordMapNew1(v2)
 								tmp30 := aotExternalFn4(tmp28, tmp29)
 								panic(tmp30)
 							}
 						} else {
-							tmp31 := kw_kind.Invoke1(v2)
+							tmp31 := aotKeywordSite9.Get(kw_kind, v2, nil)
 							tmp32 := aotExternalFn5("Unknown node kind: ", tmp31)
-							tmp33 := lang.NewMap(kw_node, v2)
+							tmp33 := aotKeywordMapNew1(v2)
 							tmp34 := aotExternalFn4(tmp32, tmp33)
 							panic(tmp34)
 						}
@@ -754,7 +828,7 @@ func LoadNS() {
 					var tmp8 any
 					{ // let
 						// let binding "temp__0__auto__"
-						tmp9 := kw_anchor.Invoke1(v2)
+						tmp9 := aotKeywordSite10.Get(kw_anchor, v2, nil)
 						var v10 any = tmp9
 						_ = v10
 						var tmp11 any
@@ -783,8 +857,8 @@ func LoadNS() {
 		})
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_constructor_construct_DASH_node = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_constructor_construct_DASH_node.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_constructor_construct_DASH_node.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/constructor.glj", kw_line, int(50), kw_column, int(7), kw_end_DASH_line, int(50), kw_end_DASH_column, int(20), kw_arglists, lang.NewList(lang.NewVector(sym_node, sym_anchors)), kw_doc, "Construct native data from a resolved node.\n\n  Args:\n    node: A node with resolved tags\n    anchors: An atom containing a map of anchor names to constructed values\n\n  Returns:\n    Native Clojure data (nil, boolean, number, string, map, or vector)", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_constructor))
-		})
+		}, false)
 	}
 }

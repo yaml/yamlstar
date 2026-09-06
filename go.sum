@@ -8,8 +8,8 @@ github.com/gloathub/gojava v0.1.0 h1:lNxzOURH+dWzBxgIsiEwggMKpzo+s9U6/uyC7jMwaF8
 github.com/gloathub/gojava v0.1.0/go.mod h1:5BolUlfQEVhISDwoCnchpGwFTE5upbi2965/m3WRQH8=
 github.com/gloathub/ys-v0-glj v0.1.3 h1:fwZw3WloGt+m9shvdsq1qoxT7mp2tJBeBV4vXxQmbsk=
 github.com/gloathub/ys-v0-glj v0.1.3/go.mod h1:zVwSh+pXptfavFsfZea9Cc2yExkDHw3bCBQYv09BZRg=
-github.com/glojurelang/glojure v0.7.14 h1:LRR1hj5SARFZJoUQvigCELvihXecZzhLJBAeweiZNNU=
-github.com/glojurelang/glojure v0.7.14/go.mod h1:ZYtJSMN1AB1hkDRS7zerNzDWVufuCGxKsHrQkn5l1Mc=
+github.com/glojurelang/glojure v0.7.15 h1:i1U8awmxzSxHwisteW41WTSNGiQ86Z1jy2eEfCdHrRo=
+github.com/glojurelang/glojure v0.7.15/go.mod h1:ZYtJSMN1AB1hkDRS7zerNzDWVufuCGxKsHrQkn5l1Mc=
 github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
 github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/kylelemons/godebug v1.1.0 h1:RPNrshWIDI6G2gRW9EHilWtl7Z6Sb1BR0xunSBf0SNc=

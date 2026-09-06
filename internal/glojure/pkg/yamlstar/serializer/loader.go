@@ -7,31 +7,109 @@ import (
 	lang "github.com/glojurelang/glojure/pkg/lang"
 	runtime "github.com/glojurelang/glojure/pkg/runtime"
 	reflect "reflect"
-	sync "sync"
+	atomic "sync/atomic"
 )
 
 var aotDirectFn0 lang.FnFunc1
 var aotDirectFn1 lang.FnFunc1
 var aotDirectFn2 lang.FnFunc1
 
+var aotKeywordMapShape0 = lang.NewKeywordMapShape("event")
+
+type aotKeywordMapStorage0 struct {
+	lang.Map
+	values [1]any
+}
+
+func aotKeywordMapNew0(v0 any) *lang.Map {
+	storage := &aotKeywordMapStorage0{}
+	storage.values = [1]any{v0}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape0,
+		storage.values[:],
+	)
+}
+
+var aotKeywordSite0 lang.KeywordSite
+var aotKeywordSite1 lang.KeywordSite
+var aotKeywordMapShape1 = lang.NewKeywordMapShape("event", "name")
+
+type aotKeywordMapStorage1 struct {
+	lang.Map
+	values [2]any
+}
+
+func aotKeywordMapNew1(v0 any, v1 any) *lang.Map {
+	storage := &aotKeywordMapStorage1{}
+	storage.values = [2]any{v0, v1}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape1,
+		storage.values[:],
+	)
+}
+
+var aotKeywordSite2 lang.KeywordSite
+var aotKeywordMapShape2 = lang.NewKeywordMapShape("event", "value")
+
+type aotKeywordMapStorage2 struct {
+	lang.Map
+	values [2]any
+}
+
+func aotKeywordMapNew2(v0 any, v1 any) *lang.Map {
+	storage := &aotKeywordMapStorage2{}
+	storage.values = [2]any{v0, v1}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape2,
+		storage.values[:],
+	)
+}
+
+var aotKeywordSite3 lang.KeywordSite
+var aotKeywordSite4 lang.KeywordSite
+var aotKeywordSite5 lang.KeywordSite
+var aotKeywordSite6 lang.KeywordSite
+var aotKeywordSite7 lang.KeywordSite
+var aotKeywordSite8 lang.KeywordSite
+var aotKeywordSite9 lang.KeywordSite
+var aotKeywordSite10 lang.KeywordSite
+var aotKeywordSite11 lang.KeywordSite
+var aotKeywordSite12 lang.KeywordSite
+var aotKeywordSite13 lang.KeywordSite
+var aotKeywordSite14 lang.KeywordSite
+var aotKeywordSite15 lang.KeywordSite
+var aotKeywordSite16 lang.KeywordSite
+var aotKeywordSite17 lang.KeywordSite
+var aotKeywordSite18 lang.KeywordSite
+var aotKeywordSite19 lang.KeywordSite
+var aotKeywordSite20 lang.KeywordSite
+var aotKeywordSite21 lang.KeywordSite
+var aotKeywordSite22 lang.KeywordSite
+
 func aotLinkFn1(vr *lang.Var) lang.FnFunc1 {
 	if vr.IsBound() {
 		return aotLinkBoundFn1(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc1
+	var linked atomic.Pointer[lang.FnFunc1]
 	return func(p0 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0)
+		}
 		if !vr.IsBound() {
 			return lang.Apply1(checkDerefVar(vr), p0)
 		}
-		once.Do(func() { linked = aotLinkBoundFn1(vr) })
-		return linked(p0)
+		fn := aotLinkBoundFn1(vr)
+		linked.Store(&fn)
+		return fn(p0)
 	}
 }
 
 func aotLinkBoundFn1(vr *lang.Var) lang.FnFunc1 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc1); ok {
+	if direct, ok := lang.DirectFn1(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn1); ok {
@@ -44,20 +122,23 @@ func aotLinkFn2(vr *lang.Var) lang.FnFunc2 {
 	if vr.IsBound() {
 		return aotLinkBoundFn2(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc2
+	var linked atomic.Pointer[lang.FnFunc2]
 	return func(p0 any, p1 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1)
+		}
 		if !vr.IsBound() {
 			return lang.Apply2(checkDerefVar(vr), p0, p1)
 		}
-		once.Do(func() { linked = aotLinkBoundFn2(vr) })
-		return linked(p0, p1)
+		fn := aotLinkBoundFn2(vr)
+		linked.Store(&fn)
+		return fn(p0, p1)
 	}
 }
 
 func aotLinkBoundFn2(vr *lang.Var) lang.FnFunc2 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc2); ok {
+	if direct, ok := lang.DirectFn2(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn2); ok {
@@ -70,20 +151,23 @@ func aotLinkFn3(vr *lang.Var) lang.FnFunc3 {
 	if vr.IsBound() {
 		return aotLinkBoundFn3(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc3
+	var linked atomic.Pointer[lang.FnFunc3]
 	return func(p0 any, p1 any, p2 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1, p2)
+		}
 		if !vr.IsBound() {
 			return lang.Apply3(checkDerefVar(vr), p0, p1, p2)
 		}
-		once.Do(func() { linked = aotLinkBoundFn3(vr) })
-		return linked(p0, p1, p2)
+		fn := aotLinkBoundFn3(vr)
+		linked.Store(&fn)
+		return fn(p0, p1, p2)
 	}
 }
 
 func aotLinkBoundFn3(vr *lang.Var) lang.FnFunc3 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc3); ok {
+	if direct, ok := lang.DirectFn3(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn3); ok {
@@ -135,7 +219,6 @@ func LoadNS() {
 	kw_doc := lang.NewKeyword("doc")
 	kw_end_DASH_column := lang.NewKeyword("end-column")
 	kw_end_DASH_line := lang.NewKeyword("end-line")
-	kw_event := lang.NewKeyword("event")
 	kw_file := lang.NewKeyword("file")
 	kw_flow := lang.NewKeyword("flow")
 	kw_kind := lang.NewKeyword("kind")
@@ -257,8 +340,8 @@ func LoadNS() {
 		tmp1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := lang.NewMap(kw_event, "stream_start")
-			tmp4 := lang.NewMap(kw_event, "document_start")
+			tmp3 := aotKeywordMapNew0("stream_start")
+			tmp4 := aotKeywordMapNew0("document_start")
 			tmp5 := lang.NewVector(tmp3, tmp4)
 			var tmp6 any
 			if lang.IsTruthy(v2) {
@@ -266,8 +349,8 @@ func LoadNS() {
 				tmp6 = tmp7
 			} else {
 			}
-			tmp8 := lang.NewMap(kw_event, "document_end")
-			tmp9 := lang.NewMap(kw_event, "stream_end")
+			tmp8 := aotKeywordMapNew0("document_end")
+			tmp9 := aotKeywordMapNew0("stream_end")
 			tmp10 := lang.NewVector(tmp8, tmp9)
 			tmp11 := aotExternalFn1(tmp5, tmp6, tmp10)
 			tmp12 := aotExternalFn0(tmp11)
@@ -275,9 +358,9 @@ func LoadNS() {
 		})
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_serializer_serialize = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_serializer_serialize.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_serializer_serialize.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/serializer.glj", kw_line, int(36), kw_column, int(7), kw_end_DASH_line, int(36), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_doc, "Serialize one YAML node tree to an event stream.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_serializer))
-		})
+		}, false)
 	}
 	// serialize-all
 	{
@@ -286,13 +369,13 @@ func LoadNS() {
 		tmp1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := lang.NewMap(kw_event, "stream_start")
+			tmp3 := aotKeywordMapNew0("stream_start")
 			tmp4 := lang.NewVector(tmp3)
 			var tmp5 lang.FnFunc1
 			tmp5 = lang.FnFunc1(func(p0 any) any {
 				v6 := p0
 				_ = v6
-				tmp7 := lang.NewMap(kw_event, "document_start")
+				tmp7 := aotKeywordMapNew0("document_start")
 				tmp8 := lang.NewVector(tmp7)
 				var tmp9 any
 				if lang.IsTruthy(v6) {
@@ -300,13 +383,13 @@ func LoadNS() {
 					tmp9 = tmp10
 				} else {
 				}
-				tmp11 := lang.NewMap(kw_event, "document_end")
+				tmp11 := aotKeywordMapNew0("document_end")
 				tmp12 := lang.NewVector(tmp11)
 				tmp13 := aotExternalFn1(tmp8, tmp9, tmp12)
 				return tmp13
 			})
 			tmp6 := aotExternalFn2(tmp5, v2)
-			tmp7 := lang.NewMap(kw_event, "stream_end")
+			tmp7 := aotKeywordMapNew0("stream_end")
 			tmp8 := lang.NewVector(tmp7)
 			tmp9 := aotExternalFn1(tmp4, tmp6, tmp8)
 			tmp10 := aotExternalFn0(tmp9)
@@ -314,9 +397,9 @@ func LoadNS() {
 		})
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_serializer_serialize_DASH_all = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_serializer_serialize_DASH_all.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_serializer_serialize_DASH_all.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/serializer.glj", kw_line, int(44), kw_column, int(7), kw_end_DASH_line, int(44), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector(sym_nodes)), kw_doc, "Serialize multiple YAML node trees to an event stream.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_serializer))
-		})
+		}, false)
 	}
 	// serialize-node
 	{
@@ -328,7 +411,7 @@ func LoadNS() {
 			var tmp3 any
 			{ // let
 				// let binding "G__1"
-				tmp4 := kw_kind.Invoke1(v2)
+				tmp4 := aotKeywordSite0.Get(kw_kind, v2, nil)
 				var v5 any = tmp4
 				_ = v5
 				// case
@@ -338,8 +421,8 @@ func LoadNS() {
 				// case entry 0 (key=0, collision=false)
 				if tmp7 == 0 {
 					if v5 == kw_alias {
-						tmp8 := kw_name.Invoke1(v2)
-						tmp9 := lang.NewMap(kw_event, "alias", kw_name, tmp8)
+						tmp8 := aotKeywordSite1.Get(kw_name, v2, nil)
+						tmp9 := aotKeywordMapNew1("alias", tmp8)
 						tmp10 := lang.NewVector(tmp9)
 						tmp6 = tmp10
 					} else {
@@ -353,15 +436,15 @@ func LoadNS() {
 						var tmp13 any
 						{ // let
 							// let binding "G__2"
-							tmp14 := kw_value.Invoke1(v2)
-							tmp15 := lang.NewMap(kw_event, "scalar", kw_value, tmp14)
+							tmp14 := aotKeywordSite2.Get(kw_value, v2, nil)
+							tmp15 := aotKeywordMapNew2("scalar", tmp14)
 							var v16 any = tmp15
 							_ = v16
 							// let binding "G__2"
 							var tmp17 any
-							tmp18 := kw_anchor.Invoke1(v2)
+							tmp18 := aotKeywordSite3.Get(kw_anchor, v2, nil)
 							if lang.IsTruthy(tmp18) {
-								tmp19 := kw_anchor.Invoke1(v2)
+								tmp19 := aotKeywordSite4.Get(kw_anchor, v2, nil)
 								var tmp20 any = v16
 								tmp20 = lang.Assoc(tmp20, kw_anchor, tmp19)
 								tmp17 = tmp20
@@ -372,9 +455,9 @@ func LoadNS() {
 							_ = v21
 							// let binding "G__2"
 							var tmp22 any
-							tmp23 := kw_tag.Invoke1(v2)
+							tmp23 := aotKeywordSite5.Get(kw_tag, v2, nil)
 							if lang.IsTruthy(tmp23) {
-								tmp24 := kw_tag.Invoke1(v2)
+								tmp24 := aotKeywordSite6.Get(kw_tag, v2, nil)
 								var tmp25 any = v21
 								tmp25 = lang.Assoc(tmp25, kw_tag, tmp24)
 								tmp22 = tmp25
@@ -384,9 +467,9 @@ func LoadNS() {
 							var v26 any = tmp22
 							_ = v26
 							var tmp27 any
-							tmp28 := kw_style.Invoke1(v2)
+							tmp28 := aotKeywordSite7.Get(kw_style, v2, nil)
 							if lang.IsTruthy(tmp28) {
-								tmp29 := kw_style.Invoke1(v2)
+								tmp29 := aotKeywordSite8.Get(kw_style, v2, nil)
 								var tmp30 any = v26
 								tmp30 = lang.Assoc(tmp30, kw_style, tmp29)
 								tmp27 = tmp30
@@ -408,14 +491,14 @@ func LoadNS() {
 						var tmp17 any
 						{ // let
 							// let binding "G__3"
-							tmp18 := lang.NewMap(kw_event, "mapping_start")
+							tmp18 := aotKeywordMapNew0("mapping_start")
 							var v19 any = tmp18
 							_ = v19
 							// let binding "G__3"
 							var tmp20 any
-							tmp21 := kw_anchor.Invoke1(v2)
+							tmp21 := aotKeywordSite9.Get(kw_anchor, v2, nil)
 							if lang.IsTruthy(tmp21) {
-								tmp22 := kw_anchor.Invoke1(v2)
+								tmp22 := aotKeywordSite10.Get(kw_anchor, v2, nil)
 								var tmp23 any = v19
 								tmp23 = lang.Assoc(tmp23, kw_anchor, tmp22)
 								tmp20 = tmp23
@@ -426,9 +509,9 @@ func LoadNS() {
 							_ = v24
 							// let binding "G__3"
 							var tmp25 any
-							tmp26 := kw_tag.Invoke1(v2)
+							tmp26 := aotKeywordSite11.Get(kw_tag, v2, nil)
 							if lang.IsTruthy(tmp26) {
-								tmp27 := kw_tag.Invoke1(v2)
+								tmp27 := aotKeywordSite12.Get(kw_tag, v2, nil)
 								var tmp28 any = v24
 								tmp28 = lang.Assoc(tmp28, kw_tag, tmp27)
 								tmp25 = tmp28
@@ -438,9 +521,9 @@ func LoadNS() {
 							var v29 any = tmp25
 							_ = v29
 							var tmp30 any
-							tmp31 := kw_flow.Invoke1(v2)
+							tmp31 := aotKeywordSite13.Get(kw_flow, v2, nil)
 							if lang.IsTruthy(tmp31) {
-								tmp32 := kw_flow.Invoke1(v2)
+								tmp32 := aotKeywordSite14.Get(kw_flow, v2, nil)
 								var tmp33 any = v29
 								tmp33 = lang.Assoc(tmp33, kw_flow, tmp32)
 								tmp30 = tmp33
@@ -474,9 +557,9 @@ func LoadNS() {
 							} // end let
 							return tmp21
 						})
-						tmp20 := kw_value.Invoke1(v2)
+						tmp20 := aotKeywordSite15.Get(kw_value, v2, nil)
 						tmp21 := aotExternalFn2(tmp19, tmp20)
-						tmp22 := lang.NewMap(kw_event, "mapping_end")
+						tmp22 := aotKeywordMapNew0("mapping_end")
 						tmp23 := lang.NewVector(tmp22)
 						tmp24 := aotExternalFn1(tmp18, tmp21, tmp23)
 						tmp25 := aotExternalFn0(tmp24)
@@ -492,14 +575,14 @@ func LoadNS() {
 						var tmp28 any
 						{ // let
 							// let binding "G__8"
-							tmp29 := lang.NewMap(kw_event, "sequence_start")
+							tmp29 := aotKeywordMapNew0("sequence_start")
 							var v30 any = tmp29
 							_ = v30
 							// let binding "G__8"
 							var tmp31 any
-							tmp32 := kw_anchor.Invoke1(v2)
+							tmp32 := aotKeywordSite16.Get(kw_anchor, v2, nil)
 							if lang.IsTruthy(tmp32) {
-								tmp33 := kw_anchor.Invoke1(v2)
+								tmp33 := aotKeywordSite17.Get(kw_anchor, v2, nil)
 								var tmp34 any = v30
 								tmp34 = lang.Assoc(tmp34, kw_anchor, tmp33)
 								tmp31 = tmp34
@@ -510,9 +593,9 @@ func LoadNS() {
 							_ = v35
 							// let binding "G__8"
 							var tmp36 any
-							tmp37 := kw_tag.Invoke1(v2)
+							tmp37 := aotKeywordSite18.Get(kw_tag, v2, nil)
 							if lang.IsTruthy(tmp37) {
-								tmp38 := kw_tag.Invoke1(v2)
+								tmp38 := aotKeywordSite19.Get(kw_tag, v2, nil)
 								var tmp39 any = v35
 								tmp39 = lang.Assoc(tmp39, kw_tag, tmp38)
 								tmp36 = tmp39
@@ -522,9 +605,9 @@ func LoadNS() {
 							var v40 any = tmp36
 							_ = v40
 							var tmp41 any
-							tmp42 := kw_flow.Invoke1(v2)
+							tmp42 := aotKeywordSite20.Get(kw_flow, v2, nil)
 							if lang.IsTruthy(tmp42) {
-								tmp43 := kw_flow.Invoke1(v2)
+								tmp43 := aotKeywordSite21.Get(kw_flow, v2, nil)
 								var tmp44 any = v40
 								tmp44 = lang.Assoc(tmp44, kw_flow, tmp43)
 								tmp41 = tmp44
@@ -535,9 +618,9 @@ func LoadNS() {
 						} // end let
 						tmp29 := lang.NewVector(tmp28)
 						tmp30 := checkDerefVar(var_yamlstar_DOT_serializer_serialize_DASH_node)
-						tmp31 := kw_value.Invoke1(v2)
+						tmp31 := aotKeywordSite22.Get(kw_value, v2, nil)
 						tmp32 := aotExternalFn2(tmp30, tmp31)
-						tmp33 := lang.NewMap(kw_event, "sequence_end")
+						tmp33 := aotKeywordMapNew0("sequence_end")
 						tmp34 := lang.NewVector(tmp33)
 						tmp35 := aotExternalFn1(tmp29, tmp32, tmp34)
 						tmp36 := aotExternalFn0(tmp35)
@@ -558,8 +641,8 @@ func LoadNS() {
 		})
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_serializer_serialize_DASH_node = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_serializer_serialize_DASH_node.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_serializer_serialize_DASH_node.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/serializer.glj", kw_line, int(5), kw_column, int(8), kw_end_DASH_line, int(5), kw_end_DASH_column, int(21), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_serializer))
-		})
+		}, false)
 	}
 }

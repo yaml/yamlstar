@@ -7,7 +7,7 @@ import (
 	lang "github.com/glojurelang/glojure/pkg/lang"
 	runtime "github.com/glojurelang/glojure/pkg/runtime"
 	reflect "reflect"
-	sync "sync"
+	atomic "sync/atomic"
 )
 
 var aotDirectFn0 lang.FnFunc2
@@ -18,20 +18,23 @@ func aotLinkFn2(vr *lang.Var) lang.FnFunc2 {
 	if vr.IsBound() {
 		return aotLinkBoundFn2(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc2
+	var linked atomic.Pointer[lang.FnFunc2]
 	return func(p0 any, p1 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1)
+		}
 		if !vr.IsBound() {
 			return lang.Apply2(checkDerefVar(vr), p0, p1)
 		}
-		once.Do(func() { linked = aotLinkBoundFn2(vr) })
-		return linked(p0, p1)
+		fn := aotLinkBoundFn2(vr)
+		linked.Store(&fn)
+		return fn(p0, p1)
 	}
 }
 
 func aotLinkBoundFn2(vr *lang.Var) lang.FnFunc2 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc2); ok {
+	if direct, ok := lang.DirectFn2(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn2); ok {
@@ -44,20 +47,23 @@ func aotLinkFn4(vr *lang.Var) lang.FnFunc4 {
 	if vr.IsBound() {
 		return aotLinkBoundFn4(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc4
+	var linked atomic.Pointer[lang.FnFunc4]
 	return func(p0 any, p1 any, p2 any, p3 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1, p2, p3)
+		}
 		if !vr.IsBound() {
 			return lang.Apply4(checkDerefVar(vr), p0, p1, p2, p3)
 		}
-		once.Do(func() { linked = aotLinkBoundFn4(vr) })
-		return linked(p0, p1, p2, p3)
+		fn := aotLinkBoundFn4(vr)
+		linked.Store(&fn)
+		return fn(p0, p1, p2, p3)
 	}
 }
 
 func aotLinkBoundFn4(vr *lang.Var) lang.FnFunc4 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc4); ok {
+	if direct, ok := lang.DirectFn4(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn4); ok {
@@ -217,9 +223,9 @@ func LoadNS() {
 		})
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_options_add = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_options_add.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_options_add.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/options.glj", kw_line, int(9), kw_column, int(7), kw_end_DASH_line, int(9), kw_end_DASH_column, int(9), kw_arglists, lang.NewList(lang.NewVector(sym_options, sym_m)), kw_doc, "Shallow-merge m into options.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_options))
-		})
+		}, false)
 	}
 	// options
 	{
@@ -231,9 +237,9 @@ func LoadNS() {
 		})
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_options_options = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_options_options.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_options_options.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/options.glj", kw_line, int(4), kw_column, int(7), kw_end_DASH_line, int(4), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Return an empty YAMLStar options map.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_options))
-		})
+		}, false)
 	}
 	// plugin
 	{
@@ -250,8 +256,8 @@ func LoadNS() {
 		})
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_options_plugin = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_options_plugin.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_options_plugin.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/options.glj", kw_line, int(14), kw_column, int(7), kw_end_DASH_line, int(14), kw_end_DASH_column, int(12), kw_arglists, lang.NewList(lang.NewVector(sym_options, sym_plugin_DASH_options)), kw_doc, "Add a plugin option fragment under :plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_options))
-		})
+		}, false)
 	}
 }

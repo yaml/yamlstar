@@ -8,32 +8,47 @@ import (
 	runtime "github.com/glojurelang/glojure/pkg/runtime"
 	reflect "reflect"
 	regexp4 "regexp"
-	sync "sync"
+	atomic "sync/atomic"
 )
 
 var aotDirectFn0 lang.FnFunc1
 var aotDirectFn1 lang.FnFunc1
 var aotDirectFn2 lang.FnFunc1
 var aotDirectFn3 lang.FnFunc1
+var aotDirectFn4 lang.FnFunc1
+
+var aotKeywordSite0 lang.KeywordSite
+var aotKeywordSite1 lang.KeywordSite
+var aotKeywordSite2 lang.KeywordSite
+var aotKeywordSite3 lang.KeywordSite
+var aotKeywordSite4 lang.KeywordSite
+var aotKeywordSite5 lang.KeywordSite
+var aotKeywordSite6 lang.KeywordSite
+var aotKeywordSite7 lang.KeywordSite
+var aotKeywordSite8 lang.KeywordSite
+var aotKeywordSite9 lang.KeywordSite
 
 func aotLinkFn2(vr *lang.Var) lang.FnFunc2 {
 	if vr.IsBound() {
 		return aotLinkBoundFn2(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc2
+	var linked atomic.Pointer[lang.FnFunc2]
 	return func(p0 any, p1 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1)
+		}
 		if !vr.IsBound() {
 			return lang.Apply2(checkDerefVar(vr), p0, p1)
 		}
-		once.Do(func() { linked = aotLinkBoundFn2(vr) })
-		return linked(p0, p1)
+		fn := aotLinkBoundFn2(vr)
+		linked.Store(&fn)
+		return fn(p0, p1)
 	}
 }
 
 func aotLinkBoundFn2(vr *lang.Var) lang.FnFunc2 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc2); ok {
+	if direct, ok := lang.DirectFn2(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn2); ok {
@@ -46,20 +61,23 @@ func aotLinkFn3(vr *lang.Var) lang.FnFunc3 {
 	if vr.IsBound() {
 		return aotLinkBoundFn3(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc3
+	var linked atomic.Pointer[lang.FnFunc3]
 	return func(p0 any, p1 any, p2 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1, p2)
+		}
 		if !vr.IsBound() {
 			return lang.Apply3(checkDerefVar(vr), p0, p1, p2)
 		}
-		once.Do(func() { linked = aotLinkBoundFn3(vr) })
-		return linked(p0, p1, p2)
+		fn := aotLinkBoundFn3(vr)
+		linked.Store(&fn)
+		return fn(p0, p1, p2)
 	}
 }
 
 func aotLinkBoundFn3(vr *lang.Var) lang.FnFunc3 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc3); ok {
+	if direct, ok := lang.DirectFn3(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn3); ok {
@@ -93,8 +111,8 @@ func checkArityGTE(args []any, min int) {
 
 // LoadNS initializes the namespace "yamlstar.resolver"
 func LoadNS() {
-	sym__EQ_ := lang.NewSymbolUnchecked("=")
 	sym_clojure_DOT_core := lang.NewSymbolUnchecked("clojure.core")
+	sym_infer_DASH_number_DASH_tag := lang.NewSymbolUnchecked("infer-number-tag")
 	sym_infer_DASH_scalar_DASH_tag := lang.NewSymbolUnchecked("infer-scalar-tag")
 	sym_map := lang.NewSymbolUnchecked("map")
 	sym_mapv := lang.NewSymbolUnchecked("mapv")
@@ -117,19 +135,20 @@ func LoadNS() {
 	kw_line := lang.NewKeyword("line")
 	kw_mapping := lang.NewKeyword("mapping")
 	kw_ns := lang.NewKeyword("ns")
+	kw_private := lang.NewKeyword("private")
 	kw_scalar := lang.NewKeyword("scalar")
 	kw_sequence := lang.NewKeyword("sequence")
 	kw_style := lang.NewKeyword("style")
 	kw_tag := lang.NewKeyword("tag")
 	kw_value := lang.NewKeyword("value")
-	// var clojure.core/=
-	var_clojure_DOT_core__EQ_ := lang.InternVarName(sym_clojure_DOT_core, sym__EQ_)
 	// var clojure.core/map
 	var_clojure_DOT_core_map := lang.InternVarName(sym_clojure_DOT_core, sym_map)
 	// var clojure.core/mapv
 	var_clojure_DOT_core_mapv := lang.InternVarName(sym_clojure_DOT_core, sym_mapv)
 	// var clojure.core/re-matches
 	var_clojure_DOT_core_re_DASH_matches := lang.InternVarName(sym_clojure_DOT_core, sym_re_DASH_matches)
+	// var yamlstar.resolver/infer-number-tag
+	var_yamlstar_DOT_resolver_infer_DASH_number_DASH_tag := lang.InternVarName(sym_yamlstar_DOT_resolver, sym_infer_DASH_number_DASH_tag)
 	// var yamlstar.resolver/infer-scalar-tag
 	var_yamlstar_DOT_resolver_infer_DASH_scalar_DASH_tag := lang.InternVarName(sym_yamlstar_DOT_resolver, sym_infer_DASH_scalar_DASH_tag)
 	// var yamlstar.resolver/resolve
@@ -138,8 +157,7 @@ func LoadNS() {
 	var_yamlstar_DOT_resolver_resolve_DASH_all := lang.InternVarName(sym_yamlstar_DOT_resolver, sym_resolve_DASH_all)
 	// var yamlstar.resolver/resolve-node
 	var_yamlstar_DOT_resolver_resolve_DASH_node := lang.InternVarName(sym_yamlstar_DOT_resolver, sym_resolve_DASH_node)
-	aotExternalFn0 := aotLinkFn2(var_clojure_DOT_core__EQ_)
-	aotExternalFn1 := aotLinkFn2(var_clojure_DOT_core_re_DASH_matches)
+	aotExternalFn0 := aotLinkFn2(var_clojure_DOT_core_re_DASH_matches)
 	aotExternalFn2 := aotLinkFn2(var_clojure_DOT_core_map)
 	aotExternalFn3 := aotLinkFn2(var_clojure_DOT_core_mapv)
 	// reference fmt to avoid unused import error
@@ -232,22 +250,79 @@ func LoadNS() {
 	var closed4 any
 	var closed5 any
 	{
-		closed0 = regexp4.MustCompile("null|Null|NULL|~")
+		closed0 = regexp4.MustCompile("[-+]?[0-9]+")
 	}
 	{
-		closed1 = regexp4.MustCompile("true|True|TRUE|false|False|FALSE")
+		closed1 = regexp4.MustCompile("[-+]?(\\.[0-9]+|[0-9]+(\\.[0-9]*)?)([eE][-+]?[0-9]+)?")
 	}
 	{
-		closed2 = regexp4.MustCompile("[-+]?[0-9]+")
+		closed2 = regexp4.MustCompile("[+-]?(\\.inf|\\.Inf|\\.INF)")
 	}
 	{
-		closed3 = regexp4.MustCompile("[-+]?(\\.[0-9]+|[0-9]+(\\.[0-9]*)?)([eE][-+]?[0-9]+)?")
+		closed3 = regexp4.MustCompile("\\.nan|\\.NaN|\\.NAN")
 	}
 	{
-		closed4 = regexp4.MustCompile("[+-]?(\\.inf|\\.Inf|\\.INF)")
+		closed4 = regexp4.MustCompile("true|True|TRUE|false|False|FALSE")
 	}
 	{
-		closed5 = regexp4.MustCompile("\\.nan|\\.NaN|\\.NAN")
+		closed5 = regexp4.MustCompile("null|Null|NULL|~")
+	}
+	// infer-number-tag
+	{
+		tmp0 := sym_infer_DASH_number_DASH_tag
+		var tmp1 lang.FnFunc1
+		tmp1 = lang.FnFunc1(func(p0 any) any {
+			v2 := p0
+			_ = v2
+			var tmp3 any
+			tmp4 := aotExternalFn0(closed0, v2)
+			if lang.IsTruthy(tmp4) {
+				tmp3 = "!!int"
+			} else {
+				var tmp5 any
+				var tmp6 any
+				{ // let
+					// let binding "or__0__auto__"
+					tmp7 := aotExternalFn0(closed1, v2)
+					var v8 any = tmp7
+					_ = v8
+					var tmp9 any
+					if lang.IsTruthy(v8) {
+						tmp9 = v8
+					} else {
+						var tmp10 any
+						{ // let
+							// let binding "or__0__auto__"
+							tmp11 := aotExternalFn0(closed2, v2)
+							var v12 any = tmp11
+							_ = v12
+							var tmp13 any
+							if lang.IsTruthy(v12) {
+								tmp13 = v12
+							} else {
+								tmp14 := aotExternalFn0(closed3, v2)
+								tmp13 = tmp14
+							}
+							tmp10 = tmp13
+						} // end let
+						tmp9 = tmp10
+					}
+					tmp6 = tmp9
+				} // end let
+				if lang.IsTruthy(tmp6) {
+					tmp5 = "!!float"
+				} else {
+					tmp5 = "!!str"
+				}
+				tmp3 = tmp5
+			}
+			return tmp3
+		})
+		aotDirectFn0 = tmp1
+		var_yamlstar_DOT_resolver_infer_DASH_number_DASH_tag = ns.InternWithValue(tmp0, tmp1, true)
+		var_yamlstar_DOT_resolver_infer_DASH_number_DASH_tag.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.glj", kw_line, int(10), kw_column, int(8), kw_end_DASH_line, int(10), kw_end_DASH_column, int(23), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_doc, "Infer !!int, !!float or !!str for a value starting with a sign, a dot\n  or a digit", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
+		}, false)
 	}
 	// infer-scalar-tag
 	{
@@ -257,82 +332,236 @@ func LoadNS() {
 			v2 := p0
 			_ = v2
 			var tmp3 any
-			var tmp4 any
-			{ // let
-				// let binding "or__0__auto__"
-				tmp5 := aotExternalFn0(v2, "")
-				var v6 any = tmp5
-				_ = v6
-				var tmp7 any
-				if lang.IsTruthy(v6) {
-					tmp7 = v6
-				} else {
-					tmp8 := aotExternalFn1(closed0, v2)
-					tmp7 = tmp8
-				}
-				tmp4 = tmp7
-			} // end let
-			if lang.IsTruthy(tmp4) {
+			tmp4 := lang.Equals(v2, "")
+			if tmp4 {
 				tmp3 = "!!null"
 			} else {
 				var tmp5 any
-				tmp6 := aotExternalFn1(closed1, v2)
-				if lang.IsTruthy(tmp6) {
-					tmp5 = "!!bool"
-				} else {
-					var tmp7 any
-					tmp8 := aotExternalFn1(closed2, v2)
-					if lang.IsTruthy(tmp8) {
-						tmp7 = "!!int"
-					} else {
-						var tmp9 any
-						var tmp10 any
-						{ // let
-							// let binding "or__0__auto__"
-							tmp11 := aotExternalFn1(closed3, v2)
-							var v12 any = tmp11
-							_ = v12
-							var tmp13 any
-							if lang.IsTruthy(v12) {
-								tmp13 = v12
-							} else {
-								var tmp14 any
-								{ // let
-									// let binding "or__0__auto__"
-									tmp15 := aotExternalFn1(closed4, v2)
-									var v16 any = tmp15
-									_ = v16
-									var tmp17 any
-									if lang.IsTruthy(v16) {
-										tmp17 = v16
-									} else {
-										tmp18 := aotExternalFn1(closed5, v2)
-										tmp17 = tmp18
-									}
-									tmp14 = tmp17
-								} // end let
-								tmp13 = tmp14
-							}
-							tmp10 = tmp13
-						} // end let
-						if lang.IsTruthy(tmp10) {
-							tmp9 = "!!float"
+				{ // let
+					// let binding "G__34"
+					tmp6 := runtime.RT.Nth(v2, lang.IntCast(int64(0)))
+					var v7 any = tmp6
+					_ = v7
+					// case
+					var tmp8 any
+					var tmp9 int64
+					tmp9 = int64(lang.Hash(v7))
+					// case entry 0 (key=43, collision=false)
+					if tmp9 == 43 {
+						if lang.Equals(v7, lang.NewChar(43)) {
+							tmp10 := aotDirectFn0(v2)
+							tmp8 = tmp10
 						} else {
-							tmp9 = "!!str"
+							tmp8 = "!!str"
 						}
-						tmp7 = tmp9
+						// case entry 1 (key=45, collision=false)
+					} else if tmp9 == 45 {
+						if lang.Equals(v7, lang.NewChar(45)) {
+							tmp11 := aotDirectFn0(v2)
+							tmp8 = tmp11
+						} else {
+							tmp8 = "!!str"
+						}
+						// case entry 2 (key=46, collision=false)
+					} else if tmp9 == 46 {
+						if lang.Equals(v7, lang.NewChar(46)) {
+							tmp12 := aotDirectFn0(v2)
+							tmp8 = tmp12
+						} else {
+							tmp8 = "!!str"
+						}
+						// case entry 3 (key=48, collision=false)
+					} else if tmp9 == 48 {
+						if lang.Equals(v7, lang.NewChar(48)) {
+							tmp13 := aotDirectFn0(v2)
+							tmp8 = tmp13
+						} else {
+							tmp8 = "!!str"
+						}
+						// case entry 4 (key=49, collision=false)
+					} else if tmp9 == 49 {
+						if lang.Equals(v7, lang.NewChar(49)) {
+							tmp14 := aotDirectFn0(v2)
+							tmp8 = tmp14
+						} else {
+							tmp8 = "!!str"
+						}
+						// case entry 5 (key=50, collision=false)
+					} else if tmp9 == 50 {
+						if lang.Equals(v7, lang.NewChar(50)) {
+							tmp15 := aotDirectFn0(v2)
+							tmp8 = tmp15
+						} else {
+							tmp8 = "!!str"
+						}
+						// case entry 6 (key=51, collision=false)
+					} else if tmp9 == 51 {
+						if lang.Equals(v7, lang.NewChar(51)) {
+							tmp16 := aotDirectFn0(v2)
+							tmp8 = tmp16
+						} else {
+							tmp8 = "!!str"
+						}
+						// case entry 7 (key=52, collision=false)
+					} else if tmp9 == 52 {
+						if lang.Equals(v7, lang.NewChar(52)) {
+							tmp17 := aotDirectFn0(v2)
+							tmp8 = tmp17
+						} else {
+							tmp8 = "!!str"
+						}
+						// case entry 8 (key=53, collision=false)
+					} else if tmp9 == 53 {
+						if lang.Equals(v7, lang.NewChar(53)) {
+							tmp18 := aotDirectFn0(v2)
+							tmp8 = tmp18
+						} else {
+							tmp8 = "!!str"
+						}
+						// case entry 9 (key=54, collision=false)
+					} else if tmp9 == 54 {
+						if lang.Equals(v7, lang.NewChar(54)) {
+							tmp19 := aotDirectFn0(v2)
+							tmp8 = tmp19
+						} else {
+							tmp8 = "!!str"
+						}
+						// case entry 10 (key=55, collision=false)
+					} else if tmp9 == 55 {
+						if lang.Equals(v7, lang.NewChar(55)) {
+							tmp20 := aotDirectFn0(v2)
+							tmp8 = tmp20
+						} else {
+							tmp8 = "!!str"
+						}
+						// case entry 11 (key=56, collision=false)
+					} else if tmp9 == 56 {
+						if lang.Equals(v7, lang.NewChar(56)) {
+							tmp21 := aotDirectFn0(v2)
+							tmp8 = tmp21
+						} else {
+							tmp8 = "!!str"
+						}
+						// case entry 12 (key=57, collision=false)
+					} else if tmp9 == 57 {
+						if lang.Equals(v7, lang.NewChar(57)) {
+							tmp22 := aotDirectFn0(v2)
+							tmp8 = tmp22
+						} else {
+							tmp8 = "!!str"
+						}
+						// case entry 13 (key=70, collision=false)
+					} else if tmp9 == 70 {
+						if lang.Equals(v7, lang.NewChar(70)) {
+							var tmp23 any
+							tmp24 := aotExternalFn0(closed4, v2)
+							if lang.IsTruthy(tmp24) {
+								tmp23 = "!!bool"
+							} else {
+								tmp23 = "!!str"
+							}
+							tmp8 = tmp23
+						} else {
+							tmp8 = "!!str"
+						}
+						// case entry 14 (key=78, collision=false)
+					} else if tmp9 == 78 {
+						if lang.Equals(v7, lang.NewChar(78)) {
+							var tmp25 any
+							tmp26 := aotExternalFn0(closed5, v2)
+							if lang.IsTruthy(tmp26) {
+								tmp25 = "!!null"
+							} else {
+								tmp25 = "!!str"
+							}
+							tmp8 = tmp25
+						} else {
+							tmp8 = "!!str"
+						}
+						// case entry 15 (key=84, collision=false)
+					} else if tmp9 == 84 {
+						if lang.Equals(v7, lang.NewChar(84)) {
+							var tmp27 any
+							tmp28 := aotExternalFn0(closed4, v2)
+							if lang.IsTruthy(tmp28) {
+								tmp27 = "!!bool"
+							} else {
+								tmp27 = "!!str"
+							}
+							tmp8 = tmp27
+						} else {
+							tmp8 = "!!str"
+						}
+						// case entry 16 (key=102, collision=false)
+					} else if tmp9 == 102 {
+						if lang.Equals(v7, lang.NewChar(102)) {
+							var tmp29 any
+							tmp30 := aotExternalFn0(closed4, v2)
+							if lang.IsTruthy(tmp30) {
+								tmp29 = "!!bool"
+							} else {
+								tmp29 = "!!str"
+							}
+							tmp8 = tmp29
+						} else {
+							tmp8 = "!!str"
+						}
+						// case entry 17 (key=110, collision=false)
+					} else if tmp9 == 110 {
+						if lang.Equals(v7, lang.NewChar(110)) {
+							var tmp31 any
+							tmp32 := aotExternalFn0(closed5, v2)
+							if lang.IsTruthy(tmp32) {
+								tmp31 = "!!null"
+							} else {
+								tmp31 = "!!str"
+							}
+							tmp8 = tmp31
+						} else {
+							tmp8 = "!!str"
+						}
+						// case entry 18 (key=116, collision=false)
+					} else if tmp9 == 116 {
+						if lang.Equals(v7, lang.NewChar(116)) {
+							var tmp33 any
+							tmp34 := aotExternalFn0(closed4, v2)
+							if lang.IsTruthy(tmp34) {
+								tmp33 = "!!bool"
+							} else {
+								tmp33 = "!!str"
+							}
+							tmp8 = tmp33
+						} else {
+							tmp8 = "!!str"
+						}
+						// case entry 19 (key=126, collision=false)
+					} else if tmp9 == 126 {
+						if lang.Equals(v7, lang.NewChar(126)) {
+							var tmp35 any
+							tmp36 := aotExternalFn0(closed5, v2)
+							if lang.IsTruthy(tmp36) {
+								tmp35 = "!!null"
+							} else {
+								tmp35 = "!!str"
+							}
+							tmp8 = tmp35
+						} else {
+							tmp8 = "!!str"
+						}
+					} else {
+						tmp8 = "!!str"
 					}
-					tmp5 = tmp7
-				}
+					tmp5 = tmp8
+				} // end let
 				tmp3 = tmp5
 			}
 			return tmp3
 		})
-		aotDirectFn0 = tmp1
+		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_resolver_infer_DASH_scalar_DASH_tag = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_resolver_infer_DASH_scalar_DASH_tag.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.glj", kw_line, int(10), kw_column, int(7), kw_end_DASH_line, int(10), kw_end_DASH_column, int(22), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_doc, "Infer the tag for an untagged scalar based on YAML 1.2 core schema.\n\n  Args:\n    value: The string value of the scalar\n\n  Returns:\n    A tag string (!!null, !!bool, !!int, !!float, or !!str)", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
-		})
+		var_yamlstar_DOT_resolver_infer_DASH_scalar_DASH_tag.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.glj", kw_line, int(27), kw_column, int(7), kw_end_DASH_line, int(27), kw_end_DASH_column, int(22), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_doc, "Infer the tag for an untagged scalar based on YAML 1.2 core schema.\n\n  Only the patterns that can start with the first character are tried:\n  null and bool words, or the numeric forms.\n\n  Args:\n    value: The string value of the scalar\n\n  Returns:\n    A tag string (!!null, !!bool, !!int, !!float, or !!str)", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
+		}, false)
 	}
 	// resolve
 	{
@@ -341,14 +570,14 @@ func LoadNS() {
 		tmp1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := aotDirectFn3(v2)
+			tmp3 := aotDirectFn4(v2)
 			return tmp3
 		})
-		aotDirectFn1 = tmp1
+		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_resolver_resolve = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_resolver_resolve.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.glj", kw_line, int(92), kw_column, int(7), kw_end_DASH_line, int(92), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_doc, "Resolve tags for a node tree.\n\n  Walks the entire tree and adds tags to all untagged nodes.\n\n  Args:\n    node: A node tree from composer\n\n  Returns:\n    The same node tree structure with all tags resolved", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
-		})
+		var_yamlstar_DOT_resolver_resolve.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.glj", kw_line, int(110), kw_column, int(7), kw_end_DASH_line, int(110), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_doc, "Resolve tags for a node tree.\n\n  Walks the entire tree and adds tags to all untagged nodes.\n\n  Args:\n    node: A node tree from composer\n\n  Returns:\n    The same node tree structure with all tags resolved", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
+		}, false)
 	}
 	// resolve-node
 	{
@@ -361,8 +590,8 @@ func LoadNS() {
 			if lang.IsTruthy(v2) {
 				var tmp4 any
 				{ // let
-					// let binding "G__40"
-					tmp5 := kw_kind.Invoke1(v2)
+					// let binding "G__35"
+					tmp5 := aotKeywordSite0.Get(kw_kind, v2, nil)
 					var v6 any = tmp5
 					_ = v6
 					// case
@@ -381,37 +610,44 @@ func LoadNS() {
 						if v6 == kw_scalar {
 							var tmp9 any
 							{ // let
-								// let binding "tag"
-								var tmp10 any
-								tmp11 := kw_tag.Invoke1(v2)
-								tmp12 := aotExternalFn0("!", tmp11)
-								if lang.IsTruthy(tmp12) {
-									tmp10 = "!!str"
-								} else {
+								// let binding "temp__0__auto__"
+								tmp10 := aotKeywordSite1.Get(kw_tag, v2, nil)
+								var v11 any = tmp10
+								_ = v11
+								var tmp12 any
+								if lang.IsTruthy(v11) {
 									var tmp13 any
-									tmp14 := kw_tag.Invoke1(v2)
-									if lang.IsTruthy(tmp14) {
-										tmp15 := kw_tag.Invoke1(v2)
-										tmp13 = tmp15
-									} else {
-										var tmp16 any
-										tmp17 := kw_style.Invoke1(v2)
-										if lang.IsTruthy(tmp17) {
-											tmp16 = "!!str"
+									{ // let
+										// let binding "tag"
+										var v14 any = v11
+										_ = v14
+										var tmp15 any
+										tmp16 := lang.Equals("!", v14)
+										if tmp16 {
+											var tmp17 any = v2
+											tmp17 = lang.Assoc(tmp17, kw_tag, "!!str")
+											tmp15 = tmp17
 										} else {
-											tmp18 := kw_value.Invoke1(v2)
-											tmp19 := aotDirectFn0(tmp18)
-											tmp16 = tmp19
+											tmp15 = v2
 										}
-										tmp13 = tmp16
+										tmp13 = tmp15
+									} // end let
+									tmp12 = tmp13
+								} else {
+									var tmp14 any
+									tmp15 := aotKeywordSite2.Get(kw_style, v2, nil)
+									if lang.IsTruthy(tmp15) {
+										tmp14 = "!!str"
+									} else {
+										tmp16 := aotKeywordSite3.Get(kw_value, v2, nil)
+										tmp17 := aotDirectFn1(tmp16)
+										tmp14 = tmp17
 									}
-									tmp10 = tmp13
+									var tmp18 any = v2
+									tmp18 = lang.Assoc(tmp18, kw_tag, tmp14)
+									tmp12 = tmp18
 								}
-								var v20 any = tmp10
-								_ = v20
-								var tmp21 any = v2
-								tmp21 = lang.Assoc(tmp21, kw_tag, v20)
-								tmp9 = tmp21
+								tmp9 = tmp12
 							} // end let
 							tmp7 = tmp9
 						} else {
@@ -424,15 +660,15 @@ func LoadNS() {
 							{ // let
 								// let binding "tag"
 								var tmp11 any
-								tmp12 := kw_tag.Invoke1(v2)
-								tmp13 := aotExternalFn0("!", tmp12)
-								if lang.IsTruthy(tmp13) {
+								tmp12 := aotKeywordSite4.Get(kw_tag, v2, nil)
+								tmp13 := lang.Equals("!", tmp12)
+								if tmp13 {
 									tmp11 = "!!map"
 								} else {
 									var tmp14 any
 									{ // let
 										// let binding "or__0__auto__"
-										tmp15 := kw_tag.Invoke1(v2)
+										tmp15 := aotKeywordSite5.Get(kw_tag, v2, nil)
 										var v16 any = tmp15
 										_ = v16
 										var tmp17 any
@@ -448,7 +684,7 @@ func LoadNS() {
 								var v15 any = tmp11
 								_ = v15
 								// let binding "pairs"
-								tmp16 := kw_value.Invoke1(v2)
+								tmp16 := aotKeywordSite6.Get(kw_value, v2, nil)
 								var v17 any = tmp16
 								_ = v17
 								// let binding "resolved-pairs"
@@ -458,7 +694,7 @@ func LoadNS() {
 									_ = v19
 									var tmp20 any
 									{ // let
-										// let binding "vec__42"
+										// let binding "vec__37"
 										var v21 any = v19
 										_ = v21
 										// let binding "k"
@@ -469,8 +705,8 @@ func LoadNS() {
 										tmp24 := runtime.RT.NthDefault(v21, lang.IntCast(int64(1)), nil)
 										var v25 any = tmp24
 										_ = v25
-										tmp26 := aotDirectFn3(v23)
-										tmp27 := aotDirectFn3(v25)
+										tmp26 := aotDirectFn4(v23)
+										tmp27 := aotDirectFn4(v25)
 										tmp28 := lang.NewVector(tmp26, tmp27)
 										tmp20 = tmp28
 									} // end let
@@ -495,15 +731,15 @@ func LoadNS() {
 							{ // let
 								// let binding "tag"
 								var tmp12 any
-								tmp13 := kw_tag.Invoke1(v2)
-								tmp14 := aotExternalFn0("!", tmp13)
-								if lang.IsTruthy(tmp14) {
+								tmp13 := aotKeywordSite7.Get(kw_tag, v2, nil)
+								tmp14 := lang.Equals("!", tmp13)
+								if tmp14 {
 									tmp12 = "!!seq"
 								} else {
 									var tmp15 any
 									{ // let
 										// let binding "or__0__auto__"
-										tmp16 := kw_tag.Invoke1(v2)
+										tmp16 := aotKeywordSite8.Get(kw_tag, v2, nil)
 										var v17 any = tmp16
 										_ = v17
 										var tmp18 any
@@ -519,7 +755,7 @@ func LoadNS() {
 								var v16 any = tmp12
 								_ = v16
 								// let binding "items"
-								tmp17 := kw_value.Invoke1(v2)
+								tmp17 := aotKeywordSite9.Get(kw_value, v2, nil)
 								var v18 any = tmp17
 								_ = v18
 								// let binding "resolved-items"
@@ -546,11 +782,11 @@ func LoadNS() {
 			}
 			return tmp3
 		})
-		aotDirectFn3 = tmp1
+		aotDirectFn4 = tmp1
 		var_yamlstar_DOT_resolver_resolve_DASH_node = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_resolver_resolve_DASH_node.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.glj", kw_line, int(39), kw_column, int(7), kw_end_DASH_line, int(39), kw_end_DASH_column, int(18), kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_doc, "Add resolved tag to a node.\n\n  For untagged nodes, infers the tag based on YAML 1.2 core schema.\n  For the explicit non-specific tag (!), uses the kind-specific default tag.\n  For other already-tagged nodes, leaves the tag unchanged.\n  Recursively processes child nodes.\n\n  Args:\n    node: A node from the composer\n\n  Returns:\n    The node with :tag field populated", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
-		})
+		var_yamlstar_DOT_resolver_resolve_DASH_node.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.glj", kw_line, int(56), kw_column, int(7), kw_end_DASH_line, int(56), kw_end_DASH_column, int(18), kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_doc, "Add resolved tag to a node.\n\n  For untagged nodes, infers the tag based on YAML 1.2 core schema.\n  For the explicit non-specific tag (!), uses the kind-specific default tag.\n  For other already-tagged nodes, leaves the tag unchanged.\n  Recursively processes child nodes.\n\n  Args:\n    node: A node from the composer\n\n  Returns:\n    The node with :tag field populated", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
+		}, false)
 	}
 	// resolve-all
 	{
@@ -563,10 +799,10 @@ func LoadNS() {
 			tmp4 := aotExternalFn2(tmp3, v2)
 			return tmp4
 		})
-		aotDirectFn2 = tmp1
+		aotDirectFn3 = tmp1
 		var_yamlstar_DOT_resolver_resolve_DASH_all = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_resolver_resolve_DASH_all.SetMetaLazy(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.glj", kw_line, int(105), kw_column, int(7), kw_end_DASH_line, int(105), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_nodes)), kw_doc, "Resolve tags for multiple node trees.\n\n  Args:\n    nodes: Sequence of node trees from composer\n\n  Returns:\n    Sequence of node trees with tags resolved", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
-		})
+		var_yamlstar_DOT_resolver_resolve_DASH_all.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.glj", kw_line, int(123), kw_column, int(7), kw_end_DASH_line, int(123), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_nodes)), kw_doc, "Resolve tags for multiple node trees.\n\n  Args:\n    nodes: Sequence of node trees from composer\n\n  Returns:\n    Sequence of node trees with tags resolved", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
+		}, false)
 	}
 }

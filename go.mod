@@ -4,7 +4,7 @@ go 1.24
 
 require (
 	github.com/gloathub/ys-v0-glj v0.1.3
-	github.com/glojurelang/glojure v0.7.14
+	github.com/glojurelang/glojure v0.7.15
 )
 
 require (

@@ -8,30 +8,49 @@ import (
 	runtime "github.com/glojurelang/glojure/pkg/runtime"
 	goyamlparser4 "github.com/yaml/yamlstar/internal/goyamlparser"
 	reflect "reflect"
-	sync "sync"
+	atomic "sync/atomic"
 )
 
 var aotDirectFn0 lang.FnFunc2
 var aotDirectFn1 lang.FnFunc0
 
+var aotKeywordMapShape0 = lang.NewKeywordMapShape("name", "parse", "default-config")
+
+type aotKeywordMapStorage0 struct {
+	lang.Map
+	values [3]any
+}
+
+func aotKeywordMapNew0(v0 any, v1 any, v2 any) *lang.Map {
+	storage := &aotKeywordMapStorage0{}
+	storage.values = [3]any{v0, v1, v2}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape0,
+		storage.values[:],
+	)
+}
 func aotLinkFn3(vr *lang.Var) lang.FnFunc3 {
 	if vr.IsBound() {
 		return aotLinkBoundFn3(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc3
+	var linked atomic.Pointer[lang.FnFunc3]
 	return func(p0 any, p1 any, p2 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1, p2)
+		}
 		if !vr.IsBound() {
 			return lang.Apply3(checkDerefVar(vr), p0, p1, p2)
 		}
-		once.Do(func() { linked = aotLinkBoundFn3(vr) })
-		return linked(p0, p1, p2)
+		fn := aotLinkBoundFn3(vr)
+		linked.Store(&fn)
+		return fn(p0, p1, p2)
 	}
 }
 
 func aotLinkBoundFn3(vr *lang.Var) lang.FnFunc3 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc3); ok {
+	if direct, ok := lang.DirectFn3(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn3); ok {
@@ -75,15 +94,12 @@ func LoadNS() {
 	sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml := lang.NewSymbolUnchecked("yamlstar.plugin.parser.go-yaml")
 	kw_arglists := lang.NewKeyword("arglists")
 	kw_column := lang.NewKeyword("column")
-	kw_default_DASH_config := lang.NewKeyword("default-config")
 	kw_doc := lang.NewKeyword("doc")
 	kw_end_DASH_column := lang.NewKeyword("end-column")
 	kw_end_DASH_line := lang.NewKeyword("end-line")
 	kw_file := lang.NewKeyword("file")
 	kw_line := lang.NewKeyword("line")
-	kw_name := lang.NewKeyword("name")
 	kw_ns := lang.NewKeyword("ns")
-	kw_parse := lang.NewKeyword("parse")
 	kw_private := lang.NewKeyword("private")
 	// var yamlstar.plugin.parser.go-yaml/parse
 	var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_parse := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml, sym_parse)
@@ -225,9 +241,9 @@ func LoadNS() {
 		})
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_parse = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_parse.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_parse.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser/go_yaml.glj", kw_line, int(16), kw_column, int(7), kw_end_DASH_line, int(16), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str, sym__config)), kw_doc, "Parse a YAML string into a YAMLStar event stream using go-yaml.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
-		})
+		}, false)
 	}
 	// plugin
 	{
@@ -278,10 +294,10 @@ func LoadNS() {
 			} // end let
 			return tmp5
 		})
-		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_plugin = ns.InternWithValue(tmp0, lang.NewMap(kw_name, "go-yaml", kw_parse, tmp1, kw_default_DASH_config, lang.NewMap()), true)
-		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_plugin.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_plugin = ns.InternWithValue(tmp0, aotKeywordMapNew0("go-yaml", tmp1, lang.NewMap()), true)
+		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_plugin.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yamlstar/plugin/parser/go_yaml.glj", kw_line, int(32), kw_column, int(6), kw_end_DASH_line, int(32), kw_end_DASH_column, int(11), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
-		})
+		}, false)
 	}
 	// require-glojure-runtime
 	{
@@ -292,8 +308,8 @@ func LoadNS() {
 		})
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_require_DASH_glojure_DASH_runtime = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_require_DASH_glojure_DASH_runtime.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_require_DASH_glojure_DASH_runtime.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser/go_yaml.glj", kw_line, int(9), kw_column, int(8), kw_end_DASH_line, int(9), kw_end_DASH_column, int(30), kw_private, true, kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
-		})
+		}, false)
 	}
 }

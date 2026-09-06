@@ -8,7 +8,7 @@ import (
 	runtime "github.com/glojurelang/glojure/pkg/runtime"
 	reflect "reflect"
 	strconv4 "strconv"
-	sync "sync"
+	atomic "sync/atomic"
 )
 
 var aotDirectFn0 lang.FnFunc1
@@ -17,24 +17,43 @@ var aotDirectFn2 lang.FnFunc1
 var aotDirectFn3 lang.FnFunc1
 var aotDirectFn4 lang.FnFunc1
 
+var aotKeywordMapShape0 = lang.NewKeywordMapShape("value", "min", "max")
+
+type aotKeywordMapStorage0 struct {
+	lang.Map
+	values [3]any
+}
+
+func aotKeywordMapNew0(v0 any, v1 any, v2 any) *lang.Map {
+	storage := &aotKeywordMapStorage0{}
+	storage.values = [3]any{v0, v1, v2}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape0,
+		storage.values[:],
+	)
+}
 func aotLinkFn2(vr *lang.Var) lang.FnFunc2 {
 	if vr.IsBound() {
 		return aotLinkBoundFn2(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc2
+	var linked atomic.Pointer[lang.FnFunc2]
 	return func(p0 any, p1 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1)
+		}
 		if !vr.IsBound() {
 			return lang.Apply2(checkDerefVar(vr), p0, p1)
 		}
-		once.Do(func() { linked = aotLinkBoundFn2(vr) })
-		return linked(p0, p1)
+		fn := aotLinkBoundFn2(vr)
+		linked.Store(&fn)
+		return fn(p0, p1)
 	}
 }
 
 func aotLinkBoundFn2(vr *lang.Var) lang.FnFunc2 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc2); ok {
+	if direct, ok := lang.DirectFn2(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn2); ok {
@@ -47,20 +66,23 @@ func aotLinkFn3(vr *lang.Var) lang.FnFunc3 {
 	if vr.IsBound() {
 		return aotLinkBoundFn3(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc3
+	var linked atomic.Pointer[lang.FnFunc3]
 	return func(p0 any, p1 any, p2 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1, p2)
+		}
 		if !vr.IsBound() {
 			return lang.Apply3(checkDerefVar(vr), p0, p1, p2)
 		}
-		once.Do(func() { linked = aotLinkBoundFn3(vr) })
-		return linked(p0, p1, p2)
+		fn := aotLinkBoundFn3(vr)
+		linked.Store(&fn)
+		return fn(p0, p1, p2)
 	}
 }
 
 func aotLinkBoundFn3(vr *lang.Var) lang.FnFunc3 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc3); ok {
+	if direct, ok := lang.DirectFn3(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn3); ok {
@@ -113,10 +135,7 @@ func LoadNS() {
 	kw_end_DASH_line := lang.NewKeyword("end-line")
 	kw_file := lang.NewKeyword("file")
 	kw_line := lang.NewKeyword("line")
-	kw_max := lang.NewKeyword("max")
-	kw_min := lang.NewKeyword("min")
 	kw_ns := lang.NewKeyword("ns")
-	kw_value := lang.NewKeyword("value")
 	// var clojure.core/ex-info
 	var_clojure_DOT_core_ex_DASH_info := lang.InternVarName(sym_clojure_DOT_core, sym_ex_DASH_info)
 	// var clojure.core/str
@@ -254,25 +273,25 @@ func LoadNS() {
 		})
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_numbers_parse_DASH_safe_DASH_integer = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_numbers_parse_DASH_safe_DASH_integer.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_numbers_parse_DASH_safe_DASH_integer.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yamlstar/numbers.glj", kw_line, int(31), kw_column, int(7), kw_end_DASH_line, int(31), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
-		})
+		}, false)
 	}
 	// safe-integer-max
 	{
 		tmp0 := sym_safe_DASH_integer_DASH_max
 		var_yamlstar_DOT_numbers_safe_DASH_integer_DASH_max = ns.InternWithValue(tmp0, int64(9007199254740991), true)
-		var_yamlstar_DOT_numbers_safe_DASH_integer_DASH_max.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_numbers_safe_DASH_integer_DASH_max.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yamlstar/numbers.glj", kw_line, int(7), kw_column, int(6), kw_end_DASH_line, int(7), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
-		})
+		}, false)
 	}
 	// safe-integer-min
 	{
 		tmp0 := sym_safe_DASH_integer_DASH_min
 		var_yamlstar_DOT_numbers_safe_DASH_integer_DASH_min = ns.InternWithValue(tmp0, int64(-9007199254740991), true)
-		var_yamlstar_DOT_numbers_safe_DASH_integer_DASH_min.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_numbers_safe_DASH_integer_DASH_min.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yamlstar/numbers.glj", kw_line, int(4), kw_column, int(6), kw_end_DASH_line, int(4), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
-		})
+		}, false)
 	}
 	// safe-integer?
 	{
@@ -302,9 +321,9 @@ func LoadNS() {
 		})
 		aotDirectFn3 = tmp1
 		var_yamlstar_DOT_numbers_safe_DASH_integer_QMARK_ = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_numbers_safe_DASH_integer_QMARK_.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_numbers_safe_DASH_integer_QMARK_.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yamlstar/numbers.glj", kw_line, int(22), kw_column, int(7), kw_end_DASH_line, int(22), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector(sym_n)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
-		})
+		}, false)
 	}
 	// validate-safe-integer
 	{
@@ -325,9 +344,9 @@ func LoadNS() {
 		})
 		aotDirectFn4 = tmp1
 		var_yamlstar_DOT_numbers_validate_DASH_safe_DASH_integer = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_numbers_validate_DASH_safe_DASH_integer.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_numbers_validate_DASH_safe_DASH_integer.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yamlstar/numbers.glj", kw_line, int(26), kw_column, int(7), kw_end_DASH_line, int(26), kw_end_DASH_column, int(27), kw_arglists, lang.NewList(lang.NewVector(sym_n)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
-		})
+		}, false)
 	}
 	// integer-range-error
 	{
@@ -339,15 +358,15 @@ func LoadNS() {
 			tmp3 := aotDirectFn1(v2)
 			tmp4 := checkDerefVar(var_yamlstar_DOT_numbers_safe_DASH_integer_DASH_min)
 			tmp5 := checkDerefVar(var_yamlstar_DOT_numbers_safe_DASH_integer_DASH_max)
-			tmp6 := lang.NewMap(kw_value, v2, kw_min, tmp4, kw_max, tmp5)
+			tmp6 := aotKeywordMapNew0(v2, tmp4, tmp5)
 			tmp7 := aotExternalFn0(tmp3, tmp6)
 			return tmp7
 		})
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_numbers_integer_DASH_range_DASH_error = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_numbers_integer_DASH_range_DASH_error.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_numbers_integer_DASH_range_DASH_error.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yamlstar/numbers.glj", kw_line, int(16), kw_column, int(7), kw_end_DASH_line, int(16), kw_end_DASH_column, int(25), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
-		})
+		}, false)
 	}
 	// integer-range-message
 	{
@@ -364,8 +383,8 @@ func LoadNS() {
 		})
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_numbers_integer_DASH_range_DASH_message = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_numbers_integer_DASH_range_DASH_message.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_numbers_integer_DASH_range_DASH_message.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yamlstar/numbers.glj", kw_line, int(10), kw_column, int(7), kw_end_DASH_line, int(10), kw_end_DASH_column, int(27), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
-		})
+		}, false)
 	}
 }

@@ -14,6 +14,39 @@ var aotDirectFn1 lang.FnFunc1
 var aotDirectFn2 lang.FnFunc0
 var aotDirectFn3 lang.FnFunc0
 
+var aotKeywordMapShape0 = lang.NewKeywordMapShape("name")
+
+type aotKeywordMapStorage0 struct {
+	lang.Map
+	values [1]any
+}
+
+func aotKeywordMapNew0(v0 any) *lang.Map {
+	storage := &aotKeywordMapStorage0{}
+	storage.values = [1]any{v0}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape0,
+		storage.values[:],
+	)
+}
+
+var aotKeywordMapShape1 = lang.NewKeywordMapShape("parser")
+
+type aotKeywordMapStorage1 struct {
+	lang.Map
+	values [1]any
+}
+
+func aotKeywordMapNew1(v0 any) *lang.Map {
+	storage := &aotKeywordMapStorage1{}
+	storage.values = [1]any{v0}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape1,
+		storage.values[:],
+	)
+}
 func init() {
 	runtime.RegisterNSLoader("yamlstar/plugin/parser", LoadNS)
 }
@@ -53,9 +86,7 @@ func LoadNS() {
 	kw_end_DASH_line := lang.NewKeyword("end-line")
 	kw_file := lang.NewKeyword("file")
 	kw_line := lang.NewKeyword("line")
-	kw_name := lang.NewKeyword("name")
 	kw_ns := lang.NewKeyword("ns")
-	kw_parser := lang.NewKeyword("parser")
 	// var yamlstar.plugin.parser/go-yaml
 	var_yamlstar_DOT_plugin_DOT_parser_go_DASH_yaml := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_parser, sym_go_DASH_yaml)
 	// var yamlstar.plugin.parser/name
@@ -157,9 +188,9 @@ func LoadNS() {
 		})
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_plugin_DOT_parser_go_DASH_yaml = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_DOT_parser_go_DASH_yaml.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_plugin_DOT_parser_go_DASH_yaml.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser.glj", kw_line, int(19), kw_column, int(7), kw_end_DASH_line, int(19), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Select the go-yaml parser plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser))
-		})
+		}, false)
 	}
 	// name
 	{
@@ -168,15 +199,15 @@ func LoadNS() {
 		tmp1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := lang.NewMap(kw_name, v2)
-			tmp4 := lang.NewMap(kw_parser, tmp3)
+			tmp3 := aotKeywordMapNew0(v2)
+			tmp4 := aotKeywordMapNew1(tmp3)
 			return tmp4
 		})
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_plugin_DOT_parser_name = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_DOT_parser_name.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_plugin_DOT_parser_name.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser.glj", kw_line, int(4), kw_column, int(7), kw_end_DASH_line, int(4), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_parser_DASH_name)), kw_doc, "Select a parser plugin by name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser))
-		})
+		}, false)
 	}
 	// reference
 	{
@@ -188,9 +219,9 @@ func LoadNS() {
 		})
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_plugin_DOT_parser_reference = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_DOT_parser_reference.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_plugin_DOT_parser_reference.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser.glj", kw_line, int(9), kw_column, int(7), kw_end_DASH_line, int(9), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Select the built-in reference parser plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser))
-		})
+		}, false)
 	}
 	// snakeyaml
 	{
@@ -202,8 +233,8 @@ func LoadNS() {
 		})
 		aotDirectFn3 = tmp1
 		var_yamlstar_DOT_plugin_DOT_parser_snakeyaml = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_DOT_parser_snakeyaml.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_plugin_DOT_parser_snakeyaml.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser.glj", kw_line, int(14), kw_column, int(7), kw_end_DASH_line, int(14), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Select the SnakeYAML parser plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser))
-		})
+		}, false)
 	}
 }

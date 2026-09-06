@@ -8,7 +8,7 @@ import (
 	lang "github.com/glojurelang/glojure/pkg/lang"
 	runtime "github.com/glojurelang/glojure/pkg/runtime"
 	reflect "reflect"
-	sync "sync"
+	atomic "sync/atomic"
 )
 
 var aotDirectFn0 lang.FnFunc0
@@ -23,20 +23,23 @@ func aotLinkFn1(vr *lang.Var) lang.FnFunc1 {
 	if vr.IsBound() {
 		return aotLinkBoundFn1(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc1
+	var linked atomic.Pointer[lang.FnFunc1]
 	return func(p0 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0)
+		}
 		if !vr.IsBound() {
 			return lang.Apply1(checkDerefVar(vr), p0)
 		}
-		once.Do(func() { linked = aotLinkBoundFn1(vr) })
-		return linked(p0)
+		fn := aotLinkBoundFn1(vr)
+		linked.Store(&fn)
+		return fn(p0)
 	}
 }
 
 func aotLinkBoundFn1(vr *lang.Var) lang.FnFunc1 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc1); ok {
+	if direct, ok := lang.DirectFn1(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn1); ok {
@@ -49,20 +52,23 @@ func aotLinkFn2(vr *lang.Var) lang.FnFunc2 {
 	if vr.IsBound() {
 		return aotLinkBoundFn2(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc2
+	var linked atomic.Pointer[lang.FnFunc2]
 	return func(p0 any, p1 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1)
+		}
 		if !vr.IsBound() {
 			return lang.Apply2(checkDerefVar(vr), p0, p1)
 		}
-		once.Do(func() { linked = aotLinkBoundFn2(vr) })
-		return linked(p0, p1)
+		fn := aotLinkBoundFn2(vr)
+		linked.Store(&fn)
+		return fn(p0, p1)
 	}
 }
 
 func aotLinkBoundFn2(vr *lang.Var) lang.FnFunc2 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc2); ok {
+	if direct, ok := lang.DirectFn2(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn2); ok {
@@ -75,20 +81,23 @@ func aotLinkFn3(vr *lang.Var) lang.FnFunc3 {
 	if vr.IsBound() {
 		return aotLinkBoundFn3(vr)
 	}
-	var once sync.Once
-	var linked lang.FnFunc3
+	var linked atomic.Pointer[lang.FnFunc3]
 	return func(p0 any, p1 any, p2 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1, p2)
+		}
 		if !vr.IsBound() {
 			return lang.Apply3(checkDerefVar(vr), p0, p1, p2)
 		}
-		once.Do(func() { linked = aotLinkBoundFn3(vr) })
-		return linked(p0, p1, p2)
+		fn := aotLinkBoundFn3(vr)
+		linked.Store(&fn)
+		return fn(p0, p1, p2)
 	}
 }
 
 func aotLinkBoundFn3(vr *lang.Var) lang.FnFunc3 {
 	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc3); ok {
+	if direct, ok := lang.DirectFn3(fn); ok {
 		return direct
 	}
 	if fixed, ok := fn.(lang.FixedArityFn3); ok {
@@ -125,7 +134,6 @@ func LoadNS() {
 	sym__AMP_ := lang.NewSymbolUnchecked("&")
 	sym_clojure_DOT_core := lang.NewSymbolUnchecked("clojure.core")
 	sym_current_DASH_default_DASH_parser := lang.NewSymbolUnchecked("current-default-parser")
-	sym_deref := lang.NewSymbolUnchecked("deref")
 	sym_fallback_DASH_default_DASH_parser := lang.NewSymbolUnchecked("fallback-default-parser")
 	sym_mapv := lang.NewSymbolUnchecked("mapv")
 	sym_name := lang.NewSymbolUnchecked("name")
@@ -153,8 +161,6 @@ func LoadNS() {
 	kw_line := lang.NewKeyword("line")
 	kw_ns := lang.NewKeyword("ns")
 	kw_private := lang.NewKeyword("private")
-	// var clojure.core/deref
-	var_clojure_DOT_core_deref := lang.InternVarName(sym_clojure_DOT_core, sym_deref)
 	// var clojure.core/mapv
 	var_clojure_DOT_core_mapv := lang.InternVarName(sym_clojure_DOT_core, sym_mapv)
 	// var clojure.core/reset!
@@ -179,7 +185,6 @@ func LoadNS() {
 	var_yamlstar_DOT_plugin_register_DASH_parser_BANG_ := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_register_DASH_parser_BANG_)
 	// var yamlstar.plugin/resolve-parser
 	var_yamlstar_DOT_plugin_resolve_DASH_parser := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_resolve_DASH_parser)
-	aotExternalFn0 := aotLinkFn1(var_clojure_DOT_core_deref)
 	aotExternalFn1 := aotLinkFn1(var_yamlstar_DOT_plugin_parser_DASH_opts)
 	aotExternalFn3 := aotLinkFn3(var_yamlstar_DOT_plugin_parse_DASH_with)
 	aotExternalFn4 := aotLinkFn2(var_clojure_DOT_core_mapv)
@@ -274,9 +279,9 @@ func LoadNS() {
 		tmp0 := sym_fallback_DASH_default_DASH_parser
 		tmp1 := lang.NewAtom("reference")
 		var_yamlstar_DOT_parser_fallback_DASH_default_DASH_parser = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_parser_fallback_DASH_default_DASH_parser.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_parser_fallback_DASH_default_DASH_parser.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yamlstar/parser.glj", kw_line, int(28), kw_column, int(6), kw_end_DASH_line, int(28), kw_end_DASH_column, int(38), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
-		})
+		}, false)
 	}
 	// parse
 	{
@@ -339,9 +344,9 @@ func LoadNS() {
 		)
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_parser_parse = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_parser_parse.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_parser_parse.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/parser.glj", kw_line, int(45), kw_column, int(7), kw_end_DASH_line, int(45), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str), lang.NewVector(sym_yaml_DASH_str, sym_opts)), kw_doc, "Parse a YAML string into an event stream.\n\n  Args:\n    yaml-str: A string containing YAML content\n    opts: (optional) Options map; {:plugin {:parser {:name \"name\"}}}\n          selects a parser plugin\n\n  Returns:\n    A sequence of event maps representing the YAML structure\n\n  Example event:\n    {:event \"scalar\" :value \"hello\" :style \"plain\"}\n    {:event \"mapping_start\" :flow false}", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
-		})
+		}, false)
 	}
 	// register-parsers!
 	{
@@ -371,9 +376,9 @@ func LoadNS() {
 		)
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_parser_register_DASH_parsers_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_parser_register_DASH_parsers_BANG_.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_parser_register_DASH_parsers_BANG_.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/parser.glj", kw_line, int(11), kw_column, int(7), kw_end_DASH_line, int(11), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym__AMP_, sym_names)), kw_doc, "Register the named parser plugins whose namespaces are already loaded.\n\n  Each plugin namespace self-registers with a top-level form, but AOT\n  compiled runtimes (Glojure) drop top-level side effects, so generated\n  runtimes call this explicitly after loading their plugin namespaces.\n  Returns the registered plugin maps in the given order.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
-		})
+		}, false)
 	}
 	// register-reference-parser!
 	{
@@ -386,9 +391,9 @@ func LoadNS() {
 		})
 		aotDirectFn3 = tmp1
 		var_yamlstar_DOT_parser_register_DASH_reference_DASH_parser_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_parser_register_DASH_reference_DASH_parser_BANG_.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_parser_register_DASH_reference_DASH_parser_BANG_.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/parser.glj", kw_line, int(21), kw_column, int(7), kw_end_DASH_line, int(21), kw_end_DASH_column, int(32), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Register the built-in reference parser plugin.\n\n  Generated runtimes call this after loading their reference parser plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
-		})
+		}, false)
 	}
 	// set-default-parser!
 	{
@@ -404,9 +409,9 @@ func LoadNS() {
 		})
 		aotDirectFn4 = tmp1
 		var_yamlstar_DOT_parser_set_DASH_default_DASH_parser_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_parser_set_DASH_default_DASH_parser_BANG_.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_parser_set_DASH_default_DASH_parser_BANG_.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/parser.glj", kw_line, int(30), kw_column, int(7), kw_end_DASH_line, int(30), kw_end_DASH_column, int(25), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Set the runtime fallback parser name.\n\n  YAMLSTAR_PARSER still has precedence over this fallback, and per-call\n  options still have precedence over both.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
-		})
+		}, false)
 	}
 	// current-default-parser
 	{
@@ -427,7 +432,7 @@ func LoadNS() {
 					{ // let
 						// let binding "or__0__auto__"
 						tmp7 := checkDerefVar(var_yamlstar_DOT_parser_fallback_DASH_default_DASH_parser)
-						tmp8 := aotExternalFn0(tmp7)
+						tmp8 := lang.DerefValue(tmp7)
 						var v9 any = tmp8
 						_ = v9
 						var tmp10 any
@@ -446,8 +451,8 @@ func LoadNS() {
 		})
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_parser_current_DASH_default_DASH_parser = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_parser_current_DASH_default_DASH_parser.SetMetaLazy(func() lang.IPersistentMap {
+		var_yamlstar_DOT_parser_current_DASH_default_DASH_parser.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/parser.glj", kw_line, int(39), kw_column, int(8), kw_end_DASH_line, int(39), kw_end_DASH_column, int(29), kw_private, true, kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
-		})
+		}, false)
 	}
 }
