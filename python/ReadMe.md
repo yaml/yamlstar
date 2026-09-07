@@ -60,6 +60,25 @@ ys = yamlstar.YAMLStar(opts)
 data = ys.load("key: value")
 ```
 
+### Install a Shared Plugin
+
+Install the JSON comments plugin wheel in the same environment:
+
+```bash
+pip install yamlstar-plugin-json-comments
+```
+
+The binding discovers the installed library when that plugin is selected:
+
+```python
+opts = yamlstar.Options().plugin(yamlstar.json_comments())
+ys = yamlstar.YAMLStar(opts)
+data = ys.load('{"a": true // comment}')
+```
+
+Setting `YAMLSTAR_LIBRARY_PATH` disables Python package discovery and uses
+only the directories in that explicit path.
+
 ## Usage Examples
 
 ### Basic Types

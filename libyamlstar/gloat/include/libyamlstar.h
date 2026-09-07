@@ -15,6 +15,10 @@ char *yamlstar_dump(
   graal_isolatethread_t *thread, const char *data_json, const char *opts_json);
 char *yamlstar_dump_all(
   graal_isolatethread_t *thread, const char *data_json, const char *opts_json);
+int yamlstar_set_plugin_environment(
+  graal_isolatethread_t *thread,
+  const char *library_path,
+  const char *installer);
 char *yamlstar_version(graal_isolatethread_t *thread);
 
 #ifdef __cplusplus

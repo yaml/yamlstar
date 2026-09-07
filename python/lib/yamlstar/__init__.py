@@ -11,9 +11,14 @@ import os
 import sys
 import threading
 
+try:
+  from importlib import metadata as importlib_metadata
+except ImportError:
+  import importlib_metadata
+
 yamlstar_version = '0.1.20'
 
-_plugin_installer_lock = threading.Lock()
+_plugin_environment_lock = threading.Lock()
 
 assert sys.version_info >= (3, 6), \
   "Python 3.6 or greater required for 'yamlstar'."
@@ -61,6 +66,105 @@ def _candidate_filenames(so):
   if base.endswith('.' + ext):
     return [base]
   return ['%s.%s' % (base, ext)]
+
+
+def _plugin_entry_points():
+  entry_points = importlib_metadata.entry_points()
+  if hasattr(entry_points, 'select'):
+    return list(entry_points.select(group='yamlstar.plugins'))
+  if hasattr(entry_points, 'get'):
+    return list(entry_points.get('yamlstar.plugins', ()))
+  return [
+    entry_point for entry_point in entry_points
+    if entry_point.group == 'yamlstar.plugins'
+  ]
+
+
+def _requested_plugin_names(options):
+  plugins = options.get('plugin') if isinstance(options, dict) else None
+  if not isinstance(plugins, dict):
+    return []
+  names = []
+  for api, config in plugins.items():
+    if not isinstance(config, dict):
+      continue
+    name = config.get('name', api)
+    if isinstance(name, str) and name not in names:
+      names.append(name)
+  return names
+
+
+def _installed_plugin_dirs(options):
+  directories = []
+  names = _requested_plugin_names(options)
+  entry_points = _plugin_entry_points() if names else []
+  for name in names:
+    matches = [
+      entry_point for entry_point in entry_points
+      if entry_point.name == name
+    ]
+    if len(matches) > 1:
+      raise Exception(
+        "Multiple installed YAMLStar plugins are named '%s'" % name)
+    if not matches:
+      continue
+    entry_point = matches[0]
+    try:
+      directory = os.path.abspath(os.fspath(entry_point.load()()))
+    except Exception as error:
+      raise Exception(
+        "Failed to load installed YAMLStar plugin '%s': %s" %
+        (name, error))
+    if not os.path.isdir(directory):
+      raise Exception(
+        "Installed YAMLStar plugin '%s' returned a missing directory: %s" %
+        (name, directory))
+    if directory not in directories:
+      directories.append(directory)
+  return directories
+
+
+def _binding_plugin_dirs(options):
+  if 'YAMLSTAR_LIBRARY_PATH' in os.environ:
+    return []
+  return _installed_plugin_dirs(options)
+
+
+def _default_plugin_dirs(libyamlstar_path):
+  directories = [os.path.dirname(os.path.abspath(libyamlstar_path))]
+  executable_lib = os.path.abspath(
+    os.path.join(os.path.dirname(sys.executable), '..', 'lib'))
+  directories.append(executable_lib)
+  home = os.environ.get('HOME') or os.path.expanduser('~')
+  if home:
+    directories.append(os.path.join(home, '.local', 'lib'))
+  if sys.platform != 'win32':
+    directories.extend(['/usr/local/lib', '/usr/lib'])
+  return directories
+
+
+def _plugin_search_path_from_dirs(installed, libyamlstar_path):
+  if not installed:
+    return None
+  configured = os.environ.get('YAMLSTAR_LIBRARY_PATH')
+  directories = configured.split(os.pathsep) if configured else []
+  directories.extend(installed)
+  directories.extend(_default_plugin_dirs(libyamlstar_path))
+  unique = []
+  for directory in directories:
+    if not directory:
+      continue
+    directory = os.path.abspath(directory)
+    if directory not in unique:
+      unique.append(directory)
+  return os.pathsep.join(unique)
+
+
+def _plugin_search_path(options, libyamlstar_path):
+  if 'YAMLSTAR_LIBRARY_PATH' in os.environ:
+    return None
+  return _plugin_search_path_from_dirs(
+    _installed_plugin_dirs(options), libyamlstar_path)
 
 
 def find_libyamlstar(so='libyamlstar'):
@@ -137,17 +241,43 @@ class YAMLStar():
     self._libyamlstar_path = find_libyamlstar(so)
     self._plugin_installer_path = os.path.join(
       os.path.dirname(self._libyamlstar_path), 'yamlstar-plugin')
-    self._libyamlstar = ctypes.CDLL(self._libyamlstar_path)
-    self._configure_functions()
+    self._installed_plugin_dirs = _binding_plugin_dirs(self._options)
 
-    self._isolatethread = ctypes.c_void_p()
-    rc = self._libyamlstar.graal_create_isolate(
-      None,
-      None,
-      ctypes.byref(self._isolatethread),
-    )
-    if rc != 0:
-      raise Exception("Failed to initialize libyamlstar")
+    with _plugin_environment_lock:
+      previous_path = os.environ.get('YAMLSTAR_LIBRARY_PATH')
+      previous_installer = os.environ.get('YAMLSTAR_PLUGIN_INSTALLER')
+      plugin_path = _plugin_search_path_from_dirs(
+        self._installed_plugin_dirs, self._libyamlstar_path)
+      selected_installer = self._selected_plugin_installer()
+      native_path = (
+        plugin_path if plugin_path is not None else previous_path)
+      native_installer = (
+        selected_installer
+        if selected_installer is not None else previous_installer)
+      if plugin_path is not None:
+        os.environ['YAMLSTAR_LIBRARY_PATH'] = plugin_path
+      if selected_installer is not None:
+        os.environ['YAMLSTAR_PLUGIN_INSTALLER'] = selected_installer
+      try:
+        self._libyamlstar = ctypes.CDLL(self._libyamlstar_path)
+        self._configure_functions()
+        self._isolatethread = ctypes.c_void_p()
+        rc = self._libyamlstar.graal_create_isolate(
+          None,
+          None,
+          ctypes.byref(self._isolatethread),
+        )
+        if rc != 0:
+          raise Exception("Failed to initialize libyamlstar")
+        self._set_native_plugin_environment(native_path, native_installer)
+      finally:
+        if hasattr(self, '_plugin_environment'):
+          self._set_native_plugin_environment(
+            previous_path, previous_installer)
+        self._restore_environment(
+          'YAMLSTAR_LIBRARY_PATH', previous_path)
+        self._restore_environment(
+          'YAMLSTAR_PLUGIN_INSTALLER', previous_installer)
 
   def _configure_functions(self):
     self._load = self._libyamlstar.yamlstar_load
@@ -172,6 +302,43 @@ class YAMLStar():
     self._version.argtypes = [ctypes.c_void_p]
     self._version.restype = ctypes.c_char_p
 
+    try:
+      self._plugin_environment = (
+        self._libyamlstar.yamlstar_set_plugin_environment)
+    except AttributeError:
+      self._plugin_environment = None
+    if self._plugin_environment is not None:
+      self._plugin_environment.argtypes = [
+        ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p]
+      self._plugin_environment.restype = ctypes.c_int
+
+  @staticmethod
+  def _restore_environment(name, value):
+    if value is None:
+      os.environ.pop(name, None)
+    else:
+      os.environ[name] = value
+
+  def _selected_plugin_installer(self):
+    install = self._options.get(
+      'plugin-install', self._options.get('plugin_install'))
+    installer = self._plugin_installer_path
+    if (install is True and os.path.isfile(installer) and
+        os.access(installer, os.X_OK) and
+        not os.environ.get('YAMLSTAR_PLUGIN_INSTALLER')):
+      return installer
+    return None
+
+  def _set_native_plugin_environment(self, plugin_path, installer):
+    function = getattr(self, '_plugin_environment', None)
+    if function is None:
+      return
+    path_bytes = _bytes(plugin_path) if plugin_path is not None else None
+    installer_bytes = _bytes(installer) if installer is not None else None
+    rc = function(self._isolatethread, path_bytes, installer_bytes)
+    if rc != 0:
+      raise Exception("Failed to configure YAMLStar plugin environment")
+
   def _opts_bytes(self):
     return _bytes(json.dumps(self._options))
 
@@ -183,22 +350,39 @@ class YAMLStar():
         _bytes(input_text),
         self._opts_bytes()).decode()
 
-    install = self._options.get(
-      'plugin-install', self._options.get('plugin_install'))
-    installer = self._plugin_installer_path
-    if (install is True and os.path.isfile(installer) and
-        os.access(installer, os.X_OK) and
-        not os.environ.get('YAMLSTAR_PLUGIN_INSTALLER')):
-      with _plugin_installer_lock:
-        previous = os.environ.get('YAMLSTAR_PLUGIN_INSTALLER')
-        os.environ['YAMLSTAR_PLUGIN_INSTALLER'] = installer
+    installed_plugin_dirs = getattr(
+      self, '_installed_plugin_dirs', None)
+    if installed_plugin_dirs is None:
+      installed_plugin_dirs = _binding_plugin_dirs(self._options)
+    selected_installer = self._selected_plugin_installer()
+    if installed_plugin_dirs or selected_installer is not None:
+      with _plugin_environment_lock:
+        previous_path = os.environ.get('YAMLSTAR_LIBRARY_PATH')
+        previous_installer = os.environ.get('YAMLSTAR_PLUGIN_INSTALLER')
+        plugin_path = _plugin_search_path_from_dirs(
+          installed_plugin_dirs, self._libyamlstar_path)
+        native_path = (
+          plugin_path if plugin_path is not None else previous_path)
+        native_installer = (
+          selected_installer
+          if selected_installer is not None else previous_installer)
+        if plugin_path is not None:
+          os.environ['YAMLSTAR_LIBRARY_PATH'] = plugin_path
+        if selected_installer is not None:
+          os.environ['YAMLSTAR_PLUGIN_INSTALLER'] = selected_installer
         try:
+          self._set_native_plugin_environment(
+            native_path, native_installer)
           data_json = call_native()
         finally:
-          if previous is None:
-            del os.environ['YAMLSTAR_PLUGIN_INSTALLER']
-          else:
-            os.environ['YAMLSTAR_PLUGIN_INSTALLER'] = previous
+          self._set_native_plugin_environment(
+            previous_path, previous_installer)
+          if plugin_path is not None:
+            self._restore_environment(
+              'YAMLSTAR_LIBRARY_PATH', previous_path)
+          if selected_installer is not None:
+            self._restore_environment(
+              'YAMLSTAR_PLUGIN_INSTALLER', previous_installer)
     else:
       data_json = call_native()
 

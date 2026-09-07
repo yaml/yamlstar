@@ -4,11 +4,27 @@ Tests for yamlstar Python package.
 import pytest
 import sys
 import os
+import threading
+import time
 
 # Add lib directory to path for testing
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'lib'))
 
 import yamlstar
+
+
+class FakeEntryPoint:
+    """Minimal installed plugin entry point for discovery tests."""
+
+    def __init__(self, name, directory):
+        self.name = name
+        self.group = 'yamlstar.plugins'
+        self.directory = directory
+        self.loaded = False
+
+    def load(self):
+        self.loaded = True
+        return lambda: self.directory
 
 
 @pytest.fixture
@@ -256,6 +272,208 @@ def test_load_with_snakeyaml_parser(ys):
         pytest.skip('SnakeYAML parser library is not available')
     assert snakeyaml.load(yaml_str) == ys.load(yaml_str)
     assert snakeyaml.load_all("---\ndoc1\n---\ndoc2") == ["doc1", "doc2"]
+
+
+def test_requested_plugin_names():
+    """Extract plugin distribution names from native plugin options."""
+    options = {
+        'plugin': {
+            'parser': {'name': 'reference'},
+            'json-comments': {},
+            'ignored': 'not-a-plugin',
+        },
+    }
+    assert yamlstar._requested_plugin_names(options) == [
+        'reference',
+        'json-comments',
+    ]
+
+
+def test_installed_plugin_discovery_loads_only_requested(
+        monkeypatch, tmp_path):
+    """Do not import unrelated YAMLStar plugin distributions."""
+    requested_dir = tmp_path / 'requested'
+    requested_dir.mkdir()
+    requested = FakeEntryPoint('json-comments', str(requested_dir))
+    unrelated = FakeEntryPoint('other-plugin', str(tmp_path / 'missing'))
+    monkeypatch.setattr(
+        yamlstar.importlib_metadata,
+        'entry_points',
+        lambda: [requested, unrelated],
+    )
+
+    options = {
+        'plugin': {'json-comments': {'name': 'json-comments'}},
+    }
+    assert yamlstar._installed_plugin_dirs(options) == [
+        str(requested_dir),
+    ]
+    assert requested.loaded is True
+    assert unrelated.loaded is False
+
+
+def test_installed_plugin_discovery_rejects_duplicate_names(
+        monkeypatch, tmp_path):
+    """Duplicate plugin distributions must not depend on entry point order."""
+    directory = tmp_path / 'plugin'
+    directory.mkdir()
+    monkeypatch.setattr(
+        yamlstar.importlib_metadata,
+        'entry_points',
+        lambda: [
+            FakeEntryPoint('json-comments', str(directory)),
+            FakeEntryPoint('json-comments', str(directory)),
+        ],
+    )
+
+    options = {
+        'plugin': {'json-comments': {'name': 'json-comments'}},
+    }
+    with pytest.raises(Exception, match='Multiple installed YAMLStar plugins'):
+        yamlstar._installed_plugin_dirs(options)
+
+
+def test_installed_plugin_discovery_rejects_missing_directory(
+        monkeypatch, tmp_path):
+    """A plugin entry point must return an existing directory."""
+    missing = tmp_path / 'missing'
+    monkeypatch.setattr(
+        yamlstar.importlib_metadata,
+        'entry_points',
+        lambda: [FakeEntryPoint('json-comments', str(missing))],
+    )
+
+    options = {
+        'plugin': {'json-comments': {'name': 'json-comments'}},
+    }
+    with pytest.raises(Exception, match='returned a missing directory'):
+        yamlstar._installed_plugin_dirs(options)
+
+
+def test_explicit_plugin_search_path_disables_discovery(
+        monkeypatch, tmp_path):
+    """An explicit library path remains the complete native search path."""
+    configured = tmp_path / 'configured'
+    installed = tmp_path / 'installed'
+    configured.mkdir()
+    installed.mkdir()
+    entry_point = FakeEntryPoint('json-comments', str(installed))
+    monkeypatch.setattr(
+        yamlstar.importlib_metadata,
+        'entry_points',
+        lambda: [entry_point],
+    )
+    monkeypatch.setenv(
+        'YAMLSTAR_LIBRARY_PATH',
+        os.pathsep.join([str(configured), str(installed)]),
+    )
+
+    options = {
+        'plugin': {'json-comments': {'name': 'json-comments'}},
+    }
+    library = tmp_path / 'native' / 'libyamlstar.so'
+    assert yamlstar._binding_plugin_dirs(options) == []
+    assert yamlstar._plugin_search_path(options, str(library)) is None
+    assert entry_point.loaded is False
+
+
+def test_call_uses_and_restores_installed_plugin_path(
+        monkeypatch, tmp_path):
+    """A native call sees the installed plugin without leaking its path."""
+    installed = tmp_path / 'installed'
+    installed.mkdir()
+    monkeypatch.setattr(
+        yamlstar.importlib_metadata,
+        'entry_points',
+        lambda: [FakeEntryPoint('json-comments', str(installed))],
+    )
+    monkeypatch.delenv('YAMLSTAR_LIBRARY_PATH', raising=False)
+
+    instance = object.__new__(yamlstar.YAMLStar)
+    instance._options = {
+        'plugin': {'json-comments': {'name': 'json-comments'}},
+    }
+    instance._libyamlstar_path = str(tmp_path / 'libyamlstar.so')
+    instance._plugin_installer_path = str(tmp_path / 'missing-installer')
+    instance._isolatethread = None
+    seen = []
+    native_environment = []
+
+    def set_native_environment(thread, library_path, installer):
+        native_environment.append((
+            library_path.value.decode() if library_path else None,
+            installer.value.decode() if installer else None,
+        ))
+        return 0
+
+    instance._plugin_environment = set_native_environment
+
+    def native_call(*args):
+        seen.append(os.environ['YAMLSTAR_LIBRARY_PATH'].split(os.pathsep))
+        return b'{"data":"ok"}'
+
+    assert instance._call(native_call, 'a: b') == 'ok'
+    assert seen[0][0] == str(installed)
+    assert native_environment[0][0].split(os.pathsep)[0] == str(installed)
+    assert native_environment[1] == (None, None)
+    assert 'YAMLSTAR_LIBRARY_PATH' not in os.environ
+
+
+def test_parallel_calls_keep_plugin_paths_isolated(monkeypatch, tmp_path):
+    """Concurrent bindings cannot observe another call's plugin directory."""
+    directories = {}
+    entry_points = []
+    for name in ('plugin-one', 'plugin-two'):
+        directory = tmp_path / name
+        directory.mkdir()
+        directories[name] = str(directory)
+        entry_points.append(FakeEntryPoint(name, str(directory)))
+    monkeypatch.setattr(
+        yamlstar.importlib_metadata,
+        'entry_points',
+        lambda: entry_points,
+    )
+    monkeypatch.delenv('YAMLSTAR_LIBRARY_PATH', raising=False)
+
+    seen = {}
+    errors = []
+
+    def run(name):
+        instance = object.__new__(yamlstar.YAMLStar)
+        instance._options = {'plugin': {name: {'name': name}}}
+        instance._libyamlstar_path = str(tmp_path / 'libyamlstar.so')
+        instance._plugin_installer_path = str(tmp_path / 'missing-installer')
+        instance._installed_plugin_dirs = [directories[name]]
+        instance._isolatethread = None
+
+        def native_call(*args):
+            seen[name] = os.environ['YAMLSTAR_LIBRARY_PATH']
+            time.sleep(0.05)
+            return b'{"data":null}'
+
+        try:
+            instance._call(native_call, '')
+        except Exception as error:
+            errors.append(error)
+
+    threads = [
+        threading.Thread(target=run, args=(name,))
+        for name in directories
+    ]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+
+    assert errors == []
+    assert set(seen) == set(directories)
+    for name, directory in directories.items():
+        paths = seen[name].split(os.pathsep)
+        assert directory in paths
+        other = directories[
+            'plugin-two' if name == 'plugin-one' else 'plugin-one']
+        assert other not in paths
+    assert 'YAMLSTAR_LIBRARY_PATH' not in os.environ
 
 
 def test_load_with_options_dict(ys):

@@ -146,6 +146,25 @@ opts = yamlstar.Options().plugin(yamlstar.json_comments())
 ys = yamlstar.YAMLStar(opts, install_plugins=True)
 ```
 
+Python users can instead install a plugin wheel:
+
+```bash
+pip install yamlstar-plugin-json-comments
+```
+
+```python
+opts = yamlstar.Options().plugin(yamlstar.json_comments())
+ys = yamlstar.YAMLStar(opts)
+data = ys.load('{"a": true // comment}')
+```
+
+The Python binding discovers the `yamlstar.plugins` entry point matching
+the selected plugin name.
+It does not import entry points for unselected plugins.
+When `YAMLSTAR_LIBRARY_PATH` is present, installed-package discovery is
+disabled and the native library searches only the explicitly configured
+directories.
+
 The installer can also be run directly:
 
 ```bash

@@ -28,6 +28,7 @@
    "yamlstar-load-all"        [:int :str :str :str]
    "yamlstar-dump"            [:int :str :str :str]
    "yamlstar-dump-all"        [:int :str :str :str]
+   "yamlstar-set-plugin-environment" [:int :str :str :int]
    "yamlstar-version"         [:int :str]})
 
 ;; The public C API historically exposed GraalVM isolate lifecycle functions.
@@ -39,6 +40,20 @@
 (defn graal-detach-thread [_thread] 0)
 (defn graal-get-current-thread [_isolate] 0)
 (defn graal-get-isolate [_thread] 0)
+
+(defn set-environment! [name value]
+  (if (nil? value)
+    (os.Unsetenv name)
+    (os.Setenv name value)))
+
+(defn yamlstar-set-plugin-environment
+  "Update plugin environment values in the embedded Go runtime."
+  [_thread library-path installer]
+  (let [path-error (set-environment!
+                    "YAMLSTAR_LIBRARY_PATH" library-path)
+        installer-error (set-environment!
+                         "YAMLSTAR_PLUGIN_INSTALLER" installer)]
+    (if (or path-error installer-error) 1 0)))
 
 (defn nil-keys->string
   "Replace nil keys with string 'null' for JSON serialization.
