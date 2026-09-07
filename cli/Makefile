@@ -66,6 +66,7 @@ MAKES-CLEAN := \
   .lein-* \
   bin \
   cache \
+  lib \
 
 ifeq ($(OS-NAME),windows)
 CLI-BIN := bin/$(CLI-NAME).exe
