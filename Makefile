@@ -113,6 +113,11 @@ ALL-TESTS := \
   test-cli \
   test-libyamlstar \
   $(BINDING-TESTS)
+ifeq ($(YAMLSTAR_ENGINE),glojure)
+# The JVM CLI suite requires GraalVM classes and does not test the released
+# Glojure CLI. Release jobs smoke-test the installed native CLI directly.
+ALL-TESTS := $(filter-out test-cli,$(ALL-TESTS))
+endif
 TEST-TIME ?=
 
 build:: build-libyamlstar

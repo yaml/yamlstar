@@ -169,9 +169,11 @@ GLOAT-GLOJURE-ENV := \
   GLOJURE_DIR=$(abspath $(TEST-WITH-GLOJURE)) \
   GOCACHE=$(GLOAT-DIR)/.cache/local/cache/go-build \
   GOMODCACHE=$(GLOAT-DIR)/.cache/local/go/pkg/mod
+LOCAL-GLJ-BUILD := ../util/build-local-glj
 
-_prepare-glj: _prepare-gloat-bin $(GLOAT-RUN-DEPS)
-	env -u GOROOT $(GLOAT-GLOJURE-ENV) $(GLOAT-RUN) --glj-build
+_prepare-glj: _prepare-gloat-bin $(GO) $(LOCAL-GLJ-BUILD)
+	env -u GOROOT $(GLOAT-GLOJURE-ENV) \
+	  bash $(LOCAL-GLJ-BUILD) $(abspath $(TEST-WITH-GLOJURE)) $(GO)
 
 GLOAT-CLI-GLJ-DEP := _prepare-glj
 endif
@@ -255,7 +257,7 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
   $(GLOAT-CORE)/contract.clj \
   gloat/src/yamlstar/cli.clj
 	mkdir -p $(dir $@)
-	</dev/null env -u GOROOT $(GLOAT-GLOJURE-ENV) \
+	</dev/null env -u GOROOT $(GLOAT-GO-ENV) $(GLOAT-GLOJURE-ENV) \
 	  GLOAT_MODULE=github.com/yaml/yamlstar \
 	  GLOAT_GO=$(GO) \
 	  GLOAT_GLJDEPS=$(abspath ../gljdeps.edn) \

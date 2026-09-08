@@ -6,6 +6,7 @@ YAMLSTAR_ENGINE ?= $(if $(YAMLSTAR_GLOJURE),glojure,graalvm)
 # Avoids graalvm.mk/java.mk conflict when both platforms are present
 ifeq ($(YAMLSTAR_ENGINE),glojure)
 include $M/gloat.mk
+include $M/go.mk
 else ifeq ($(YAMLSTAR_ENGINE),graalvm)
 include $M/graalvm.mk
 include $M/clojure.mk
@@ -287,11 +288,12 @@ GLOAT-GLOJURE-ENV := \
   GLOJURE_DIR=$(abspath $(TEST-WITH-GLOJURE)) \
   GOCACHE=$(GLOAT-DIR)/.cache/local/cache/go-build \
   GOMODCACHE=$(GLOAT-DIR)/.cache/local/go/pkg/mod
+LOCAL-GLJ-BUILD := ../util/build-local-glj
 
-_twg-build: $(GLOAT-RUN-DEPS) | $(GLOAT-DIR)
+_twg-build: $(GO) $(LOCAL-GLJ-BUILD) | $(GLOAT-DIR)
 	@echo "Building glj from $(TEST-WITH-GLOJURE)..."
 	env -u GOROOT $(GLOAT-GLOJURE-ENV) \
-	  $(GLOAT-RUN) --glj-build
+	  bash $(LOCAL-GLJ-BUILD) $(abspath $(TEST-WITH-GLOJURE)) $(GO)
 
 $(LIB-SO-GLOAT): _twg-build
 
@@ -373,7 +375,7 @@ $(LIB-SO-GLOAT): $(GLOAT-SRCS) $(GLOAT-LINKS) $(GO-YAML-GENERATED-STAMP) \
   $(LIBYAMLSTAR-GLOAT-ABI-STAMP) | $(GLOAT-DIR)
 	@echo "Building gloat shared library..."
 	mkdir -p $(LIB-DIR)
-	</dev/null env -u GOROOT \
+	</dev/null env -u GOROOT $(GLOAT-GO-ENV) \
 	  GLOAT_MODULE=github.com/yaml/yamlstar \
 	  GLOAT_GLJDEPS=$(abspath ../gljdeps.edn) \
 	  GLOAT_EXTRA_GO_DIR=$(abspath $(GO-YAML-GENERATED-DIR)) \

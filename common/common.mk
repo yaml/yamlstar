@@ -9,6 +9,11 @@ LIBYAMLSTAR-HEADER := $(LIBYS)/lib/libyamlstar.h
 export LD_LIBRARY_PATH := $(ROOT)/libyamlstar/lib:$(LD_LIBRARY_PATH)
 export DYLD_LIBRARY_PATH := $(ROOT)/libyamlstar/lib:$(DYLD_LIBRARY_PATH)
 
+PUREGO-FREEBSD-GCFLAGS := \
+  -gcflags=github.com/ebitengine/purego/internal/fakecgo=-std
+GLOAT-GO-ENV := $(if $(filter freebsd/%,$(GLOAT_PLATFORM)), \
+  GOFLAGS=$(PUREGO-FREEBSD-GCFLAGS))
+
 
 $(LIBYAMLSTAR-SO) $(LIBYAMLSTAR-SO-VERSION) $(LIBYAMLSTAR-HEADER):
 	$(MAKE) -C $(LIBYS) build

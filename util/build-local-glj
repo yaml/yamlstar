@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if (($# != 2)); then
+  echo "Usage: $0 GLOJURE-DIRECTORY GO" >&2
+  exit 2
+fi
+
+glojure_dir=$1
+go=$2
+
+if [[ ! -x $glojure_dir/scripts/build-glj.sh ]]; then
+  echo "Glojure build script not found in $glojure_dir" >&2
+  exit 2
+fi
+
+if [[ ! -x $go ]]; then
+  echo "Go executable not found: $go" >&2
+  exit 2
+fi
+
+version=$(
+  git -C "$glojure_dir" describe --tags --exact-match HEAD 2>/dev/null ||
+    true
+)
+if [[ $version != v* ]]; then
+  version=0.0.0
+fi
+
+goos=$("$go" env GOOS)
+goarch=$("$go" env GOARCH)
+platform=${goos}_${goarch}
+output=$glojure_dir/bin/$platform/glj
+
+mkdir -p "$(dirname "$output")"
+echo "Building glj $version from $glojure_dir..." >&2
+(
+  cd "$glojure_dir"
+  PATH=$(dirname "$go"):$PATH \
+    GLJ_VERSION=$version \
+    scripts/build-glj.sh "$output" "$platform"
+)
