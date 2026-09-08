@@ -1,7 +1,7 @@
 SHELL := bash
 .SHELLFLAGS := -e -o pipefail -c
 
-YAMLSTAR_VERSION := 0.1.20
+YAMLSTAR_VERSION := 0.1.21
 DYALOG-RELEASE-VERSION := $(or $(YS_RELEASE_VERSION_NEW),$v)
 IMAGE := yamlstar-dyalog
 DOCKER_CONFIG := $(CURDIR)/.cache/docker

@@ -1,3 +1,10 @@
+- version: 0.1.21
+  date:    Tue Sep  8 10:38:49 AM EDT 2026
+  changes:
+  - Add shared event-source plugins
+  - Add automatic shared plugin installs
+  - Clean installed CLI libraries
+  - Discover installed Python plugins
 - version: 0.1.20
   date:    Sun Sep  6 12:58:30 PM EDT 2026
   changes:
