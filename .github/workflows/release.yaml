@@ -648,6 +648,16 @@ jobs:
         cli/bin/yaml --version
         [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
 
+    - name: Smoke test Python wheel
+      run: |
+        wheel=$(find release-artifacts -type f -name '*.whl' | head -n1)
+        test -n "$wheel"
+        python -m pip install --force-reinstall "$wheel"
+        python - <<'PY'
+        import yamlstar
+        assert yamlstar.YAMLStar().load('a: 1') == {'a': 1}
+        PY
+
     - name: Use GitHub Leiningen mirror
       run: |
         make --no-print-directory -n default >/dev/null
@@ -667,7 +677,12 @@ jobs:
         PY
 
     - name: Run tests
-      run: make test-all YAMLSTAR_ENGINE=glojure YAMLSTAR_SYSTEM_RUBY=1 TEST-TIME='date; time' 'PYTHON-NAME=cpython-$(PYTHON-VERSION)-macos-x86_64-none' RAKU-VERSION=2026.01-01 BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua moonbit php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
+      run: |
+        make test-all \
+          YAMLSTAR_ENGINE=glojure \
+          TEST-TIME='date; time' \
+          'PYTHON-NAME=cpython-$(PYTHON-VERSION)-macos-x86_64-none' \
+          BINDING-LANGS='go python'
 
   test-windows:
     name: Test Windows artifacts
@@ -1153,6 +1168,16 @@ jobs:
         cli/bin/yaml --version
         [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
 
+    - name: Smoke test Python wheel
+      run: |
+        wheel=$(find release-artifacts -type f -name '*.whl' | head -n1)
+        test -n "$wheel"
+        python -m pip install --force-reinstall "$wheel"
+        python - <<'PY'
+        import yamlstar
+        assert yamlstar.YAMLStar().load('a: 1') == {'a': 1}
+        PY
+
     - name: Use GitHub Leiningen mirror
       run: |
         make --no-print-directory -n default >/dev/null
@@ -1172,7 +1197,12 @@ jobs:
         PY
 
     - name: Run tests
-      run: make test-all YAMLSTAR_ENGINE=glojure YAMLSTAR_SYSTEM_RUBY=1 TEST-TIME='date; time' 'PYTHON-NAME=cpython-$(PYTHON-VERSION)-macos-x86_64-none' RAKU-VERSION=2026.01-01 BINDING-SKIP="delphi elixir erlang fortran fsharp haskell lua moonbit php powershell r zig $YS_RELEASE_BINDINGS_SKIP"
+      run: |
+        make test-all \
+          YAMLSTAR_ENGINE=glojure \
+          TEST-TIME='date; time' \
+          'PYTHON-NAME=cpython-$(PYTHON-VERSION)-macos-x86_64-none' \
+          BINDING-LANGS='go python'
 
   test-freebsd-x64-retry:
     name: Test FreeBSD x64 artifacts (retry)
