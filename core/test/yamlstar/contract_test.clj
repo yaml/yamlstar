@@ -5,6 +5,18 @@
 
 (def sample "a: &x [1, \"two\"]\nb: *x\n")
 
+(deftest retired-node-key-is-rejected
+  (doseq [source ["kind: Scalar\nvalue: old\n"
+                  "node: Scalar\nkind: Scalar\nvalue: old\n"
+                  "node: Document\ncontent:\n- kind: Scalar\n  value: old\n"
+                  (str "node: Document\ncontent:\n- node: Scalar\n"
+                       "  kind: Scalar\n  value: old\n")]]
+    (is (thrown? clojure.lang.ExceptionInfo
+                 (contract/contract-nodes
+                  (:value (contract/read-contract source "node"))))))
+  (is (= :yaml (:stage (contract/read-contract
+                       "kind: Scalar\nvalue: old\n" nil)))))
+
 (deftest event-and-node-contracts-chain
   (let [events (contract/yaml-events sample)
         external-events (contract/event-contract events)
@@ -14,7 +26,7 @@
         imported-nodes (contract/contract-nodes detailed)]
     (is (= "STREAM-START" (get (first external-events) "event")))
     (is (= "STREAM-END" (get (last external-events) "event")))
-    (is (= "Document" (get detailed "kind")))
+    (is (= "Document" (get detailed "node")))
     (is (= sample (contract/events-yaml imported-events)))
     (is (= sample (contract/nodes-yaml imported-nodes)))))
 
@@ -39,9 +51,9 @@
          (contract/check-forward! :event :token)))))
 
 (deftest stream-node-wrappers-are-not-documents
-  (let [stream {"kind" "Stream" "encoding" "UTF-8"}
-        document {"kind" "Document"
-                  "content" [{"kind" "Scalar"
+  (let [stream {"node" "Stream" "encoding" "UTF-8"}
+        document {"node" "Document"
+                  "content" [{"node" "Scalar"
                               "style" "Plain"
                               "tag" "!!str"
                               "value" "value"}]}

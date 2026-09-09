@@ -20,7 +20,14 @@
   (let [events (cli/convert-input sample {:event true} {})
         nodes (cli/convert-input events {:NODE true} {})
         output (cli/convert-input nodes {:YAML true} {})]
+    (is (= "Document" (get (yaml/load nodes) "node")))
+    (is (= "Mapping" (get-in (yaml/load nodes) ["content" 0 "node"])))
     (is (= sample output))))
+
+(deftest retired-node-key-is-rejected
+  (is (thrown? clojure.lang.ExceptionInfo
+               (cli/convert-input "kind: Scalar\nvalue: old\n"
+                                  {:from "node" :YAML true} {}))))
 
 (deftest forced-yaml-disambiguates-contract-shaped-data
   (let [source "- {event: STREAM-START}\n- {event: STREAM-END}\n"

@@ -52,7 +52,7 @@
 (defn detailed-node? [value]
   (and (map? value)
        (contains? #{"Document" "Mapping" "Sequence" "Scalar" "Alias" "Stream"}
-                  (field value "kind"))))
+                  (field value "node"))))
 
 (defn node-contract? [value]
   (or (compact-node? value)
@@ -165,7 +165,7 @@
                   :mapping (vec (mapcat identity (:value node)))
                   :sequence (:value node)
                   nil)]
-    (cond-> (array-map "kind" (str/capitalize (name kind)))
+    (cond-> (array-map "node" (str/capitalize (name kind)))
       (contains? #{:mapping :sequence :scalar} kind)
       (assoc "style" (node-style node))
       (:anchor node) (assoc "anchor" (:anchor node))
@@ -175,7 +175,7 @@
       content (assoc "content" (mapv internal-node->detailed content)))))
 
 (defn wrap-detailed-document [node]
-  (array-map "kind" "Document" "content" [(internal-node->detailed node)]))
+  (array-map "node" "Document" "content" [(internal-node->detailed node)]))
 
 (defn internal-node->compact [node]
   (let [base (cond-> (array-map)
@@ -203,7 +203,9 @@
 (declare detailed->internal compact->internal)
 
 (defn detailed->internal [node]
-  (let [kind (some-> (field node "kind") str/lower-case keyword)
+  (when (has-field? node "kind")
+    (throw (ex-info "invalid node input: use 'node' instead of 'kind'" {})))
+  (let [kind (some-> (field node "node") str/lower-case keyword)
         content (mapv detailed->internal (or (field node "content") []))
         base (cond-> {:kind kind}
                (field node "anchor") (assoc :anchor (field node "anchor"))
@@ -220,7 +222,7 @@
                      (not= "plain" (lower-style (field node "style"))))
                 (assoc :style (lower-style (field node "style"))))
       :alias {:kind :alias :name (field node "value")}
-      (throw (ex-info (str "unknown node kind '" (field node "kind") "'") {})))))
+      (throw (ex-info (str "unknown node kind '" (field node "node") "'") {})))))
 
 (defn compact->internal [node]
   (let [shape (first (filter #(has-field? node %) node-shapes))

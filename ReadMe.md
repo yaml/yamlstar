@@ -61,6 +61,18 @@ yaml --version
 Run `yaml --help` or see <https://yamlstar.org/cli/> for the full CLI
 reference.
 
+Detailed node output (`-N`) uses `node: Document`, `node: Mapping`, and
+other node types, including nested content.
+The same contract can be passed between YAMLStar and go-yaml:
+
+```bash
+printf 'a: b\n' | go-yaml -N | yaml -Y
+printf 'a: b\n' | yaml -N | go-yaml -Y
+```
+
+Use `-f node` to force node input.
+The retired `kind:` spelling is not accepted as a detailed node contract.
+
 ## Vision
 
 YAMLStar aims to be the best YAML load/dump framework available, with these key
