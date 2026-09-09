@@ -14,6 +14,8 @@ include $M/shellcheck.mk
 include $M/zig.mk
 include $M/shell.mk
 
+MAKE-BASH := bash util/make.bash
+
 # Extract version from Meta file
 VERSION := $(shell grep '^version:' Meta | cut -d' ' -f2)
 YAMLSTAR_ENGINE ?= $(if $(YAMLSTAR_GLOJURE),glojure,graalvm)
@@ -191,6 +193,7 @@ shellcheck: $(SHELLCHECK)
 	  util/release \
 	  util/yamlstar-plugin \
 	  util/release-repo.bash \
+	  util/make.bash \
 	  util/release-binding-published \
 	  util/cli-local-source \
 	  util/install-release-artifacts \
@@ -373,15 +376,7 @@ endif
 
 release-pull:
 ifndef d
-	( \
-	  set -ex; \
-	  head=$$(git rev-parse HEAD); \
-	  git pull --rebase; \
-	  if [[ $$(git rev-parse HEAD) != $$head ]]; then \
-	    echo "Pulled new changes. Please re-run 'make release'."; \
-	    exit 1; \
-	  fi \
-	)
+	$(MAKE-BASH) $@
 endif
 
 _release-yamlstar: $(YS) $(GH)
@@ -471,43 +466,14 @@ release-tests-retry: $(GH)
 ifndef v
 	$(error 'make release-tests-retry' requires v=NEW_VERSION)
 endif
-	@set -e; \
-	  branch=$$(git branch --show-current); \
-	  artifact_run_id='$(r)'; \
-	  if [[ -z "$$artifact_run_id" ]]; then \
-	    artifact_run_id=$$(gh run list --workflow=release.yaml \
-	      --repo yaml/yamlstar --branch $$branch --limit=1 \
-	      --json databaseId --jq '.[0].databaseId'); \
-	  fi; \
-	  test -n "$$artifact_run_id"; \
-	  gh run view $$artifact_run_id --repo yaml/yamlstar \
-	    --json databaseId --jq .databaseId > /dev/null || { \
-	    echo "ERROR: run id '$$artifact_run_id' not found"; exit 1; }; \
-	  echo "Using build artifacts from run $$artifact_run_id"; \
-	  git push origin HEAD:$$branch; \
-	  gh workflow run release.yaml \
-	    --repo yaml/yamlstar --ref $$branch -f version=$(v) \
-	    -f tests_only='$(subst $(comma), ,$(t))' \
-	    -f test_artifacts_run_id=$$artifact_run_id; \
-	  sleep 5; \
-	  run_id=$$(gh run list --workflow=release.yaml \
-	    --repo yaml/yamlstar --branch $$branch --limit=1 \
-	    --json databaseId --jq '.[0].databaseId'); \
-	  gh run watch $$run_id --repo yaml/yamlstar \
-	    --exit-status --interval=10
+	@$(MAKE-BASH) $@ "$(v)" "$(r)" \
+	  "$(subst $(comma), ,$(t))"
 
 release-retry: $(YS) $(GH)
 ifndef v
 	$(error 'make release-retry' requires v=NEW_VERSION)
 endif
-	@if gh release view $(v) --repo yaml/yamlstar >/dev/null 2>&1; then \
-	  echo "Deleting existing GitHub release $(v)"; \
-	  gh release delete $(v) --repo yaml/yamlstar --yes; \
-	fi
-	git push --force-with-lease origin HEAD:$$(git branch --show-current)
-	git tag -f $(v) HEAD
-	git tag -f v$(v) HEAD
-	git push -f origin $(v) v$(v)
+	@$(MAKE-BASH) $@ "$(v)"
 	$(MAKE) release-build-github v=$(v)
 
 # Rerun the failed jobs of a release workflow run (r=RUN_ID, default:
@@ -521,26 +487,7 @@ release-rerun: $(GH)
 ifndef v
 	$(error 'make release-rerun' requires v=NEW_VERSION)
 endif
-	@set -e; \
-	  branch=$$(git branch --show-current); \
-	  run_id='$(r)'; \
-	  if [[ -z "$$run_id" ]]; then \
-	    run_id=$$(gh run list --workflow=release.yaml \
-	      --repo yaml/yamlstar --branch $$branch --limit=1 \
-	      --json databaseId --jq '.[0].databaseId'); \
-	  fi; \
-	  test -n "$$run_id"; \
-	  gh run view $$run_id --repo yaml/yamlstar \
-	    --json databaseId --jq .databaseId > /dev/null || { \
-	    echo "ERROR: run id '$$run_id' not found"; exit 1; }; \
-	  git push --force-with-lease origin HEAD:$$branch; \
-	  git tag -f $(v) HEAD; \
-	  git tag -f v$(v) HEAD; \
-	  git push -f origin $(v) v$(v); \
-	  echo "Rerunning failed jobs of run $$run_id"; \
-	  gh run rerun $$run_id --failed --repo yaml/yamlstar; \
-	  gh run watch $$run_id --repo yaml/yamlstar \
-	    --exit-status --interval=10
+	@$(MAKE-BASH) $@ "$(v)" "$(r)"
 
 release-bindings: $(YS)
 ifndef v
@@ -578,48 +525,20 @@ release-publish-homebrew: $(GH)
 ifndef v
 	$(error 'make release-publish-homebrew' requires v=NEW_VERSION)
 endif
-	@set -e; \
-	  branch=$$(git branch --show-current); \
-	  git push origin HEAD:$$branch; \
-	  gh workflow run release.yaml \
-	    --repo yaml/yamlstar --ref $$branch -f version=$(v) \
-	    -f publish_homebrew_only=true; \
-	  sleep 5; \
-	  run_id=$$(gh run list --workflow=release.yaml \
-	    --repo yaml/yamlstar --branch $$branch --limit=1 \
-	    --json databaseId --jq '.[0].databaseId'); \
-	  gh run watch $$run_id --repo yaml/yamlstar \
-	    --exit-status --interval 10
+	@$(MAKE-BASH) $@ "$(v)"
 
 release-publish-bindings: $(GH)
 ifndef v
 	$(error 'make release-publish-bindings' requires v=NEW_VERSION)
 endif
-	@set -e; \
-	  branch=$$(git branch --show-current); \
-	  git push origin HEAD:$$branch; \
-	  gh workflow run release.yaml \
-	    --repo yaml/yamlstar --ref $$branch -f version=$(v) \
-	    -f publish_bindings_only=true \
-	    -f force_bindings='$(if $(YS_RELEASE_FORCE_BINDINGS),true,false)' \
-	    -f bindings='$(YS_RELEASE_BINDINGS)' \
-	    -f bindings_skip='$(YS_RELEASE_BINDINGS_SKIP)'; \
-	  sleep 5; \
-	  run_id=$$(gh run list --workflow=release.yaml \
-	    --repo yaml/yamlstar --branch $$branch --limit=1 \
-	    --json databaseId --jq '.[0].databaseId'); \
-	  gh run watch $$run_id --repo yaml/yamlstar \
-	    --exit-status --interval=10
+	@$(MAKE-BASH) $@ "$(v)" \
+	  "$(if $(YS_RELEASE_FORCE_BINDINGS),true,false)" \
+	  "$(YS_RELEASE_BINDINGS)" "$(YS_RELEASE_BINDINGS_SKIP)"
 
 publish-python-wheels: $(GH)
 ifndef v
 	$(error 'make publish-python-wheels' requires v=VERSION)
 endif
-	rm -fr python/dist
-	mkdir -p python/dist/release-assets
-	gh release download $(v) \
-	  --repo yaml/yamlstar \
-	  --pattern 'libyamlstar-$(v)-*.tar.xz' \
-	  --dir python/dist/release-assets
+	$(MAKE-BASH) $@ "$(v)"
 	$(MAKE) -C python wheels-from-release n=$(v)
 	$(MAKE) -C python publish-wheels

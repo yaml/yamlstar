@@ -1,6 +1,8 @@
 include ../common/init.mk
 M := ../.cache/makes
 
+MAKE-BASH := bash ../util/make.bash
+
 RT ?= $(if $(YAMLSTAR_GLOJURE),glj,graal)
 PARSER ?= $(if $(filter glj,$(RT)),go,ref)
 
@@ -150,19 +152,8 @@ GLOAT-CLI-SRCS := \
   gloat/src/yamlstar/cli.clj \
 
 _prepare-gloat-bin:
-	@if ! test -x "$(GLOAT)"; then \
-	  case "$(GLOAT-DIR)" in \
-	    "$(LOCAL-CACHE)"/*) \
-	      rm -rf "$(GLOAT-DIR)"; \
-	      $(MAKE) "$(GLOAT)"; \
-	      ;; \
-	    *) \
-	      echo "Gloat executable not found: $(GLOAT)" >&2; \
-	      exit 1; \
-	      ;; \
-	  esac; \
-	fi
-	@test -x "$(GLOAT)"
+	@$(MAKE-BASH) $@ "$(GLOAT)" "$(GLOAT-DIR)" \
+	  "$(LOCAL-CACHE)" $(MAKE)
 
 ifdef TEST-WITH-GLOJURE
 GLOAT-GLOJURE-ENV := \
@@ -273,22 +264,9 @@ $(GLOAT-CLI-OPTIONS-SRC): $(GLOAT-CORE)/cli_options.cljc
 	@mkdir -p $(dir $@)
 	ln -sf $(abspath $<) $@
 
-$(CLI-DEFAULT-SRC): Makefile
-	@mkdir -p $(dir $@)
-	@if test -n '$(CLI-DEFAULT-REQUIRE)'; then \
-	  printf '%s\n' \
-	    '(ns yamlstar.cli-default' \
-	    '  (:require $(CLI-DEFAULT-REQUIRE)))' \
-	    '' \
-	    '(def default-parser "$(PARSER-NAME)")' \
-	    > $@; \
-	else \
-	  printf '%s\n' \
-	    '(ns yamlstar.cli-default)' \
-	    '' \
-	    '(def default-parser "$(PARSER-NAME)")' \
-	    > $@; \
-	fi
+$(CLI-DEFAULT-SRC): Makefile ../util/make.bash
+	@$(MAKE-BASH) CLI-DEFAULT-SRC "$@" \
+	  '$(CLI-DEFAULT-REQUIRE)' "$(PARSER-NAME)"
 
 ifeq ($(YAMLSTAR_ENGINE),graalvm)
 PLUGIN-HOST-DIR := cache/plugin-host
