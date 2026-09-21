@@ -1,6 +1,6 @@
 //go:build !darwin && !freebsd && !linux
 
-// Package pluginloader loads YAMLStar event-source shared libraries.
+// Package pluginloader loads YAMLStar text-transform shared libraries.
 package pluginloader
 
 import "fmt"
@@ -16,7 +16,7 @@ func Manifest(api, name string, _ bool) (string, error) {
 }
 
 // Parse reports that shared plugins are not supported on this platform.
-func Parse(api, name, input, options string) (string, int64, error) {
+func Transform(api, name, input, options string) (string, int64, error) {
 	return "", 2, unsupported(api, name)
 }
 

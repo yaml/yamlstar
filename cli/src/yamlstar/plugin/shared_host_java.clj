@@ -7,10 +7,10 @@
   []
   (some? (System/getProperty "org.graalvm.nativeimage.imagecode")))
 
-(defn- parse
+(defn- transform
   [api name input options]
   (let [[status output]
-        (seq (yamlstar.plugin.SharedPluginHost/parse
+        (seq (yamlstar.plugin.SharedPluginHost/transform
               api name input options))]
     [(Long/parseLong status) output]))
 
@@ -18,8 +18,8 @@
   "Install the GraalVM shared-library loader in a native image."
   []
   (when (native-image?)
-    (plugin/set-event-source-loader!
+    (plugin/set-json-comments-loader!
      (shared/make-loader
       (fn [api name install?]
         (yamlstar.plugin.SharedPluginHost/manifest api name install?))
-      parse))))
+      transform))))

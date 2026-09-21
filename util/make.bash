@@ -42,19 +42,20 @@ release-tests-retry() (
 release-retry() (
   set -e
   version=$1
-  if gh release view "$version" --repo yaml/yamlstar >/dev/null 2>&1; then
-    echo "Deleting existing GitHub release $version"
-    gh release delete "$version" --repo yaml/yamlstar --yes
+  tag=v$version
+  if gh release view "$tag" --repo yaml/yamlstar >/dev/null 2>&1; then
+    echo "Deleting existing GitHub release $tag"
+    gh release delete "$tag" --repo yaml/yamlstar --yes
   fi
   git push --force-with-lease origin HEAD:"$(git branch --show-current)"
-  git tag -f "$version" HEAD
-  git tag -f v"$version" HEAD
-  git push -f origin "$version" v"$version"
+  git tag -f "$tag" HEAD
+  git push -f origin "$tag"
 )
 
 release-rerun() (
   set -e
   version=$1
+  tag=v$version
   run_id=$2
   branch=$(git branch --show-current)
   if [[ -z $run_id ]]; then
@@ -67,9 +68,8 @@ release-rerun() (
     --json databaseId --jq .databaseId > /dev/null || {
     echo "ERROR: run id '$run_id' not found"; exit 1; }
   git push --force-with-lease origin HEAD:"$branch"
-  git tag -f "$version" HEAD
-  git tag -f v"$version" HEAD
-  git push -f origin "$version" v"$version"
+  git tag -f "$tag" HEAD
+  git push -f origin "$tag"
   echo "Rerunning failed jobs of run $run_id"
   gh run rerun "$run_id" --failed --repo yaml/yamlstar
   gh run watch "$run_id" --repo yaml/yamlstar \

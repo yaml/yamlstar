@@ -3,44 +3,38 @@
             [yamlstar.plugin.shared :as shared]))
 
 (def manifest
-  {:abi 1
+  {:abi 2
    :api "json-comments"
-   :name "json-comments"
-   :version "0.1.0"
-   :kind "event-source"
-   :requires {:parser "reference"}
-   :event-format "yamlstar-events-edn-v1"})
+   :name "sanitizer"
+   :version "0.1.9"
+   :kind "text-transform"})
 
 (deftest shared-loader-test
   (let [loader (shared/make-loader
                 (fn [_ _ _] (pr-str manifest))
-                (fn [_ _ _ _]
-                  [0 (pr-str [{:event "stream_start"}
-                              {:event "stream_end"}])]))
-        plugin (loader "json-comments" "json-comments" false)]
+                (fn [_ _ input _]
+                  [0 (.replace input "// comment" "")]))
+        plugin (loader "json-comments" "sanitizer" nil false)]
     (is (= manifest (:manifest plugin)))
-    (is (= {:parser "reference"} (:requires plugin)))
-    (is (= [{:event "stream_start"} {:event "stream_end"}]
-           ((:parse plugin) "x" {})))))
+    (is (= "0.1.9" (:version plugin)))
+    (is (= "a: true "
+           ((:sanitize plugin) "a: true // comment" {})))))
 
 (deftest manifest-validation-test
   (testing "ABI mismatch"
     (is (thrown-with-msg?
          Exception #"manifest abi"
-         (shared/validate-manifest (assoc manifest :abi 2)
-                                   "json-comments" "json-comments"))))
+         (shared/validate-manifest (assoc manifest :abi 1)
+                                   "json-comments" "sanitizer"))))
   (testing "API mismatch"
     (is (thrown-with-msg?
          Exception #"manifest api"
-         (shared/validate-manifest manifest "other" "json-comments")))))
+         (shared/validate-manifest manifest "other" "sanitizer")))))
 
 (deftest shared-error-test
   (let [loader (shared/make-loader
                 (fn [_ _ _] (pr-str manifest))
-                (fn [_ _ _ _]
-                  [1 (pr-str {:error {:type "parse"
-                                      :message "bad input"
-                                      :data {:position 4}}})]))
-        plugin (loader "json-comments" "json-comments" false)]
+                (fn [_ _ _ _] [1 "bad input"]))
+        plugin (loader "json-comments" "sanitizer" nil false)]
     (is (thrown-with-msg? Exception #"bad input"
-                          ((:parse plugin) "x" {})))))
+                          ((:sanitize plugin) "x" {})))))

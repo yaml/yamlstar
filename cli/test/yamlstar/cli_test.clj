@@ -10,6 +10,21 @@
   (is (= #{"reference" "snakeyaml"}
          (set (plugin/registered-parsers)))))
 
+(deftest bundled-json-comments-plugin
+  (is (= {"a" true}
+         (yaml/load "a: true // comment\n"
+                    {:plugin {:parser "reference@v0.2.5"
+                              :json-comments true}}))))
+
+(deftest combined-plugin-selector
+  (let [output
+        (with-out-str
+          (is (zero?
+               (cli/main-status
+                "--eval" "a: true // comment\n"
+                "--plugin=parser=reference@0.2.5,json-comments"))))]
+    (is (= "{\"a\":true}\n" output))))
+
 (deftest version-output
   (is (= (str "yaml v"
               (clojure.string/replace cli/version #"-SNAPSHOT$" ""))

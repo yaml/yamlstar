@@ -18,11 +18,6 @@ import (
 	"github.com/glojurelang/glojure/pkg/glj"
 	"github.com/glojurelang/glojure/pkg/lang"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/libyamlstar"
-	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yaml_parser/core"
-	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yaml_parser/grammar"
-	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yaml_parser/parser"
-	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yaml_parser/prelude"
-	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yaml_parser/receiver"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/api"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/composer"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/constructor"
@@ -139,20 +134,15 @@ var (
 var namespaces = []string{
 	"clojure.data.json",
 	"yamlstar.numbers",
-	"yaml-parser.prelude",
-	"yaml-parser.core",
 	"yamlstar.emitter",
-	"yaml-parser.grammar",
 	"yamlstar.api",
 	"yamlstar.desolver",
 	"libyamlstar",
 	"yamlstar.plugin",
 	"yamlstar.plugin.parser.reference",
 	"yamlstar.plugin.parser.go-yaml",
-	"yaml-parser.parser",
 	"yamlstar.composer",
 	"yamlstar.parser",
-	"yaml-parser.receiver",
 	"yamlstar.representer",
 	"yamlstar.serializer",
 	"yamlstar.constructor",

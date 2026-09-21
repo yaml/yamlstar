@@ -65,20 +65,34 @@
 
 (defn plugin-options
   [spec]
-  (let [[api explicit-name extra] (str/split spec #"=" 3)
-        name (or explicit-name api)]
-    (when (or (str/blank? api) (str/blank? name) extra)
-      (throw (ex-info "Plugin option must be NAME or API=NAME"
-                      {:plugin spec})))
-    {:plugin {(normalize-key api) {:name name}}}))
+  (letfn [(selector-options [selector]
+            (let [[api implementation extra]
+                  (str/split selector #"=" 3)
+                  [name version version-extra]
+                  (str/split (or implementation api) #"@" 3)]
+              (when (or (str/blank? api)
+                        (and implementation (str/blank? name))
+                        extra version-extra
+                        (and (str/includes? selector "@")
+                             (str/blank? version)))
+                (throw
+                 (ex-info
+                  (str "Plugin selector must be API, API@VERSION, "
+                       "API=NAME, or API=NAME@VERSION")
+                  {:plugin selector})))
+              {:plugin
+               {(normalize-key api)
+                (cond-> {}
+                  implementation (assoc :name name)
+                  version (assoc :version version))}}))]
+    (apply deep-merge
+           (map selector-options (str/split spec #"," -1)))))
 
 (defn cli-plugin-options
   [opts]
   (deep-merge
    (apply deep-merge
-          (concat
-            (map plugin-options (:plugin opts))
-            [(parser-options (:parser opts))]))
+          (map plugin-options (:plugin opts)))
    (when (:no-plugin-install opts)
      {:plugin-install false})))
 

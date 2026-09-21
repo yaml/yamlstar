@@ -60,8 +60,7 @@
    ["-o" "--output FILE" "Output file"]
    ["-s" "--stream" "Output all documents"]
    [nil "--config CONFIG" "YAMLStar options file or inline YAML mapping"]
-   [nil "--parser NAME" "YAML parser plugin name"]
-   [nil "--plugin SPEC" "YAMLStar plugin selector (NAME or API=NAME)"
+   [nil "--plugin SPEC" "Plugin selector list"
     :assoc-fn (fn [m k v] (update m k (fnil conj []) v))]
    [nil "--no-plugin-install" "Do not install missing shared plugins"]
    ["-d" "--debug" "Debug all stages"]
@@ -88,8 +87,7 @@ Examples:
   go-yaml -N file.yaml | yaml -Y # go-yaml nodes → YAML
   cat f.yaml | yaml -J       # stdin → pretty JSON
   yaml -D parse config.yaml  # Debug parser stage
-  yaml --parser reference f.yaml
-  yaml --plugin=json-comments f.yaml
+  yaml --plugin=parser=reference@v0.2.5,json-comments f.yaml
   yaml --config '{plugin: {parser: {name: reference}}}' f.yaml
 
 Options:")

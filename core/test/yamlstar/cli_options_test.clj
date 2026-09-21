@@ -40,28 +40,29 @@
           (opts/config-options "[1, 2]")))))
 
 (deftest plugin-options-test
-  (testing "parser flag options"
-    (is (= {:plugin {:parser {:name "go-yaml"}}}
-           (opts/parser-options "go-yaml"))))
-
   (testing "generic plugin flag options"
     (is (= {:plugin {:parser {:name "reference"}}}
            (opts/plugin-options "parser=reference")))
-    (is (= {:plugin {:json-comments {:name "json-comments"}}}
-           (opts/plugin-options "json-comments"))))
+    (is (= {:plugin {:json-comments {}}}
+           (opts/plugin-options "json-comments")))
+    (is (= {:plugin
+            {:parser {:name "reference" :version "v0.2.5"}
+             :json-comments {}}}
+           (opts/plugin-options
+            "parser=reference@v0.2.5,json-comments"))))
 
   (testing "malformed plugin option"
     (is (thrown-with-msg?
-          Exception #"Plugin option must be NAME or API=NAME"
+          Exception #"Plugin selector must be"
           (opts/plugin-options "parser=")))))
 
 (deftest runtime-options-precedence-test
-  (testing "cli parser beats cli config, env config, and env parser"
+  (testing "cli plugin beats cli config, env config, and env parser"
     (is (= {:plugin-install true
             :plugin {:parser {:name "reference"}}}
            (opts/runtime-options
              {:config "{plugin: {parser: {name: snakeyaml}}}"
-              :parser "reference"}
+              :plugin ["parser=reference"]}
              (env {"YAMLSTAR_PARSER" "env-parser"
                    "YAMLSTAR_CONFIG"
                    "{plugin: {parser: {name: go-yaml}}}"})))))
@@ -83,14 +84,6 @@
              (env {"YAMLSTAR_PARSER" "env-parser"
                    "YAMLSTAR_CONFIG"
                    "{plugin: {parser: {name: go-yaml}}}"})))))
-
-  (testing "--parser beats --plugin parser=NAME"
-    (is (= {:plugin-install true
-            :plugin {:parser {:name "reference"}}}
-           (opts/runtime-options
-             {:plugin ["parser=go-yaml"]
-             :parser "reference"}
-             (env {})))))
 
   (testing "config can disable automatic plugin installation"
     (is (= {:plugin-install false}

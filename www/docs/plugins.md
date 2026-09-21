@@ -1,79 +1,123 @@
-# Plugin System
+# Plugin system
 
-The YAMLStar plugin system extends YAML processing with swappable
-components while keeping the same API and results across all language
-bindings.
+YAMLStar plugin APIs identify replaceable processing roles.
+Each API can have several named implementations.
+The current APIs and implementations are:
 
-## Overview
+| API | Implementation | Availability |
+|---|---|---|
+| `parser` | `reference` | JVM and native |
+| `parser` | `go-yaml` | Glojure native runtime |
+| `parser` | `snakeyaml` | JVM runtime |
+| `json-comments` | `sanitizer` | JVM artifact or native shared library |
 
-Plugins can customize internal processing during loading and dumping.
-Parser plugins replace the YAML parser.
-Event-source plugins produce the complete parser event stream and can be
-distributed as shared libraries.
+The JSON-comments sanitizer transforms source text before the selected parser
+runs.
+It can therefore be combined with any available parser.
 
-Every load operation accepts an options structure that selects plugins
-and configures them.
-The options are the same in every binding; only the syntax is idiomatic
-to each language.
+## Configuration
 
-## Available Parsers
+Options use a `plugin` mapping keyed by plugin API:
 
-| Name | Description |
-|------|-------------|
-| `reference` | The pure Clojure YAML 1.2 reference parser (default) |
-| `go-yaml` | The go-yaml parser (Glojure runtime only) |
-| `snakeyaml` | The SnakeYAML Engine parser (JVM only) |
+```yaml
+plugin:
+  parser: reference@v0.2.5
+  json-comments: sanitizer@v0.1.9
+```
 
-All parsers produce identical results for conforming YAML documents.
-SnakeYAML rejects some edge cases that the reference parser accepts
-(tabs in certain positions, multiline flow mapping keys, and other
-yaml-test-suite corner cases).
-
-Not every parser is available in every binding.
-The released `yaml` CLI and the `libyamlstar` shared library are built
-with Glojure and bundle the `reference` and `go-yaml` parsers.
-The `snakeyaml` parser needs a JVM, so it is only available from the
-Clojure and Java bindings.
-The GraalVM native build that included it is no longer part of the
-release artifacts.
-
-## Options Shape
-
-Options are a nested mapping.
-The `plugin` key holds a map of plugin type to plugin configuration.
-For parser plugins, `name` names the parser and any sibling keys are
-passed to it as configuration:
+An implementation can also use a mapping:
 
 ```yaml
 plugin:
   parser:
-    name: snakeyaml
+    name: reference
+    version: v0.2.5
+  json-comments:
+    name: sanitizer
+    version: v0.1.9
 ```
 
-## Shared Event-Source Plugins
+`true` selects the API's default implementation.
+`false` disables that API.
+A mapping may use `disable: true` to retain settings without selecting the
+plugin.
+Null is invalid.
+Versions with and without the leading `v` are accepted.
+Documentation and Git tags use the `v` prefix.
 
-The native `yaml` CLIs and both native `libyamlstar` implementations can
-load an event-source plugin from a Unix shared library.
-The JVM library and the pure Go package do not load shared plugins.
+## Command line
 
-Select the JSON comments plugin with either of these equivalent forms:
+`--plugin` accepts only plugin selector syntax.
+It does not accept a file name or an inline YAML mapping.
+Selectors have these forms:
+
+```text
+API
+API@VERSION
+API=IMPLEMENTATION
+API=IMPLEMENTATION@VERSION
+```
+
+Several selectors can be comma-separated:
 
 ```bash
-yaml --plugin=json-comments
-yaml --plugin=json-comments=json-comments
+yaml --plugin=parser=reference@v0.2.5,json-comments file.yaml
 ```
 
-Only one event-source plugin can be active for a load operation.
-An event-source plugin supersedes the default parser.
-It can coexist with an explicit `reference` parser selection, but a
-different explicitly selected parser is a configuration error.
+The short `json-comments` selector chooses `sanitizer`.
+The short `parser` selector chooses the runtime's default parser.
+Use `--config=FILE` for a YAML options file.
+The former `--parser` flag has been removed.
+
+`YAMLSTAR_PARSER` remains available as an environment override for existing
+applications and test runs.
+
+## Parser implementations
+
+The `reference` implementation uses release `v0.2.5` of the YAML reference
+parser.
+The canonical Clojure source remains in `yaml/yaml-reference-parser-clj`.
+JVM builds use its Clojars artifact directly.
+Glojure builds use the generated Go module
+`github.com/yamlstar/yamlstar-plugin-parser-reference`.
+
+The released native CLI also provides the built-in `go-yaml` implementation.
+The `snakeyaml` implementation is available to JVM applications.
+
+All parser implementations return YAMLStar's standard event maps.
+Applications can select another parser without changing JSON-comments
+configuration.
+
+## JSON-comments implementation
+
+The `sanitizer` implementation removes recognized `//` and `/* */` comments
+from UTF-8 input while preserving line endings and non-comment text.
+The selected parser receives the transformed source.
+Comment markers inside quoted scalars, block scalars, and URLs remain text.
+See the plugin's syntax documentation for the exact recognition rules.
+
+JVM users add the independent Clojars artifact:
+
+```clojure
+[org.yamlstar/yamlstar-plugin-json-comments "0.1.9"]
+```
+
+YAMLStar resolves it from the classpath only when `json-comments` is selected.
+It needs no native library or GraalVM.
+The standard JVM CLI includes this artifact.
+
+Native Glojure and GraalVM hosts load the implementation from
+`libyamlstar-plugin-json-comments.so` on Linux and FreeBSD or the matching
+`.dylib` on macOS.
+The implementation name remains `sanitizer`; the native distribution and
+library artifact retain the `json-comments` repository name.
+
+## Native plugin search and installation
 
 When `YAMLSTAR_LIBRARY_PATH` is set, YAMLStar searches only its
-colon-separated directories, in order.
+colon-separated directories.
 Empty entries are ignored.
-Otherwise, YAMLStar searches for
-`libyamlstar-plugin-json-comments.so` on Linux and FreeBSD, or the
-corresponding `.dylib` on macOS, in these default locations:
+Otherwise it searches:
 
 1. Beside the hosting `libyamlstar` library.
 2. `../lib` relative to the CLI executable.
@@ -81,72 +125,33 @@ corresponding `.dylib` on macOS, in these default locations:
 4. `/usr/local/lib`.
 5. `/usr/lib`.
 
-Print the default path in colon-separated form with:
+Print the default path with:
 
 ```bash
 yaml --path
 ```
 
-For example, this adds `foo` ahead of the default path:
+Add a directory for one invocation with:
 
 ```bash
-YAMLSTAR_LIBRARY_PATH=foo:$(yaml --path) yaml file.yaml
+YAMLSTAR_LIBRARY_PATH=foo:$(yaml --path) \
+  yaml --plugin=json-comments file.yaml
 ```
 
-The same override can be scoped to one invocation:
+The native CLI can install a missing official plugin automatically.
+Use `--no-plugin-install` to disable that behavior.
+The installer downloads the newest release of
+`yamlstar/yamlstar-plugin-json-comments`, verifies `SHA256SUMS`, and installs
+the library atomically in the first writable search directory.
+An existing library is not updated during loading.
+
+The installer can also be run directly:
 
 ```bash
-yaml --path=foo --plugin=json-comments file.yaml
-yaml --path=foo:$(yaml --path) --plugin=json-comments file.yaml
+yamlstar-plugin install json-comments
 ```
 
-The current working directory is never searched by default.
-
-### Installing Missing Plugins
-
-The native `yaml` command automatically installs a missing official
-plugin before loading the input:
-
-```bash
-printf '%s\n' '{"a": true // comment}' |
-  yaml --plugin=json-comments
-```
-
-Use `--no-plugin-install` when network access or filesystem changes are
-not wanted.
-An installed plugin is never checked for updates during loading.
-
-Automatic installation maps plugin name `NAME` to the GitHub repository
-`yamlstar/yamlstar-plugin-NAME` and selects its newest published release.
-It supports Linux x64 and aarch64 and macOS x64 and arm64 when the release
-contains the corresponding asset.
-The installer requires `curl`, `tar`, and either `sha256sum` or `shasum`.
-It verifies `SHA256SUMS` before installing the library atomically in the
-first writable plugin path.
-When `YAMLSTAR_LIBRARY_PATH` is set, only its directories are considered.
-Otherwise, the default path printed by `yaml --path` is used.
-
-The `libyamlstar` API does not install plugins unless the caller opts in:
-
-```json
-{
-  "plugin": {
-    "json-comments": {
-      "name": "json-comments"
-    }
-  },
-  "plugin-install": true
-}
-```
-
-Python provides a convenience argument for the same option:
-
-```python
-opts = yamlstar.Options().plugin(yamlstar.json_comments())
-ys = yamlstar.YAMLStar(opts, install_plugins=True)
-```
-
-Python users can instead install a plugin wheel:
+Python users can install the native distribution through its wheel:
 
 ```bash
 pip install yamlstar-plugin-json-comments
@@ -158,156 +163,64 @@ ys = yamlstar.YAMLStar(opts)
 data = ys.load('{"a": true // comment}')
 ```
 
-The Python binding discovers the `yamlstar.plugins` entry point matching
-the selected plugin name.
-It does not import entry points for unselected plugins.
-When `YAMLSTAR_LIBRARY_PATH` is present, installed-package discovery is
-disabled and the native library searches only the explicitly configured
-directories.
+The Python helper produces this common configuration:
 
-The installer can also be run directly:
-
-```bash
-yamlstar-plugin install json-comments
+```json
+{"plugin": {"json-comments": {"name": "sanitizer"}}}
 ```
 
-Set `YAMLSTAR_PLUGIN_INSTALLER` to an alternate installer executable.
-Third-party plugins continue to use manual installation or
-`YAMLSTAR_LIBRARY_PATH`.
+The binding maps the logical `sanitizer` implementation to the
+`json-comments` package entry point and native library artifact.
 
-The version 1 shared-plugin ABI uses raw UTF-8 input and EDN output.
-The plugin manifest declares its API, independent version, plugin kind,
-required parser, and event format.
-Returned buffers are owned by the plugin and must be released through its
-exported free function.
+## Shared text-transform ABI
+
+Native JSON-comments plugins use shared ABI version 2.
+The manifest is EDN and declares `:api "json-comments"`,
+`:name "sanitizer"`, `:kind "text-transform"`, and its release version.
+The transform input and successful output are raw UTF-8 bytes.
+Only the small manifest and options value use EDN.
 
 ```c
-uint64_t yamlstar_plugin_v1_abi(void);
-int32_t yamlstar_plugin_v1_manifest(
+uint64_t yamlstar_plugin_v2_abi(void);
+int32_t yamlstar_plugin_v2_manifest(
     uint8_t **output, size_t *output_length);
-int32_t yamlstar_plugin_v1_parse(
+int32_t yamlstar_plugin_v2_transform(
     const uint8_t *input, size_t input_length,
     const uint8_t *options_edn, size_t options_length,
     uint8_t **output, size_t *output_length);
-void yamlstar_plugin_v1_free(uint8_t *output);
+void yamlstar_plugin_v2_free(uint8_t *output);
 ```
 
-Status `0` is success, `1` is a plugin parse or configuration error, and
-`2` is an ABI or internal failure.
+Status `0` is success.
+Status `1` returns a plugin error message.
+Status `2` reports an ABI or internal host failure.
+The host releases every returned buffer through the plugin's free function.
 
-## Using Parser Plugins
+## Writing a parser implementation
 
-### Clojure
-
-```clojure
-(require '[yamlstar.core :as yaml]
-         '[yamlstar.options :as opts]
-         '[yamlstar.plugin.parser :as parser])
-
-(def options
-  (-> (opts/options)
-      (opts/plugin (parser/name "snakeyaml"))))
-
-(yaml/load "key: value" options)
-```
-
-### Python
-
-```python
-import yamlstar
-
-opts = yamlstar.Options().plugin(yamlstar.parser('go-yaml'))
-ys = yamlstar.YAMLStar(opts)
-data = ys.load("key: value")
-
-# Full options form:
-ys = yamlstar.YAMLStar({'plugin': {'parser': {'name': 'go-yaml'}}})
-data = ys.load("key: value")
-```
-
-### Go
-
-```go
-import "github.com/yaml/yamlstar/go"
-
-data, err := yamlstar.Load("key: value",
-    yamlstar.WithPlugin(yamlstar.Parser("reference")))
-```
-
-## Environment Override
-
-The `YAMLSTAR_PARSER` environment variable changes the default parser
-for operations that don't select one explicitly:
-
-```bash
-YAMLSTAR_PARSER=reference python my-program.py
-```
-
-This is useful for testing a whole program or test suite against a
-different parser without code changes.
-
-## FFI Wire Format
-
-Language bindings pass options to `libyamlstar` as a JSON string.
-The load and dump C entry points take the options JSON as their final
-argument:
-
-```c
-char *yamlstar_load(long long isolate, const char *yaml,
-                    const char *opts_json);
-```
-
-- Pass `"{}"` (or NULL) when no options are set.
-- Example: `{"plugin": {"parser": {"name": "snakeyaml"}}}`
-- Keys are normalized from `snake_case` to `kebab-case`; values are
-  never rewritten.
-
-## Writing a Parser Plugin
-
-A parser plugin is a Clojure map registered with
+A Clojure parser implementation registers a map with
 `yamlstar.plugin/register-parser!`:
 
 ```clojure
-(require '[yamlstar.plugin :as plugin])
-
 (plugin/register-parser!
-  {:name "my-parser"
-   :parse (fn [yaml-str config] ...)   ; -> event map sequence
-   :default-config {}})                 ; optional
+ {:name "my-parser"
+  :version "1.0.0"
+  :parse (fn [yaml-str config] ...)
+  :default-config {}})
 ```
 
-The `:parse` function receives the YAML string and a config map (the
-`:name` siblings merged over `:default-config`) and must return the
-standard YAMLStar event stream: an ordered sequence of maps using this
-vocabulary:
+The parse function returns an ordered sequence of event maps:
 
-| Event | Keys |
-|-------|------|
-| `{:event "stream_start"}` | |
-| `{:event "stream_end"}` | |
-| `{:event "document_start"}` | `:explicit` (true), `:version` ("1.2") |
-| `{:event "document_end"}` | `:explicit` (true) |
-| `{:event "mapping_start"}` | `:flow` (bool, always), `:anchor`, `:tag` |
-| `{:event "mapping_end"}` | |
-| `{:event "sequence_start"}` | `:flow` (bool, always), `:anchor`, `:tag` |
-| `{:event "sequence_end"}` | |
-| `{:event "scalar"}` | `:value`, `:style`, `:anchor`, `:tag` |
-| `{:event "alias"}` | `:name` |
+| Event | Optional keys |
+|---|---|
+| `stream_start`, `stream_end` | none |
+| `document_start` | `explicit`, `version` |
+| `document_end` | `explicit` |
+| `mapping_start`, `sequence_start` | `flow`, `anchor`, `tag` |
+| `mapping_end`, `sequence_end` | none |
+| `scalar` | `value`, `style`, `anchor`, `tag` |
+| `alias` | `name` |
 
-Notes:
-
-- `:style` is one of `"single"`, `"double"`, `"literal"`, `"folded"`
-  and is omitted for plain scalars.
-- `:anchor` and `:tag` are included only when present.
-- Tags are fully resolved URIs (`!!int` becomes
-  `tag:yaml.org,2002:int`); local tags keep their `!` prefix.
-- A namespace named `yamlstar.plugin.<name>` that self-registers on
-  load is resolved automatically when `<name>` is first used.
-
-## Roadmap
-
-- A `rapidyaml` parser plugin (C++ parser, working on a branch) will
-  register through this same API.
-- Dumper-side plugins (emitter, representer) are planned.
-- Additional load options (duplicate key handling, merge keys) will
-  join `plugin` at the top level of the options mapping.
+The `flow` key is always present on collection start events.
+Plain scalars omit `style`.
+Anchor and tag keys are present only when supplied by the parser.

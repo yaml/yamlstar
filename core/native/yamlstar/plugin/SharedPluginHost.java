@@ -31,7 +31,7 @@ public final class SharedPluginHost {
         }
     }
 
-    public static String[] parse(
+    public static String[] transform(
         String api,
         String name,
         String input,
@@ -46,7 +46,7 @@ public final class SharedPluginHost {
              CTypeConversion.CCharPointerHolder optionsPointer =
                  CTypeConversion.toCString(options)) {
             CIntPointer status = StackValue.get(CIntPointer.class);
-            CCharPointer output = parseNative(
+            CCharPointer output = transformNative(
                 apiPointer.get(), namePointer.get(), inputPointer.get(),
                 optionsPointer.get(), status);
             String text = takeOutput(output);
@@ -77,8 +77,8 @@ public final class SharedPluginHost {
         CIntPointer status
     );
 
-    @CFunction("yamlstar_host_plugin_parse")
-    private static native CCharPointer parseNative(
+    @CFunction("yamlstar_host_plugin_transform")
+    private static native CCharPointer transformNative(
         CCharPointer api,
         CCharPointer name,
         CCharPointer input,

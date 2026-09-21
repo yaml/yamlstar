@@ -134,15 +134,14 @@ func LoadNS() {
 	sym__AMP_ := lang.NewSymbolUnchecked("&")
 	sym_clojure_DOT_core := lang.NewSymbolUnchecked("clojure.core")
 	sym_current_DASH_default_DASH_parser := lang.NewSymbolUnchecked("current-default-parser")
-	sym_event_DASH_source_DASH_opts := lang.NewSymbolUnchecked("event-source-opts")
 	sym_fallback_DASH_default_DASH_parser := lang.NewSymbolUnchecked("fallback-default-parser")
+	sym_json_DASH_comments_DASH_opts := lang.NewSymbolUnchecked("json-comments-opts")
 	sym_mapv := lang.NewSymbolUnchecked("mapv")
 	sym_name := lang.NewSymbolUnchecked("name")
 	sym_names := lang.NewSymbolUnchecked("names")
 	sym_opts := lang.NewSymbolUnchecked("opts")
 	sym_parse := lang.NewSymbolUnchecked("parse")
 	sym_parse_DASH_with := lang.NewSymbolUnchecked("parse-with")
-	sym_parse_DASH_with_DASH_event_DASH_source := lang.NewSymbolUnchecked("parse-with-event-source")
 	sym_parser_DASH_opts := lang.NewSymbolUnchecked("parser-opts")
 	sym_plugin := lang.NewSymbolUnchecked("plugin")
 	sym_register_DASH_parser_BANG_ := lang.NewSymbolUnchecked("register-parser!")
@@ -150,6 +149,7 @@ func LoadNS() {
 	sym_register_DASH_reference_DASH_parser_BANG_ := lang.NewSymbolUnchecked("register-reference-parser!")
 	sym_reset_BANG_ := lang.NewSymbolUnchecked("reset!")
 	sym_resolve_DASH_parser := lang.NewSymbolUnchecked("resolve-parser")
+	sym_sanitize_DASH_with := lang.NewSymbolUnchecked("sanitize-with")
 	sym_set_DASH_default_DASH_parser_BANG_ := lang.NewSymbolUnchecked("set-default-parser!")
 	sym_yaml_DASH_str := lang.NewSymbolUnchecked("yaml-str")
 	sym_yamlstar_DOT_parser := lang.NewSymbolUnchecked("yamlstar.parser")
@@ -179,21 +179,21 @@ func LoadNS() {
 	var_yamlstar_DOT_parser_register_DASH_reference_DASH_parser_BANG_ := lang.InternVarName(sym_yamlstar_DOT_parser, sym_register_DASH_reference_DASH_parser_BANG_)
 	// var yamlstar.parser/set-default-parser!
 	var_yamlstar_DOT_parser_set_DASH_default_DASH_parser_BANG_ := lang.InternVarName(sym_yamlstar_DOT_parser, sym_set_DASH_default_DASH_parser_BANG_)
-	// var yamlstar.plugin/event-source-opts
-	var_yamlstar_DOT_plugin_event_DASH_source_DASH_opts := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_event_DASH_source_DASH_opts)
+	// var yamlstar.plugin/json-comments-opts
+	var_yamlstar_DOT_plugin_json_DASH_comments_DASH_opts := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_json_DASH_comments_DASH_opts)
 	// var yamlstar.plugin/parse-with
 	var_yamlstar_DOT_plugin_parse_DASH_with := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_parse_DASH_with)
-	// var yamlstar.plugin/parse-with-event-source
-	var_yamlstar_DOT_plugin_parse_DASH_with_DASH_event_DASH_source := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_parse_DASH_with_DASH_event_DASH_source)
 	// var yamlstar.plugin/parser-opts
 	var_yamlstar_DOT_plugin_parser_DASH_opts := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_parser_DASH_opts)
 	// var yamlstar.plugin/register-parser!
 	var_yamlstar_DOT_plugin_register_DASH_parser_BANG_ := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_register_DASH_parser_BANG_)
 	// var yamlstar.plugin/resolve-parser
 	var_yamlstar_DOT_plugin_resolve_DASH_parser := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_resolve_DASH_parser)
-	aotExternalFn1 := aotLinkFn1(var_yamlstar_DOT_plugin_event_DASH_source_DASH_opts)
+	// var yamlstar.plugin/sanitize-with
+	var_yamlstar_DOT_plugin_sanitize_DASH_with := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_sanitize_DASH_with)
+	aotExternalFn1 := aotLinkFn1(var_yamlstar_DOT_plugin_json_DASH_comments_DASH_opts)
 	aotExternalFn10 := aotLinkFn2(var_clojure_DOT_core_reset_BANG_)
-	aotExternalFn2 := aotLinkFn2(var_yamlstar_DOT_plugin_parse_DASH_with_DASH_event_DASH_source)
+	aotExternalFn2 := aotLinkFn2(var_yamlstar_DOT_plugin_sanitize_DASH_with)
 	aotExternalFn3 := aotLinkFn1(var_yamlstar_DOT_plugin_parser_DASH_opts)
 	aotExternalFn5 := aotLinkFn3(var_yamlstar_DOT_plugin_parse_DASH_with)
 	aotExternalFn6 := aotLinkFn2(var_clojure_DOT_core_mapv)
@@ -308,58 +308,77 @@ func LoadNS() {
 			_ = v3
 			var tmp4 any
 			{ // let
-				// let binding "temp__0__auto__"
-				tmp5 := aotExternalFn1(v3)
+				// let binding "yaml-str"
+				var tmp5 any
+				{ // let
+					// let binding "temp__0__auto__"
+					tmp6 := aotExternalFn1(v3)
+					var v7 any = tmp6
+					_ = v7
+					var tmp8 any
+					if lang.IsTruthy(v7) {
+						var tmp9 any
+						{ // let
+							// let binding "comments"
+							var v10 any = v7
+							_ = v10
+							tmp11 := aotExternalFn2(v10, v2)
+							tmp9 = tmp11
+						} // end let
+						tmp8 = tmp9
+					} else {
+						tmp8 = v2
+					}
+					tmp5 = tmp8
+				} // end let
 				var v6 any = tmp5
 				_ = v6
+				// let binding "vec__19"
 				var tmp7 any
-				if lang.IsTruthy(v6) {
-					var tmp8 any
-					{ // let
-						// let binding "source"
-						var v9 any = v6
-						_ = v9
-						tmp10 := aotExternalFn2(v9, v2)
-						tmp8 = tmp10
-					} // end let
-					tmp7 = tmp8
-				} else {
-					var tmp9 any
-					{ // let
-						// let binding "vec__25"
-						var tmp10 any
-						{ // let
-							// let binding "or__0__auto__"
-							tmp11 := aotExternalFn3(v3)
-							var v12 any = tmp11
-							_ = v12
-							var tmp13 any
-							if lang.IsTruthy(v12) {
-								tmp13 = v12
-							} else {
-								tmp14 := aotDirectFn0()
-								tmp15 := lang.NewMap()
-								tmp16 := lang.NewVector(tmp14, tmp15)
-								tmp13 = tmp16
-							}
-							tmp10 = tmp13
-						} // end let
-						var v11 any = tmp10
-						_ = v11
-						// let binding "pname"
-						tmp12 := runtime.RT.NthDefault(v11, lang.IntCast(int64(0)), nil)
-						var v13 any = tmp12
-						_ = v13
-						// let binding "config"
-						tmp14 := runtime.RT.NthDefault(v11, lang.IntCast(int64(1)), nil)
-						var v15 any = tmp14
-						_ = v15
-						tmp16 := aotExternalFn5(v13, v15, v2)
-						tmp9 = tmp16
-					} // end let
-					tmp7 = tmp9
-				}
-				tmp4 = tmp7
+				{ // let
+					// let binding "or__0__auto__"
+					tmp8 := aotExternalFn3(v3)
+					var v9 any = tmp8
+					_ = v9
+					var tmp10 any
+					if lang.IsTruthy(v9) {
+						tmp10 = v9
+					} else {
+						tmp11 := lang.NewMap()
+						tmp12 := lang.NewVector(nil, tmp11)
+						tmp10 = tmp12
+					}
+					tmp7 = tmp10
+				} // end let
+				var v8 any = tmp7
+				_ = v8
+				// let binding "pname"
+				tmp9 := runtime.RT.NthDefault(v8, lang.IntCast(int64(0)), nil)
+				var v10 any = tmp9
+				_ = v10
+				// let binding "config"
+				tmp11 := runtime.RT.NthDefault(v8, lang.IntCast(int64(1)), nil)
+				var v12 any = tmp11
+				_ = v12
+				// let binding "pname"
+				var tmp13 any
+				{ // let
+					// let binding "or__0__auto__"
+					var v14 any = v10
+					_ = v14
+					var tmp15 any
+					if lang.IsTruthy(v14) {
+						tmp15 = v14
+					} else {
+						tmp16 := aotDirectFn0()
+						tmp15 = tmp16
+					}
+					tmp13 = tmp15
+				} // end let
+				var v14 any = tmp13
+				_ = v14
+				tmp15 := aotExternalFn5(v14, v12, v6)
+				tmp4 = tmp15
 			} // end let
 			return tmp4
 		})

@@ -1,2 +1,5 @@
 {:deps
- {github.com:ebitengine:purego {:mvn/version "v0.10.2"}}}
+ {github.com:ebitengine:purego
+  {:mvn/version "v0.10.2"}
+  github.com:yamlstar:yamlstar-plugin-parser-reference
+  {:mvn/version "v0.2.5"}}}

@@ -6,6 +6,7 @@ require (
 	github.com/ebitengine/purego v0.10.2
 	github.com/gloathub/ys-v0-glj v0.1.3
 	github.com/glojurelang/glojure v0.7.15
+	github.com/yamlstar/yamlstar-plugin-parser-reference v0.2.5
 )
 
 require (

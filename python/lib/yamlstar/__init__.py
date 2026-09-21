@@ -86,11 +86,14 @@ def _requested_plugin_names(options):
     return []
   names = []
   for api, config in plugins.items():
+    if api != 'json-comments':
+      continue
     if not isinstance(config, dict):
       continue
     name = config.get('name', api)
-    if isinstance(name, str) and name not in names:
-      names.append(name)
+    artifact = 'json-comments' if name == 'sanitizer' else name
+    if isinstance(artifact, str) and artifact not in names:
+      names.append(artifact)
   return names
 
 
@@ -213,8 +216,8 @@ def parser(name):
   return {'parser': {'name': name}}
 
 
-def json_comments(name='json-comments'):
-  """Return a JSON comments event-source plugin option fragment."""
+def json_comments(name='sanitizer'):
+  """Return a JSON-comments sanitizer plugin option fragment."""
   return {'json-comments': {'name': name}}
 
 

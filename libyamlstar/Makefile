@@ -78,7 +78,7 @@ CORE-SRCS := \
 
 # Gloat compiles Clojure sources directly, so use the sources shipped in the
 # exact yaml-parser artifact consumed by the JVM build.
-YAML-PARSER-VERSION := 0.2.4
+YAML-PARSER-VERSION := 0.2.5
 YAML-PARSER-JAR := cache/yaml-parser-$(YAML-PARSER-VERSION).jar
 YAML-PARSER-URL := https://repo.clojars.org/org/yamlstar/yaml-parser/$(YAML-PARSER-VERSION)/yaml-parser-$(YAML-PARSER-VERSION).jar
 GO-YAML-REF ?= 643e93b9c9bec2be8ae2b842a3492c54532549c9
@@ -91,6 +91,11 @@ GO-YAML-PREPARE := gloat/prepare-go-yaml-parser
 GLOAT-GO-YAML-PATCH := gloat/patch-gloat-extra-go-dir
 GLOAT-GO-YAML-PATCH-STAMP := \
   $(LOCAL-CACHE)/gloat-patch/$(subst /,_,$(abspath $(GLOAT-DIR))).stamp
+REFERENCE-PARSER-DIR ?= $(if \
+  $(wildcard ../../yamlstar-plugin-parser-reference/go.mod), \
+  ../../yamlstar-plugin-parser-reference)
+GLOAT-REFERENCE-ENV := $(if $(REFERENCE-PARSER-DIR), \
+  GLOAT_GO_REPLACE='github.com/yamlstar/yamlstar-plugin-parser-reference => $(abspath $(REFERENCE-PARSER-DIR))')
 
 ifdef YAML-PARSER-DIR
 YAML-PARSER-SRC-DIR := $(abspath $(YAML-PARSER-DIR))/src
@@ -162,6 +167,11 @@ $(GLOAT-LINK-DIR)/plugin/parser/go_yaml.clj: $(CORE-YAMLSTAR)/plugin/parser/go_y
 	@mkdir -p $(dir $@)
 	ln -sf $(abspath $<) $@
 
+$(GLOAT-LINK-DIR)/plugin/parser/reference.clj: \
+  $(CORE-YAMLSTAR)/plugin/parser/reference.cljc
+	@mkdir -p $(dir $@)
+	ln -sf $(abspath $<) $@
+
 $(GLOAT-LINK-DIR)/plugin/shared.clj: $(CORE-YAMLSTAR)/plugin/shared.cljc
 	@mkdir -p $(dir $@)
 	ln -sf $(abspath $<) $@
@@ -200,11 +210,6 @@ $(LIBYAMLSTAR-GLOAT-ABI-STAMP):
 	printf '%s\n' '$(LIBYAMLSTAR-GLOAT-ABI)' > $@
 
 GLOAT-LINKS := \
-  $(GLOAT-LINK-DIR)/yaml_parser/prelude.clj \
-  $(GLOAT-LINK-DIR)/yaml_parser/parser.clj \
-  $(GLOAT-LINK-DIR)/yaml_parser/receiver.clj \
-  $(GLOAT-LINK-DIR)/yaml_parser/grammar.clj \
-  $(GLOAT-LINK-DIR)/yaml_parser/core.clj \
   $(GLOAT-LINK-DIR)/constructor.clj \
   $(GLOAT-LINK-DIR)/numbers.clj \
   $(GLOAT-LINK-DIR)/representer.clj \
@@ -212,20 +217,16 @@ GLOAT-LINKS := \
   $(GLOAT-LINK-DIR)/serializer.clj \
   $(GLOAT-LINK-DIR)/emitter.clj \
   $(GLOAT-LINK-DIR)/plugin/parser/go_yaml.clj \
+  $(GLOAT-LINK-DIR)/plugin/parser/reference.clj \
   $(GLOAT-LINK-DIR)/plugin/shared.clj \
   $(GLOAT-LINK-DIR)/plugin/shared_host.clj \
 
 # Clojure source files compiled by gloat (order matters for namespaces)
 GLOAT-SRCS := \
-  $(GLOAT-LINK-DIR)/yaml_parser/prelude.clj \
-  $(GLOAT-LINK-DIR)/yaml_parser/parser.clj \
-  $(GLOAT-LINK-DIR)/yaml_parser/receiver.clj \
-  $(GLOAT-LINK-DIR)/yaml_parser/grammar.clj \
-  $(GLOAT-LINK-DIR)/yaml_parser/core.clj \
   $(CORE-YAMLSTAR)/plugin.clj \
   $(CORE-YAMLSTAR)/options.clj \
   $(CORE-YAMLSTAR)/plugin/parser.clj \
-  $(CORE-YAMLSTAR)/plugin/parser/reference.clj \
+  $(GLOAT-LINK-DIR)/plugin/parser/reference.clj \
   $(GLOAT-LINK-DIR)/plugin/parser/go_yaml.clj \
   $(GLOAT-LINK-DIR)/plugin/shared.clj \
   $(GLOAT-LINK-DIR)/plugin/shared_host.clj \
@@ -242,18 +243,12 @@ GLOAT-SRCS := \
   gloat/src/libyamlstar.clj \
 
 prepare-gloat: $(GLOAT-LINKS) prepare-go-yaml-parser patch-gloat-go-yaml
-ifdef YAML-PARSER-DIR
-	ln -sf $(YAML-PARSER-SRC-DIR)/yaml_parser/prelude.cljc $(GLOAT-LINK-DIR)/yaml_parser/prelude.clj
-	ln -sf $(YAML-PARSER-SRC-DIR)/yaml_parser/parser.cljc $(GLOAT-LINK-DIR)/yaml_parser/parser.clj
-	ln -sf $(YAML-PARSER-SRC-DIR)/yaml_parser/receiver.cljc $(GLOAT-LINK-DIR)/yaml_parser/receiver.clj
-	ln -sf $(YAML-PARSER-SRC-DIR)/yaml_parser/grammar.cljc $(GLOAT-LINK-DIR)/yaml_parser/grammar.clj
-	ln -sf $(YAML-PARSER-SRC-DIR)/yaml_parser/core.clj $(GLOAT-LINK-DIR)/yaml_parser/core.clj
-endif
 
 generate-go: prepare-gloat $(GLOAT)
 	rm -rf $(GO-GENERATED-WORK)
 	mkdir -p $(GO-GENERATED-WORK)
 	env -u GOROOT \
+	  $(GLOAT-REFERENCE-ENV) \
 	  GLOAT_GLJDEPS=$(abspath ../gljdeps.edn) \
 	  $(GLOAT) --force \
 	  --module $(GO-GENERATED-MODULE) \
@@ -378,6 +373,7 @@ $(LIB-SO-GLOAT): $(GLOAT-SRCS) $(GLOAT-LINKS) $(GO-YAML-GENERATED-STAMP) \
 	</dev/null env -u GOROOT $(GLOAT-GO-ENV) \
 	  GLOAT_MODULE=github.com/yaml/yamlstar \
 	  GLOAT_GLJDEPS=$(abspath ../gljdeps.edn) \
+	  $(GLOAT-REFERENCE-ENV) \
 	  GLOAT_EXTRA_GO_DIR=$(abspath $(GO-YAML-GENERATED-DIR)) \
 	  $(if $(GLOAT_PATH),PATH='$(GLOAT_PATH)') \
 	  $(GLOAT-GLOJURE-ENV) \

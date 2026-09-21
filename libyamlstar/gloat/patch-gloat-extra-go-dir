@@ -2,23 +2,46 @@
 set -euo pipefail
 
 gloat_src=${1:?gloat.clj path required}
-tmp="$gloat_src.tmp.$$"
+tmp=$gloat_src.tmp.$$
 
-# Newer gloat checkouts ship the hook, so leave those alone.
-if grep -q GLOAT_EXTRA_GO_DIR "$gloat_src"; then
-  exit 0
-fi
-
-perl -0pe '
-  my $needle = quotemeta(q{    (fs/create-dirs output-dir)});
-  my $new = q{    (fs/create-dirs output-dir)
+if ! grep -q GLOAT_EXTRA_GO_DIR "$gloat_src"; then
+  perl -0pe '
+    my $needle = quotemeta(q{    (fs/create-dirs output-dir)});
+    my $new = q{    (fs/create-dirs output-dir)
     (when-let [extra-go-dir (System/getenv "GLOAT_EXTRA_GO_DIR")]
       (when (fs/exists? extra-go-dir)
         (let [target (str output-dir "/internal/goyamlparser")]
           (fs/delete-tree target)
           (fs/create-dirs (fs/parent target))
           (process/shell "cp" "-R" extra-go-dir target))))};
-  s/$needle/$new/ or die "patch target not found\n";
-' "$gloat_src" > "$tmp"
+    s/$needle/$new/ or die "extra Go directory patch target not found\n";
+  ' "$gloat_src" > "$tmp"
+  mv "$tmp" "$gloat_src"
+fi
 
-mv "$tmp" "$gloat_src"
+if ! grep -q GLOAT_GO_REPLACE "$gloat_src"; then
+  perl -0pe '
+    my $needle = quotemeta(q{result (str result (or replace-block ""))});
+    my $new = q{result (str result (or replace-block "")
+                              (when-let [replacement
+                                         (System/getenv "GLOAT_GO_REPLACE")]
+                                (str "\nreplace " replacement "\n")))};
+    s/$needle/$new/ or die "Go replace patch target not found\n";
+  ' "$gloat_src" > "$tmp"
+  mv "$tmp" "$gloat_src"
+fi
+
+replace_count=$(grep -c 'System/getenv "GLOAT_GO_REPLACE"' "$gloat_src")
+if ((replace_count < 2)); then
+  perl -0pe '
+    my $needle = quotemeta(
+      q{(when (seq extra-block) (str "\n" extra-block)))]});
+    my $new = q{(when (seq extra-block) (str "\n" extra-block))
+                  (when-let [replacement
+                             (System/getenv "GLOAT_GO_REPLACE")]
+                    (str "\nreplace " replacement "\n")))]};
+    s/$needle/$new/
+      or die "glj workspace replace patch target not found\n";
+  ' "$gloat_src" > "$tmp"
+  mv "$tmp" "$gloat_src"
+fi

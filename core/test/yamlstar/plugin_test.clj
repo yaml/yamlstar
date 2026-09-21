@@ -67,11 +67,14 @@
     (is (= ["x" {:setting 1}]
            (plugin/parser-opts {:plugin {:parser {:name "x" :setting 1}}}))))
 
+  (testing "parser short form accepts a release version"
+    (is (= ["reference" {:version "0.2.5"}]
+           (plugin/parser-opts
+            {:plugin {:parser "reference@v0.2.5"}}))))
+
   (testing "malformed opts are rejected"
     (is (thrown-with-msg? Exception #":plugin must be a map"
                           (plugin/parser-opts {:plugin "nope"})))
-    (is (thrown-with-msg? Exception #":parser must be a map"
-                          (plugin/parser-opts {:plugin {:parser "nope"}})))
     (is (thrown-with-msg? Exception #":name must be a string"
                           (plugin/parser-opts
                             {:plugin {:parser {:name 5}}})))))
@@ -126,77 +129,61 @@
              (parser/parse yaml nil)
              (parser/parse yaml {}))))))
 
-(def fixed-events
-  [{:event "stream_start"}
-   {:event "document_start"}
-   {:event "scalar" :value "from plugin"}
-   {:event "document_end"}
-   {:event "stream_end"}])
-
-(deftest event-source-test
-  (let [source {:api "json-comments"
-                :name "json-comments"
-                :requires {:parser "reference"}
-                :parse (fn [_ _] fixed-events)}]
+(deftest json-comments-test
+  (let [sanitizer {:api "json-comments"
+                   :name "test-sanitizer"
+                   :version "1.2.3"
+                   :sanitize (fn [input _]
+                               (.replace input "// value" "42"))}]
     (try
-      (plugin/register-event-source! source)
-      (is (= "from plugin"
-             (yaml/load "ignored" {:plugin {:json-comments {}}})))
-      (is (= "from plugin"
-             (yaml/load "ignored"
-                        {:plugin {:parser {:name "reference"}
-                                  :json-comments {}}})))
-      (is (thrown-with-msg?
-           Exception #"requires parser reference"
-           (yaml/load "ignored"
-                      {:plugin {:parser {:name "other"}
-                                :json-comments {}}})))
-      (is (thrown-with-msg?
-           Exception #"Only one event-source"
-           (yaml/load "ignored"
-                      {:plugin {:json-comments {}
-                                :another {}}})))
+      (plugin/register-json-comments! sanitizer)
+      (is (= 42
+             (yaml/load "// value"
+                        {:plugin
+                         {:json-comments
+                          "test-sanitizer@v1.2.3"}})))
+      (is (thrown-with-msg? Exception #"version mismatch"
+                            (yaml/load
+                             "// value"
+                             {:plugin
+                              {:json-comments
+                               "test-sanitizer@v1.2.4"}})))
       (finally
-        (plugin/unregister-event-source! "json-comments"
-                                         "json-comments")))))
+        (plugin/unregister-json-comments! "test-sanitizer")))))
 
-(deftest event-source-loader-test
+(deftest json-comments-loader-test
   (try
-    (plugin/set-event-source-loader!
-     (fn [api name _]
-       {:api api :name name :parse (fn [_ _] fixed-events)}))
-    (is (= "from plugin"
-           (yaml/load "ignored" {:plugin {:external {}}})))
+    (plugin/set-json-comments-loader!
+     (fn [api name _version _install?]
+       {:api api :name name :version "1.0.0"
+        :sanitize (fn [_ _] "loaded")}))
+    (is (= "loaded"
+           (yaml/load "ignored"
+                      {:plugin {:json-comments "external"}})))
     (finally
-      (plugin/unregister-event-source! "external" "external")
-      (plugin/set-event-source-loader! nil))))
+      (plugin/unregister-json-comments! "external")
+      (plugin/set-json-comments-loader! nil))))
 
-(deftest event-source-install-option-test
+(deftest json-comments-install-option-test
   (let [install-values (atom [])]
     (try
-      (plugin/set-event-source-loader!
-       (fn [api name install?]
+      (plugin/set-json-comments-loader!
+       (fn [api name _version install?]
          (swap! install-values conj install?)
-         {:api api :name name :parse (fn [_ _] fixed-events)}))
-      (is (= "from plugin"
+         {:api api :name name
+          :sanitize (fn [_ _] "loaded")}))
+      (is (= "loaded"
              (yaml/load "ignored"
-                        {:plugin {:external-no-install {}}})))
-      (is (= "from plugin"
+                        {:plugin
+                         {:json-comments "external-no-install"}})))
+      (plugin/unregister-json-comments! "external-no-install")
+      (is (= "loaded"
              (yaml/load "ignored"
-                        {:plugin {:external-install {}}
+                        {:plugin
+                         {:json-comments "external-install"}
                          :plugin-install true})))
       (is (= [false true] @install-values))
       (finally
-        (plugin/unregister-event-source! "external-no-install"
-                                         "external-no-install")
-        (plugin/unregister-event-source! "external-install"
-                                         "external-install")
-        (plugin/set-event-source-loader! nil)))))
-
-(deftest event-source-validation-test
-  (is (thrown-with-msg?
-       Exception #"result must be a vector"
-       (plugin/validate-events (seq fixed-events))))
-  (is (thrown-with-msg?
-       Exception #"invalid event"
-       (plugin/validate-events [{:event "bogus"}]))))
+        (plugin/unregister-json-comments! "external-no-install")
+        (plugin/unregister-json-comments! "external-install")
+        (plugin/set-json-comments-loader! nil)))))

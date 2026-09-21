@@ -166,24 +166,24 @@ do-check-version() (
 # Check if git tag already exists
 do-check-tag() (
   # Tag should exist (created by `make release` locally)
-  if ! git rev-parse "$VERSION" >/dev/null 2>&1; then
-    die "ERROR: Tag $VERSION does not exist" \
+  if ! git rev-parse "v$VERSION" >/dev/null 2>&1; then
+    die "ERROR: Tag v$VERSION does not exist" \
         "Run 'make release o=OLD v=$VERSION' first to create the tag"
   fi
-  echo "✓ Tag $VERSION exists"
+  echo "✓ Tag v$VERSION exists"
 
   # Tag must point to current commit (HEAD)
   local tag_commit head_commit
-  tag_commit=$(git rev-parse "$VERSION^{commit}")
+  tag_commit=$(git rev-parse "v$VERSION^{commit}")
   head_commit=$(git rev-parse HEAD)
   if [[ $tag_commit != "$head_commit" ]]; then
-    die "ERROR: Tag $VERSION ($tag_commit) does not point to HEAD ($head_commit)"
+    die "ERROR: Tag v$VERSION ($tag_commit) does not point to HEAD ($head_commit)"
   fi
-  echo "✓ Tag $VERSION points to HEAD"
+  echo "✓ Tag v$VERSION points to HEAD"
 
   # Fail if GitHub release already exists with assets
-  if gh release view "$VERSION" --json assets --jq '.assets | length' 2>/dev/null | grep -q '^[1-9]'; then
-    die "ERROR: GitHub release $VERSION already has assets - already released"
+  if gh release view "v$VERSION" --json assets --jq '.assets | length' 2>/dev/null | grep -q '^[1-9]'; then
+    die "ERROR: GitHub release v$VERSION already has assets - already released"
   fi
   echo "✓ No existing release assets - OK to build"
 )
@@ -532,27 +532,23 @@ More information: https://yamlstar.org/cli/
 
 # Create and push git tag
 do-release-tag() (
-  if git rev-parse "$VERSION" >/dev/null 2>&1; then
-    die "ERROR: Tag $VERSION already exists"
-  fi
   if git rev-parse "v$VERSION" >/dev/null 2>&1; then
-    die "ERROR: Go module tag v$VERSION already exists"
+    die "ERROR: Tag v$VERSION already exists"
   fi
-  git tag "$VERSION"
   git tag "v$VERSION"
-  git push origin "$VERSION" "v$VERSION"
-  echo "Created and pushed tags $VERSION and v$VERSION"
+  git push origin "v$VERSION"
+  echo "Created and pushed tag v$VERSION"
 )
 
 # Create GitHub release with artifacts
 do-release-github() (
-  if ! gh release view "$VERSION" >/dev/null 2>&1; then
+  if ! gh release view "v$VERSION" >/dev/null 2>&1; then
     echo 'Extracting release notes from Changes file...'
     ys -e "load('Changes').find(\\(%[:version] == '$VERSION'))
            .changes.map(\\(str '- ' %))
            .join(str/lf):say" > release-notes.txt || \
       echo "Release $VERSION" > release-notes.txt
-    gh release create "$VERSION" \
+    gh release create "v$VERSION" \
       --title "YAMLStar $VERSION" \
       --notes-file release-notes.txt \
       "dist/yamlstar-$VERSION-*.tar.xz" \
@@ -560,7 +556,7 @@ do-release-github() (
       "dist/libyamlstar-$VERSION-*.tar.xz" \
       "dist/libyamlstar-$VERSION-*.zip"
     rm -f release-notes.txt
-    echo "Created GitHub release $VERSION"
+    echo "Created GitHub release v$VERSION"
   else
     echo "Release $VERSION already exists"
   fi
@@ -574,10 +570,10 @@ do-check-release() (
     export GH_TOKEN
   fi
   echo "Checking for GitHub release $VERSION..."
-  gh release view "$VERSION" >/dev/null 2>&1 ||
-    die "ERROR: Release $VERSION not found"
+  gh release view "v$VERSION" >/dev/null 2>&1 ||
+    die "ERROR: Release v$VERSION not found"
   echo 'Checking for required assets...'
-  assets=$(gh release view "$VERSION" --json assets --jq '.assets[].name')
+  assets=$(gh release view "v$VERSION" --json assets --jq '.assets[].name')
   required=(
     "yamlstar-$VERSION-linux-aarch64.tar.xz"
     "yamlstar-$VERSION-linux-x64.tar.xz"
@@ -1250,7 +1246,7 @@ do-commit() {
 
 # Step 5: Tag with deletion handling
 do-tag() {
-  local tag=$NEW_VERSION
+  local tag=v$NEW_VERSION
 
   # Check if tag already exists locally
   if git rev-parse "$tag" >/dev/null 2>&1; then
@@ -1280,17 +1276,18 @@ do-tag() {
 
 # Step 6: Push with confirmation
 do-push() {
-  local current_branch
+  local current_branch tag
   current_branch=$(git rev-parse --abbrev-ref HEAD)
+  tag=v$NEW_VERSION
 
   echo "This will push:"
   echo "  - Branch: $current_branch"
-  echo "  - Tag: $NEW_VERSION"
+  echo "  - Tag: $tag"
   echo
 
   if confirm "Push to origin?" Y; then
     git push origin "$current_branch"
-    git push origin "$NEW_VERSION"
+    git push origin "$tag"
     echo "✓ Pushed changes and tag to origin"
   else
     echo "Skipping push"

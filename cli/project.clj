@@ -7,7 +7,8 @@
   :dependencies [[yamlstar/core "0.1.21-SNAPSHOT"]
                  [org.clojure/clojure "1.12.0"]
                  [org.clojure/tools.cli "1.1.230"]
-                 [org.clojure/data.json "2.5.0"]]
+                 [org.clojure/data.json "2.5.0"]
+                 [org.yamlstar/yamlstar-plugin-json-comments "0.1.9"]]
 
   :main yamlstar.cli
   :aot [yamlstar.cli]

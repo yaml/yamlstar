@@ -33,7 +33,7 @@
 
 typedef uint64_t (*yamlstar_abi_fn)(void);
 typedef int32_t (*yamlstar_manifest_fn)(uint8_t **, size_t *);
-typedef int32_t (*yamlstar_parse_fn)(
+typedef int32_t (*yamlstar_transform_fn)(
     const uint8_t *, size_t, const uint8_t *, size_t,
     uint8_t **, size_t *);
 typedef void (*yamlstar_free_fn)(uint8_t *);
@@ -42,7 +42,7 @@ struct yamlstar_host_library {
     char path[PATH_MAX];
     void *handle;
     yamlstar_manifest_fn manifest;
-    yamlstar_parse_fn parse;
+    yamlstar_transform_fn transform;
     yamlstar_free_fn free_output;
 };
 
@@ -436,27 +436,28 @@ static inline struct yamlstar_host_library *yamlstar_host_load(
     }
     yamlstar_abi_fn abi = NULL;
     int valid = yamlstar_host_symbol(
-                    library->handle, "yamlstar_plugin_v1_abi", &abi)
+                    library->handle, "yamlstar_plugin_v2_abi", &abi)
         && yamlstar_host_symbol(
-            library->handle, "yamlstar_plugin_v1_manifest",
+            library->handle, "yamlstar_plugin_v2_manifest",
             &library->manifest)
         && yamlstar_host_symbol(
-            library->handle, "yamlstar_plugin_v1_parse", &library->parse)
+            library->handle, "yamlstar_plugin_v2_transform",
+            &library->transform)
         && yamlstar_host_symbol(
-            library->handle, "yamlstar_plugin_v1_free",
+            library->handle, "yamlstar_plugin_v2_free",
             &library->free_output);
     if (!valid) {
         *error = yamlstar_host_error(
-            "YAMLStar plugin %s is missing a version 1 ABI symbol", path);
+            "YAMLStar plugin %s is missing a version 2 ABI symbol", path);
         dlclose(library->handle);
         library->handle = NULL;
         pthread_mutex_unlock(&yamlstar_host_mutex);
         return NULL;
     }
     uint64_t version = abi();
-    if (version != 1) {
+    if (version != 2) {
         *error = yamlstar_host_error(
-            "YAMLStar plugin %s has ABI %llu, expected 1",
+            "YAMLStar plugin %s has ABI %llu, expected 2",
             path, (unsigned long long) version);
         dlclose(library->handle);
         library->handle = NULL;
@@ -519,7 +520,7 @@ YAMLSTAR_PLUGIN_HOST_LINKAGE char *yamlstar_host_plugin_manifest(
     return yamlstar_host_copy_output(library, output, length);
 }
 
-YAMLSTAR_PLUGIN_HOST_LINKAGE char *yamlstar_host_plugin_parse(
+YAMLSTAR_PLUGIN_HOST_LINKAGE char *yamlstar_host_plugin_transform(
     const char *api,
     const char *name,
     const char *input,
@@ -535,7 +536,7 @@ YAMLSTAR_PLUGIN_HOST_LINKAGE char *yamlstar_host_plugin_parse(
     }
     uint8_t *output = NULL;
     size_t length = 0;
-    *status = library->parse(
+    *status = library->transform(
         (const uint8_t *) input, strlen(input),
         (const uint8_t *) options, strlen(options),
         &output, &length);

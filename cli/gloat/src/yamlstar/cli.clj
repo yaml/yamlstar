@@ -32,8 +32,7 @@ Options:
   -o, --output FILE  Write output to FILE
   -s, --stream       Load all YAML documents
       --config CONF  YAMLStar options file or inline YAML mapping
-      --parser NAME  YAML parser plugin name
-      --plugin SPEC   Plugin selector: NAME or API=NAME
+      --plugin SPEC   Plugin selector list
       --path[=PATH]   Print defaults or set the shared library path
       --no-plugin-install
                        Do not install missing shared plugins
@@ -126,14 +125,9 @@ Options:
             (die (str arg " requires a config value"))
             (recur (rest more) (assoc opts :config (first more)) positional))
 
-          (= arg "--parser")
-          (if (empty? more)
-            (die (str arg " requires a parser name"))
-            (recur (rest more) (assoc opts :parser (first more)) positional))
-
           (= arg "--plugin")
           (if (empty? more)
-            (die (str arg " requires NAME or API=NAME"))
+            (die (str arg " requires a plugin selector"))
             (recur (rest more)
                    (update opts :plugin (fnil conj []) (first more))
                    positional))
@@ -141,7 +135,7 @@ Options:
           (str/starts-with? arg "--plugin=")
           (let [spec (subs arg (count "--plugin="))]
             (if (str/blank? spec)
-              (die "--plugin requires NAME or API=NAME")
+              (die "--plugin requires a plugin selector")
               (recur more
                      (update opts :plugin (fnil conj []) spec)
                      positional)))

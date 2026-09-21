@@ -113,6 +113,12 @@ CLI-BIN-GLOAT := bin/$(CLI-GLOAT-NAME)
 GLOAT-CACHE := ../libyamlstar/cache/gloat-srcs
 GLOAT-CORE := ../core/src/yamlstar
 GLOAT-GO-YAML-SRC := $(GLOAT-CACHE)/plugin/parser/go_yaml.clj
+GLOAT-REFERENCE-SRC := $(GLOAT-CACHE)/plugin/parser/reference.clj
+REFERENCE-PARSER-DIR ?= $(if \
+  $(wildcard ../../yamlstar-plugin-parser-reference/go.mod), \
+  ../../yamlstar-plugin-parser-reference)
+GLOAT-REFERENCE-ENV := $(if $(REFERENCE-PARSER-DIR), \
+  GLOAT_GO_REPLACE='github.com/yamlstar/yamlstar-plugin-parser-reference => $(abspath $(REFERENCE-PARSER-DIR))')
 GLOAT-CLI-OPTIONS-SRC := $(GLOAT-CACHE)/cli_options.clj
 GLOAT-SHARED-PLUGIN-SRC := $(GLOAT-CACHE)/plugin/shared.clj
 GLOAT-SHARED-HOST-SRC := $(GLOAT-CACHE)/plugin/shared_host.clj
@@ -124,15 +130,10 @@ CORE-SRCS := \
   $(wildcard $(GLOAT-CORE)/plugin/parser/*.clj) \
   $(wildcard $(GLOAT-CORE)/plugin/parser/*.cljc)
 GLOAT-CLI-SRCS := \
-  $(GLOAT-CACHE)/yaml_parser/prelude.clj \
-  $(GLOAT-CACHE)/yaml_parser/parser.clj \
-  $(GLOAT-CACHE)/yaml_parser/receiver.clj \
-  $(GLOAT-CACHE)/yaml_parser/grammar.clj \
-  $(GLOAT-CACHE)/yaml_parser/core.clj \
   $(GLOAT-CORE)/plugin.clj \
   $(GLOAT-CORE)/options.clj \
   $(GLOAT-CORE)/plugin/parser.clj \
-  $(GLOAT-CORE)/plugin/parser/reference.clj \
+  $(GLOAT-REFERENCE-SRC) \
   $(if $(filter glj,$(RT)),$(GLOAT-GO-YAML-SRC)) \
   $(GLOAT-SHARED-PLUGIN-SRC) \
   $(GLOAT-SHARED-HOST-SRC) \
@@ -236,7 +237,7 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
   $(GLOAT-CORE)/plugin.clj \
   $(GLOAT-CORE)/options.clj \
   $(GLOAT-CORE)/plugin/parser.clj \
-  $(GLOAT-CORE)/plugin/parser/reference.clj \
+  $(GLOAT-REFERENCE-SRC) \
   $(if $(filter glj,$(RT)),$(GLOAT-GO-YAML-SRC)) \
   $(GLOAT-SHARED-PLUGIN-SRC) \
   $(GLOAT-SHARED-HOST-SRC) \
@@ -252,6 +253,7 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
 	  GLOAT_MODULE=github.com/yaml/yamlstar \
 	  GLOAT_GO=$(GO) \
 	  GLOAT_GLJDEPS=$(abspath ../gljdeps.edn) \
+	  $(GLOAT-REFERENCE-ENV) \
 	  GLOAT_EXTRA_GO_DIR=$(abspath ../internal/goyamlparser) \
 	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
 	  $(if $(LET_GO_SRC),LET_GO_SRC=$(abspath $(LET_GO_SRC))) \

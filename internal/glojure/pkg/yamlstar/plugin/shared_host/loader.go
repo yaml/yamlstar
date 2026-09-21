@@ -13,8 +13,8 @@ import (
 
 var aotDirectFn0 lang.FnFunc0
 var aotDirectFn1 lang.FnFunc3
-var aotDirectFn2 lang.FnFunc4
-var aotDirectFn3 lang.FnFunc0
+var aotDirectFn2 lang.FnFunc0
+var aotDirectFn3 lang.FnFunc4
 
 func aotLinkFn1(vr *lang.Var) lang.FnFunc1 {
 	if vr.IsBound() {
@@ -137,11 +137,11 @@ func LoadNS() {
 	sym_manifest := lang.NewSymbolUnchecked("manifest")
 	sym_name := lang.NewSymbolUnchecked("name")
 	sym_options := lang.NewSymbolUnchecked("options")
-	sym_parse := lang.NewSymbolUnchecked("parse")
 	sym_plugin := lang.NewSymbolUnchecked("plugin")
 	sym_require_DASH_glojure_DASH_runtime := lang.NewSymbolUnchecked("require-glojure-runtime")
-	sym_set_DASH_event_DASH_source_DASH_loader_BANG_ := lang.NewSymbolUnchecked("set-event-source-loader!")
+	sym_set_DASH_json_DASH_comments_DASH_loader_BANG_ := lang.NewSymbolUnchecked("set-json-comments-loader!")
 	sym_shared := lang.NewSymbolUnchecked("shared")
+	sym_transform := lang.NewSymbolUnchecked("transform")
 	sym_yamlstar_DOT_plugin := lang.NewSymbolUnchecked("yamlstar.plugin")
 	sym_yamlstar_DOT_plugin_DOT_shared := lang.NewSymbolUnchecked("yamlstar.plugin.shared")
 	sym_yamlstar_DOT_plugin_DOT_shared_DASH_host := lang.NewSymbolUnchecked("yamlstar.plugin.shared-host")
@@ -158,15 +158,15 @@ func LoadNS() {
 	var_yamlstar_DOT_plugin_DOT_shared_DASH_host_install_BANG_ := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host, sym_install_BANG_)
 	// var yamlstar.plugin.shared-host/manifest
 	var_yamlstar_DOT_plugin_DOT_shared_DASH_host_manifest := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host, sym_manifest)
-	// var yamlstar.plugin.shared-host/parse
-	var_yamlstar_DOT_plugin_DOT_shared_DASH_host_parse := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host, sym_parse)
 	// var yamlstar.plugin.shared-host/require-glojure-runtime
 	var_yamlstar_DOT_plugin_DOT_shared_DASH_host_require_DASH_glojure_DASH_runtime := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host, sym_require_DASH_glojure_DASH_runtime)
+	// var yamlstar.plugin.shared-host/transform
+	var_yamlstar_DOT_plugin_DOT_shared_DASH_host_transform := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host, sym_transform)
 	// var yamlstar.plugin.shared/make-loader
 	var_yamlstar_DOT_plugin_DOT_shared_make_DASH_loader := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_shared, sym_make_DASH_loader)
-	// var yamlstar.plugin/set-event-source-loader!
-	var_yamlstar_DOT_plugin_set_DASH_event_DASH_source_DASH_loader_BANG_ := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_set_DASH_event_DASH_source_DASH_loader_BANG_)
-	aotExternalFn0 := aotLinkFn1(var_yamlstar_DOT_plugin_set_DASH_event_DASH_source_DASH_loader_BANG_)
+	// var yamlstar.plugin/set-json-comments-loader!
+	var_yamlstar_DOT_plugin_set_DASH_json_DASH_comments_DASH_loader_BANG_ := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_set_DASH_json_DASH_comments_DASH_loader_BANG_)
+	aotExternalFn0 := aotLinkFn1(var_yamlstar_DOT_plugin_set_DASH_json_DASH_comments_DASH_loader_BANG_)
 	aotExternalFn1 := aotLinkFn2(var_yamlstar_DOT_plugin_DOT_shared_make_DASH_loader)
 	// reference fmt to avoid unused import error
 	_ = fmt.Printf
@@ -263,11 +263,11 @@ func LoadNS() {
 			_ = v3
 			v4 := p2
 			_ = v4
-			tmp5 := aotDirectFn3()
+			tmp5 := aotDirectFn2()
 			_ = tmp5
 			var tmp6 any
 			{ // let
-				// let binding "vec__29"
+				// let binding "vec__23"
 				tmp7 := lang.Apply3(pluginloader4.Manifest, v2, v3, v4)
 				var v8 any = tmp7
 				_ = v8
@@ -296,9 +296,22 @@ func LoadNS() {
 			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared_host.glj", kw_line, int(13), kw_column, int(8), kw_end_DASH_line, int(13), kw_end_DASH_column, int(15), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_api, sym_name, sym_install_QMARK_)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host))
 		}, false)
 	}
-	// parse
+	// require-glojure-runtime
 	{
-		tmp0 := sym_parse
+		tmp0 := sym_require_DASH_glojure_DASH_runtime
+		var tmp1 lang.FnFunc0
+		tmp1 = lang.FnFunc0(func() any {
+			return nil
+		})
+		aotDirectFn2 = tmp1
+		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_require_DASH_glojure_DASH_runtime = ns.InternWithValue(tmp0, tmp1, true)
+		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_require_DASH_glojure_DASH_runtime.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared_host.glj", kw_line, int(6), kw_column, int(8), kw_end_DASH_line, int(6), kw_end_DASH_column, int(30), kw_private, true, kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host))
+		}, false)
+	}
+	// transform
+	{
+		tmp0 := sym_transform
 		var tmp1 lang.FnFunc4
 		tmp1 = lang.FnFunc4(func(p0, p1, p2, p3 any) any {
 			v2 := p0
@@ -309,12 +322,12 @@ func LoadNS() {
 			_ = v4
 			v5 := p3
 			_ = v5
-			tmp6 := aotDirectFn3()
+			tmp6 := aotDirectFn2()
 			_ = tmp6
 			var tmp7 any
 			{ // let
-				// let binding "vec__32"
-				tmp8 := lang.Apply4(pluginloader4.Parse, v2, v3, v4, v5)
+				// let binding "vec__26"
+				tmp8 := lang.Apply4(pluginloader4.Transform, v2, v3, v4, v5)
 				var v9 any = tmp8
 				_ = v9
 				// let binding "text"
@@ -341,23 +354,10 @@ func LoadNS() {
 			} // end let
 			return tmp7
 		})
-		aotDirectFn2 = tmp1
-		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_parse = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_parse.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared_host.glj", kw_line, int(23), kw_column, int(8), kw_end_DASH_line, int(23), kw_end_DASH_column, int(12), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_api, sym_name, sym_input, sym_options)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host))
-		}, false)
-	}
-	// require-glojure-runtime
-	{
-		tmp0 := sym_require_DASH_glojure_DASH_runtime
-		var tmp1 lang.FnFunc0
-		tmp1 = lang.FnFunc0(func() any {
-			return nil
-		})
 		aotDirectFn3 = tmp1
-		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_require_DASH_glojure_DASH_runtime = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_require_DASH_glojure_DASH_runtime.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared_host.glj", kw_line, int(6), kw_column, int(8), kw_end_DASH_line, int(6), kw_end_DASH_column, int(30), kw_private, true, kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host))
+		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_transform = ns.InternWithValue(tmp0, tmp1, true)
+		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_transform.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared_host.glj", kw_line, int(23), kw_column, int(8), kw_end_DASH_line, int(23), kw_end_DASH_column, int(16), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_api, sym_name, sym_input, sym_options)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host))
 		}, false)
 	}
 	// install!
@@ -365,10 +365,10 @@ func LoadNS() {
 		tmp0 := sym_install_BANG_
 		var tmp1 lang.FnFunc0
 		tmp1 = lang.FnFunc0(func() any {
-			tmp2 := aotDirectFn3()
+			tmp2 := aotDirectFn2()
 			_ = tmp2
 			tmp3 := checkDerefVar(var_yamlstar_DOT_plugin_DOT_shared_DASH_host_manifest)
-			tmp4 := checkDerefVar(var_yamlstar_DOT_plugin_DOT_shared_DASH_host_parse)
+			tmp4 := checkDerefVar(var_yamlstar_DOT_plugin_DOT_shared_DASH_host_transform)
 			tmp5 := aotExternalFn1(tmp3, tmp4)
 			tmp6 := aotExternalFn0(tmp5)
 			return tmp6
@@ -376,7 +376,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_install_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_install_BANG_.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared_host.glj", kw_line, int(35), kw_column, int(7), kw_end_DASH_line, int(35), kw_end_DASH_column, int(14), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Install the Glojure shared-library event-source loader.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared_host.glj", kw_line, int(35), kw_column, int(7), kw_end_DASH_line, int(35), kw_end_DASH_column, int(14), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Install the Glojure shared-library JSON-comments loader.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host))
 		}, false)
 	}
 }

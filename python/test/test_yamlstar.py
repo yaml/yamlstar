@@ -284,7 +284,6 @@ def test_requested_plugin_names():
         },
     }
     assert yamlstar._requested_plugin_names(options) == [
-        'reference',
         'json-comments',
     ]
 
@@ -303,7 +302,7 @@ def test_installed_plugin_discovery_loads_only_requested(
     )
 
     options = {
-        'plugin': {'json-comments': {'name': 'json-comments'}},
+        'plugin': {'json-comments': {'name': 'sanitizer'}},
     }
     assert yamlstar._installed_plugin_dirs(options) == [
         str(requested_dir),
@@ -327,7 +326,7 @@ def test_installed_plugin_discovery_rejects_duplicate_names(
     )
 
     options = {
-        'plugin': {'json-comments': {'name': 'json-comments'}},
+        'plugin': {'json-comments': {'name': 'sanitizer'}},
     }
     with pytest.raises(Exception, match='Multiple installed YAMLStar plugins'):
         yamlstar._installed_plugin_dirs(options)
@@ -344,7 +343,7 @@ def test_installed_plugin_discovery_rejects_missing_directory(
     )
 
     options = {
-        'plugin': {'json-comments': {'name': 'json-comments'}},
+        'plugin': {'json-comments': {'name': 'sanitizer'}},
     }
     with pytest.raises(Exception, match='returned a missing directory'):
         yamlstar._installed_plugin_dirs(options)
@@ -369,7 +368,7 @@ def test_explicit_plugin_search_path_disables_discovery(
     )
 
     options = {
-        'plugin': {'json-comments': {'name': 'json-comments'}},
+        'plugin': {'json-comments': {'name': 'sanitizer'}},
     }
     library = tmp_path / 'native' / 'libyamlstar.so'
     assert yamlstar._binding_plugin_dirs(options) == []
@@ -391,7 +390,7 @@ def test_call_uses_and_restores_installed_plugin_path(
 
     instance = object.__new__(yamlstar.YAMLStar)
     instance._options = {
-        'plugin': {'json-comments': {'name': 'json-comments'}},
+        'plugin': {'json-comments': {'name': 'sanitizer'}},
     }
     instance._libyamlstar_path = str(tmp_path / 'libyamlstar.so')
     instance._plugin_installer_path = str(tmp_path / 'missing-installer')
@@ -485,7 +484,7 @@ def test_load_with_options_dict(ys):
 def test_json_comments_options():
     """Test the JSON comments plugin option helper."""
     assert yamlstar.json_comments() == {
-        'json-comments': {'name': 'json-comments'}}
+        'json-comments': {'name': 'sanitizer'}}
 
 
 def test_plugin_install_options():

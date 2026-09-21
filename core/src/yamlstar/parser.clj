@@ -59,9 +59,9 @@
   ([yaml-str]
    (parse yaml-str nil))
   ([yaml-str opts]
-   (if-let [source (plugin/event-source-opts opts)]
-     (plugin/parse-with-event-source source yaml-str)
-     (let [[pname config]
-           (or (plugin/parser-opts opts)
-               [(current-default-parser) {}])]
-       (plugin/parse-with pname config yaml-str)))))
+   (let [yaml-str (if-let [comments (plugin/json-comments-opts opts)]
+                    (plugin/sanitize-with comments yaml-str)
+                    yaml-str)
+         [pname config] (or (plugin/parser-opts opts) [nil {}])
+         pname (or pname (current-default-parser))]
+     (plugin/parse-with pname config yaml-str))))

@@ -1,8 +1,7 @@
 (ns yamlstar.plugin.shared
-  "Shared-library event-source protocol support for native hosts.")
+  "Shared-library text-transform protocol support for native hosts.")
 
-(def abi-version 1)
-(def event-format "yamlstar-events-edn-v1")
+(def abi-version 2)
 
 (defn- read-edn
   [text context]
@@ -30,46 +29,39 @@
   (require-value manifest :abi abi-version)
   (require-value manifest :api api)
   (require-value manifest :name name)
-  (require-value manifest :kind "event-source")
-  (require-value manifest :event-format event-format)
-  (require-value manifest :requires {:parser "reference"})
+  (require-value manifest :kind "text-transform")
   manifest)
 
-(defn- plugin-error
-  [response]
-  (let [error (:error response)]
-    (if (map? error)
-      (ex-info (or (:message error) "Shared plugin parse failed")
-               (assoc (or (:data error) {})
-                      :plugin-error-type (:type error)))
-      (ex-info "Shared plugin returned an invalid error envelope"
-               {:response response}))))
-
 (defn make-loader
-  "Create a YAMLStar event-source loader from native host functions.
+  "Create a JSON-comments loader from native host functions.
 
-  manifest-fn receives api, name, and install? and returns manifest EDN.
-  parse-fn receives api, name, input, and options EDN and returns
-  [status output-edn]."
-  [manifest-fn parse-fn]
-  (fn [api name install?]
-    (let [manifest (-> (manifest-fn api name install?)
+  manifest-fn receives api, artifact name, and install? and returns EDN.
+  transform-fn receives api, artifact name, input, and options EDN and
+  returns [status output]."
+  [manifest-fn transform-fn]
+  (fn [api name _version install?]
+    (when-not (and (= api "json-comments") (= name "sanitizer"))
+      (throw (ex-info "No shared plugin artifact for implementation"
+                      {:api api :name name})))
+    (let [artifact "json-comments"
+          manifest (-> (manifest-fn api artifact install?)
                        (read-edn "manifest")
                        (validate-manifest api name))]
       {:api api
        :name name
+       :version (:version manifest)
        :manifest manifest
-       :requires (:requires manifest)
        :default-config {}
-       :parse
+       :sanitize
        (fn [input options]
-         (let [[status output] (parse-fn api name (or input "")
-                                          (pr-str options))
-               response (read-edn output "parse response")]
+         (let [[status output]
+               (transform-fn api artifact (or input "")
+                             (pr-str options))]
            (case (long status)
-             0 response
-             1 (throw (plugin-error response))
+             0 output
+             1 (throw (ex-info output
+                               {:api api :name name :kind :transform}))
              (throw
               (ex-info "Shared plugin ABI call failed"
                        {:api api :name name :status status
-                        :response response})))))})))
+                        :response output})))))})))

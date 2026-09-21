@@ -20,12 +20,12 @@
        (if (nil? error) text (throw error)))
      :clj nil))
 
-(defn- parse
+(defn- transform
   [api name input options]
   (require-glojure-runtime)
   #?(:glj
      (let [[text status error]
-           (github.com:yaml:yamlstar:internal:goyamlparser:pluginloader.Parse
+           (github.com:yaml:yamlstar:internal:goyamlparser:pluginloader.Transform
             api name input options)]
        (if (nil? error)
          [status text]
@@ -33,7 +33,8 @@
      :clj nil))
 
 (defn install!
-  "Install the Glojure shared-library event-source loader."
+  "Install the Glojure shared-library JSON-comments loader."
   []
   (require-glojure-runtime)
-  (plugin/set-event-source-loader! (shared/make-loader manifest parse)))
+  (plugin/set-json-comments-loader!
+   (shared/make-loader manifest transform)))

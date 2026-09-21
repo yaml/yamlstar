@@ -1,6 +1,6 @@
 //go:build darwin || freebsd || linux
 
-// Package pluginloader loads YAMLStar event-source shared libraries.
+// Package pluginloader loads YAMLStar text-transform shared libraries.
 package pluginloader
 
 import (
@@ -21,11 +21,11 @@ import (
 const pluginPrefix = "libyamlstar-plugin-"
 
 type library struct {
-	path     string
-	abi      func() uint64
-	manifest func(**byte, *uintptr) int32
-	parse    func(*byte, uintptr, *byte, uintptr, **byte, *uintptr) int32
-	free     func(*byte)
+	path      string
+	abi       func() uint64
+	manifest  func(**byte, *uintptr) int32
+	transform func(*byte, uintptr, *byte, uintptr, **byte, *uintptr) int32
+	free      func(*byte)
 }
 
 var libraries = struct {
@@ -42,13 +42,13 @@ func Manifest(api, name string, install bool) (string, error) {
 	return library.callManifest()
 }
 
-// Parse invokes a plugin and returns its EDN response and status code.
-func Parse(api, name, input, options string) (string, int64, error) {
+// Transform invokes a plugin and returns its output and status code.
+func Transform(api, name, input, options string) (string, int64, error) {
 	library, err := load(api, name, false)
 	if err != nil {
 		return "", 2, err
 	}
-	output, status, err := library.callParse([]byte(input), []byte(options))
+	output, status, err := library.callTransform([]byte(input), []byte(options))
 	return output, int64(status), err
 }
 
@@ -176,16 +176,16 @@ func open(path string) (loaded *library, err error) {
 		}
 	}()
 	purego.RegisterLibFunc(&loaded.abi, handle,
-		"yamlstar_plugin_v1_abi")
+		"yamlstar_plugin_v2_abi")
 	purego.RegisterLibFunc(&loaded.manifest, handle,
-		"yamlstar_plugin_v1_manifest")
-	purego.RegisterLibFunc(&loaded.parse, handle,
-		"yamlstar_plugin_v1_parse")
+		"yamlstar_plugin_v2_manifest")
+	purego.RegisterLibFunc(&loaded.transform, handle,
+		"yamlstar_plugin_v2_transform")
 	purego.RegisterLibFunc(&loaded.free, handle,
-		"yamlstar_plugin_v1_free")
-	if abi := loaded.abi(); abi != 1 {
+		"yamlstar_plugin_v2_free")
+	if abi := loaded.abi(); abi != 2 {
 		return nil, fmt.Errorf(
-			"YAMLStar plugin %s has ABI %d, expected 1", path, abi)
+			"YAMLStar plugin %s has ABI %d, expected 2", path, abi)
 	}
 	return loaded, nil
 }
@@ -197,12 +197,12 @@ func (loaded *library) callManifest() (string, error) {
 	return loaded.takeOutput(status, output, length)
 }
 
-func (loaded *library) callParse(
+func (loaded *library) callTransform(
 	input, options []byte,
 ) (string, int32, error) {
 	var output *byte
 	var length uintptr
-	status := loaded.parse(firstByte(input), uintptr(len(input)),
+	status := loaded.transform(firstByte(input), uintptr(len(input)),
 		firstByte(options), uintptr(len(options)), &output, &length)
 	runtime.KeepAlive(input)
 	runtime.KeepAlive(options)

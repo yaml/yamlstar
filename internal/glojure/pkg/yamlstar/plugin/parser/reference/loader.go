@@ -6,53 +6,56 @@ import (
 	fmt "fmt"
 	lang "github.com/glojurelang/glojure/pkg/lang"
 	runtime "github.com/glojurelang/glojure/pkg/runtime"
+	goyamlparser4 "github.com/yaml/yamlstar/internal/goyamlparser"
 	reflect "reflect"
 	atomic "sync/atomic"
 )
 
-var aotKeywordMapShape0 = lang.NewKeywordMapShape("name", "parse", "default-config")
+var aotDirectFn0 lang.FnFunc2
+
+var aotKeywordMapShape0 = lang.NewKeywordMapShape("name", "version", "parse", "default-config")
 
 type aotKeywordMapStorage0 struct {
 	lang.Map
-	values [3]any
+	values [4]any
 }
 
-func aotKeywordMapNew0(v0 any, v1 any, v2 any) *lang.Map {
+func aotKeywordMapNew0(v0 any, v1 any, v2 any, v3 any) *lang.Map {
 	storage := &aotKeywordMapStorage0{}
-	storage.values = [3]any{v0, v1, v2}
+	storage.values = [4]any{v0, v1, v2, v3}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape0,
 		storage.values[:],
 	)
 }
-func aotLinkFn1(vr *lang.Var) lang.FnFunc1 {
+func aotLinkFn3(vr *lang.Var) lang.FnFunc3 {
 	if vr.IsBound() {
-		return aotLinkBoundFn1(vr)
+		return aotLinkBoundFn3(vr)
 	}
-	var linked atomic.Pointer[lang.FnFunc1]
-	return func(p0 any) any {
+	var linked atomic.Pointer[lang.FnFunc3]
+	return func(p0 any, p1 any, p2 any) any {
 		if fn := linked.Load(); fn != nil {
-			return (*fn)(p0)
+			return (*fn)(p0, p1, p2)
 		}
 		if !vr.IsBound() {
-			return lang.Apply1(checkDerefVar(vr), p0)
+			return lang.Apply3(checkDerefVar(vr), p0, p1, p2)
 		}
-		fn := aotLinkBoundFn1(vr)
+		fn := aotLinkBoundFn3(vr)
 		linked.Store(&fn)
-		return fn(p0)
+		return fn(p0, p1, p2)
 	}
 }
 
-func aotLinkBoundFn1(vr *lang.Var) lang.FnFunc1 {
+func aotLinkBoundFn3(vr *lang.Var) lang.FnFunc3 {
 	fn := checkDerefVar(vr)
-	if direct, ok := lang.DirectFn1(fn); ok {
+	if direct, ok := lang.DirectFn3(fn); ok {
 		return direct
 	}
-	if fixed, ok := fn.(lang.FixedArityFn1); ok {
-		return fixed.Invoke1
+	if fixed, ok := fn.(lang.FixedArityFn3); ok {
+		return fixed.Invoke3
 	}
-	return func(p0 any) any { return lang.Apply1(fn, p0) }
+	return func(p0 any, p1 any, p2 any) any { return lang.Apply3(fn, p0, p1, p2) }
 }
 
 func init() {
@@ -80,24 +83,27 @@ func checkArityGTE(args []any, min int) {
 
 // LoadNS initializes the namespace "yamlstar.plugin.parser.reference"
 func LoadNS() {
+	sym__config := lang.NewSymbolUnchecked("_config")
 	sym_clojure_DOT_core := lang.NewSymbolUnchecked("clojure.core")
 	sym_parse := lang.NewSymbolUnchecked("parse")
 	sym_plugin := lang.NewSymbolUnchecked("plugin")
 	sym_ref_DASH_parser := lang.NewSymbolUnchecked("ref-parser")
 	sym_yaml_DASH_parser_DOT_core := lang.NewSymbolUnchecked("yaml-parser.core")
+	sym_yaml_DASH_str := lang.NewSymbolUnchecked("yaml-str")
 	sym_yamlstar_DOT_plugin := lang.NewSymbolUnchecked("yamlstar.plugin")
 	sym_yamlstar_DOT_plugin_DOT_parser_DOT_reference := lang.NewSymbolUnchecked("yamlstar.plugin.parser.reference")
+	kw_arglists := lang.NewKeyword("arglists")
 	kw_column := lang.NewKeyword("column")
+	kw_doc := lang.NewKeyword("doc")
 	kw_end_DASH_column := lang.NewKeyword("end-column")
 	kw_end_DASH_line := lang.NewKeyword("end-line")
 	kw_file := lang.NewKeyword("file")
 	kw_line := lang.NewKeyword("line")
 	kw_ns := lang.NewKeyword("ns")
-	// var yaml-parser.core/parse
-	var_yaml_DASH_parser_DOT_core_parse := lang.InternVarName(sym_yaml_DASH_parser_DOT_core, sym_parse)
+	// var yamlstar.plugin.parser.reference/parse
+	var_yamlstar_DOT_plugin_DOT_parser_DOT_reference_parse := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_parser_DOT_reference, sym_parse)
 	// var yamlstar.plugin.parser.reference/plugin
 	var_yamlstar_DOT_plugin_DOT_parser_DOT_reference_plugin := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_parser_DOT_reference, sym_plugin)
-	aotExternalFn0 := aotLinkFn1(var_yaml_DASH_parser_DOT_core_parse)
 	// reference fmt to avoid unused import error
 	_ = fmt.Printf
 	// reference reflect to avoid unused import error
@@ -182,6 +188,59 @@ func LoadNS() {
 	}
 	ns.AddAlias(sym_ref_DASH_parser, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_core))
 	ns.AddAlias(sym_plugin, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+	// parse
+	{
+		tmp0 := sym_parse
+		var tmp1 lang.FnFunc2
+		tmp1 = lang.FnFunc2(func(p0, p1 any) any {
+			v2 := p0
+			_ = v2
+			v3 := p1
+			_ = v3
+			var tmp4 any
+			{ // let
+				// let binding "vec__19"
+				var tmp5 any
+				{ // let
+					// let binding "or__0__auto__"
+					var v6 any = v2
+					_ = v6
+					var tmp7 any
+					if lang.IsTruthy(v6) {
+						tmp7 = v6
+					} else {
+						tmp7 = ""
+					}
+					tmp5 = tmp7
+				} // end let
+				tmp6 := lang.Apply1(goyamlparser4.ParseReferenceEvents, tmp5)
+				var v7 any = tmp6
+				_ = v7
+				// let binding "events"
+				tmp8 := runtime.RT.NthDefault(v7, lang.IntCast(int64(0)), nil)
+				var v9 any = tmp8
+				_ = v9
+				// let binding "error"
+				tmp10 := runtime.RT.NthDefault(v7, lang.IntCast(int64(1)), nil)
+				var v11 any = tmp10
+				_ = v11
+				var tmp12 any
+				tmp13 := lang.Identical(v11, nil)
+				if lang.IsTruthy(tmp13) {
+					tmp12 = v9
+				} else {
+					panic(v11)
+				}
+				tmp4 = tmp12
+			} // end let
+			return tmp4
+		})
+		aotDirectFn0 = tmp1
+		var_yamlstar_DOT_plugin_DOT_parser_DOT_reference_parse = ns.InternWithValue(tmp0, tmp1, true)
+		var_yamlstar_DOT_plugin_DOT_parser_DOT_reference_parse.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser/reference.glj", kw_line, int(6), kw_column, int(7), kw_end_DASH_line, int(6), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str, sym__config)), kw_doc, "Parse YAML with the YAML reference parser.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_reference))
+		}, false)
+	}
 	// plugin
 	{
 		tmp0 := sym_plugin
@@ -191,12 +250,47 @@ func LoadNS() {
 			_ = v2
 			v3 := p1
 			_ = v3
-			tmp4 := aotExternalFn0(v2)
+			var tmp4 any
+			{ // let
+				// let binding "vec__19"
+				var tmp5 any
+				{ // let
+					// let binding "or__0__auto__"
+					var v6 any = v2
+					_ = v6
+					var tmp7 any
+					if lang.IsTruthy(v6) {
+						tmp7 = v6
+					} else {
+						tmp7 = ""
+					}
+					tmp5 = tmp7
+				} // end let
+				tmp6 := lang.Apply1(goyamlparser4.ParseReferenceEvents, tmp5)
+				var v7 any = tmp6
+				_ = v7
+				// let binding "events"
+				tmp8 := runtime.RT.NthDefault(v7, lang.IntCast(int64(0)), nil)
+				var v9 any = tmp8
+				_ = v9
+				// let binding "error"
+				tmp10 := runtime.RT.NthDefault(v7, lang.IntCast(int64(1)), nil)
+				var v11 any = tmp10
+				_ = v11
+				var tmp12 any
+				tmp13 := lang.Identical(v11, nil)
+				if lang.IsTruthy(tmp13) {
+					tmp12 = v9
+				} else {
+					panic(v11)
+				}
+				tmp4 = tmp12
+			} // end let
 			return tmp4
 		})
-		var_yamlstar_DOT_plugin_DOT_parser_DOT_reference_plugin = ns.InternWithValue(tmp0, aotKeywordMapNew0("reference", tmp1, lang.NewMap()), true)
+		var_yamlstar_DOT_plugin_DOT_parser_DOT_reference_plugin = ns.InternWithValue(tmp0, aotKeywordMapNew0("reference", "0.2.5", tmp1, lang.NewMap()), true)
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_reference_plugin.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/plugin/parser/reference.glj", kw_line, int(6), kw_column, int(6), kw_end_DASH_line, int(6), kw_end_DASH_column, int(11), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_reference))
+			return lang.NewMap(kw_file, "yamlstar/plugin/parser/reference.glj", kw_line, int(18), kw_column, int(6), kw_end_DASH_line, int(18), kw_end_DASH_column, int(11), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_reference))
 		}, false)
 	}
 }
