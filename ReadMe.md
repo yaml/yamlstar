@@ -299,10 +299,10 @@ Each binding directory contains its own `ReadMe.md` with detailed installation a
 YAMLStar has a plugin system that can swap internal processing
 components per load operation.
 Parser plugins select a parser implementation.
-Shared event-source plugins can add syntax such as comments in JSON:
+The `json-comments` plugin API adds JSON-style comments before parsing:
 
 ```bash
-printf '%s\n' '{"a": true // comment}' |
+printf '%s\n' '{"a": true /* comment */}' |
   yaml --plugin=json-comments
 ```
 
