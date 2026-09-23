@@ -366,5 +366,5 @@
    (emit-with-options events false opts))
   ([events multi? opts]
    (let [tabs (plugin/tab-indent-config opts)]
-     (binding [*tab-indent* (boolean tabs)]
+     (binding [*tab-indent* (= "tabs" (:dump tabs))]
        (emit events multi?)))))

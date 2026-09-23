@@ -499,12 +499,16 @@ def test_plugin_install_options():
 def test_tab_indent_options():
     """Build the built-in tab-indentation plugin configuration."""
     assert yamlstar.tab_indent() == {
-        'tab-indent': {'mode': 'auto', 'scope': 'document'},
+        'tab-indent': {'mode': 'auto', 'auto': 'document'},
     }
     opts = yamlstar.Options().plugin(
-        yamlstar.tab_indent(mode='tabs', scope='stream'))
+        yamlstar.tab_indent(
+            mode='tabs', load='spaces', dump='spaces', auto='stream'))
     assert opts.to_dict()['plugin']['tab-indent'] == {
-        'mode': 'tabs', 'scope': 'stream',
+        'mode': 'tabs',
+        'load': 'spaces',
+        'dump': 'spaces',
+        'auto': 'stream',
     }
 
 
@@ -515,6 +519,13 @@ def test_tab_indent_binding():
     value = {'root': {'child': {'value': True}}}
     output = instance.dump(value)
     assert output == 'root:\n\tchild:\n\t\tvalue: true\n'
+    assert instance.load(output) == value
+
+    spaces = yamlstar.Options().plugin(
+        yamlstar.tab_indent(load='spaces', dump='spaces'))
+    instance = yamlstar.YAMLStar(spaces)
+    output = instance.dump(value)
+    assert output == 'root:\n  child:\n    value: true\n'
     assert instance.load(output) == value
 
 

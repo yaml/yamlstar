@@ -19,11 +19,11 @@
   (require-glojure-runtime)
   #?(:glj
      (let [tabs (:tab-indent config)
-           mode (or (:mode tabs) "")
-           scope (or (:scope tabs) "")
+           load (or (:load tabs) "")
+           auto (or (:auto tabs) "")
            [events err]
            (github.com:yaml:yamlstar:internal:goyamlparser.ParseYAMLStarEvents
-             (or yaml-str "") mode scope)]
+             (or yaml-str "") load auto)]
        (if (nil? err)
          events
          (throw err)))

@@ -320,13 +320,19 @@
 
 (deftest test-tab-indent-dump
   (let [opts {:plugin {:tab-indent {:mode "auto"
-                                    :scope "document"}}}]
+                                    :load "auto"
+                                    :dump "tabs"
+                                    :auto "document"}}}]
     (is (= "root:\n\tchild:\n\t\tvalue: true\n"
            (yaml/dump
             {"root" {"child" {"value" true}}} opts)))
     (is (= "---\nroot:\n\tvalue: true\n"
            (yaml/dump-all
-            [{"root" {"value" true}}] opts)))))
+            [{"root" {"value" true}}] opts)))
+    (is (= "root:\n  value: true\n"
+           (yaml/dump
+            {"root" {"value" true}}
+            {:plugin {:tab-indent {:dump "spaces"}}})))))
 
 (deftest test-tab-indent-load-needs-go-yaml
   (is (thrown-with-msg?
@@ -335,7 +341,18 @@
        (yaml/load
         "root:\n\tvalue: true\n"
         {:plugin {:parser {:name "reference"}
-                  :tab-indent {}}}))))
+                  :tab-indent {}}})))
+  (is (= {"root" {"value" true}}
+         (yaml/load
+          "root:\n  value: true\n"
+          {:plugin {:parser {:name "reference"}
+                    :tab-indent {:load "spaces"}}})))
+  (is (thrown-with-msg?
+       Exception
+       #"Unknown tab-indent configuration key"
+       (yaml/load
+        "root:\n  value: true\n"
+        {:plugin {:tab-indent {:scope "document"}}}))))
 
 (deftest test-dump-non-string-map-keys
   (testing "Dump scalar and keyword map keys"

@@ -1150,7 +1150,8 @@ func (parser *Parser) fetchDirective() error {
 // Produce the DOCUMENT-START or DOCUMENT-END token.
 func (parser *Parser) fetchDocumentIndicator(typ TokenType) error {
 	if typ == DOCUMENT_START_TOKEN && parser.tabIndent != nil &&
-		parser.tabIndent.Scope == TabIndentScopeDocument {
+		parser.tabIndent.Load == TabIndentLoadAuto &&
+		parser.tabIndent.Auto == TabIndentAutoDocument {
 		parser.tabIndentStyle = 0
 	}
 
@@ -3080,11 +3081,15 @@ func (parser *Parser) validateTabIndentStyle(style byte, start Mark) error {
 	if parser.tabIndent == nil || style == 0 {
 		return nil
 	}
-	if parser.tabIndent.Mode == TabIndentModeTabs && style != '\t' {
+	if parser.tabIndent.Load == TabIndentLoadTabs && style != '\t' {
 		return formatScannerError(
 			"found spaces where tab indentation is required", start)
 	}
-	if parser.tabIndent.Mode == TabIndentModeAuto {
+	if parser.tabIndent.Load == TabIndentLoadSpaces && style != ' ' {
+		return formatScannerError(
+			"found tabs where space indentation is required", start)
+	}
+	if parser.tabIndent.Load == TabIndentLoadAuto {
 		if parser.tabIndentStyle == 0 {
 			parser.tabIndentStyle = style
 		} else if parser.tabIndentStyle != style {

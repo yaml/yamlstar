@@ -22,16 +22,33 @@ const (
 	TabIndentModeTabs TabIndentMode = "tabs"
 )
 
-type TabIndentScope string
+type TabIndentLoad string
 
 const (
-	TabIndentScopeDocument TabIndentScope = "document"
-	TabIndentScopeStream   TabIndentScope = "stream"
+	TabIndentLoadTabs   TabIndentLoad = "tabs"
+	TabIndentLoadSpaces TabIndentLoad = "spaces"
+	TabIndentLoadAuto   TabIndentLoad = "auto"
+)
+
+type TabIndentDump string
+
+const (
+	TabIndentDumpTabs   TabIndentDump = "tabs"
+	TabIndentDumpSpaces TabIndentDump = "spaces"
+)
+
+type TabIndentAuto string
+
+const (
+	TabIndentAutoDocument TabIndentAuto = "document"
+	TabIndentAutoStream   TabIndentAuto = "stream"
 )
 
 type TabIndentConfig struct {
-	Mode  TabIndentMode
-	Scope TabIndentScope
+	Mode TabIndentMode
+	Load TabIndentLoad
+	Dump TabIndentDump
+	Auto TabIndentAuto
 }
 
 func DefaultDepthCheck(depth int, ctx *DepthContext) error {

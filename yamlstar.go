@@ -80,7 +80,7 @@ func Parser(name string) Plugin {
 	}
 }
 
-// TabIndentMode controls structural indentation loading.
+// TabIndentMode supplies loading and dumping defaults.
 type TabIndentMode string
 
 const (
@@ -88,34 +88,53 @@ const (
 	TabIndentModeTabs TabIndentMode = "tabs"
 )
 
-// TabIndentScope controls how long auto-detected indentation remains active.
-type TabIndentScope string
+// TabIndentLoad controls accepted structural indentation.
+type TabIndentLoad string
 
 const (
-	TabIndentScopeDocument TabIndentScope = "document"
-	TabIndentScopeStream   TabIndentScope = "stream"
+	TabIndentLoadTabs   TabIndentLoad = "tabs"
+	TabIndentLoadSpaces TabIndentLoad = "spaces"
+	TabIndentLoadAuto   TabIndentLoad = "auto"
+)
+
+// TabIndentDump controls emitted structural indentation.
+type TabIndentDump string
+
+const (
+	TabIndentDumpTabs   TabIndentDump = "tabs"
+	TabIndentDumpSpaces TabIndentDump = "spaces"
+)
+
+// TabIndentAuto controls how long auto-detected indentation remains active.
+type TabIndentAuto string
+
+const (
+	TabIndentAutoDocument TabIndentAuto = "document"
+	TabIndentAutoStream   TabIndentAuto = "stream"
 )
 
 // TabIndentConfig configures the built-in tab-indent plugin.
 type TabIndentConfig struct {
-	Mode  TabIndentMode
-	Scope TabIndentScope
+	Mode TabIndentMode
+	Load TabIndentLoad
+	Dump TabIndentDump
+	Auto TabIndentAuto
 }
 
 // TabIndent enables tab-aware loading and tab-indented dumping.
 func TabIndent(config ...TabIndentConfig) Plugin {
 	return func(o *options) {
 		value := TabIndentConfig{
-			Mode:  TabIndentModeAuto,
-			Scope: TabIndentScopeDocument,
+			Mode: TabIndentModeAuto,
+			Auto: TabIndentAutoDocument,
 		}
 		if len(config) > 0 {
 			value = config[0]
 			if value.Mode == "" {
 				value.Mode = TabIndentModeAuto
 			}
-			if value.Scope == "" {
-				value.Scope = TabIndentScopeDocument
+			if value.Auto == "" {
+				value.Auto = TabIndentAutoDocument
 			}
 		}
 		o.tabIndent = &value
@@ -151,10 +170,17 @@ func (o options) json() (string, error) {
 		plugins["parser"] = map[string]any{"name": o.parser}
 	}
 	if o.tabIndent != nil {
-		plugins["tab-indent"] = map[string]any{
-			"mode":  o.tabIndent.Mode,
-			"scope": o.tabIndent.Scope,
+		config := map[string]any{
+			"mode": o.tabIndent.Mode,
+			"auto": o.tabIndent.Auto,
 		}
+		if o.tabIndent.Load != "" {
+			config["load"] = o.tabIndent.Load
+		}
+		if o.tabIndent.Dump != "" {
+			config["dump"] = o.tabIndent.Dump
+		}
+		plugins["tab-indent"] = config
 	}
 	if len(plugins) > 0 {
 		cfg["plugin"] = plugins

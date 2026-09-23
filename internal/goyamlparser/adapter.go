@@ -63,7 +63,7 @@ func makeShapes(fixed, extra string) [8]*lang.KeywordMapShape {
 	return shapes
 }
 
-func ParseYAMLStarEvents(input, mode, scope string) (any, error) {
+func ParseYAMLStarEvents(input, load, auto string) (any, error) {
 	if input == "" {
 		input = "\n"
 	} else if !strings.HasSuffix(input, "\n") {
@@ -71,23 +71,24 @@ func ParseYAMLStarEvents(input, mode, scope string) (any, error) {
 	}
 
 	parser := NewParser()
-	if mode != "" || scope != "" {
-		if mode == "" {
-			mode = string(TabIndentModeAuto)
+	if load != "" || auto != "" {
+		if load == "" {
+			load = string(TabIndentLoadAuto)
 		}
-		if scope == "" {
-			scope = string(TabIndentScopeDocument)
+		if auto == "" {
+			auto = string(TabIndentAutoDocument)
 		}
-		if mode != string(TabIndentModeAuto) &&
-			mode != string(TabIndentModeTabs) {
-			return nil, fmt.Errorf("invalid tab-indent mode %q", mode)
+		if load != string(TabIndentLoadAuto) &&
+			load != string(TabIndentLoadSpaces) &&
+			load != string(TabIndentLoadTabs) {
+			return nil, fmt.Errorf("invalid tab-indent load %q", load)
 		}
-		if scope != string(TabIndentScopeDocument) &&
-			scope != string(TabIndentScopeStream) {
-			return nil, fmt.Errorf("invalid tab-indent scope %q", scope)
+		if auto != string(TabIndentAutoDocument) &&
+			auto != string(TabIndentAutoStream) {
+			return nil, fmt.Errorf("invalid tab-indent auto %q", auto)
 		}
 		parser.SetTabIndent(&TabIndentConfig{
-			Mode: TabIndentMode(mode), Scope: TabIndentScope(scope),
+			Load: TabIndentLoad(load), Auto: TabIndentAuto(auto),
 		})
 	}
 	parser.SetInputString([]byte(input))
