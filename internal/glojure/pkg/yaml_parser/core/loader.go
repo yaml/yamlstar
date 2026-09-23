@@ -286,7 +286,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yaml_DASH_parser_DOT_core_parse = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_core_parse.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yaml_parser/core.glj", kw_line, int(7), kw_column, int(7), kw_end_DASH_line, int(7), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_yaml)), kw_doc, "Parse a YAML string and return a vector of YAML event maps.", kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_core))
+			return lang.NewMapUniqueKeys(kw_file, "yaml_parser/core.clj", kw_line, int(7), kw_column, int(7), kw_end_DASH_line, int(7), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_yaml)), kw_doc, "Parse a YAML string and return a vector of YAML event maps.", kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_core))
 		}, false)
 	}
 	// parse-yaml
@@ -330,7 +330,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yaml_DASH_parser_DOT_core_parse_DASH_yaml = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_core_parse_DASH_yaml.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/core.glj", kw_line, int(15), kw_column, int(6), kw_end_DASH_line, int(15), kw_end_DASH_column, int(15), kw_doc, "Alias for parse, kept for compatibility with the original Clojure port.", kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_core))
+			return lang.NewMap(kw_file, "yaml_parser/core.clj", kw_line, int(15), kw_column, int(6), kw_end_DASH_line, int(15), kw_end_DASH_column, int(15), kw_doc, "Alias for parse, kept for compatibility with the original Clojure port.", kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_core))
 		}, false)
 	}
 }

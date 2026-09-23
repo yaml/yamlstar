@@ -233,7 +233,7 @@ type aotKeywordMapStorage0 struct {
 	values [4]any
 }
 
-func aotKeywordMapNew0(v0 any, v1 any, v2 any, v3 any) *lang.Map {
+func aotKeywordMapNew0(v0 any, v1 any, v2 any, v3 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage0{}
 	storage.values = [4]any{v0, v1, v2, v3}
 	return lang.InitStaticKeywordMap(
@@ -250,7 +250,7 @@ type aotKeywordMapStorage1 struct {
 	values [5]any
 }
 
-func aotKeywordMapNew1(v0 any, v1 any, v2 any, v3 any, v4 any) *lang.Map {
+func aotKeywordMapNew1(v0 any, v1 any, v2 any, v3 any, v4 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage1{}
 	storage.values = [5]any{v0, v1, v2, v3, v4}
 	return lang.InitStaticKeywordMap(
@@ -267,7 +267,7 @@ type aotKeywordMapStorage2 struct {
 	values [5]any
 }
 
-func aotKeywordMapNew2(v0 any, v1 any, v2 any, v3 any, v4 any) *lang.Map {
+func aotKeywordMapNew2(v0 any, v1 any, v2 any, v3 any, v4 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage2{}
 	storage.values = [5]any{v0, v1, v2, v3, v4}
 	return lang.InitStaticKeywordMap(
@@ -3562,7 +3562,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_auto_detect = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_grammar_auto_detect.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(20), kw_column, int(7), kw_end_DASH_line, int(20), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_n)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(20), kw_column, int(7), kw_end_DASH_line, int(20), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_n)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// auto_detect_indent
@@ -3580,7 +3580,7 @@ func LoadNS() {
 		aotDirectFn2 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_auto_detect_indent = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_grammar_auto_detect_indent.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(23), kw_column, int(7), kw_end_DASH_line, int(23), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_n)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(23), kw_column, int(7), kw_end_DASH_line, int(23), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector(sym_parser, sym_n)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// empty
@@ -3596,7 +3596,7 @@ func LoadNS() {
 		aotDirectFn80 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_empty = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_grammar_empty.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(26), kw_column, int(7), kw_end_DASH_line, int(26), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_parser)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(26), kw_column, int(7), kw_end_DASH_line, int(26), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_parser)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	{
@@ -8234,7 +8234,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_TOP = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_TOP.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(12), kw_column, int(6), kw_end_DASH_line, int(12), kw_end_DASH_column, int(8), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(12), kw_column, int(6), kw_end_DASH_line, int(12), kw_end_DASH_column, int(8), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// b_as_line_feed
@@ -8265,7 +8265,7 @@ func LoadNS() {
 		aotDirectFn3 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_b_as_line_feed = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_b_as_line_feed.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(559), kw_column, int(6), kw_end_DASH_line, int(559), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(559), kw_column, int(6), kw_end_DASH_line, int(559), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// b_as_space
@@ -8296,7 +8296,7 @@ func LoadNS() {
 		aotDirectFn4 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_b_as_space = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_b_as_space.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1214), kw_column, int(6), kw_end_DASH_line, int(1214), kw_end_DASH_column, int(15), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1214), kw_column, int(6), kw_end_DASH_line, int(1214), kw_end_DASH_column, int(15), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// b_break
@@ -8327,7 +8327,7 @@ func LoadNS() {
 		aotDirectFn5 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_b_break = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_b_break.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(548), kw_column, int(6), kw_end_DASH_line, int(548), kw_end_DASH_column, int(12), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(548), kw_column, int(6), kw_end_DASH_line, int(548), kw_end_DASH_column, int(12), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// b_carriage_return
@@ -8358,7 +8358,7 @@ func LoadNS() {
 		aotDirectFn6 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_b_carriage_return = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_b_carriage_return.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(513), kw_column, int(6), kw_end_DASH_line, int(513), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(513), kw_column, int(6), kw_end_DASH_line, int(513), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// b_char
@@ -8389,7 +8389,7 @@ func LoadNS() {
 		aotDirectFn7 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_b_char = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_b_char.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(524), kw_column, int(6), kw_end_DASH_line, int(524), kw_end_DASH_column, int(11), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(524), kw_column, int(6), kw_end_DASH_line, int(524), kw_end_DASH_column, int(11), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// b_chomped_last
@@ -8447,7 +8447,7 @@ func LoadNS() {
 		aotDirectFn8 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_b_chomped_last = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_b_chomped_last.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3213), kw_column, int(6), kw_end_DASH_line, int(3213), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3213), kw_column, int(6), kw_end_DASH_line, int(3213), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// b_comment
@@ -8478,7 +8478,7 @@ func LoadNS() {
 		aotDirectFn9 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_b_comment = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_b_comment.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1280), kw_column, int(6), kw_end_DASH_line, int(1280), kw_end_DASH_column, int(14), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1280), kw_column, int(6), kw_end_DASH_line, int(1280), kw_end_DASH_column, int(14), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// b_l_folded
@@ -8531,7 +8531,7 @@ func LoadNS() {
 		aotDirectFn10 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_b_l_folded = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_b_l_folded.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1226), kw_column, int(6), kw_end_DASH_line, int(1226), kw_end_DASH_column, int(15), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1226), kw_column, int(6), kw_end_DASH_line, int(1226), kw_end_DASH_column, int(15), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// b_l_spaced
@@ -8583,7 +8583,7 @@ func LoadNS() {
 		aotDirectFn11 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_b_l_spaced = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_b_l_spaced.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3500), kw_column, int(6), kw_end_DASH_line, int(3500), kw_end_DASH_column, int(15), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3500), kw_column, int(6), kw_end_DASH_line, int(3500), kw_end_DASH_column, int(15), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// b_l_trimmed
@@ -8637,7 +8637,7 @@ func LoadNS() {
 		aotDirectFn12 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_b_l_trimmed = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_b_l_trimmed.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1195), kw_column, int(6), kw_end_DASH_line, int(1195), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1195), kw_column, int(6), kw_end_DASH_line, int(1195), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// b_line_feed
@@ -8668,7 +8668,7 @@ func LoadNS() {
 		aotDirectFn13 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_b_line_feed = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_b_line_feed.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(502), kw_column, int(6), kw_end_DASH_line, int(502), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(502), kw_column, int(6), kw_end_DASH_line, int(502), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// b_nb_literal_next
@@ -8719,7 +8719,7 @@ func LoadNS() {
 		aotDirectFn14 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_b_nb_literal_next = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_b_nb_literal_next.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3373), kw_column, int(6), kw_end_DASH_line, int(3373), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3373), kw_column, int(6), kw_end_DASH_line, int(3373), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// b_non_content
@@ -8750,7 +8750,7 @@ func LoadNS() {
 		aotDirectFn15 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_b_non_content = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_b_non_content.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(571), kw_column, int(6), kw_end_DASH_line, int(571), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(571), kw_column, int(6), kw_end_DASH_line, int(571), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_alias
@@ -8781,7 +8781,7 @@ func LoadNS() {
 		aotDirectFn16 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_alias = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_alias.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(390), kw_column, int(6), kw_end_DASH_line, int(390), kw_end_DASH_column, int(12), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(390), kw_column, int(6), kw_end_DASH_line, int(390), kw_end_DASH_column, int(12), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_anchor
@@ -8812,7 +8812,7 @@ func LoadNS() {
 		aotDirectFn17 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_anchor = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_anchor.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(379), kw_column, int(6), kw_end_DASH_line, int(379), kw_end_DASH_column, int(13), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(379), kw_column, int(6), kw_end_DASH_line, int(379), kw_end_DASH_column, int(13), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_b_block_header
@@ -8880,7 +8880,7 @@ func LoadNS() {
 		aotDirectFn18 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_b_block_header = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_b_block_header.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3098), kw_column, int(6), kw_end_DASH_line, int(3098), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3098), kw_column, int(6), kw_end_DASH_line, int(3098), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_byte_order_mark
@@ -8911,7 +8911,7 @@ func LoadNS() {
 		aotDirectFn19 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_byte_order_mark = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_byte_order_mark.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(269), kw_column, int(6), kw_end_DASH_line, int(269), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(269), kw_column, int(6), kw_end_DASH_line, int(269), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_chomping_indicator
@@ -8942,7 +8942,7 @@ func LoadNS() {
 		aotDirectFn20 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_chomping_indicator = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_chomping_indicator.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3173), kw_column, int(6), kw_end_DASH_line, int(3173), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3173), kw_column, int(6), kw_end_DASH_line, int(3173), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_collect_entry
@@ -8973,7 +8973,7 @@ func LoadNS() {
 		aotDirectFn21 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_collect_entry = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_collect_entry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(313), kw_column, int(6), kw_end_DASH_line, int(313), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(313), kw_column, int(6), kw_end_DASH_line, int(313), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_comment
@@ -9004,7 +9004,7 @@ func LoadNS() {
 		aotDirectFn22 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_comment = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_comment.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(368), kw_column, int(6), kw_end_DASH_line, int(368), kw_end_DASH_column, int(14), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(368), kw_column, int(6), kw_end_DASH_line, int(368), kw_end_DASH_column, int(14), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_directive
@@ -9035,7 +9035,7 @@ func LoadNS() {
 		aotDirectFn23 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_directive = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_directive.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(456), kw_column, int(6), kw_end_DASH_line, int(456), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(456), kw_column, int(6), kw_end_DASH_line, int(456), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_directives_end
@@ -9066,7 +9066,7 @@ func LoadNS() {
 		aotDirectFn24 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_directives_end = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_directives_end.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(4074), kw_column, int(6), kw_end_DASH_line, int(4074), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(4074), kw_column, int(6), kw_end_DASH_line, int(4074), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_document_end
@@ -9097,7 +9097,7 @@ func LoadNS() {
 		aotDirectFn25 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_document_end = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_document_end.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(4104), kw_column, int(6), kw_end_DASH_line, int(4104), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(4104), kw_column, int(6), kw_end_DASH_line, int(4104), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_double_quote
@@ -9128,7 +9128,7 @@ func LoadNS() {
 		aotDirectFn26 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_double_quote = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_double_quote.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(445), kw_column, int(6), kw_end_DASH_line, int(445), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(445), kw_column, int(6), kw_end_DASH_line, int(445), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_double_quoted
@@ -9182,7 +9182,7 @@ func LoadNS() {
 		aotDirectFn27 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_double_quoted = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_double_quoted.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1912), kw_column, int(6), kw_end_DASH_line, int(1912), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1912), kw_column, int(6), kw_end_DASH_line, int(1912), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_escape
@@ -9213,7 +9213,7 @@ func LoadNS() {
 		aotDirectFn28 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_escape = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_escape.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(776), kw_column, int(6), kw_end_DASH_line, int(776), kw_end_DASH_column, int(13), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(776), kw_column, int(6), kw_end_DASH_line, int(776), kw_end_DASH_column, int(13), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_flow_indicator
@@ -9244,7 +9244,7 @@ func LoadNS() {
 		aotDirectFn29 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_flow_indicator = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_flow_indicator.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(491), kw_column, int(6), kw_end_DASH_line, int(491), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(491), kw_column, int(6), kw_end_DASH_line, int(491), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_flow_json_content
@@ -9317,7 +9317,7 @@ func LoadNS() {
 		aotDirectFn30 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_flow_json_content = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_flow_json_content.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2974), kw_column, int(6), kw_end_DASH_line, int(2974), kw_end_DASH_column, int(24), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2974), kw_column, int(6), kw_end_DASH_line, int(2974), kw_end_DASH_column, int(24), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_flow_json_node
@@ -9375,7 +9375,7 @@ func LoadNS() {
 		aotDirectFn31 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_flow_json_node = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_flow_json_node.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3043), kw_column, int(6), kw_end_DASH_line, int(3043), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3043), kw_column, int(6), kw_end_DASH_line, int(3043), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_flow_mapping
@@ -9436,7 +9436,7 @@ func LoadNS() {
 		aotDirectFn32 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_flow_mapping = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_flow_mapping.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2564), kw_column, int(6), kw_end_DASH_line, int(2564), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2564), kw_column, int(6), kw_end_DASH_line, int(2564), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_flow_sequence
@@ -9497,7 +9497,7 @@ func LoadNS() {
 		aotDirectFn33 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_flow_sequence = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_flow_sequence.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2479), kw_column, int(6), kw_end_DASH_line, int(2479), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2479), kw_column, int(6), kw_end_DASH_line, int(2479), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_folded
@@ -9528,7 +9528,7 @@ func LoadNS() {
 		aotDirectFn34 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_folded = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_folded.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(423), kw_column, int(6), kw_end_DASH_line, int(423), kw_end_DASH_column, int(13), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(423), kw_column, int(6), kw_end_DASH_line, int(423), kw_end_DASH_column, int(13), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_forbidden
@@ -9559,7 +9559,7 @@ func LoadNS() {
 		aotDirectFn35 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_forbidden = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_forbidden.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(4143), kw_column, int(6), kw_end_DASH_line, int(4143), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(4143), kw_column, int(6), kw_end_DASH_line, int(4143), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_indentation_indicator
@@ -9617,7 +9617,7 @@ func LoadNS() {
 		aotDirectFn36 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_indentation_indicator = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_indentation_indicator.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3139), kw_column, int(6), kw_end_DASH_line, int(3139), kw_end_DASH_column, int(28), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3139), kw_column, int(6), kw_end_DASH_line, int(3139), kw_end_DASH_column, int(28), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_indicator
@@ -9648,7 +9648,7 @@ func LoadNS() {
 		aotDirectFn37 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_indicator = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_indicator.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(480), kw_column, int(6), kw_end_DASH_line, int(480), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(480), kw_column, int(6), kw_end_DASH_line, int(480), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_l_block_map_explicit_entry
@@ -9716,7 +9716,7 @@ func LoadNS() {
 		aotDirectFn38 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_l_block_map_explicit_entry = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_l_block_map_explicit_entry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3760), kw_column, int(6), kw_end_DASH_line, int(3760), kw_end_DASH_column, int(33), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3760), kw_column, int(6), kw_end_DASH_line, int(3760), kw_end_DASH_column, int(33), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_l_block_map_explicit_key
@@ -9772,7 +9772,7 @@ func LoadNS() {
 		aotDirectFn39 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_l_block_map_explicit_key = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_l_block_map_explicit_key.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3784), kw_column, int(6), kw_end_DASH_line, int(3784), kw_end_DASH_column, int(31), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3784), kw_column, int(6), kw_end_DASH_line, int(3784), kw_end_DASH_column, int(31), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_l_block_map_implicit_value
@@ -9827,7 +9827,7 @@ func LoadNS() {
 		aotDirectFn40 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_l_block_map_implicit_value = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_l_block_map_implicit_value.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3867), kw_column, int(6), kw_end_DASH_line, int(3867), kw_end_DASH_column, int(33), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3867), kw_column, int(6), kw_end_DASH_line, int(3867), kw_end_DASH_column, int(33), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_l_block_seq_entry
@@ -9894,7 +9894,7 @@ func LoadNS() {
 		aotDirectFn41 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_l_block_seq_entry = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_l_block_seq_entry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3637), kw_column, int(6), kw_end_DASH_line, int(3637), kw_end_DASH_column, int(24), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3637), kw_column, int(6), kw_end_DASH_line, int(3637), kw_end_DASH_column, int(24), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_l_folded
@@ -9950,7 +9950,7 @@ func LoadNS() {
 		aotDirectFn42 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_l_folded = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_l_folded.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3418), kw_column, int(6), kw_end_DASH_line, int(3418), kw_end_DASH_column, int(15), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3418), kw_column, int(6), kw_end_DASH_line, int(3418), kw_end_DASH_column, int(15), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_l_literal
@@ -10006,7 +10006,7 @@ func LoadNS() {
 		aotDirectFn43 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_l_literal = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_l_literal.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3327), kw_column, int(6), kw_end_DASH_line, int(3327), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3327), kw_column, int(6), kw_end_DASH_line, int(3327), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_literal
@@ -10037,7 +10037,7 @@ func LoadNS() {
 		aotDirectFn44 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_literal = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_literal.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(412), kw_column, int(6), kw_end_DASH_line, int(412), kw_end_DASH_column, int(14), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(412), kw_column, int(6), kw_end_DASH_line, int(412), kw_end_DASH_column, int(14), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_mapping_end
@@ -10068,7 +10068,7 @@ func LoadNS() {
 		aotDirectFn45 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_mapping_end = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_mapping_end.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(357), kw_column, int(6), kw_end_DASH_line, int(357), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(357), kw_column, int(6), kw_end_DASH_line, int(357), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_mapping_key
@@ -10099,7 +10099,7 @@ func LoadNS() {
 		aotDirectFn46 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_mapping_key = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_mapping_key.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(291), kw_column, int(6), kw_end_DASH_line, int(291), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(291), kw_column, int(6), kw_end_DASH_line, int(291), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_mapping_start
@@ -10130,7 +10130,7 @@ func LoadNS() {
 		aotDirectFn47 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_mapping_start = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_mapping_start.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(346), kw_column, int(6), kw_end_DASH_line, int(346), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(346), kw_column, int(6), kw_end_DASH_line, int(346), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_mapping_value
@@ -10161,7 +10161,7 @@ func LoadNS() {
 		aotDirectFn48 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_mapping_value = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_mapping_value.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(302), kw_column, int(6), kw_end_DASH_line, int(302), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(302), kw_column, int(6), kw_end_DASH_line, int(302), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_named_tag_handle
@@ -10192,7 +10192,7 @@ func LoadNS() {
 		aotDirectFn49 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_named_tag_handle = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_named_tag_handle.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1590), kw_column, int(6), kw_end_DASH_line, int(1590), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1590), kw_column, int(6), kw_end_DASH_line, int(1590), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_nb_comment_text
@@ -10223,7 +10223,7 @@ func LoadNS() {
 		aotDirectFn50 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_nb_comment_text = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_nb_comment_text.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1263), kw_column, int(6), kw_end_DASH_line, int(1263), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1263), kw_column, int(6), kw_end_DASH_line, int(1263), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_non_specific_tag
@@ -10254,7 +10254,7 @@ func LoadNS() {
 		aotDirectFn51 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_non_specific_tag = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_non_specific_tag.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1775), kw_column, int(6), kw_end_DASH_line, int(1775), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1775), kw_column, int(6), kw_end_DASH_line, int(1775), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_ns_alias_node
@@ -10299,7 +10299,7 @@ func LoadNS() {
 		aotDirectFn52 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_ns_alias_node = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_ns_alias_node.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1835), kw_column, int(6), kw_end_DASH_line, int(1835), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1835), kw_column, int(6), kw_end_DASH_line, int(1835), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_ns_anchor_property
@@ -10344,7 +10344,7 @@ func LoadNS() {
 		aotDirectFn53 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_ns_anchor_property = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_ns_anchor_property.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1786), kw_column, int(6), kw_end_DASH_line, int(1786), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1786), kw_column, int(6), kw_end_DASH_line, int(1786), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_ns_esc_char
@@ -10375,7 +10375,7 @@ func LoadNS() {
 		aotDirectFn54 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_ns_esc_char = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_ns_esc_char.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1036), kw_column, int(6), kw_end_DASH_line, int(1036), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1036), kw_column, int(6), kw_end_DASH_line, int(1036), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_ns_flow_map_adjacent_value
@@ -10434,7 +10434,7 @@ func LoadNS() {
 		aotDirectFn55 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_ns_flow_map_adjacent_value = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_ns_flow_map_adjacent_value.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2806), kw_column, int(6), kw_end_DASH_line, int(2806), kw_end_DASH_column, int(33), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2806), kw_column, int(6), kw_end_DASH_line, int(2806), kw_end_DASH_column, int(33), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_ns_flow_map_empty_key_entry
@@ -10487,7 +10487,7 @@ func LoadNS() {
 		aotDirectFn56 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_ns_flow_map_empty_key_entry = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_ns_flow_map_empty_key_entry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2731), kw_column, int(6), kw_end_DASH_line, int(2731), kw_end_DASH_column, int(34), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2731), kw_column, int(6), kw_end_DASH_line, int(2731), kw_end_DASH_column, int(34), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_ns_flow_map_json_key_entry
@@ -10547,7 +10547,7 @@ func LoadNS() {
 		aotDirectFn57 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_ns_flow_map_json_key_entry = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_ns_flow_map_json_key_entry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2778), kw_column, int(6), kw_end_DASH_line, int(2778), kw_end_DASH_column, int(33), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2778), kw_column, int(6), kw_end_DASH_line, int(2778), kw_end_DASH_column, int(33), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_ns_flow_map_separate_value
@@ -10608,7 +10608,7 @@ func LoadNS() {
 		aotDirectFn58 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_ns_flow_map_separate_value = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_ns_flow_map_separate_value.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2748), kw_column, int(6), kw_end_DASH_line, int(2748), kw_end_DASH_column, int(33), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2748), kw_column, int(6), kw_end_DASH_line, int(2748), kw_end_DASH_column, int(33), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_ns_flow_pair_json_key_entry
@@ -10662,7 +10662,7 @@ func LoadNS() {
 		aotDirectFn59 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_ns_flow_pair_json_key_entry = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_ns_flow_pair_json_key_entry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2899), kw_column, int(6), kw_end_DASH_line, int(2899), kw_end_DASH_column, int(34), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2899), kw_column, int(6), kw_end_DASH_line, int(2899), kw_end_DASH_column, int(34), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_ns_local_tag_prefix
@@ -10693,7 +10693,7 @@ func LoadNS() {
 		aotDirectFn60 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_ns_local_tag_prefix = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_ns_local_tag_prefix.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1625), kw_column, int(6), kw_end_DASH_line, int(1625), kw_end_DASH_column, int(26), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1625), kw_column, int(6), kw_end_DASH_line, int(1625), kw_end_DASH_column, int(26), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_ns_properties
@@ -10771,7 +10771,7 @@ func LoadNS() {
 		aotDirectFn61 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_ns_properties = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_ns_properties.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1668), kw_column, int(6), kw_end_DASH_line, int(1668), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1668), kw_column, int(6), kw_end_DASH_line, int(1668), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_ns_shorthand_tag
@@ -10802,7 +10802,7 @@ func LoadNS() {
 		aotDirectFn62 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_ns_shorthand_tag = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_ns_shorthand_tag.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1756), kw_column, int(6), kw_end_DASH_line, int(1756), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1756), kw_column, int(6), kw_end_DASH_line, int(1756), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_ns_tag_property
@@ -10847,7 +10847,7 @@ func LoadNS() {
 		aotDirectFn63 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_ns_tag_property = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_ns_tag_property.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1708), kw_column, int(6), kw_end_DASH_line, int(1708), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1708), kw_column, int(6), kw_end_DASH_line, int(1708), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_primary_tag_handle
@@ -10878,7 +10878,7 @@ func LoadNS() {
 		aotDirectFn64 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_primary_tag_handle = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_primary_tag_handle.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1560), kw_column, int(6), kw_end_DASH_line, int(1560), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1560), kw_column, int(6), kw_end_DASH_line, int(1560), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_printable
@@ -10909,7 +10909,7 @@ func LoadNS() {
 		aotDirectFn65 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_printable = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_printable.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(247), kw_column, int(6), kw_end_DASH_line, int(247), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(247), kw_column, int(6), kw_end_DASH_line, int(247), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_quoted_quote
@@ -10940,7 +10940,7 @@ func LoadNS() {
 		aotDirectFn66 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_quoted_quote = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_quoted_quote.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2082), kw_column, int(6), kw_end_DASH_line, int(2082), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2082), kw_column, int(6), kw_end_DASH_line, int(2082), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_reserved
@@ -10971,7 +10971,7 @@ func LoadNS() {
 		aotDirectFn67 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_reserved = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_reserved.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(467), kw_column, int(6), kw_end_DASH_line, int(467), kw_end_DASH_column, int(15), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(467), kw_column, int(6), kw_end_DASH_line, int(467), kw_end_DASH_column, int(15), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_s_implicit_json_key
@@ -11037,7 +11037,7 @@ func LoadNS() {
 		aotDirectFn68 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_s_implicit_json_key = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_s_implicit_json_key.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2937), kw_column, int(6), kw_end_DASH_line, int(2937), kw_end_DASH_column, int(26), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2937), kw_column, int(6), kw_end_DASH_line, int(2937), kw_end_DASH_column, int(26), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_secondary_tag_handle
@@ -11068,7 +11068,7 @@ func LoadNS() {
 		aotDirectFn69 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_secondary_tag_handle = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_secondary_tag_handle.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1571), kw_column, int(6), kw_end_DASH_line, int(1571), kw_end_DASH_column, int(27), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1571), kw_column, int(6), kw_end_DASH_line, int(1571), kw_end_DASH_column, int(27), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_sequence_end
@@ -11099,7 +11099,7 @@ func LoadNS() {
 		aotDirectFn70 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_sequence_end = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_sequence_end.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(335), kw_column, int(6), kw_end_DASH_line, int(335), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(335), kw_column, int(6), kw_end_DASH_line, int(335), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_sequence_entry
@@ -11130,7 +11130,7 @@ func LoadNS() {
 		aotDirectFn71 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_sequence_entry = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_sequence_entry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(280), kw_column, int(6), kw_end_DASH_line, int(280), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(280), kw_column, int(6), kw_end_DASH_line, int(280), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_sequence_start
@@ -11161,7 +11161,7 @@ func LoadNS() {
 		aotDirectFn72 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_sequence_start = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_sequence_start.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(324), kw_column, int(6), kw_end_DASH_line, int(324), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(324), kw_column, int(6), kw_end_DASH_line, int(324), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_single_quote
@@ -11192,7 +11192,7 @@ func LoadNS() {
 		aotDirectFn73 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_single_quote = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_single_quote.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(434), kw_column, int(6), kw_end_DASH_line, int(434), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(434), kw_column, int(6), kw_end_DASH_line, int(434), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_single_quoted
@@ -11246,7 +11246,7 @@ func LoadNS() {
 		aotDirectFn74 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_single_quoted = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_single_quoted.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2132), kw_column, int(6), kw_end_DASH_line, int(2132), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2132), kw_column, int(6), kw_end_DASH_line, int(2132), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_tag
@@ -11277,7 +11277,7 @@ func LoadNS() {
 		aotDirectFn75 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_tag = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_tag.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(401), kw_column, int(6), kw_end_DASH_line, int(401), kw_end_DASH_column, int(10), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(401), kw_column, int(6), kw_end_DASH_line, int(401), kw_end_DASH_column, int(10), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_tag_handle
@@ -11308,7 +11308,7 @@ func LoadNS() {
 		aotDirectFn76 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_tag_handle = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_tag_handle.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1544), kw_column, int(6), kw_end_DASH_line, int(1544), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1544), kw_column, int(6), kw_end_DASH_line, int(1544), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// c_verbatim_tag
@@ -11339,7 +11339,7 @@ func LoadNS() {
 		aotDirectFn77 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_c_verbatim_tag = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_c_verbatim_tag.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1729), kw_column, int(6), kw_end_DASH_line, int(1729), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1729), kw_column, int(6), kw_end_DASH_line, int(1729), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// e_node
@@ -11370,7 +11370,7 @@ func LoadNS() {
 		aotDirectFn78 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_e_node = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_e_node.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1869), kw_column, int(6), kw_end_DASH_line, int(1869), kw_end_DASH_column, int(11), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1869), kw_column, int(6), kw_end_DASH_line, int(1869), kw_end_DASH_column, int(11), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// e_scalar
@@ -11401,7 +11401,7 @@ func LoadNS() {
 		aotDirectFn79 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_e_scalar = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_e_scalar.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1857), kw_column, int(6), kw_end_DASH_line, int(1857), kw_end_DASH_column, int(13), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1857), kw_column, int(6), kw_end_DASH_line, int(1857), kw_end_DASH_column, int(13), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// in_flow
@@ -11435,7 +11435,7 @@ func LoadNS() {
 		aotDirectFn81 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_in_flow = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_in_flow.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2460), kw_column, int(6), kw_end_DASH_line, int(2460), kw_end_DASH_column, int(12), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2460), kw_column, int(6), kw_end_DASH_line, int(2460), kw_end_DASH_column, int(12), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_any_document
@@ -11466,7 +11466,7 @@ func LoadNS() {
 		aotDirectFn82 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_any_document = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_any_document.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(4229), kw_column, int(6), kw_end_DASH_line, int(4229), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(4229), kw_column, int(6), kw_end_DASH_line, int(4229), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_bare_document
@@ -11497,7 +11497,7 @@ func LoadNS() {
 		aotDirectFn83 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_bare_document = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_bare_document.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(4167), kw_column, int(6), kw_end_DASH_line, int(4167), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(4167), kw_column, int(6), kw_end_DASH_line, int(4167), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_block_map_explicit_value
@@ -11550,7 +11550,7 @@ func LoadNS() {
 		aotDirectFn84 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_block_map_explicit_value = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_block_map_explicit_value.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3810), kw_column, int(6), kw_end_DASH_line, int(3810), kw_end_DASH_column, int(31), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3810), kw_column, int(6), kw_end_DASH_line, int(3810), kw_end_DASH_column, int(31), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_block_mapping
@@ -11636,7 +11636,7 @@ func LoadNS() {
 		aotDirectFn85 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_block_mapping = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_block_mapping.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3717), kw_column, int(6), kw_end_DASH_line, int(3717), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3717), kw_column, int(6), kw_end_DASH_line, int(3717), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_block_sequence
@@ -11722,7 +11722,7 @@ func LoadNS() {
 		aotDirectFn86 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_block_sequence = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_block_sequence.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3611), kw_column, int(6), kw_end_DASH_line, int(3611), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3611), kw_column, int(6), kw_end_DASH_line, int(3611), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_chomped_empty
@@ -11779,7 +11779,7 @@ func LoadNS() {
 		aotDirectFn87 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_chomped_empty = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_chomped_empty.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3234), kw_column, int(6), kw_end_DASH_line, int(3234), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3234), kw_column, int(6), kw_end_DASH_line, int(3234), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_comment
@@ -11810,7 +11810,7 @@ func LoadNS() {
 		aotDirectFn88 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_comment = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_comment.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1323), kw_column, int(6), kw_end_DASH_line, int(1323), kw_end_DASH_column, int(14), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1323), kw_column, int(6), kw_end_DASH_line, int(1323), kw_end_DASH_column, int(14), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_directive
@@ -11841,7 +11841,7 @@ func LoadNS() {
 		aotDirectFn89 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_directive = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_directive.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1400), kw_column, int(6), kw_end_DASH_line, int(1400), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1400), kw_column, int(6), kw_end_DASH_line, int(1400), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_directive_document
@@ -11872,7 +11872,7 @@ func LoadNS() {
 		aotDirectFn90 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_directive_document = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_directive_document.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(4208), kw_column, int(6), kw_end_DASH_line, int(4208), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(4208), kw_column, int(6), kw_end_DASH_line, int(4208), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_document_prefix
@@ -11903,7 +11903,7 @@ func LoadNS() {
 		aotDirectFn91 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_document_prefix = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_document_prefix.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(4055), kw_column, int(6), kw_end_DASH_line, int(4055), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(4055), kw_column, int(6), kw_end_DASH_line, int(4055), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_document_suffix
@@ -11934,7 +11934,7 @@ func LoadNS() {
 		aotDirectFn92 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_document_suffix = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_document_suffix.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(4126), kw_column, int(6), kw_end_DASH_line, int(4126), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(4126), kw_column, int(6), kw_end_DASH_line, int(4126), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_empty
@@ -11990,7 +11990,7 @@ func LoadNS() {
 		aotDirectFn93 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_empty = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_empty.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1177), kw_column, int(6), kw_end_DASH_line, int(1177), kw_end_DASH_column, int(12), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1177), kw_column, int(6), kw_end_DASH_line, int(1177), kw_end_DASH_column, int(12), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_explicit_document
@@ -12021,7 +12021,7 @@ func LoadNS() {
 		aotDirectFn94 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_explicit_document = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_explicit_document.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(4186), kw_column, int(6), kw_end_DASH_line, int(4186), kw_end_DASH_column, int(24), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(4186), kw_column, int(6), kw_end_DASH_line, int(4186), kw_end_DASH_column, int(24), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_folded_content
@@ -12079,7 +12079,7 @@ func LoadNS() {
 		aotDirectFn95 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_folded_content = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_folded_content.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3588), kw_column, int(6), kw_end_DASH_line, int(3588), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3588), kw_column, int(6), kw_end_DASH_line, int(3588), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_keep_empty
@@ -12133,7 +12133,7 @@ func LoadNS() {
 		aotDirectFn96 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_keep_empty = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_keep_empty.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3280), kw_column, int(6), kw_end_DASH_line, int(3280), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3280), kw_column, int(6), kw_end_DASH_line, int(3280), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_literal_content
@@ -12194,7 +12194,7 @@ func LoadNS() {
 		aotDirectFn97 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_literal_content = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_literal_content.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3391), kw_column, int(6), kw_end_DASH_line, int(3391), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3391), kw_column, int(6), kw_end_DASH_line, int(3391), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_nb_diff_lines
@@ -12249,7 +12249,7 @@ func LoadNS() {
 		aotDirectFn98 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_nb_diff_lines = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_nb_diff_lines.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3565), kw_column, int(6), kw_end_DASH_line, int(3565), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3565), kw_column, int(6), kw_end_DASH_line, int(3565), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_nb_folded_lines
@@ -12305,7 +12305,7 @@ func LoadNS() {
 		aotDirectFn99 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_nb_folded_lines = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_nb_folded_lines.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3460), kw_column, int(6), kw_end_DASH_line, int(3460), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3460), kw_column, int(6), kw_end_DASH_line, int(3460), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_nb_literal_text
@@ -12361,7 +12361,7 @@ func LoadNS() {
 		aotDirectFn100 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_nb_literal_text = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_nb_literal_text.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3351), kw_column, int(6), kw_end_DASH_line, int(3351), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3351), kw_column, int(6), kw_end_DASH_line, int(3351), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_nb_same_lines
@@ -12417,7 +12417,7 @@ func LoadNS() {
 		aotDirectFn101 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_nb_same_lines = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_nb_same_lines.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3542), kw_column, int(6), kw_end_DASH_line, int(3542), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3542), kw_column, int(6), kw_end_DASH_line, int(3542), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_nb_spaced_lines
@@ -12473,7 +12473,7 @@ func LoadNS() {
 		aotDirectFn102 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_nb_spaced_lines = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_nb_spaced_lines.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3520), kw_column, int(6), kw_end_DASH_line, int(3520), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3520), kw_column, int(6), kw_end_DASH_line, int(3520), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_strip_empty
@@ -12529,7 +12529,7 @@ func LoadNS() {
 		aotDirectFn103 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_strip_empty = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_strip_empty.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3254), kw_column, int(6), kw_end_DASH_line, int(3254), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3254), kw_column, int(6), kw_end_DASH_line, int(3254), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_trail_comments
@@ -12584,7 +12584,7 @@ func LoadNS() {
 		aotDirectFn104 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_trail_comments = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_trail_comments.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3305), kw_column, int(6), kw_end_DASH_line, int(3305), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3305), kw_column, int(6), kw_end_DASH_line, int(3305), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// l_yaml_stream
@@ -12615,7 +12615,7 @@ func LoadNS() {
 		aotDirectFn105 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_l_yaml_stream = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_l_yaml_stream.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(4248), kw_column, int(6), kw_end_DASH_line, int(4248), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(4248), kw_column, int(6), kw_end_DASH_line, int(4248), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// nb_char
@@ -12646,7 +12646,7 @@ func LoadNS() {
 		aotDirectFn106 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_nb_char = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_nb_char.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(535), kw_column, int(6), kw_end_DASH_line, int(535), kw_end_DASH_column, int(12), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(535), kw_column, int(6), kw_end_DASH_line, int(535), kw_end_DASH_column, int(12), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// nb_double_char
@@ -12677,7 +12677,7 @@ func LoadNS() {
 		aotDirectFn107 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_nb_double_char = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_nb_double_char.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1881), kw_column, int(6), kw_end_DASH_line, int(1881), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1881), kw_column, int(6), kw_end_DASH_line, int(1881), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// nb_double_multi_line
@@ -12731,7 +12731,7 @@ func LoadNS() {
 		aotDirectFn108 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_nb_double_multi_line = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_nb_double_multi_line.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2060), kw_column, int(6), kw_end_DASH_line, int(2060), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2060), kw_column, int(6), kw_end_DASH_line, int(2060), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// nb_double_one_line
@@ -12762,7 +12762,7 @@ func LoadNS() {
 		aotDirectFn109 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_nb_double_one_line = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_nb_double_one_line.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1955), kw_column, int(6), kw_end_DASH_line, int(1955), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1955), kw_column, int(6), kw_end_DASH_line, int(1955), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// nb_double_text
@@ -12819,7 +12819,7 @@ func LoadNS() {
 		aotDirectFn110 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_nb_double_text = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_nb_double_text.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1935), kw_column, int(6), kw_end_DASH_line, int(1935), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1935), kw_column, int(6), kw_end_DASH_line, int(1935), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// nb_json
@@ -12850,7 +12850,7 @@ func LoadNS() {
 		aotDirectFn111 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_nb_json = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_nb_json.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(258), kw_column, int(6), kw_end_DASH_line, int(258), kw_end_DASH_column, int(12), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(258), kw_column, int(6), kw_end_DASH_line, int(258), kw_end_DASH_column, int(12), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// nb_ns_double_in_line
@@ -12881,7 +12881,7 @@ func LoadNS() {
 		aotDirectFn112 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_nb_ns_double_in_line = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_nb_ns_double_in_line.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2014), kw_column, int(6), kw_end_DASH_line, int(2014), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2014), kw_column, int(6), kw_end_DASH_line, int(2014), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// nb_ns_plain_in_line
@@ -12950,7 +12950,7 @@ func LoadNS() {
 		aotDirectFn113 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_nb_ns_plain_in_line = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_nb_ns_plain_in_line.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2386), kw_column, int(6), kw_end_DASH_line, int(2386), kw_end_DASH_column, int(24), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2386), kw_column, int(6), kw_end_DASH_line, int(2386), kw_end_DASH_column, int(24), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// nb_ns_single_in_line
@@ -12981,7 +12981,7 @@ func LoadNS() {
 		aotDirectFn114 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_nb_ns_single_in_line = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_nb_ns_single_in_line.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2187), kw_column, int(6), kw_end_DASH_line, int(2187), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2187), kw_column, int(6), kw_end_DASH_line, int(2187), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// nb_single_char
@@ -13012,7 +13012,7 @@ func LoadNS() {
 		aotDirectFn115 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_nb_single_char = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_nb_single_char.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2101), kw_column, int(6), kw_end_DASH_line, int(2101), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2101), kw_column, int(6), kw_end_DASH_line, int(2101), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// nb_single_multi_line
@@ -13066,7 +13066,7 @@ func LoadNS() {
 		aotDirectFn116 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_nb_single_multi_line = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_nb_single_multi_line.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2231), kw_column, int(6), kw_end_DASH_line, int(2231), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2231), kw_column, int(6), kw_end_DASH_line, int(2231), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// nb_single_one_line
@@ -13097,7 +13097,7 @@ func LoadNS() {
 		aotDirectFn117 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_nb_single_one_line = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_nb_single_one_line.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2175), kw_column, int(6), kw_end_DASH_line, int(2175), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2175), kw_column, int(6), kw_end_DASH_line, int(2175), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// nb_single_text
@@ -13154,7 +13154,7 @@ func LoadNS() {
 		aotDirectFn118 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_nb_single_text = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_nb_single_text.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2155), kw_column, int(6), kw_end_DASH_line, int(2155), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2155), kw_column, int(6), kw_end_DASH_line, int(2155), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_anchor_char
@@ -13185,7 +13185,7 @@ func LoadNS() {
 		aotDirectFn119 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_anchor_char = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_anchor_char.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1808), kw_column, int(6), kw_end_DASH_line, int(1808), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1808), kw_column, int(6), kw_end_DASH_line, int(1808), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_anchor_name
@@ -13216,7 +13216,7 @@ func LoadNS() {
 		aotDirectFn120 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_anchor_name = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_anchor_name.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1823), kw_column, int(6), kw_end_DASH_line, int(1823), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1823), kw_column, int(6), kw_end_DASH_line, int(1823), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_ascii_letter
@@ -13247,7 +13247,7 @@ func LoadNS() {
 		aotDirectFn121 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_ascii_letter = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_ascii_letter.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(650), kw_column, int(6), kw_end_DASH_line, int(650), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(650), kw_column, int(6), kw_end_DASH_line, int(650), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_char
@@ -13278,7 +13278,7 @@ func LoadNS() {
 		aotDirectFn122 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_char = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_char.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(616), kw_column, int(6), kw_end_DASH_line, int(616), kw_end_DASH_column, int(12), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(616), kw_column, int(6), kw_end_DASH_line, int(616), kw_end_DASH_column, int(12), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_dec_digit
@@ -13309,7 +13309,7 @@ func LoadNS() {
 		aotDirectFn123 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_dec_digit = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_dec_digit.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(627), kw_column, int(6), kw_end_DASH_line, int(627), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(627), kw_column, int(6), kw_end_DASH_line, int(627), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_directive_name
@@ -13340,7 +13340,7 @@ func LoadNS() {
 		aotDirectFn124 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_directive_name = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_directive_name.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1444), kw_column, int(6), kw_end_DASH_line, int(1444), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1444), kw_column, int(6), kw_end_DASH_line, int(1444), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_directive_parameter
@@ -13371,7 +13371,7 @@ func LoadNS() {
 		aotDirectFn125 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_directive_parameter = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_directive_parameter.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1456), kw_column, int(6), kw_end_DASH_line, int(1456), kw_end_DASH_column, int(27), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1456), kw_column, int(6), kw_end_DASH_line, int(1456), kw_end_DASH_column, int(27), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_double_char
@@ -13402,7 +13402,7 @@ func LoadNS() {
 		aotDirectFn126 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_double_char = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_double_char.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1896), kw_column, int(6), kw_end_DASH_line, int(1896), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1896), kw_column, int(6), kw_end_DASH_line, int(1896), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_16_bit
@@ -13433,7 +13433,7 @@ func LoadNS() {
 		aotDirectFn127 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_16_bit = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_16_bit.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(993), kw_column, int(6), kw_end_DASH_line, int(993), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(993), kw_column, int(6), kw_end_DASH_line, int(993), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_32_bit
@@ -13464,7 +13464,7 @@ func LoadNS() {
 		aotDirectFn128 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_32_bit = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_32_bit.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1011), kw_column, int(6), kw_end_DASH_line, int(1011), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1011), kw_column, int(6), kw_end_DASH_line, int(1011), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_8_bit
@@ -13495,7 +13495,7 @@ func LoadNS() {
 		aotDirectFn129 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_8_bit = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_8_bit.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(975), kw_column, int(6), kw_end_DASH_line, int(975), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(975), kw_column, int(6), kw_end_DASH_line, int(975), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_backslash
@@ -13526,7 +13526,7 @@ func LoadNS() {
 		aotDirectFn130 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_backslash = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_backslash.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(919), kw_column, int(6), kw_end_DASH_line, int(919), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(919), kw_column, int(6), kw_end_DASH_line, int(919), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_backspace
@@ -13557,7 +13557,7 @@ func LoadNS() {
 		aotDirectFn131 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_backspace = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_backspace.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(809), kw_column, int(6), kw_end_DASH_line, int(809), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(809), kw_column, int(6), kw_end_DASH_line, int(809), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_bell
@@ -13588,7 +13588,7 @@ func LoadNS() {
 		aotDirectFn132 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_bell = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_bell.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(798), kw_column, int(6), kw_end_DASH_line, int(798), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(798), kw_column, int(6), kw_end_DASH_line, int(798), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_carriage_return
@@ -13619,7 +13619,7 @@ func LoadNS() {
 		aotDirectFn133 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_carriage_return = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_carriage_return.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(864), kw_column, int(6), kw_end_DASH_line, int(864), kw_end_DASH_column, int(27), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(864), kw_column, int(6), kw_end_DASH_line, int(864), kw_end_DASH_column, int(27), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_double_quote
@@ -13650,7 +13650,7 @@ func LoadNS() {
 		aotDirectFn134 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_double_quote = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_double_quote.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(897), kw_column, int(6), kw_end_DASH_line, int(897), kw_end_DASH_column, int(24), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(897), kw_column, int(6), kw_end_DASH_line, int(897), kw_end_DASH_column, int(24), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_escape
@@ -13681,7 +13681,7 @@ func LoadNS() {
 		aotDirectFn135 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_escape = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_escape.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(875), kw_column, int(6), kw_end_DASH_line, int(875), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(875), kw_column, int(6), kw_end_DASH_line, int(875), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_form_feed
@@ -13712,7 +13712,7 @@ func LoadNS() {
 		aotDirectFn136 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_form_feed = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_form_feed.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(853), kw_column, int(6), kw_end_DASH_line, int(853), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(853), kw_column, int(6), kw_end_DASH_line, int(853), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_horizontal_tab
@@ -13743,7 +13743,7 @@ func LoadNS() {
 		aotDirectFn137 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_horizontal_tab = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_horizontal_tab.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(820), kw_column, int(6), kw_end_DASH_line, int(820), kw_end_DASH_column, int(26), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(820), kw_column, int(6), kw_end_DASH_line, int(820), kw_end_DASH_column, int(26), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_line_feed
@@ -13774,7 +13774,7 @@ func LoadNS() {
 		aotDirectFn138 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_line_feed = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_line_feed.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(831), kw_column, int(6), kw_end_DASH_line, int(831), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(831), kw_column, int(6), kw_end_DASH_line, int(831), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_line_separator
@@ -13805,7 +13805,7 @@ func LoadNS() {
 		aotDirectFn139 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_line_separator = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_line_separator.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(952), kw_column, int(6), kw_end_DASH_line, int(952), kw_end_DASH_column, int(26), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(952), kw_column, int(6), kw_end_DASH_line, int(952), kw_end_DASH_column, int(26), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_next_line
@@ -13836,7 +13836,7 @@ func LoadNS() {
 		aotDirectFn140 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_next_line = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_next_line.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(930), kw_column, int(6), kw_end_DASH_line, int(930), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(930), kw_column, int(6), kw_end_DASH_line, int(930), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_non_breaking_space
@@ -13867,7 +13867,7 @@ func LoadNS() {
 		aotDirectFn141 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_non_breaking_space = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_non_breaking_space.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(941), kw_column, int(6), kw_end_DASH_line, int(941), kw_end_DASH_column, int(30), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(941), kw_column, int(6), kw_end_DASH_line, int(941), kw_end_DASH_column, int(30), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_null
@@ -13898,7 +13898,7 @@ func LoadNS() {
 		aotDirectFn142 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_null = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_null.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(787), kw_column, int(6), kw_end_DASH_line, int(787), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(787), kw_column, int(6), kw_end_DASH_line, int(787), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_paragraph_separator
@@ -13929,7 +13929,7 @@ func LoadNS() {
 		aotDirectFn143 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_paragraph_separator = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_paragraph_separator.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(963), kw_column, int(6), kw_end_DASH_line, int(963), kw_end_DASH_column, int(31), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(963), kw_column, int(6), kw_end_DASH_line, int(963), kw_end_DASH_column, int(31), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_slash
@@ -13960,7 +13960,7 @@ func LoadNS() {
 		aotDirectFn144 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_slash = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_slash.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(908), kw_column, int(6), kw_end_DASH_line, int(908), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(908), kw_column, int(6), kw_end_DASH_line, int(908), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_space
@@ -13991,7 +13991,7 @@ func LoadNS() {
 		aotDirectFn145 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_space = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_space.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(886), kw_column, int(6), kw_end_DASH_line, int(886), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(886), kw_column, int(6), kw_end_DASH_line, int(886), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_esc_vertical_tab
@@ -14022,7 +14022,7 @@ func LoadNS() {
 		aotDirectFn146 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_vertical_tab = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_esc_vertical_tab.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(842), kw_column, int(6), kw_end_DASH_line, int(842), kw_end_DASH_column, int(24), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(842), kw_column, int(6), kw_end_DASH_line, int(842), kw_end_DASH_column, int(24), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_flow_content
@@ -14076,7 +14076,7 @@ func LoadNS() {
 		aotDirectFn147 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_content = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_content.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2996), kw_column, int(6), kw_end_DASH_line, int(2996), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2996), kw_column, int(6), kw_end_DASH_line, int(2996), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_flow_map_entry
@@ -14140,7 +14140,7 @@ func LoadNS() {
 		aotDirectFn148 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_map_entry = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_map_entry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2635), kw_column, int(6), kw_end_DASH_line, int(2635), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2635), kw_column, int(6), kw_end_DASH_line, int(2635), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_flow_map_explicit_entry
@@ -14195,7 +14195,7 @@ func LoadNS() {
 		aotDirectFn149 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_map_explicit_entry = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_map_explicit_entry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2666), kw_column, int(6), kw_end_DASH_line, int(2666), kw_end_DASH_column, int(31), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2666), kw_column, int(6), kw_end_DASH_line, int(2666), kw_end_DASH_column, int(31), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_flow_map_implicit_entry
@@ -14251,7 +14251,7 @@ func LoadNS() {
 		aotDirectFn150 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_map_implicit_entry = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_map_implicit_entry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2686), kw_column, int(6), kw_end_DASH_line, int(2686), kw_end_DASH_column, int(31), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2686), kw_column, int(6), kw_end_DASH_line, int(2686), kw_end_DASH_column, int(31), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_flow_map_yaml_key_entry
@@ -14311,7 +14311,7 @@ func LoadNS() {
 		aotDirectFn151 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_map_yaml_key_entry = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_map_yaml_key_entry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2705), kw_column, int(6), kw_end_DASH_line, int(2705), kw_end_DASH_column, int(31), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2705), kw_column, int(6), kw_end_DASH_line, int(2705), kw_end_DASH_column, int(31), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_flow_node
@@ -14374,7 +14374,7 @@ func LoadNS() {
 		aotDirectFn152 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_node = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_node.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3069), kw_column, int(6), kw_end_DASH_line, int(3069), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3069), kw_column, int(6), kw_end_DASH_line, int(3069), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_flow_pair
@@ -14438,7 +14438,7 @@ func LoadNS() {
 		aotDirectFn153 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_pair = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_pair.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2835), kw_column, int(6), kw_end_DASH_line, int(2835), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2835), kw_column, int(6), kw_end_DASH_line, int(2835), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_flow_pair_entry
@@ -14494,7 +14494,7 @@ func LoadNS() {
 		aotDirectFn154 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_pair_entry = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_pair_entry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2866), kw_column, int(6), kw_end_DASH_line, int(2866), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2866), kw_column, int(6), kw_end_DASH_line, int(2866), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_flow_pair_yaml_key_entry
@@ -14548,7 +14548,7 @@ func LoadNS() {
 		aotDirectFn155 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_pair_yaml_key_entry = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_pair_yaml_key_entry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2883), kw_column, int(6), kw_end_DASH_line, int(2883), kw_end_DASH_column, int(32), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2883), kw_column, int(6), kw_end_DASH_line, int(2883), kw_end_DASH_column, int(32), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_flow_seq_entry
@@ -14602,7 +14602,7 @@ func LoadNS() {
 		aotDirectFn156 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_seq_entry = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_seq_entry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2548), kw_column, int(6), kw_end_DASH_line, int(2548), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2548), kw_column, int(6), kw_end_DASH_line, int(2548), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_flow_yaml_content
@@ -14653,7 +14653,7 @@ func LoadNS() {
 		aotDirectFn157 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_yaml_content = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_yaml_content.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2961), kw_column, int(6), kw_end_DASH_line, int(2961), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2961), kw_column, int(6), kw_end_DASH_line, int(2961), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_flow_yaml_node
@@ -14716,7 +14716,7 @@ func LoadNS() {
 		aotDirectFn158 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_yaml_node = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_flow_yaml_node.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3016), kw_column, int(6), kw_end_DASH_line, int(3016), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3016), kw_column, int(6), kw_end_DASH_line, int(3016), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_global_tag_prefix
@@ -14747,7 +14747,7 @@ func LoadNS() {
 		aotDirectFn159 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_global_tag_prefix = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_global_tag_prefix.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1646), kw_column, int(6), kw_end_DASH_line, int(1646), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1646), kw_column, int(6), kw_end_DASH_line, int(1646), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_hex_digit
@@ -14778,7 +14778,7 @@ func LoadNS() {
 		aotDirectFn160 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_hex_digit = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_hex_digit.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(639), kw_column, int(6), kw_end_DASH_line, int(639), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(639), kw_column, int(6), kw_end_DASH_line, int(639), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_l_block_map_entry
@@ -14830,7 +14830,7 @@ func LoadNS() {
 		aotDirectFn161 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_l_block_map_entry = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_l_block_map_entry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3743), kw_column, int(6), kw_end_DASH_line, int(3743), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3743), kw_column, int(6), kw_end_DASH_line, int(3743), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_l_block_map_implicit_entry
@@ -14883,7 +14883,7 @@ func LoadNS() {
 		aotDirectFn162 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_l_block_map_implicit_entry = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_l_block_map_implicit_entry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3831), kw_column, int(6), kw_end_DASH_line, int(3831), kw_end_DASH_column, int(34), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3831), kw_column, int(6), kw_end_DASH_line, int(3831), kw_end_DASH_column, int(34), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_l_compact_mapping
@@ -14939,7 +14939,7 @@ func LoadNS() {
 		aotDirectFn163 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_l_compact_mapping = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_l_compact_mapping.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3891), kw_column, int(6), kw_end_DASH_line, int(3891), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3891), kw_column, int(6), kw_end_DASH_line, int(3891), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_l_compact_sequence
@@ -14995,7 +14995,7 @@ func LoadNS() {
 		aotDirectFn164 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_l_compact_sequence = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_l_compact_sequence.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3694), kw_column, int(6), kw_end_DASH_line, int(3694), kw_end_DASH_column, int(26), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3694), kw_column, int(6), kw_end_DASH_line, int(3694), kw_end_DASH_column, int(26), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_plain
@@ -15054,7 +15054,7 @@ func LoadNS() {
 		aotDirectFn165 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_plain = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_plain.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2365), kw_column, int(6), kw_end_DASH_line, int(2365), kw_end_DASH_column, int(13), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2365), kw_column, int(6), kw_end_DASH_line, int(2365), kw_end_DASH_column, int(13), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_plain_char
@@ -15116,7 +15116,7 @@ func LoadNS() {
 		aotDirectFn166 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_plain_char = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_plain_char.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2322), kw_column, int(6), kw_end_DASH_line, int(2322), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2322), kw_column, int(6), kw_end_DASH_line, int(2322), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_plain_first
@@ -15185,7 +15185,7 @@ func LoadNS() {
 		aotDirectFn167 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_plain_first = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_plain_first.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2255), kw_column, int(6), kw_end_DASH_line, int(2255), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2255), kw_column, int(6), kw_end_DASH_line, int(2255), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_plain_multi_line
@@ -15240,7 +15240,7 @@ func LoadNS() {
 		aotDirectFn168 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_plain_multi_line = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_plain_multi_line.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2438), kw_column, int(6), kw_end_DASH_line, int(2438), kw_end_DASH_column, int(24), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2438), kw_column, int(6), kw_end_DASH_line, int(2438), kw_end_DASH_column, int(24), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_plain_one_line
@@ -15292,7 +15292,7 @@ func LoadNS() {
 		aotDirectFn169 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_plain_one_line = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_plain_one_line.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2402), kw_column, int(6), kw_end_DASH_line, int(2402), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2402), kw_column, int(6), kw_end_DASH_line, int(2402), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_plain_safe
@@ -15345,7 +15345,7 @@ func LoadNS() {
 		aotDirectFn170 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_plain_safe = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_plain_safe.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2273), kw_column, int(6), kw_end_DASH_line, int(2273), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2273), kw_column, int(6), kw_end_DASH_line, int(2273), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_plain_safe_in
@@ -15376,7 +15376,7 @@ func LoadNS() {
 		aotDirectFn171 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_plain_safe_in = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_plain_safe_in.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2305), kw_column, int(6), kw_end_DASH_line, int(2305), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2305), kw_column, int(6), kw_end_DASH_line, int(2305), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_plain_safe_out
@@ -15407,7 +15407,7 @@ func LoadNS() {
 		aotDirectFn172 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_plain_safe_out = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_plain_safe_out.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2293), kw_column, int(6), kw_end_DASH_line, int(2293), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2293), kw_column, int(6), kw_end_DASH_line, int(2293), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_reserved_directive
@@ -15438,7 +15438,7 @@ func LoadNS() {
 		aotDirectFn173 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_reserved_directive = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_reserved_directive.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1423), kw_column, int(6), kw_end_DASH_line, int(1423), kw_end_DASH_column, int(26), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1423), kw_column, int(6), kw_end_DASH_line, int(1423), kw_end_DASH_column, int(26), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_s_block_map_implicit_key
@@ -15469,7 +15469,7 @@ func LoadNS() {
 		aotDirectFn174 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_s_block_map_implicit_key = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_s_block_map_implicit_key.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3850), kw_column, int(6), kw_end_DASH_line, int(3850), kw_end_DASH_column, int(32), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3850), kw_column, int(6), kw_end_DASH_line, int(3850), kw_end_DASH_column, int(32), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_s_flow_map_entries
@@ -15533,7 +15533,7 @@ func LoadNS() {
 		aotDirectFn175 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_s_flow_map_entries = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_s_flow_map_entries.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2596), kw_column, int(6), kw_end_DASH_line, int(2596), kw_end_DASH_column, int(26), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2596), kw_column, int(6), kw_end_DASH_line, int(2596), kw_end_DASH_column, int(26), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_s_flow_seq_entries
@@ -15597,7 +15597,7 @@ func LoadNS() {
 		aotDirectFn176 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_s_flow_seq_entries = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_s_flow_seq_entries.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2511), kw_column, int(6), kw_end_DASH_line, int(2511), kw_end_DASH_column, int(26), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2511), kw_column, int(6), kw_end_DASH_line, int(2511), kw_end_DASH_column, int(26), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_s_implicit_yaml_key
@@ -15649,7 +15649,7 @@ func LoadNS() {
 		aotDirectFn177 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_s_implicit_yaml_key = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_s_implicit_yaml_key.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2916), kw_column, int(6), kw_end_DASH_line, int(2916), kw_end_DASH_column, int(27), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2916), kw_column, int(6), kw_end_DASH_line, int(2916), kw_end_DASH_column, int(27), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_single_char
@@ -15680,7 +15680,7 @@ func LoadNS() {
 		aotDirectFn178 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_single_char = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_single_char.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2116), kw_column, int(6), kw_end_DASH_line, int(2116), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2116), kw_column, int(6), kw_end_DASH_line, int(2116), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_tag_char
@@ -15711,7 +15711,7 @@ func LoadNS() {
 		aotDirectFn179 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_tag_char = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_tag_char.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(758), kw_column, int(6), kw_end_DASH_line, int(758), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(758), kw_column, int(6), kw_end_DASH_line, int(758), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_tag_directive
@@ -15742,7 +15742,7 @@ func LoadNS() {
 		aotDirectFn180 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_tag_directive = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_tag_directive.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1516), kw_column, int(6), kw_end_DASH_line, int(1516), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1516), kw_column, int(6), kw_end_DASH_line, int(1516), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_tag_prefix
@@ -15773,7 +15773,7 @@ func LoadNS() {
 		aotDirectFn181 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_tag_prefix = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_tag_prefix.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1610), kw_column, int(6), kw_end_DASH_line, int(1610), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1610), kw_column, int(6), kw_end_DASH_line, int(1610), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_uri_char
@@ -15804,7 +15804,7 @@ func LoadNS() {
 		aotDirectFn182 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_uri_char = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_uri_char.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(674), kw_column, int(6), kw_end_DASH_line, int(674), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(674), kw_column, int(6), kw_end_DASH_line, int(674), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_word_char
@@ -15835,7 +15835,7 @@ func LoadNS() {
 		aotDirectFn183 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_word_char = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_word_char.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(661), kw_column, int(6), kw_end_DASH_line, int(661), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(661), kw_column, int(6), kw_end_DASH_line, int(661), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_yaml_directive
@@ -15866,7 +15866,7 @@ func LoadNS() {
 		aotDirectFn184 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_yaml_directive = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_yaml_directive.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1469), kw_column, int(6), kw_end_DASH_line, int(1469), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1469), kw_column, int(6), kw_end_DASH_line, int(1469), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// ns_yaml_version
@@ -15897,7 +15897,7 @@ func LoadNS() {
 		aotDirectFn185 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_ns_yaml_version = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_ns_yaml_version.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1496), kw_column, int(6), kw_end_DASH_line, int(1496), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1496), kw_column, int(6), kw_end_DASH_line, int(1496), kw_end_DASH_column, int(20), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_b_comment
@@ -15928,7 +15928,7 @@ func LoadNS() {
 		aotDirectFn186 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_b_comment = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_b_comment.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1297), kw_column, int(6), kw_end_DASH_line, int(1297), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1297), kw_column, int(6), kw_end_DASH_line, int(1297), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_block_line_prefix
@@ -15977,7 +15977,7 @@ func LoadNS() {
 		aotDirectFn187 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_block_line_prefix = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_block_line_prefix.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1144), kw_column, int(6), kw_end_DASH_line, int(1144), kw_end_DASH_column, int(24), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1144), kw_column, int(6), kw_end_DASH_line, int(1144), kw_end_DASH_column, int(24), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_double_break
@@ -16029,7 +16029,7 @@ func LoadNS() {
 		aotDirectFn188 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_double_break = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_double_break.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1999), kw_column, int(6), kw_end_DASH_line, int(1999), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1999), kw_column, int(6), kw_end_DASH_line, int(1999), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_double_escaped
@@ -16087,7 +16087,7 @@ func LoadNS() {
 		aotDirectFn189 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_double_escaped = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_double_escaped.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1971), kw_column, int(6), kw_end_DASH_line, int(1971), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1971), kw_column, int(6), kw_end_DASH_line, int(1971), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_double_next_line
@@ -16146,7 +16146,7 @@ func LoadNS() {
 		aotDirectFn190 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_double_next_line = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_double_next_line.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2030), kw_column, int(6), kw_end_DASH_line, int(2030), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2030), kw_column, int(6), kw_end_DASH_line, int(2030), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_flow_folded
@@ -16200,7 +16200,7 @@ func LoadNS() {
 		aotDirectFn191 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_flow_folded = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_flow_folded.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1243), kw_column, int(6), kw_end_DASH_line, int(1243), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1243), kw_column, int(6), kw_end_DASH_line, int(1243), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_flow_line_prefix
@@ -16252,7 +16252,7 @@ func LoadNS() {
 		aotDirectFn192 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_flow_line_prefix = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_flow_line_prefix.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1157), kw_column, int(6), kw_end_DASH_line, int(1157), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1157), kw_column, int(6), kw_end_DASH_line, int(1157), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_indent
@@ -16301,7 +16301,7 @@ func LoadNS() {
 		aotDirectFn193 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_indent = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_indent.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1074), kw_column, int(6), kw_end_DASH_line, int(1074), kw_end_DASH_column, int(13), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1074), kw_column, int(6), kw_end_DASH_line, int(1074), kw_end_DASH_column, int(13), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_indent_le
@@ -16351,7 +16351,7 @@ func LoadNS() {
 		aotDirectFn194 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_indent_le = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_indent_le.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1098), kw_column, int(6), kw_end_DASH_line, int(1098), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1098), kw_column, int(6), kw_end_DASH_line, int(1098), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_indent_lt
@@ -16400,7 +16400,7 @@ func LoadNS() {
 		aotDirectFn195 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_indent_lt = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_indent_lt.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1086), kw_column, int(6), kw_end_DASH_line, int(1086), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1086), kw_column, int(6), kw_end_DASH_line, int(1086), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_l_block_collection
@@ -16489,7 +16489,7 @@ func LoadNS() {
 		aotDirectFn196 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_l_block_collection = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_l_block_collection.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3995), kw_column, int(6), kw_end_DASH_line, int(3995), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3995), kw_column, int(6), kw_end_DASH_line, int(3995), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_l_block_in_block
@@ -16543,7 +16543,7 @@ func LoadNS() {
 		aotDirectFn197 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_l_block_in_block = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_l_block_in_block.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3944), kw_column, int(6), kw_end_DASH_line, int(3944), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3944), kw_column, int(6), kw_end_DASH_line, int(3944), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_l_block_indented
@@ -16621,7 +16621,7 @@ func LoadNS() {
 		aotDirectFn198 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_l_block_indented = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_l_block_indented.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3667), kw_column, int(6), kw_end_DASH_line, int(3667), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3667), kw_column, int(6), kw_end_DASH_line, int(3667), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_l_block_node
@@ -16675,7 +16675,7 @@ func LoadNS() {
 		aotDirectFn199 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_l_block_node = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_l_block_node.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3912), kw_column, int(6), kw_end_DASH_line, int(3912), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3912), kw_column, int(6), kw_end_DASH_line, int(3912), kw_end_DASH_column, int(19), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_l_block_scalar
@@ -16755,7 +16755,7 @@ func LoadNS() {
 		aotDirectFn200 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_l_block_scalar = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_l_block_scalar.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3961), kw_column, int(6), kw_end_DASH_line, int(3961), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3961), kw_column, int(6), kw_end_DASH_line, int(3961), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_l_comments
@@ -16786,7 +16786,7 @@ func LoadNS() {
 		aotDirectFn201 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_l_comments = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_l_comments.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1344), kw_column, int(6), kw_end_DASH_line, int(1344), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1344), kw_column, int(6), kw_end_DASH_line, int(1344), kw_end_DASH_column, int(17), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_l_flow_in_block
@@ -16841,7 +16841,7 @@ func LoadNS() {
 		aotDirectFn202 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_l_flow_in_block = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_l_flow_in_block.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3928), kw_column, int(6), kw_end_DASH_line, int(3928), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3928), kw_column, int(6), kw_end_DASH_line, int(3928), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_line_prefix
@@ -16900,7 +16900,7 @@ func LoadNS() {
 		aotDirectFn203 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_line_prefix = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_line_prefix.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1124), kw_column, int(6), kw_end_DASH_line, int(1124), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1124), kw_column, int(6), kw_end_DASH_line, int(1124), kw_end_DASH_column, int(18), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_nb_folded_text
@@ -16954,7 +16954,7 @@ func LoadNS() {
 		aotDirectFn204 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_nb_folded_text = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_nb_folded_text.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3442), kw_column, int(6), kw_end_DASH_line, int(3442), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3442), kw_column, int(6), kw_end_DASH_line, int(3442), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_nb_spaced_text
@@ -17008,7 +17008,7 @@ func LoadNS() {
 		aotDirectFn205 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_nb_spaced_text = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_nb_spaced_text.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(3482), kw_column, int(6), kw_end_DASH_line, int(3482), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(3482), kw_column, int(6), kw_end_DASH_line, int(3482), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_ns_plain_next_line
@@ -17071,7 +17071,7 @@ func LoadNS() {
 		aotDirectFn206 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_ns_plain_next_line = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_ns_plain_next_line.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2418), kw_column, int(6), kw_end_DASH_line, int(2418), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2418), kw_column, int(6), kw_end_DASH_line, int(2418), kw_end_DASH_column, int(25), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_separate
@@ -17132,7 +17132,7 @@ func LoadNS() {
 		aotDirectFn207 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_separate = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_separate.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1360), kw_column, int(6), kw_end_DASH_line, int(1360), kw_end_DASH_column, int(15), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1360), kw_column, int(6), kw_end_DASH_line, int(1360), kw_end_DASH_column, int(15), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_separate_in_line
@@ -17163,7 +17163,7 @@ func LoadNS() {
 		aotDirectFn208 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_separate_in_line = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_separate_in_line.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1110), kw_column, int(6), kw_end_DASH_line, int(1110), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1110), kw_column, int(6), kw_end_DASH_line, int(1110), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_separate_lines
@@ -17212,7 +17212,7 @@ func LoadNS() {
 		aotDirectFn209 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_separate_lines = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_separate_lines.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(1384), kw_column, int(6), kw_end_DASH_line, int(1384), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(1384), kw_column, int(6), kw_end_DASH_line, int(1384), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_single_next_line
@@ -17271,7 +17271,7 @@ func LoadNS() {
 		aotDirectFn210 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_single_next_line = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_single_next_line.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(2201), kw_column, int(6), kw_end_DASH_line, int(2201), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(2201), kw_column, int(6), kw_end_DASH_line, int(2201), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_space
@@ -17302,7 +17302,7 @@ func LoadNS() {
 		aotDirectFn211 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_space = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_space.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(583), kw_column, int(6), kw_end_DASH_line, int(583), kw_end_DASH_column, int(12), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(583), kw_column, int(6), kw_end_DASH_line, int(583), kw_end_DASH_column, int(12), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_tab
@@ -17333,7 +17333,7 @@ func LoadNS() {
 		aotDirectFn212 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_tab = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_tab.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(594), kw_column, int(6), kw_end_DASH_line, int(594), kw_end_DASH_column, int(10), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(594), kw_column, int(6), kw_end_DASH_line, int(594), kw_end_DASH_column, int(10), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// s_white
@@ -17364,7 +17364,7 @@ func LoadNS() {
 		aotDirectFn213 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_s_white = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_s_white.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(605), kw_column, int(6), kw_end_DASH_line, int(605), kw_end_DASH_column, int(12), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(605), kw_column, int(6), kw_end_DASH_line, int(605), kw_end_DASH_column, int(12), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 	// seq_spaces
@@ -17401,7 +17401,7 @@ func LoadNS() {
 		aotDirectFn214 = tmp1
 		var_yaml_DASH_parser_DOT_grammar_seq_spaces = ns.InternWithValue(tmp0, tmp2, true)
 		var_yaml_DASH_parser_DOT_grammar_seq_spaces.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/grammar.glj", kw_line, int(4039), kw_column, int(6), kw_end_DASH_line, int(4039), kw_end_DASH_column, int(15), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
+			return lang.NewMap(kw_file, "yaml_parser/grammar.clj", kw_line, int(4039), kw_column, int(6), kw_end_DASH_line, int(4039), kw_end_DASH_column, int(15), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_grammar))
 		}, false)
 	}
 }

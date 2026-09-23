@@ -21,7 +21,7 @@ type aotKeywordMapStorage0 struct {
 	values [3]any
 }
 
-func aotKeywordMapNew0(v0 any, v1 any, v2 any) *lang.Map {
+func aotKeywordMapNew0(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage0{}
 	storage.values = [3]any{v0, v1, v2}
 	return lang.InitStaticKeywordMap(
@@ -203,7 +203,7 @@ func LoadNS() {
 			_ = tmp4
 			var tmp5 any
 			{ // let
-				// let binding "vec__25"
+				// let binding "vec__112"
 				var tmp6 any
 				{ // let
 					// let binding "or__0__auto__"
@@ -242,7 +242,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_parse = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_parse.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser/go_yaml.glj", kw_line, int(16), kw_column, int(7), kw_end_DASH_line, int(16), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str, sym__config)), kw_doc, "Parse a YAML string into a YAMLStar event stream using go-yaml.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser/go_yaml.clj", kw_line, int(16), kw_column, int(7), kw_end_DASH_line, int(16), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str, sym__config)), kw_doc, "Parse a YAML string into a YAMLStar event stream using go-yaml.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
 		}, false)
 	}
 	// plugin
@@ -258,7 +258,7 @@ func LoadNS() {
 			_ = tmp4
 			var tmp5 any
 			{ // let
-				// let binding "vec__25"
+				// let binding "vec__112"
 				var tmp6 any
 				{ // let
 					// let binding "or__0__auto__"
@@ -296,7 +296,7 @@ func LoadNS() {
 		})
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_plugin = ns.InternWithValue(tmp0, aotKeywordMapNew0("go-yaml", tmp1, lang.NewMap()), true)
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_plugin.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/plugin/parser/go_yaml.glj", kw_line, int(32), kw_column, int(6), kw_end_DASH_line, int(32), kw_end_DASH_column, int(11), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
+			return lang.NewMap(kw_file, "yamlstar/plugin/parser/go_yaml.clj", kw_line, int(32), kw_column, int(6), kw_end_DASH_line, int(32), kw_end_DASH_column, int(11), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
 		}, false)
 	}
 	// require-glojure-runtime
@@ -309,7 +309,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_require_DASH_glojure_DASH_runtime = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_require_DASH_glojure_DASH_runtime.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser/go_yaml.glj", kw_line, int(9), kw_column, int(8), kw_end_DASH_line, int(9), kw_end_DASH_column, int(30), kw_private, true, kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser/go_yaml.clj", kw_line, int(9), kw_column, int(8), kw_end_DASH_line, int(9), kw_end_DASH_column, int(30), kw_private, true, kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
 		}, false)
 	}
 }

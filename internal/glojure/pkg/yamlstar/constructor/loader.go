@@ -26,7 +26,7 @@ type aotKeywordMapStorage0 struct {
 	values [2]any
 }
 
-func aotKeywordMapNew0(v0 any, v1 any) *lang.Map {
+func aotKeywordMapNew0(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage0{}
 	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
@@ -44,7 +44,7 @@ type aotKeywordMapStorage1 struct {
 	values [1]any
 }
 
-func aotKeywordMapNew1(v0 any) *lang.Map {
+func aotKeywordMapNew1(v0 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage1{}
 	storage.values = [1]any{v0}
 	return lang.InitStaticKeywordMap(
@@ -62,7 +62,7 @@ type aotKeywordMapStorage2 struct {
 	values [2]any
 }
 
-func aotKeywordMapNew2(v0 any, v1 any) *lang.Map {
+func aotKeywordMapNew2(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage2{}
 	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
@@ -432,7 +432,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_constructor_construct = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_constructor_construct.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/constructor.glj", kw_line, int(102), kw_column, int(7), kw_end_DASH_line, int(102), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_doc, "Construct native data from a resolved node tree.\n\n  Args:\n    node: A resolved node tree\n\n  Returns:\n    Native Clojure data structure", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_constructor))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/constructor.clj", kw_line, int(102), kw_column, int(7), kw_end_DASH_line, int(102), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_doc, "Construct native data from a resolved node tree.\n\n  Args:\n    node: A resolved node tree\n\n  Returns:\n    Native Clojure data structure", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_constructor))
 		}, false)
 	}
 	// construct-all
@@ -464,7 +464,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_constructor_construct_DASH_all = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_constructor_construct_DASH_all.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/constructor.glj", kw_line, int(114), kw_column, int(7), kw_end_DASH_line, int(114), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector(sym_nodes)), kw_doc, "Construct native data from multiple resolved node trees.\n\n  Args:\n    nodes: Sequence of resolved node trees\n\n  Returns:\n    Sequence of native Clojure data structures", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_constructor))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/constructor.clj", kw_line, int(114), kw_column, int(7), kw_end_DASH_line, int(114), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector(sym_nodes)), kw_doc, "Construct native data from multiple resolved node trees.\n\n  Args:\n    nodes: Sequence of resolved node trees\n\n  Returns:\n    Sequence of native Clojure data structures", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_constructor))
 		}, false)
 	}
 	// constructors
@@ -518,7 +518,7 @@ func LoadNS() {
 					} else {
 						var tmp18 any
 						{ // let
-							// let binding "vec__4"
+							// let binding "vec__43"
 							tmp19 := lang.Apply2(strconv5.ParseFloat, v7, int64(64))
 							var v20 any = tmp19
 							_ = v20
@@ -618,7 +618,7 @@ func LoadNS() {
 					} else {
 						var tmp25 any
 						{ // let
-							// let binding "vec__4"
+							// let binding "vec__43"
 							tmp26 := lang.Apply2(strconv5.ParseFloat, v14, int64(64))
 							var v27 any = tmp26
 							_ = v27
@@ -642,7 +642,7 @@ func LoadNS() {
 		})
 		var_yamlstar_DOT_constructor_constructors = ns.InternWithValue(tmp0, lang.NewMapUniqueKeys("tag:yaml.org,2002:int", tmp1, "tag:yaml.org,2002:str", tmp2, "tag:yaml.org,2002:float", tmp3, "!!int", tmp4, "tag:yaml.org,2002:bool", tmp5, "!!null", tmp6, "tag:yaml.org,2002:null", tmp7, "!!bool", tmp8, "!!str", tmp9, "!!float", tmp10), true)
 		var_yamlstar_DOT_constructor_constructors.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/constructor.glj", kw_line, int(8), kw_column, int(6), kw_end_DASH_line, int(8), kw_end_DASH_column, int(17), kw_doc, "Constructor functions for YAML core schema tags.\n\n  Each constructor takes a node and returns native Clojure data.\n  Supports both short form (!!null) and fully qualified (tag:yaml.org,2002:null) tags.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_constructor))
+			return lang.NewMap(kw_file, "yamlstar/constructor.clj", kw_line, int(8), kw_column, int(6), kw_end_DASH_line, int(8), kw_end_DASH_column, int(17), kw_doc, "Constructor functions for YAML core schema tags.\n\n  Each constructor takes a node and returns native Clojure data.\n  Supports both short form (!!null) and fully qualified (tag:yaml.org,2002:null) tags.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_constructor))
 		}, false)
 	}
 	// construct-node
@@ -661,7 +661,7 @@ func LoadNS() {
 					// let binding "result"
 					var tmp6 any
 					{ // let
-						// let binding "G__7"
+						// let binding "G__46"
 						tmp7 := aotKeywordSite0.Get(kw_kind, v2, nil)
 						var v8 any = tmp7
 						_ = v8
@@ -753,7 +753,7 @@ func LoadNS() {
 										_ = v26
 										var tmp27 any
 										{ // let
-											// let binding "vec__9"
+											// let binding "vec__48"
 											var v28 any = v26
 											_ = v28
 											// let binding "key-node"
@@ -858,7 +858,7 @@ func LoadNS() {
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_constructor_construct_DASH_node = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_constructor_construct_DASH_node.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/constructor.glj", kw_line, int(50), kw_column, int(7), kw_end_DASH_line, int(50), kw_end_DASH_column, int(20), kw_arglists, lang.NewList(lang.NewVector(sym_node, sym_anchors)), kw_doc, "Construct native data from a resolved node.\n\n  Args:\n    node: A node with resolved tags\n    anchors: An atom containing a map of anchor names to constructed values\n\n  Returns:\n    Native Clojure data (nil, boolean, number, string, map, or vector)", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_constructor))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/constructor.clj", kw_line, int(50), kw_column, int(7), kw_end_DASH_line, int(50), kw_end_DASH_column, int(20), kw_arglists, lang.NewList(lang.NewVector(sym_node, sym_anchors)), kw_doc, "Construct native data from a resolved node.\n\n  Args:\n    node: A node with resolved tags\n    anchors: An atom containing a map of anchor names to constructed values\n\n  Returns:\n    Native Clojure data (nil, boolean, number, string, map, or vector)", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_constructor))
 		}, false)
 	}
 }

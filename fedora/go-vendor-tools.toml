@@ -1,0 +1,34 @@
+[archive]
+post_commands = [
+  [
+    "cp",
+    "fedora/licenses/gojava-LICENSE",
+    "vendor/github.com/gloathub/gojava/LICENSE",
+  ],
+  [
+    "cp",
+    "fedora/licenses/ys-v0-glj-LICENSE",
+    "vendor/github.com/gloathub/ys-v0-glj/LICENSE",
+  ],
+]
+
+[licensing]
+detector = "askalono"
+exclude_files = [
+  "csharp/License",
+  "delphi/License",
+  "fedora/licenses/gojava-LICENSE",
+  "fedora/licenses/ys-v0-glj-LICENSE",
+  "fortran/License",
+  "go/License",
+  "java/License",
+  "nodejs/License",
+  "perl/License",
+  "python/License",
+  "rust/License",
+]
+
+[[licensing.licenses]]
+path = "r/LICENSE"
+sha256sum = "08122f4a6ad259b624062b238b4fa1faa0019653e56706f4afc8f84e8dd80977"
+expression = "MIT"

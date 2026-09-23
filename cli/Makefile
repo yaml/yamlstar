@@ -146,10 +146,15 @@ GLOAT-CLI-SRCS := \
   $(GLOAT-CACHE)/serializer.clj \
   $(GLOAT-CACHE)/emitter.clj \
   $(GLOAT-CORE)/api.clj \
+  ../libyamlstar/gloat/src/libyamlstar.clj \
   $(GLOAT-CLI-OPTIONS-SRC) \
   $(CLI-DEFAULT-SRC) \
   $(GLOAT-CORE)/contract.clj \
   gloat/src/yamlstar/cli.clj \
+
+GO-GENERATED-WORK ?= $(abspath ../.cache/go-generate/gloat)
+GO-GENERATED-MODULE := github.com/yaml/yamlstar/internal/glojure
+GO-YAML-GENERATED-DIR ?= ../internal/goyamlparser
 
 _prepare-gloat-bin:
 	@$(MAKE-BASH) $@ "$(GLOAT)" "$(GLOAT-DIR)" \
@@ -223,10 +228,28 @@ $(PLUGIN-INSTALLER): ../util/yamlstar-plugin
 
 _build-gloat: $(CLI-BIN-GLOAT)
 
+generate-go: _prepare-gloat _prepare-gloat-bin \
+  $(GLOAT-RUN-DEPS) $(GLOAT-CLI-OPTIONS-SRC) $(CLI-DEFAULT-SRC)
+	rm -rf $(GO-GENERATED-WORK)
+	mkdir -p $(GO-GENERATED-WORK)
+	</dev/null env -u GOROOT $(GLOAT-GO-ENV) $(GLOAT-GLOJURE-ENV) \
+	  GLOAT_GO=$(GO) \
+	  GLOAT_GLJDEPS=$(abspath ../gljdeps.edn) \
+	  GLOAT_EXTRA_GO_DIR=$(abspath $(GO-YAML-GENERATED-DIR)) \
+	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
+	  $(GLOAT-RUN) --force \
+	  --module $(GO-GENERATED-MODULE) \
+	  -o $(GO-GENERATED-WORK)/ \
+	  $(GLOAT-CLI-SRCS)
+	test -f $(GO-GENERATED-WORK)/main.go
+	test -f $(GO-GENERATED-WORK)/pkg/libyamlstar/loader.go
+	test -f $(GO-GENERATED-WORK)/pkg/yamlstar/cli/loader.go
+
 _prepare-gloat:
 	$(MAKE) -C ../libyamlstar prepare-gloat \
 	  YAMLSTAR_ENGINE=glojure \
 	  GLOAT-DIR=$(GLOAT-DIR) \
+	  GO-YAML-GENERATED-DIR=$(abspath $(GO-YAML-GENERATED-DIR)) \
 	  $(if $(YAML-PARSER-DIR),YAML-PARSER-DIR=$(YAML-PARSER-DIR))
 
 $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
@@ -252,7 +275,7 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
 	  GLOAT_MODULE=github.com/yaml/yamlstar \
 	  GLOAT_GO=$(GO) \
 	  GLOAT_GLJDEPS=$(abspath ../gljdeps.edn) \
-	  GLOAT_EXTRA_GO_DIR=$(abspath ../internal/goyamlparser) \
+	  GLOAT_EXTRA_GO_DIR=$(abspath $(GO-YAML-GENERATED-DIR)) \
 	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
 	  $(if $(LET_GO_SRC),LET_GO_SRC=$(abspath $(LET_GO_SRC))) \
 	  $(GLOAT-RUN) --force $(GLOAT-PLATFORM-OPT) \

@@ -17,7 +17,7 @@ type aotKeywordMapStorage0 struct {
 	values [3]any
 }
 
-func aotKeywordMapNew0(v0 any, v1 any, v2 any) *lang.Map {
+func aotKeywordMapNew0(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage0{}
 	storage.values = [3]any{v0, v1, v2}
 	return lang.InitStaticKeywordMap(
@@ -196,7 +196,7 @@ func LoadNS() {
 		})
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_reference_plugin = ns.InternWithValue(tmp0, aotKeywordMapNew0("reference", tmp1, lang.NewMap()), true)
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_reference_plugin.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/plugin/parser/reference.glj", kw_line, int(6), kw_column, int(6), kw_end_DASH_line, int(6), kw_end_DASH_column, int(11), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_reference))
+			return lang.NewMap(kw_file, "yamlstar/plugin/parser/reference.clj", kw_line, int(6), kw_column, int(6), kw_end_DASH_line, int(6), kw_end_DASH_column, int(11), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_reference))
 		}, false)
 	}
 }

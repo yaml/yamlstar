@@ -321,7 +321,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_resolver_infer_DASH_number_DASH_tag = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_resolver_infer_DASH_number_DASH_tag.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.glj", kw_line, int(10), kw_column, int(8), kw_end_DASH_line, int(10), kw_end_DASH_column, int(23), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_doc, "Infer !!int, !!float or !!str for a value starting with a sign, a dot\n  or a digit", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.clj", kw_line, int(10), kw_column, int(8), kw_end_DASH_line, int(10), kw_end_DASH_column, int(23), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_doc, "Infer !!int, !!float or !!str for a value starting with a sign, a dot\n  or a digit", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
 		}, false)
 	}
 	// infer-scalar-tag
@@ -338,7 +338,7 @@ func LoadNS() {
 			} else {
 				var tmp5 any
 				{ // let
-					// let binding "G__54"
+					// let binding "G__34"
 					tmp6 := runtime.RT.Nth(v2, lang.IntCast(int64(0)))
 					var v7 any = tmp6
 					_ = v7
@@ -560,7 +560,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_resolver_infer_DASH_scalar_DASH_tag = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_resolver_infer_DASH_scalar_DASH_tag.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.glj", kw_line, int(27), kw_column, int(7), kw_end_DASH_line, int(27), kw_end_DASH_column, int(22), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_doc, "Infer the tag for an untagged scalar based on YAML 1.2 core schema.\n\n  Only the patterns that can start with the first character are tried:\n  null and bool words, or the numeric forms.\n\n  Args:\n    value: The string value of the scalar\n\n  Returns:\n    A tag string (!!null, !!bool, !!int, !!float, or !!str)", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.clj", kw_line, int(27), kw_column, int(7), kw_end_DASH_line, int(27), kw_end_DASH_column, int(22), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_doc, "Infer the tag for an untagged scalar based on YAML 1.2 core schema.\n\n  Only the patterns that can start with the first character are tried:\n  null and bool words, or the numeric forms.\n\n  Args:\n    value: The string value of the scalar\n\n  Returns:\n    A tag string (!!null, !!bool, !!int, !!float, or !!str)", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
 		}, false)
 	}
 	// resolve
@@ -576,7 +576,7 @@ func LoadNS() {
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_resolver_resolve = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_resolver_resolve.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.glj", kw_line, int(110), kw_column, int(7), kw_end_DASH_line, int(110), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_doc, "Resolve tags for a node tree.\n\n  Walks the entire tree and adds tags to all untagged nodes.\n\n  Args:\n    node: A node tree from composer\n\n  Returns:\n    The same node tree structure with all tags resolved", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.clj", kw_line, int(110), kw_column, int(7), kw_end_DASH_line, int(110), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_doc, "Resolve tags for a node tree.\n\n  Walks the entire tree and adds tags to all untagged nodes.\n\n  Args:\n    node: A node tree from composer\n\n  Returns:\n    The same node tree structure with all tags resolved", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
 		}, false)
 	}
 	// resolve-node
@@ -590,7 +590,7 @@ func LoadNS() {
 			if lang.IsTruthy(v2) {
 				var tmp4 any
 				{ // let
-					// let binding "G__55"
+					// let binding "G__35"
 					tmp5 := aotKeywordSite0.Get(kw_kind, v2, nil)
 					var v6 any = tmp5
 					_ = v6
@@ -694,7 +694,7 @@ func LoadNS() {
 									_ = v19
 									var tmp20 any
 									{ // let
-										// let binding "vec__57"
+										// let binding "vec__37"
 										var v21 any = v19
 										_ = v21
 										// let binding "k"
@@ -785,7 +785,7 @@ func LoadNS() {
 		aotDirectFn4 = tmp1
 		var_yamlstar_DOT_resolver_resolve_DASH_node = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_resolver_resolve_DASH_node.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.glj", kw_line, int(56), kw_column, int(7), kw_end_DASH_line, int(56), kw_end_DASH_column, int(18), kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_doc, "Add resolved tag to a node.\n\n  For untagged nodes, infers the tag based on YAML 1.2 core schema.\n  For the explicit non-specific tag (!), uses the kind-specific default tag.\n  For other already-tagged nodes, leaves the tag unchanged.\n  Recursively processes child nodes.\n\n  Args:\n    node: A node from the composer\n\n  Returns:\n    The node with :tag field populated", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.clj", kw_line, int(56), kw_column, int(7), kw_end_DASH_line, int(56), kw_end_DASH_column, int(18), kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_doc, "Add resolved tag to a node.\n\n  For untagged nodes, infers the tag based on YAML 1.2 core schema.\n  For the explicit non-specific tag (!), uses the kind-specific default tag.\n  For other already-tagged nodes, leaves the tag unchanged.\n  Recursively processes child nodes.\n\n  Args:\n    node: A node from the composer\n\n  Returns:\n    The node with :tag field populated", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
 		}, false)
 	}
 	// resolve-all
@@ -802,7 +802,7 @@ func LoadNS() {
 		aotDirectFn3 = tmp1
 		var_yamlstar_DOT_resolver_resolve_DASH_all = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_resolver_resolve_DASH_all.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.glj", kw_line, int(123), kw_column, int(7), kw_end_DASH_line, int(123), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_nodes)), kw_doc, "Resolve tags for multiple node trees.\n\n  Args:\n    nodes: Sequence of node trees from composer\n\n  Returns:\n    Sequence of node trees with tags resolved", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/resolver.clj", kw_line, int(123), kw_column, int(7), kw_end_DASH_line, int(123), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_nodes)), kw_doc, "Resolve tags for multiple node trees.\n\n  Args:\n    nodes: Sequence of node trees from composer\n\n  Returns:\n    Sequence of node trees with tags resolved", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_resolver))
 		}, false)
 	}
 }

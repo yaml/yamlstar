@@ -267,7 +267,7 @@ func LoadNS() {
 			_ = tmp5
 			var tmp6 any
 			{ // let
-				// let binding "vec__29"
+				// let binding "vec__133"
 				tmp7 := lang.Apply3(pluginloader4.Manifest, v2, v3, v4)
 				var v8 any = tmp7
 				_ = v8
@@ -293,7 +293,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_manifest = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_manifest.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared_host.glj", kw_line, int(13), kw_column, int(8), kw_end_DASH_line, int(13), kw_end_DASH_column, int(15), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_api, sym_name, sym_install_QMARK_)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared_host.clj", kw_line, int(13), kw_column, int(8), kw_end_DASH_line, int(13), kw_end_DASH_column, int(15), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_api, sym_name, sym_install_QMARK_)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host))
 		}, false)
 	}
 	// parse
@@ -313,7 +313,7 @@ func LoadNS() {
 			_ = tmp6
 			var tmp7 any
 			{ // let
-				// let binding "vec__32"
+				// let binding "vec__136"
 				tmp8 := lang.Apply4(pluginloader4.Parse, v2, v3, v4, v5)
 				var v9 any = tmp8
 				_ = v9
@@ -344,7 +344,7 @@ func LoadNS() {
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_parse = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_parse.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared_host.glj", kw_line, int(23), kw_column, int(8), kw_end_DASH_line, int(23), kw_end_DASH_column, int(12), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_api, sym_name, sym_input, sym_options)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared_host.clj", kw_line, int(23), kw_column, int(8), kw_end_DASH_line, int(23), kw_end_DASH_column, int(12), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_api, sym_name, sym_input, sym_options)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host))
 		}, false)
 	}
 	// require-glojure-runtime
@@ -357,7 +357,7 @@ func LoadNS() {
 		aotDirectFn3 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_require_DASH_glojure_DASH_runtime = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_require_DASH_glojure_DASH_runtime.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared_host.glj", kw_line, int(6), kw_column, int(8), kw_end_DASH_line, int(6), kw_end_DASH_column, int(30), kw_private, true, kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared_host.clj", kw_line, int(6), kw_column, int(8), kw_end_DASH_line, int(6), kw_end_DASH_column, int(30), kw_private, true, kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host))
 		}, false)
 	}
 	// install!
@@ -376,7 +376,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_install_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_DASH_host_install_BANG_.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared_host.glj", kw_line, int(35), kw_column, int(7), kw_end_DASH_line, int(35), kw_end_DASH_column, int(14), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Install the Glojure shared-library event-source loader.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared_host.clj", kw_line, int(35), kw_column, int(7), kw_end_DASH_line, int(35), kw_end_DASH_column, int(14), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Install the Glojure shared-library event-source loader.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host))
 		}, false)
 	}
 }
