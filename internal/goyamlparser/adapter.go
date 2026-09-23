@@ -63,7 +63,7 @@ func makeShapes(fixed, extra string) [8]*lang.KeywordMapShape {
 	return shapes
 }
 
-func ParseYAMLStarEvents(input string) (any, error) {
+func ParseYAMLStarEvents(input, mode, scope string) (any, error) {
 	if input == "" {
 		input = "\n"
 	} else if !strings.HasSuffix(input, "\n") {
@@ -71,6 +71,25 @@ func ParseYAMLStarEvents(input string) (any, error) {
 	}
 
 	parser := NewParser()
+	if mode != "" || scope != "" {
+		if mode == "" {
+			mode = string(TabIndentModeAuto)
+		}
+		if scope == "" {
+			scope = string(TabIndentScopeDocument)
+		}
+		if mode != string(TabIndentModeAuto) &&
+			mode != string(TabIndentModeTabs) {
+			return nil, fmt.Errorf("invalid tab-indent mode %q", mode)
+		}
+		if scope != string(TabIndentScopeDocument) &&
+			scope != string(TabIndentScopeStream) {
+			return nil, fmt.Errorf("invalid tab-indent scope %q", scope)
+		}
+		parser.SetTabIndent(&TabIndentConfig{
+			Mode: TabIndentMode(mode), Scope: TabIndentScope(scope),
+		})
+	}
 	parser.SetInputString([]byte(input))
 	defer parser.Delete()
 

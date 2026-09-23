@@ -15,6 +15,10 @@
   (when (bound? #'shared-host/install!)
     (shared-host/install!)))
 
+(defn install-parsers! []
+  (parser/register-parsers! "reference" "go-yaml")
+  (parser/set-default-parser! "go-yaml"))
+
 (install-shared-host!)
 
 (def EXPORT
@@ -95,6 +99,7 @@
   "Load YAML string, return JSON string with {:data ...} or {:error ...}"
   [_thread yaml-str opts-json]
   (install-shared-host!)
+  (install-parsers!)
   (try
     (let [result (yaml/load yaml-str (parse-opts opts-json))]
       (json/write-str {:data (nil-keys->string result)}))
@@ -110,6 +115,7 @@
   "Load all YAML documents, return JSON string with {:data [...]} or {:error ...}"
   [_thread yaml-str opts-json]
   (install-shared-host!)
+  (install-parsers!)
   (try
     (let [result (yaml/load-all yaml-str (parse-opts opts-json))]
       (json/write-str {:data (nil-keys->string result)}))
@@ -122,8 +128,8 @@
   "Dump one JSON-encoded value to YAML, return JSON string with {:data ...} or {:error ...}"
   [_thread data-json opts-json]
   (try
-    (let [_ (parse-opts opts-json)
-          result (yaml/dump (json/read-str data-json))]
+    (let [opts (parse-opts opts-json)
+          result (yaml/dump (json/read-str data-json) opts)]
       (json/write-str {:data result}))
     (catch #?(:glj go/any :lg Exception) e
       (json/write-str
@@ -137,8 +143,8 @@
   "Dump JSON-encoded documents to YAML, return JSON string with {:data ...} or {:error ...}"
   [_thread data-json opts-json]
   (try
-    (let [_ (parse-opts opts-json)
-          result (yaml/dump-all (json/read-str data-json))]
+    (let [opts (parse-opts opts-json)
+          result (yaml/dump-all (json/read-str data-json) opts)]
       (json/write-str {:data result}))
     (catch #?(:glj go/any :lg Exception) e
       (json/write-str {:error {:cause (str e)

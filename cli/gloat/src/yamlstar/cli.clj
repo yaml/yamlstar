@@ -339,14 +339,14 @@ Options:
           :event (yaml/dump (contract/event-contract events))
           :node (yaml/dump (contract/node-contract
                             (contract/events-nodes events) (:NODE opts)))
-          :yaml (contract/events-yaml events)
+          :yaml (contract/events-yaml events runtime-opts)
           :json (throw (ex-info "JSON output is only supported for YAML text input" {}))))
 
       :node
       (let [nodes (contract/contract-nodes value)]
         (case target
           :node (yaml/dump (contract/node-contract nodes (:NODE opts)))
-          :yaml (contract/nodes-yaml nodes)
+          :yaml (contract/nodes-yaml nodes runtime-opts)
           :json (throw (ex-info "JSON output is only supported for YAML text input" {})))))))
 
 (defn run [opts runtime-opts]

@@ -15,12 +15,15 @@
 
 (defn parse
   "Parse a YAML string into a YAMLStar event stream using go-yaml."
-  [yaml-str _config]
+  [yaml-str config]
   (require-glojure-runtime)
   #?(:glj
-     (let [[events err]
+     (let [tabs (:tab-indent config)
+           mode (or (:mode tabs) "")
+           scope (or (:scope tabs) "")
+           [events err]
            (github.com:yaml:yamlstar:internal:goyamlparser.ParseYAMLStarEvents
-             (or yaml-str ""))]
+             (or yaml-str "") mode scope)]
        (if (nil? err)
          events
          (throw err)))

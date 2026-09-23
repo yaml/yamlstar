@@ -63,7 +63,8 @@ type response struct {
 }
 
 type options struct {
-	parser string
+	parser    string
+	tabIndent *TabIndentConfig
 }
 
 // Option configures a YAML load or dump operation.
@@ -76,6 +77,48 @@ type Plugin func(*options)
 func Parser(name string) Plugin {
 	return func(o *options) {
 		o.parser = name
+	}
+}
+
+// TabIndentMode controls structural indentation loading.
+type TabIndentMode string
+
+const (
+	TabIndentModeAuto TabIndentMode = "auto"
+	TabIndentModeTabs TabIndentMode = "tabs"
+)
+
+// TabIndentScope controls how long auto-detected indentation remains active.
+type TabIndentScope string
+
+const (
+	TabIndentScopeDocument TabIndentScope = "document"
+	TabIndentScopeStream   TabIndentScope = "stream"
+)
+
+// TabIndentConfig configures the built-in tab-indent plugin.
+type TabIndentConfig struct {
+	Mode  TabIndentMode
+	Scope TabIndentScope
+}
+
+// TabIndent enables tab-aware loading and tab-indented dumping.
+func TabIndent(config ...TabIndentConfig) Plugin {
+	return func(o *options) {
+		value := TabIndentConfig{
+			Mode:  TabIndentModeAuto,
+			Scope: TabIndentScopeDocument,
+		}
+		if len(config) > 0 {
+			value = config[0]
+			if value.Mode == "" {
+				value.Mode = TabIndentModeAuto
+			}
+			if value.Scope == "" {
+				value.Scope = TabIndentScopeDocument
+			}
+		}
+		o.tabIndent = &value
 	}
 }
 
@@ -103,10 +146,18 @@ func applyOptions(opts []Option) options {
 
 func (o options) json() (string, error) {
 	cfg := map[string]any{}
+	plugins := map[string]any{}
 	if o.parser != "" {
-		cfg["plugin"] = map[string]any{
-			"parser": map[string]any{"name": o.parser},
+		plugins["parser"] = map[string]any{"name": o.parser}
+	}
+	if o.tabIndent != nil {
+		plugins["tab-indent"] = map[string]any{
+			"mode":  o.tabIndent.Mode,
+			"scope": o.tabIndent.Scope,
 		}
+	}
+	if len(plugins) > 0 {
+		cfg["plugin"] = plugins
 	}
 	data, err := json.Marshal(cfg)
 	if err != nil {

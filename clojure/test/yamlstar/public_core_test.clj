@@ -17,3 +17,10 @@
   (is (thrown-with-msg? Exception #"Unknown YAML parser plugin"
                         (yaml/load "a: 1"
                                    {:plugin {:parser {:name "nope"}}}))))
+
+(deftest tab-indent-dump-test
+  (let [opts {:plugin {:tab-indent {}}}]
+    (is (= "root:\n\tvalue: true\n"
+           (yaml/dump {"root" {"value" true}} opts)))
+    (is (= "---\nroot:\n\tvalue: true\n"
+           (yaml/dump-all [{"root" {"value" true}}] opts)))))

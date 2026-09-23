@@ -6,6 +6,7 @@ package yamlstar_test
 import (
 	"errors"
 	"reflect"
+	"strings"
 	"sync"
 	"testing"
 
@@ -47,6 +48,85 @@ func TestPureGoAPI(t *testing.T) {
 	}
 	if want := "---\none\n---\ntwo\n"; stream != want {
 		t.Fatalf("DumpAll returned %q, want %q", stream, want)
+	}
+}
+
+func TestPureGoTabIndentPlugin(t *testing.T) {
+	option := yamlstar.WithPlugin(yamlstar.TabIndent())
+	value, err := yamlstar.Load(
+		"root:\n\tchild:\n\t\tvalue: true\n", option)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := map[string]any{
+		"root": map[string]any{
+			"child": map[string]any{"value": true},
+		},
+	}
+	if !reflect.DeepEqual(value, want) {
+		t.Fatalf("Load returned %#v, want %#v", value, want)
+	}
+	output, err := yamlstar.Dump(want, option)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(output, "\n ") ||
+		!strings.Contains(output, "\n\tchild:") ||
+		!strings.Contains(output, "\n\t\tvalue: true") {
+		t.Fatalf("unexpected tab-indented output:\n%s", output)
+	}
+}
+
+func TestTabIndentNestedRoundTrip(t *testing.T) {
+	option := yamlstar.WithPlugin(yamlstar.TabIndent())
+	want := map[string]any{
+		"steps": []any{
+			map[string]any{
+				"name": "checkout",
+				"with": map[string]any{"ref": "main"},
+			},
+		},
+	}
+	output, err := yamlstar.Dump(want, option)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(output, "\n ") {
+		t.Fatalf("found space indentation:\n%s", output)
+	}
+	got, err := yamlstar.Load(output, option)
+	if err != nil {
+		t.Fatalf("failed to reload:\n%s\n%v", output, err)
+	}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("Load returned %#v, want %#v", got, want)
+	}
+}
+
+func TestTabIndentRejectsReferenceParser(t *testing.T) {
+	_, err := yamlstar.Load(
+		"root:\n\tvalue: true\n",
+		yamlstar.WithPlugin(yamlstar.Parser("reference")),
+		yamlstar.WithPlugin(yamlstar.TabIndent()))
+	if err == nil || !strings.Contains(
+		err.Error(), "requires the native go-yaml parser") {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
+func TestTabIndentConfiguration(t *testing.T) {
+	tabsOnly := yamlstar.WithPlugin(yamlstar.TabIndent(
+		yamlstar.TabIndentConfig{Mode: yamlstar.TabIndentModeTabs},
+	))
+	if _, err := yamlstar.Load("root:\n  value: true\n", tabsOnly); err == nil {
+		t.Fatal("tabs mode accepted space indentation")
+	}
+	stream := yamlstar.WithPlugin(yamlstar.TabIndent(
+		yamlstar.TabIndentConfig{Scope: yamlstar.TabIndentScopeStream},
+	))
+	input := "---\nroot:\n\tvalue: true\n---\nroot:\n  value: true\n"
+	if _, err := yamlstar.LoadAll(input, stream); err == nil {
+		t.Fatal("stream scope accepted mixed document indentation")
 	}
 }
 

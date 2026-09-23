@@ -73,16 +73,15 @@
 (defn -dumpYaml
   "Dump one JSON-encoded value to YAML, return JSON string with result or error
 
-  The options argument is parsed for validity but otherwise reserved."
+  The options argument configures YAML output."
   [^String data-json ^String opts-json]
   (debug "libyamlstar dump - input:" data-json)
   (debug "libyamlstar dump - options:" opts-json)
   (let [resp (try
-               (parse-opts opts-json)
-               (->> (json/read-str data-json)
-                    yaml/dump
-                    (assoc {} :data)
-                    json-write-str)
+               (let [opts (parse-opts opts-json)
+                     result (yaml/dump
+                             (json/read-str data-json) opts)]
+                 (json-write-str {:data result}))
                (catch Exception e
                  (-> e error-map json-write-str)))]
     (debug "libyamlstar dump - response:" resp)
@@ -91,16 +90,15 @@
 (defn -dumpYamlAll
   "Dump JSON-encoded documents to YAML, return JSON string with result or error
 
-  The options argument is parsed for validity but otherwise reserved."
+  The options argument configures YAML output."
   [^String data-json ^String opts-json]
   (debug "libyamlstar dump-all - input:" data-json)
   (debug "libyamlstar dump-all - options:" opts-json)
   (let [resp (try
-               (parse-opts opts-json)
-               (->> (json/read-str data-json)
-                    yaml/dump-all
-                    (assoc {} :data)
-                    json-write-str)
+               (let [opts (parse-opts opts-json)
+                     result (yaml/dump-all
+                             (json/read-str data-json) opts)]
+                 (json-write-str {:data result}))
                (catch Exception e
                  (-> e error-map json-write-str)))]
     (debug "libyamlstar dump-all - response:" resp)

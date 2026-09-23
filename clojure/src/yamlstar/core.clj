@@ -25,13 +25,17 @@
 
 (defn dump
   "Dump a supported Clojure value to a YAML string."
-  [value]
-  (api/dump value))
+  ([value]
+   (api/dump value))
+  ([value opts]
+   (api/dump value opts)))
 
 (defn dump-all
   "Dump a sequence of supported Clojure values to a YAML stream."
-  [values]
-  (api/dump-all values))
+  ([values]
+   (api/dump-all values))
+  ([values opts]
+   (api/dump-all values opts)))
 
 (defn version
   "Return the YAMLStar version string."

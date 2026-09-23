@@ -74,20 +74,24 @@
 
 (defn dump
   "Dump a supported native value to a YAML string."
-  [value]
-  (-> value
-      representer/represent
-      desolver/desolve
-      serializer/serialize
-      emitter/emit))
+  ([value]
+   (dump value nil))
+  ([value opts]
+   (-> value
+       representer/represent
+       desolver/desolve
+       serializer/serialize
+       (emitter/emit-with-options opts))))
 
 (defn dump-all
   "Dump a sequence of supported native values to a YAML stream."
-  [values]
-  (-> (mapv representer/represent values)
-      desolver/desolve-all
-      serializer/serialize-all
-      (emitter/emit true)))
+  ([values]
+   (dump-all values nil))
+  ([values opts]
+   (-> (mapv representer/represent values)
+       desolver/desolve-all
+       serializer/serialize-all
+       (emitter/emit-with-options true opts))))
 
 (defn version
   "Return the YAMLStar version string"

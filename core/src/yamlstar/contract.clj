@@ -260,12 +260,20 @@
 (defn events-nodes [events]
   (vec (composer/compose-all events)))
 
-(defn events-yaml [events]
-  (let [documents (count (filter #(= "document_start" (:event %)) events))]
-    (emitter/emit events (> documents 1))))
+(defn events-yaml
+  ([events]
+   (events-yaml events nil))
+  ([events opts]
+   (let [documents (count
+                    (filter #(= "document_start" (:event %)) events))]
+     (emitter/emit-with-options events (> documents 1) opts))))
 
-(defn nodes-yaml [nodes]
-  (emitter/emit (serializer/serialize-all nodes) (> (count nodes) 1)))
+(defn nodes-yaml
+  ([nodes]
+   (nodes-yaml nodes nil))
+  ([nodes opts]
+   (emitter/emit-with-options
+    (serializer/serialize-all nodes) (> (count nodes) 1) opts)))
 
 (defn yaml-value
   ([source stream?]
@@ -278,10 +286,10 @@
    (yaml-output source preserve? stream? nil))
   ([source preserve? stream? opts]
    (if preserve?
-     (events-yaml (yaml-events source opts))
+     (events-yaml (yaml-events source opts) opts)
      (if stream?
-       (yaml/dump-all (yaml/load-all source opts))
-       (yaml/dump (yaml/load source opts))))))
+       (yaml/dump-all (yaml/load-all source opts) opts)
+       (yaml/dump (yaml/load source opts) opts)))))
 
 (defn check-forward! [from to]
   (when (< (stages to) (stages from))

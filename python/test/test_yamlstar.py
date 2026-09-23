@@ -280,6 +280,7 @@ def test_requested_plugin_names():
         'plugin': {
             'parser': {'name': 'reference'},
             'json-comments': {},
+            'tab-indent': {},
             'ignored': 'not-a-plugin',
         },
     }
@@ -493,6 +494,28 @@ def test_plugin_install_options():
     assert opts.to_dict()['plugin-install'] is True
     opts.plugin_install(False)
     assert opts.to_dict()['plugin-install'] is False
+
+
+def test_tab_indent_options():
+    """Build the built-in tab-indentation plugin configuration."""
+    assert yamlstar.tab_indent() == {
+        'tab-indent': {'mode': 'auto', 'scope': 'document'},
+    }
+    opts = yamlstar.Options().plugin(
+        yamlstar.tab_indent(mode='tabs', scope='stream'))
+    assert opts.to_dict()['plugin']['tab-indent'] == {
+        'mode': 'tabs', 'scope': 'stream',
+    }
+
+
+def test_tab_indent_binding():
+    """Load and dump tab-indented YAML through the native options ABI."""
+    opts = yamlstar.Options().plugin(yamlstar.tab_indent())
+    instance = yamlstar.YAMLStar(opts)
+    value = {'root': {'child': {'value': True}}}
+    output = instance.dump(value)
+    assert output == 'root:\n\tchild:\n\t\tvalue: true\n'
+    assert instance.load(output) == value
 
 
 def test_plugin_install_constructor_option():

@@ -318,6 +318,25 @@
              (yaml/dump-all values)))
       (is (= values (yaml/load-all (yaml/dump-all values)))))))
 
+(deftest test-tab-indent-dump
+  (let [opts {:plugin {:tab-indent {:mode "auto"
+                                    :scope "document"}}}]
+    (is (= "root:\n\tchild:\n\t\tvalue: true\n"
+           (yaml/dump
+            {"root" {"child" {"value" true}}} opts)))
+    (is (= "---\nroot:\n\tvalue: true\n"
+           (yaml/dump-all
+            [{"root" {"value" true}}] opts)))))
+
+(deftest test-tab-indent-load-needs-go-yaml
+  (is (thrown-with-msg?
+       Exception
+       #"tab-indent loading requires the native go-yaml parser"
+       (yaml/load
+        "root:\n\tvalue: true\n"
+        {:plugin {:parser {:name "reference"}
+                  :tab-indent {}}}))))
+
 (deftest test-dump-non-string-map-keys
   (testing "Dump scalar and keyword map keys"
     (is (= "1: one\ntrue: yes\nname: value\nns/key: namespaced\n"

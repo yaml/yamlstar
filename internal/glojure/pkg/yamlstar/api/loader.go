@@ -10,8 +10,12 @@ import (
 	atomic "sync/atomic"
 )
 
-var aotDirectFn0 lang.FnFunc1
-var aotDirectFn1 lang.FnFunc1
+var aotDirectFn0 lang.ArityFn
+var aotDirectFn0Arity1 lang.FnFunc1
+var aotDirectFn0Arity2 lang.FnFunc2
+var aotDirectFn1 lang.ArityFn
+var aotDirectFn1Arity1 lang.FnFunc1
+var aotDirectFn1Arity2 lang.FnFunc2
 var aotDirectFn2 lang.ArityFn
 var aotDirectFn2Arity1 lang.FnFunc1
 var aotDirectFn2Arity2 lang.FnFunc2
@@ -78,6 +82,35 @@ func aotLinkBoundFn2(vr *lang.Var) lang.FnFunc2 {
 	return func(p0 any, p1 any) any { return lang.Apply2(fn, p0, p1) }
 }
 
+func aotLinkFn3(vr *lang.Var) lang.FnFunc3 {
+	if vr.IsBound() {
+		return aotLinkBoundFn3(vr)
+	}
+	var linked atomic.Pointer[lang.FnFunc3]
+	return func(p0 any, p1 any, p2 any) any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)(p0, p1, p2)
+		}
+		if !vr.IsBound() {
+			return lang.Apply3(checkDerefVar(vr), p0, p1, p2)
+		}
+		fn := aotLinkBoundFn3(vr)
+		linked.Store(&fn)
+		return fn(p0, p1, p2)
+	}
+}
+
+func aotLinkBoundFn3(vr *lang.Var) lang.FnFunc3 {
+	fn := checkDerefVar(vr)
+	if direct, ok := lang.DirectFn3(fn); ok {
+		return direct
+	}
+	if fixed, ok := fn.(lang.FixedArityFn3); ok {
+		return fixed.Invoke3
+	}
+	return func(p0 any, p1 any, p2 any) any { return lang.Apply3(fn, p0, p1, p2) }
+}
+
 func init() {
 	runtime.RegisterNSLoader("yamlstar/api", LoadNS)
 }
@@ -115,7 +148,7 @@ func LoadNS() {
 	sym_desolver := lang.NewSymbolUnchecked("desolver")
 	sym_dump := lang.NewSymbolUnchecked("dump")
 	sym_dump_DASH_all := lang.NewSymbolUnchecked("dump-all")
-	sym_emit := lang.NewSymbolUnchecked("emit")
+	sym_emit_DASH_with_DASH_options := lang.NewSymbolUnchecked("emit-with-options")
 	sym_emitter := lang.NewSymbolUnchecked("emitter")
 	sym_load := lang.NewSymbolUnchecked("load")
 	sym_load_DASH_all := lang.NewSymbolUnchecked("load-all")
@@ -176,8 +209,8 @@ func LoadNS() {
 	var_yamlstar_DOT_desolver_desolve := lang.InternVarName(sym_yamlstar_DOT_desolver, sym_desolve)
 	// var yamlstar.desolver/desolve-all
 	var_yamlstar_DOT_desolver_desolve_DASH_all := lang.InternVarName(sym_yamlstar_DOT_desolver, sym_desolve_DASH_all)
-	// var yamlstar.emitter/emit
-	var_yamlstar_DOT_emitter_emit := lang.InternVarName(sym_yamlstar_DOT_emitter, sym_emit)
+	// var yamlstar.emitter/emit-with-options
+	var_yamlstar_DOT_emitter_emit_DASH_with_DASH_options := lang.InternVarName(sym_yamlstar_DOT_emitter, sym_emit_DASH_with_DASH_options)
 	// var yamlstar.parser/parse
 	var_yamlstar_DOT_parser_parse := lang.InternVarName(sym_yamlstar_DOT_parser, sym_parse)
 	// var yamlstar.representer/represent
@@ -190,7 +223,7 @@ func LoadNS() {
 	var_yamlstar_DOT_serializer_serialize := lang.InternVarName(sym_yamlstar_DOT_serializer, sym_serialize)
 	// var yamlstar.serializer/serialize-all
 	var_yamlstar_DOT_serializer_serialize_DASH_all := lang.InternVarName(sym_yamlstar_DOT_serializer, sym_serialize_DASH_all)
-	aotExternalFn0 := aotLinkFn1(var_yamlstar_DOT_emitter_emit)
+	aotExternalFn0 := aotLinkFn2(var_yamlstar_DOT_emitter_emit_DASH_with_DASH_options)
 	aotExternalFn1 := aotLinkFn1(var_yamlstar_DOT_serializer_serialize)
 	aotExternalFn10 := aotLinkFn1(var_yamlstar_DOT_composer_compose)
 	aotExternalFn11 := aotLinkFn2(var_yamlstar_DOT_parser_parse)
@@ -199,7 +232,7 @@ func LoadNS() {
 	aotExternalFn14 := aotLinkFn1(var_yamlstar_DOT_composer_compose_DASH_all)
 	aotExternalFn2 := aotLinkFn1(var_yamlstar_DOT_desolver_desolve)
 	aotExternalFn3 := aotLinkFn1(var_yamlstar_DOT_representer_represent)
-	aotExternalFn4 := aotLinkFn2(var_yamlstar_DOT_emitter_emit)
+	aotExternalFn4 := aotLinkFn3(var_yamlstar_DOT_emitter_emit_DASH_with_DASH_options)
 	aotExternalFn5 := aotLinkFn1(var_yamlstar_DOT_serializer_serialize_DASH_all)
 	aotExternalFn6 := aotLinkFn1(var_yamlstar_DOT_desolver_desolve_DASH_all)
 	aotExternalFn7 := aotLinkFn2(var_clojure_DOT_core_mapv)
@@ -299,20 +332,37 @@ func LoadNS() {
 	// dump
 	{
 		tmp0 := sym_dump
-		var tmp1 lang.FnFunc1
-		tmp1 = lang.FnFunc1(func(p0 any) any {
+		var tmp1 lang.ArityFn
+		aotDirectFn0Arity1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := aotExternalFn3(v2)
-			tmp4 := aotExternalFn2(tmp3)
-			tmp5 := aotExternalFn1(tmp4)
-			tmp6 := aotExternalFn0(tmp5)
-			return tmp6
+			tmp3 := aotDirectFn0Arity2(v2, nil)
+			return tmp3
 		})
+		aotDirectFn0Arity2 = lang.FnFunc2(func(p0, p1 any) any {
+			v2 := p0
+			_ = v2
+			v3 := p1
+			_ = v3
+			tmp4 := aotExternalFn3(v2)
+			tmp5 := aotExternalFn2(tmp4)
+			tmp6 := aotExternalFn1(tmp5)
+			tmp7 := aotExternalFn0(tmp6, v3)
+			return tmp7
+		})
+		tmp1 = lang.NewArityFn(
+			nil,
+			aotDirectFn0Arity1,
+			aotDirectFn0Arity2,
+			nil,
+			nil,
+			nil,
+			0,
+		)
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_api_dump = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_api_dump.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(75), kw_column, int(7), kw_end_DASH_line, int(75), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_doc, "Dump a supported native value to a YAML string.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(75), kw_column, int(7), kw_end_DASH_line, int(75), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_value), lang.NewVector(sym_value, sym_opts)), kw_doc, "Dump a supported native value to a YAML string.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
 		}, false)
 	}
 	// load
@@ -407,27 +457,44 @@ func LoadNS() {
 		aotDirectFn4 = tmp1
 		var_yamlstar_DOT_api_version = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_api_version.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(92), kw_column, int(7), kw_end_DASH_line, int(92), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Return the YAMLStar version string", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(96), kw_column, int(7), kw_end_DASH_line, int(96), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Return the YAMLStar version string", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
 		}, false)
 	}
 	// dump-all
 	{
 		tmp0 := sym_dump_DASH_all
-		var tmp1 lang.FnFunc1
-		tmp1 = lang.FnFunc1(func(p0 any) any {
+		var tmp1 lang.ArityFn
+		aotDirectFn1Arity1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := checkDerefVar(var_yamlstar_DOT_representer_represent)
-			tmp4 := aotExternalFn7(tmp3, v2)
-			tmp5 := aotExternalFn6(tmp4)
-			tmp6 := aotExternalFn5(tmp5)
-			tmp7 := aotExternalFn4(tmp6, true)
-			return tmp7
+			tmp3 := aotDirectFn1Arity2(v2, nil)
+			return tmp3
 		})
+		aotDirectFn1Arity2 = lang.FnFunc2(func(p0, p1 any) any {
+			v2 := p0
+			_ = v2
+			v3 := p1
+			_ = v3
+			tmp4 := checkDerefVar(var_yamlstar_DOT_representer_represent)
+			tmp5 := aotExternalFn7(tmp4, v2)
+			tmp6 := aotExternalFn6(tmp5)
+			tmp7 := aotExternalFn5(tmp6)
+			tmp8 := aotExternalFn4(tmp7, true, v3)
+			return tmp8
+		})
+		tmp1 = lang.NewArityFn(
+			nil,
+			aotDirectFn1Arity1,
+			aotDirectFn1Arity2,
+			nil,
+			nil,
+			nil,
+			0,
+		)
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_api_dump_DASH_all = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_api_dump_DASH_all.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(84), kw_column, int(7), kw_end_DASH_line, int(84), kw_end_DASH_column, int(14), kw_arglists, lang.NewList(lang.NewVector(sym_values)), kw_doc, "Dump a sequence of supported native values to a YAML stream.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(86), kw_column, int(7), kw_end_DASH_line, int(86), kw_end_DASH_column, int(14), kw_arglists, lang.NewList(lang.NewVector(sym_values), lang.NewVector(sym_values, sym_opts)), kw_doc, "Dump a sequence of supported native values to a YAML stream.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
 		}, false)
 	}
 }

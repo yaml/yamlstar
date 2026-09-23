@@ -1,11 +1,19 @@
 (ns yamlstar.emitter
   "Emit YAML events as a YAML string."
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [yamlstar.plugin :as plugin]))
 
 (declare emit-node flow-text)
 
+(def ^:dynamic *tab-indent* false)
+
 (defn- indent [n]
-  (apply str (repeat n " ")))
+  (if *tab-indent*
+    (apply str (repeat (quot n 2) "\t"))
+    (apply str (repeat n " "))))
+
+(defn- logical-width [text]
+  (reduce + (map #(if (= % \tab) 2 1) text)))
 
 (defn- quote-double [s]
   (str "\""
@@ -284,7 +292,7 @@
       (let [props-header (emit-collection-header start level prefix)
             child-level (cond
                           props-header (+ level 2)
-                          prefix (count prefix)
+                          prefix (logical-width prefix)
                           :else level)
             first-prefix (when-not props-header prefix)]
         (loop [remaining items
@@ -297,11 +305,17 @@
                                 (str first-prefix "- ")
                                 (str (indent child-level) "- "))
                   next-level (if (and first? first-prefix)
-                               (+ level (count first-prefix))
+                               (+ level (logical-width first-prefix))
                                child-level)
                   rendered (if-let [value (inline-text item-events)]
                              (str item-prefix value "\n")
-                             (emit-node item-events next-level item-prefix))]
+                             (if *tab-indent*
+                               (str (str/replace item-prefix #" $" "")
+                                    "\n"
+                                    (emit-node item-events
+                                               (+ child-level 2) nil))
+                               (emit-node item-events
+                                          next-level item-prefix)))]
               (recur (rest remaining) false (conj out rendered)))))))))
 
 (defn- emit-node
@@ -345,3 +359,12 @@
        (if-let [doc (first docs)]
          (if (seq doc) (emit-node doc 0) "null\n")
          "null\n")))))
+
+(defn emit-with-options
+  "Emit serialized documents using YAMLStar options."
+  ([events opts]
+   (emit-with-options events false opts))
+  ([events multi? opts]
+   (let [tabs (plugin/tab-indent-config opts)]
+     (binding [*tab-indent* (boolean tabs)]
+       (emit events multi?)))))
