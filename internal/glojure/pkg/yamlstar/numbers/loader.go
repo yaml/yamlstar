@@ -24,7 +24,7 @@ type aotKeywordMapStorage0 struct {
 	values [3]any
 }
 
-func aotKeywordMapNew0(v0 any, v1 any, v2 any) *lang.Map {
+func aotKeywordMapNew0(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage0{}
 	storage.values = [3]any{v0, v1, v2}
 	return lang.InitStaticKeywordMap(
@@ -246,7 +246,7 @@ func LoadNS() {
 			_ = v2
 			var tmp3 any
 			{ // let
-				// let binding "vec__1"
+				// let binding "vec__40"
 				tmp4 := lang.Apply3(strconv4.ParseInt, v2, int64(10), int64(64))
 				var v5 any = tmp4
 				_ = v5
@@ -274,7 +274,7 @@ func LoadNS() {
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_numbers_parse_DASH_safe_DASH_integer = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_numbers_parse_DASH_safe_DASH_integer.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/numbers.glj", kw_line, int(31), kw_column, int(7), kw_end_DASH_line, int(31), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
+			return lang.NewMap(kw_file, "yamlstar/numbers.clj", kw_line, int(31), kw_column, int(7), kw_end_DASH_line, int(31), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
 		}, false)
 	}
 	// safe-integer-max
@@ -282,7 +282,7 @@ func LoadNS() {
 		tmp0 := sym_safe_DASH_integer_DASH_max
 		var_yamlstar_DOT_numbers_safe_DASH_integer_DASH_max = ns.InternWithValue(tmp0, int64(9007199254740991), true)
 		var_yamlstar_DOT_numbers_safe_DASH_integer_DASH_max.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/numbers.glj", kw_line, int(7), kw_column, int(6), kw_end_DASH_line, int(7), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
+			return lang.NewMap(kw_file, "yamlstar/numbers.clj", kw_line, int(7), kw_column, int(6), kw_end_DASH_line, int(7), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
 		}, false)
 	}
 	// safe-integer-min
@@ -290,7 +290,7 @@ func LoadNS() {
 		tmp0 := sym_safe_DASH_integer_DASH_min
 		var_yamlstar_DOT_numbers_safe_DASH_integer_DASH_min = ns.InternWithValue(tmp0, int64(-9007199254740991), true)
 		var_yamlstar_DOT_numbers_safe_DASH_integer_DASH_min.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/numbers.glj", kw_line, int(4), kw_column, int(6), kw_end_DASH_line, int(4), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
+			return lang.NewMap(kw_file, "yamlstar/numbers.clj", kw_line, int(4), kw_column, int(6), kw_end_DASH_line, int(4), kw_end_DASH_column, int(21), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
 		}, false)
 	}
 	// safe-integer?
@@ -322,7 +322,7 @@ func LoadNS() {
 		aotDirectFn3 = tmp1
 		var_yamlstar_DOT_numbers_safe_DASH_integer_QMARK_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_numbers_safe_DASH_integer_QMARK_.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/numbers.glj", kw_line, int(22), kw_column, int(7), kw_end_DASH_line, int(22), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector(sym_n)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
+			return lang.NewMap(kw_file, "yamlstar/numbers.clj", kw_line, int(22), kw_column, int(7), kw_end_DASH_line, int(22), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector(sym_n)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
 		}, false)
 	}
 	// validate-safe-integer
@@ -345,7 +345,7 @@ func LoadNS() {
 		aotDirectFn4 = tmp1
 		var_yamlstar_DOT_numbers_validate_DASH_safe_DASH_integer = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_numbers_validate_DASH_safe_DASH_integer.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/numbers.glj", kw_line, int(26), kw_column, int(7), kw_end_DASH_line, int(26), kw_end_DASH_column, int(27), kw_arglists, lang.NewList(lang.NewVector(sym_n)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
+			return lang.NewMap(kw_file, "yamlstar/numbers.clj", kw_line, int(26), kw_column, int(7), kw_end_DASH_line, int(26), kw_end_DASH_column, int(27), kw_arglists, lang.NewList(lang.NewVector(sym_n)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
 		}, false)
 	}
 	// integer-range-error
@@ -365,7 +365,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_numbers_integer_DASH_range_DASH_error = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_numbers_integer_DASH_range_DASH_error.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/numbers.glj", kw_line, int(16), kw_column, int(7), kw_end_DASH_line, int(16), kw_end_DASH_column, int(25), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
+			return lang.NewMap(kw_file, "yamlstar/numbers.clj", kw_line, int(16), kw_column, int(7), kw_end_DASH_line, int(16), kw_end_DASH_column, int(25), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
 		}, false)
 	}
 	// integer-range-message
@@ -384,7 +384,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_numbers_integer_DASH_range_DASH_message = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_numbers_integer_DASH_range_DASH_message.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/numbers.glj", kw_line, int(10), kw_column, int(7), kw_end_DASH_line, int(10), kw_end_DASH_column, int(27), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
+			return lang.NewMap(kw_file, "yamlstar/numbers.clj", kw_line, int(10), kw_column, int(7), kw_end_DASH_line, int(10), kw_end_DASH_column, int(27), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_numbers))
 		}, false)
 	}
 }

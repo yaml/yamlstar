@@ -64,7 +64,7 @@ type aotKeywordMapStorage0 struct {
 	values [2]any
 }
 
-func aotKeywordMapNew0(v0 any, v1 any) *lang.Map {
+func aotKeywordMapNew0(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage0{}
 	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
@@ -88,7 +88,7 @@ type aotKeywordMapStorage1 struct {
 	values [1]any
 }
 
-func aotKeywordMapNew1(v0 any) *lang.Map {
+func aotKeywordMapNew1(v0 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage1{}
 	storage.values = [1]any{v0}
 	return lang.InitStaticKeywordMap(
@@ -116,7 +116,7 @@ type aotKeywordMapStorage2 struct {
 	values [1]any
 }
 
-func aotKeywordMapNew2(v0 any) *lang.Map {
+func aotKeywordMapNew2(v0 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage2{}
 	storage.values = [1]any{v0}
 	return lang.InitStaticKeywordMap(
@@ -133,7 +133,7 @@ type aotKeywordMapStorage3 struct {
 	values [15]any
 }
 
-func aotKeywordMapNew3(v0 any, v1 any, v2 any, v3 any, v4 any, v5 any, v6 any, v7 any, v8 any, v9 any, v10 any, v11 any, v12 any, v13 any, v14 any) *lang.Map {
+func aotKeywordMapNew3(v0 any, v1 any, v2 any, v3 any, v4 any, v5 any, v6 any, v7 any, v8 any, v9 any, v10 any, v11 any, v12 any, v13 any, v14 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage3{}
 	storage.values = [15]any{v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14}
 	return lang.InitStaticKeywordMap(
@@ -150,7 +150,7 @@ type aotKeywordMapStorage4 struct {
 	values [2]any
 }
 
-func aotKeywordMapNew4(v0 any, v1 any) *lang.Map {
+func aotKeywordMapNew4(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage4{}
 	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
@@ -225,7 +225,7 @@ type aotKeywordMapStorage5 struct {
 	values [2]any
 }
 
-func aotKeywordMapNew5(v0 any, v1 any) *lang.Map {
+func aotKeywordMapNew5(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage5{}
 	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
@@ -868,7 +868,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_add_DASH_event = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_add_DASH_event.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(113), kw_column, int(7), kw_end_DASH_line, int(113), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_receiver, sym_event)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(113), kw_column, int(7), kw_end_DASH_line, int(113), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_receiver, sym_event)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// alias-event
@@ -884,7 +884,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_alias_DASH_event = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_alias_DASH_event.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(65), kw_column, int(7), kw_end_DASH_line, int(65), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(65), kw_column, int(7), kw_end_DASH_line, int(65), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// cache-down
@@ -1050,7 +1050,7 @@ func LoadNS() {
 		aotDirectFn2 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_cache_DASH_down = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_cache_DASH_down.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(163), kw_column, int(7), kw_end_DASH_line, int(163), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_receiver), lang.NewVector(sym_receiver, sym_event)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(163), kw_column, int(7), kw_end_DASH_line, int(163), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_receiver), lang.NewVector(sym_receiver, sym_event)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// cache-drop
@@ -1080,7 +1080,7 @@ func LoadNS() {
 		aotDirectFn3 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_cache_DASH_drop = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_cache_DASH_drop.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(174), kw_column, int(7), kw_end_DASH_line, int(174), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_receiver)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(174), kw_column, int(7), kw_end_DASH_line, int(174), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_receiver)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// cache-get
@@ -1142,7 +1142,7 @@ func LoadNS() {
 		aotDirectFn4 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_cache_DASH_get = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_cache_DASH_get.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(180), kw_column, int(7), kw_end_DASH_line, int(180), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_receiver, sym_type)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(180), kw_column, int(7), kw_end_DASH_line, int(180), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_receiver, sym_type)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// cache-pop!
@@ -1198,7 +1198,7 @@ func LoadNS() {
 		aotDirectFn5 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_cache_DASH_pop_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_cache_DASH_pop_BANG_.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yaml_parser/receiver.glj", kw_line, int(144), kw_column, int(8), kw_end_DASH_line, int(144), kw_end_DASH_column, int(17), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_receiver)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMapUniqueKeys(kw_file, "yaml_parser/receiver.clj", kw_line, int(144), kw_column, int(8), kw_end_DASH_line, int(144), kw_end_DASH_column, int(17), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_receiver)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// cache-text
@@ -1214,7 +1214,7 @@ func LoadNS() {
 		aotDirectFn6 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_cache_DASH_text = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_cache_DASH_text.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(69), kw_column, int(7), kw_end_DASH_line, int(69), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_text)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(69), kw_column, int(7), kw_end_DASH_line, int(69), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_text)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// cache-up
@@ -1283,7 +1283,7 @@ func LoadNS() {
 		aotDirectFn7 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_cache_DASH_up = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_cache_DASH_up.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(154), kw_column, int(7), kw_end_DASH_line, int(154), kw_end_DASH_column, int(14), kw_arglists, lang.NewList(lang.NewVector(sym_receiver), lang.NewVector(sym_receiver, sym_event)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(154), kw_column, int(7), kw_end_DASH_line, int(154), kw_end_DASH_column, int(14), kw_arglists, lang.NewList(lang.NewVector(sym_receiver), lang.NewVector(sym_receiver, sym_event)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// check-document-end
@@ -1331,7 +1331,7 @@ func LoadNS() {
 		aotDirectFn8 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_check_DASH_document_DASH_end = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_check_DASH_document_DASH_end.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(193), kw_column, int(7), kw_end_DASH_line, int(193), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector(sym_receiver)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(193), kw_column, int(7), kw_end_DASH_line, int(193), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector(sym_receiver)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// check-document-start
@@ -1375,7 +1375,7 @@ func LoadNS() {
 		aotDirectFn9 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_check_DASH_document_DASH_start = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_check_DASH_document_DASH_start.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(187), kw_column, int(7), kw_end_DASH_line, int(187), kw_end_DASH_column, int(26), kw_arglists, lang.NewList(lang.NewVector(sym_receiver)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(187), kw_column, int(7), kw_end_DASH_line, int(187), kw_end_DASH_column, int(26), kw_arglists, lang.NewList(lang.NewVector(sym_receiver)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// document-end-event
@@ -1419,7 +1419,7 @@ func LoadNS() {
 		aotDirectFn10 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_document_DASH_end_DASH_event = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_document_DASH_end_DASH_event.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(36), kw_column, int(7), kw_end_DASH_line, int(36), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector(), lang.NewVector(sym_explicit)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(36), kw_column, int(7), kw_end_DASH_line, int(36), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector(), lang.NewVector(sym_explicit)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// document-start-event
@@ -1482,7 +1482,7 @@ func LoadNS() {
 		aotDirectFn11 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_document_DASH_start_DASH_event = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_document_DASH_start_DASH_event.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(28), kw_column, int(7), kw_end_DASH_line, int(28), kw_end_DASH_column, int(26), kw_arglists, lang.NewList(lang.NewVector(), lang.NewVector(sym_explicit), lang.NewVector(sym_explicit, sym_version)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(28), kw_column, int(7), kw_end_DASH_line, int(28), kw_end_DASH_column, int(26), kw_arglists, lang.NewList(lang.NewVector(), lang.NewVector(sym_explicit), lang.NewVector(sym_explicit, sym_version)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// dquote-pattern
@@ -1490,7 +1490,7 @@ func LoadNS() {
 		tmp0 := sym_dquote_DASH_pattern
 		var_yaml_DASH_parser_DOT_receiver_dquote_DASH_pattern = ns.InternWithValue(tmp0, regexp4.MustCompile("(?:\\r\\n|(?:\\\\ ?\\r?\\n[ \\t]*)|(?:[ \\t]*\\r?\\n[ \\t]*)+|(?:\\\\x([0-9a-fA-F]{2}))|(?:\\\\u([0-9a-fA-F]{4}))|(?:\\\\U([0-9a-fA-F]{8}))|\\\\[\\\\ \"/_0abefnrt\\tvLNP])"), true)
 		var_yaml_DASH_parser_DOT_receiver_dquote_DASH_pattern.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(227), kw_column, int(6), kw_end_DASH_line, int(227), kw_end_DASH_column, int(29), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(227), kw_column, int(6), kw_end_DASH_line, int(227), kw_end_DASH_column, int(29), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// hex
@@ -1498,7 +1498,7 @@ func LoadNS() {
 		tmp0 := sym_hex
 		var_yaml_DASH_parser_DOT_receiver_hex = ns.InternWithValue(tmp0, "[0-9a-fA-F]", true)
 		var_yaml_DASH_parser_DOT_receiver_hex.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(223), kw_column, int(6), kw_end_DASH_line, int(223), kw_end_DASH_column, int(18), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(223), kw_column, int(6), kw_end_DASH_line, int(223), kw_end_DASH_column, int(18), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// hex2-pattern
@@ -1506,7 +1506,7 @@ func LoadNS() {
 		tmp0 := sym_hex2_DASH_pattern
 		var_yaml_DASH_parser_DOT_receiver_hex2_DASH_pattern = ns.InternWithValue(tmp0, regexp4.MustCompile("\\\\x([0-9a-fA-F]{2})"), true)
 		var_yaml_DASH_parser_DOT_receiver_hex2_DASH_pattern.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(224), kw_column, int(6), kw_end_DASH_line, int(224), kw_end_DASH_column, int(27), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(224), kw_column, int(6), kw_end_DASH_line, int(224), kw_end_DASH_column, int(27), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// hex4-pattern
@@ -1514,7 +1514,7 @@ func LoadNS() {
 		tmp0 := sym_hex4_DASH_pattern
 		var_yaml_DASH_parser_DOT_receiver_hex4_DASH_pattern = ns.InternWithValue(tmp0, regexp4.MustCompile("\\\\u([0-9a-fA-F]{4})"), true)
 		var_yaml_DASH_parser_DOT_receiver_hex4_DASH_pattern.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(225), kw_column, int(6), kw_end_DASH_line, int(225), kw_end_DASH_column, int(27), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(225), kw_column, int(6), kw_end_DASH_line, int(225), kw_end_DASH_column, int(27), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// hex8-pattern
@@ -1522,7 +1522,7 @@ func LoadNS() {
 		tmp0 := sym_hex8_DASH_pattern
 		var_yaml_DASH_parser_DOT_receiver_hex8_DASH_pattern = ns.InternWithValue(tmp0, regexp4.MustCompile("\\\\U([0-9a-fA-F]{8})"), true)
 		var_yaml_DASH_parser_DOT_receiver_hex8_DASH_pattern.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(226), kw_column, int(6), kw_end_DASH_line, int(226), kw_end_DASH_column, int(27), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(226), kw_column, int(6), kw_end_DASH_line, int(226), kw_end_DASH_column, int(27), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// hex->char
@@ -1555,7 +1555,7 @@ func LoadNS() {
 		aotDirectFn12 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_hex_DASH__GT_char = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_hex_DASH__GT_char.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(12), kw_column, int(7), kw_end_DASH_line, int(12), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_hex_DASH_val)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(12), kw_column, int(7), kw_end_DASH_line, int(12), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_hex_DASH_val)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// mapping-end-event
@@ -1569,7 +1569,7 @@ func LoadNS() {
 		aotDirectFn15 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_mapping_DASH_end_DASH_event = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_mapping_DASH_end_DASH_event.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(48), kw_column, int(7), kw_end_DASH_line, int(48), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(48), kw_column, int(7), kw_end_DASH_line, int(48), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// mapping-start-event
@@ -1598,7 +1598,7 @@ func LoadNS() {
 		aotDirectFn16 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_mapping_DASH_start_DASH_event = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_mapping_DASH_start_DASH_event.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(42), kw_column, int(7), kw_end_DASH_line, int(42), kw_end_DASH_column, int(25), kw_arglists, lang.NewList(lang.NewVector(), lang.NewVector(sym_flow)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(42), kw_column, int(7), kw_end_DASH_line, int(42), kw_end_DASH_column, int(25), kw_arglists, lang.NewList(lang.NewVector(), lang.NewVector(sym_flow)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// push-event
@@ -1704,7 +1704,7 @@ func LoadNS() {
 		aotDirectFn17 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_push_DASH_event = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_push_DASH_event.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(130), kw_column, int(7), kw_end_DASH_line, int(130), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_receiver, sym_event)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(130), kw_column, int(7), kw_end_DASH_line, int(130), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_receiver, sym_event)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// scalar-event
@@ -1738,7 +1738,7 @@ func LoadNS() {
 		aotDirectFn18 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_scalar_DASH_event = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_scalar_DASH_event.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(60), kw_column, int(7), kw_end_DASH_line, int(60), kw_end_DASH_column, int(18), kw_arglists, lang.NewList(lang.NewVector(sym_style, sym_value)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(60), kw_column, int(7), kw_end_DASH_line, int(60), kw_end_DASH_column, int(18), kw_arglists, lang.NewList(lang.NewVector(sym_style, sym_value)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// scalar-mode-rules
@@ -1746,7 +1746,7 @@ func LoadNS() {
 		tmp0 := sym_scalar_DASH_mode_DASH_rules
 		var_yaml_DASH_parser_DOT_receiver_scalar_DASH_mode_DASH_rules = ns.InternWithValue(tmp0, lang.NewSet("s_white", "ns_char", "l_empty"), true)
 		var_yaml_DASH_parser_DOT_receiver_scalar_DASH_mode_DASH_rules.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(77), kw_column, int(6), kw_end_DASH_line, int(77), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(77), kw_column, int(6), kw_end_DASH_line, int(77), kw_end_DASH_column, int(22), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// send-event
@@ -1791,7 +1791,7 @@ func LoadNS() {
 		aotDirectFn19 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_send_DASH_event = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_send_DASH_event.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(108), kw_column, int(7), kw_end_DASH_line, int(108), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_receiver, sym_event)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(108), kw_column, int(7), kw_end_DASH_line, int(108), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_receiver, sym_event)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// sequence-end-event
@@ -1805,7 +1805,7 @@ func LoadNS() {
 		aotDirectFn20 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_sequence_DASH_end_DASH_event = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_sequence_DASH_end_DASH_event.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(57), kw_column, int(7), kw_end_DASH_line, int(57), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(57), kw_column, int(7), kw_end_DASH_line, int(57), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// sequence-start-event
@@ -1834,7 +1834,7 @@ func LoadNS() {
 		aotDirectFn21 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_sequence_DASH_start_DASH_event = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_sequence_DASH_start_DASH_event.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(51), kw_column, int(7), kw_end_DASH_line, int(51), kw_end_DASH_column, int(26), kw_arglists, lang.NewList(lang.NewVector(), lang.NewVector(sym_flow)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(51), kw_column, int(7), kw_end_DASH_line, int(51), kw_end_DASH_column, int(26), kw_arglists, lang.NewList(lang.NewVector(), lang.NewVector(sym_flow)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// set-scalar-mode!
@@ -1892,7 +1892,7 @@ func LoadNS() {
 		aotDirectFn22 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_set_DASH_scalar_DASH_mode_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_set_DASH_scalar_DASH_mode_BANG_.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yaml_parser/receiver.glj", kw_line, int(80), kw_column, int(8), kw_end_DASH_line, int(80), kw_end_DASH_column, int(23), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_receiver, sym_on)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMapUniqueKeys(kw_file, "yaml_parser/receiver.clj", kw_line, int(80), kw_column, int(8), kw_end_DASH_line, int(80), kw_end_DASH_column, int(23), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_receiver, sym_on)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// stream-end-event
@@ -1906,7 +1906,7 @@ func LoadNS() {
 		aotDirectFn23 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_stream_DASH_end_DASH_event = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_stream_DASH_end_DASH_event.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(25), kw_column, int(7), kw_end_DASH_line, int(25), kw_end_DASH_column, int(22), kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(25), kw_column, int(7), kw_end_DASH_line, int(25), kw_end_DASH_column, int(22), kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// stream-start-event
@@ -1920,7 +1920,7 @@ func LoadNS() {
 		aotDirectFn24 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_stream_DASH_start_DASH_event = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_stream_DASH_start_DASH_event.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(22), kw_column, int(7), kw_end_DASH_line, int(22), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(22), kw_column, int(7), kw_end_DASH_line, int(22), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// unescapes
@@ -1928,7 +1928,7 @@ func LoadNS() {
 		tmp0 := sym_unescapes
 		var_yaml_DASH_parser_DOT_receiver_unescapes = ns.InternWithValue(tmp0, lang.NewMapUniqueKeys("\\ ", " ", "\\_", "\u00a0", "\\n", "\n", "\\\t", "\t", "\\a", "\a", "\\\"", "\"", "\\L", "\u2028", "\\b", "\b", "\\f", "\f", "\\\\", "\\", "\r\n", "\n", "\\v", "\v", "\\P", "\u2029", "\\/", "/", "\\t", "\t", "\\0", "\x00", "\\r", "\r", "\\N", "\u0085", "\\e", "\x1b"), true)
 		var_yaml_DASH_parser_DOT_receiver_unescapes.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(201), kw_column, int(6), kw_end_DASH_line, int(201), kw_end_DASH_column, int(14), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(201), kw_column, int(6), kw_end_DASH_line, int(201), kw_end_DASH_column, int(14), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// make-receiver
@@ -1967,7 +1967,7 @@ func LoadNS() {
 		aotDirectFn13 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_make_DASH_receiver = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_make_DASH_receiver.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(89), kw_column, int(7), kw_end_DASH_line, int(89), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(89), kw_column, int(7), kw_end_DASH_line, int(89), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// unescape-double-quoted
@@ -2126,7 +2126,7 @@ func LoadNS() {
 		aotDirectFn25 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_unescape_DASH_double_DASH_quoted = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_unescape_DASH_double_DASH_quoted.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(239), kw_column, int(7), kw_end_DASH_line, int(239), kw_end_DASH_column, int(28), kw_arglists, lang.NewList(lang.NewVector(sym_text)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(239), kw_column, int(7), kw_end_DASH_line, int(239), kw_end_DASH_column, int(28), kw_arglists, lang.NewList(lang.NewVector(sym_text)), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// make-receiver-with-callbacks
@@ -2143,7 +2143,7 @@ func LoadNS() {
 		aotDirectFn14 = tmp1
 		var_yaml_DASH_parser_DOT_receiver_make_DASH_receiver_DASH_with_DASH_callbacks = ns.InternWithValue(tmp0, tmp1, true)
 		var_yaml_DASH_parser_DOT_receiver_make_DASH_receiver_DASH_with_DASH_callbacks.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(642), kw_column, int(7), kw_end_DASH_line, int(642), kw_end_DASH_column, int(34), kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(642), kw_column, int(7), kw_end_DASH_line, int(642), kw_end_DASH_column, int(34), kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 	// receiver-callbacks
@@ -3216,7 +3216,7 @@ func LoadNS() {
 		})
 		var_yaml_DASH_parser_DOT_receiver_receiver_DASH_callbacks = ns.InternWithValue(tmp0, lang.NewMapUniqueKeys("got__c_flow_mapping__all__x7b", tmp1, "got__ns_l_compact_sequence", tmp2, "got__c_tag_handle", tmp3, "try__l_yaml_stream", tmp4, "got__c_flow_sequence__all__x5d", tmp5, "got__s_nb_folded_text__all__rep", tmp6, "try__c_ns_flow_map_empty_key_entry", tmp7, "got__c_ns_anchor_property", tmp8, "got__l_empty", tmp9, "got__c_flow_mapping__all__x7d", tmp10, "not__ns_l_compact_mapping", tmp11, "not__ns_l_block_map_implicit_entry", tmp12, "not__s_l_block_collection__all__rep__all__any__all", tmp13, "got__l_nb_literal_text__all__rep2", tmp14, "got__c_l_literal", tmp15, "try__ns_l_compact_sequence", tmp16, "got__c_l_block_map_explicit_entry", tmp17, "try__l_block_mapping", tmp18, "got__c_ns_tag_property", tmp19, "not__ns_flow_pair", tmp20, "got__s_white", tmp21, "try__ns_flow_pair", tmp22, "try__ns_l_compact_mapping", tmp23, "got__c_ns_flow_map_empty_key_entry", tmp24, "not__l_block_sequence", tmp25, "got__c_double_quoted", tmp26, "got__s_nb_spaced_text__all__rep", tmp27, "try__l_block_sequence", tmp28, "got__ns_plain", tmp29, "got__c_l_folded", tmp30, "not__c_l_literal", tmp31, "try__c_l_block_map_explicit_entry", tmp32, "got__l_block_mapping", tmp33, "try__c_l_literal", tmp34, "not__c_ns_flow_map_empty_key_entry", tmp35, "got__c_document_end", tmp36, "got__ns_flow_pair", tmp37, "got__c_single_quoted", tmp38, "try__c_l_folded", tmp39, "not__ns_l_compact_sequence", tmp40, "not__l_block_mapping", tmp41, "got__l_yaml_stream", tmp42, "not__c_l_folded", tmp43, "got__l_block_sequence", tmp44, "got__c_flow_sequence__all__x5b", tmp45, "got__c_directives_end", tmp46, "got__ns_l_block_map_implicit_entry", tmp47, "got__e_scalar", tmp48, "got__ns_l_compact_mapping", tmp49, "got__ns_yaml_version", tmp50, "try__ns_l_block_map_implicit_entry", tmp51, "got__ns_char", tmp52, "got__c_ns_alias_node", tmp53, "not__c_l_block_map_explicit_entry", tmp54, "got__ns_tag_prefix", tmp55), true)
 		var_yaml_DASH_parser_DOT_receiver_receiver_DASH_callbacks.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yaml_parser/receiver.glj", kw_line, int(282), kw_column, int(6), kw_end_DASH_line, int(282), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
+			return lang.NewMap(kw_file, "yaml_parser/receiver.clj", kw_line, int(282), kw_column, int(6), kw_end_DASH_line, int(282), kw_end_DASH_column, int(23), kw_ns, lang.FindOrCreateNamespace(sym_yaml_DASH_parser_DOT_receiver))
 		}, false)
 	}
 }

@@ -12,6 +12,7 @@ include $M/perl.mk
 include $M/bpan.mk
 include $M/shellcheck.mk
 include $M/zig.mk
+include $M/docker-or-podman.mk
 include $M/shell.mk
 
 MAKE-BASH := bash util/make.bash
@@ -173,12 +174,24 @@ test-bindings: $(BINDING-TESTS)
 test-examples:
 	$(MAKE) --no-pr -C example test
 
-go-generate: $(GLOAT)
-	$(MAKE) -C libyamlstar generate-go \
-	  YAMLSTAR_ENGINE=glojure GOROOT=
+go-generate: $(GO) $(PERL)
+	rm -rf .cache/go-generate/goyamlparser
+	mkdir -p .cache/go-generate/goyamlparser
+	cp -a internal/goyamlparser/. .cache/go-generate/goyamlparser/
+	rm -f .cache/go-generate/goyamlparser/.generated
+	$(MAKE) -C cli generate-go \
+	  RT=glj PARSER=go YAMLSTAR_ENGINE=glojure GOROOT= \
+	  GO-YAML-GENERATED-DIR=$(abspath .cache/go-generate/goyamlparser)
+	$(PERL) util/go-generate $(GO) $(VERSION)
+
+GENSYM-COMMENT := ^[[:space:]]*// let binding "[A-Za-z]+_+[0-9]+"$$
 
 go-generate-check: go-generate
-	git diff --exit-code -- internal/glojure/ internal/goyamlparser/
+	# Glojure gensym counters can vary across hosts in generated comments.
+	git diff --exit-code \
+	  --ignore-matching-lines='$(GENSYM-COMMENT)' \
+	  -- \
+	  cmd/yaml/ internal/glojure/ internal/goyamlparser/
 
 go-test: $(GO)
 	go test ./...
@@ -202,8 +215,18 @@ shellcheck: $(SHELLCHECK)
 	  util/release-delphi \
 	  util/release-crystal \
 	  util/release-lua \
-	  util/release-php
+	  util/release-php \
+	  util/fedora-rpm
 endif
+
+fedora-rpm: $(PERL)
+	PERL=$(PERL) bash util/fedora-rpm build '$(DOCKER-OR-PODMAN)'
+
+test-fedora-rpm: $(PERL)
+	$(MAKE) go-generate-check
+	$(MAKE) go-test
+	$(MAKE) shellcheck
+	PERL=$(PERL) bash util/fedora-rpm test '$(DOCKER-OR-PODMAN)'
 
 $(ALL-TESTS):
 	@echo '--------------------------------------------------'

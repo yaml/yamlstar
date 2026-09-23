@@ -19,7 +19,7 @@ type aotKeywordMapStorage0 struct {
 	values [3]any
 }
 
-func aotKeywordMapNew0(v0 any, v1 any, v2 any) *lang.Map {
+func aotKeywordMapNew0(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage0{}
 	storage.values = [3]any{v0, v1, v2}
 	return lang.InitStaticKeywordMap(
@@ -36,7 +36,7 @@ type aotKeywordMapStorage1 struct {
 	values [2]any
 }
 
-func aotKeywordMapNew1(v0 any, v1 any) *lang.Map {
+func aotKeywordMapNew1(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage1{}
 	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
@@ -354,7 +354,7 @@ func LoadNS() {
 											_ = v29
 											var tmp30 any
 											{ // let
-												// let binding "vec__2"
+												// let binding "vec__52"
 												var v31 any = v29
 												_ = v31
 												// let binding "k"
@@ -408,7 +408,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_representer_represent = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_representer_represent.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/representer.glj", kw_line, int(5), kw_column, int(7), kw_end_DASH_line, int(5), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_doc, "Represent a native value as a YAMLStar node tree.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_representer))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/representer.clj", kw_line, int(5), kw_column, int(7), kw_end_DASH_line, int(5), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_value)), kw_doc, "Represent a native value as a YAMLStar node tree.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_representer))
 		}, false)
 	}
 }

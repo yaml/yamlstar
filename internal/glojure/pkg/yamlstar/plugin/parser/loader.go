@@ -21,7 +21,7 @@ type aotKeywordMapStorage0 struct {
 	values [1]any
 }
 
-func aotKeywordMapNew0(v0 any) *lang.Map {
+func aotKeywordMapNew0(v0 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage0{}
 	storage.values = [1]any{v0}
 	return lang.InitStaticKeywordMap(
@@ -38,7 +38,7 @@ type aotKeywordMapStorage1 struct {
 	values [1]any
 }
 
-func aotKeywordMapNew1(v0 any) *lang.Map {
+func aotKeywordMapNew1(v0 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage1{}
 	storage.values = [1]any{v0}
 	return lang.InitStaticKeywordMap(
@@ -189,7 +189,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_plugin_DOT_parser_go_DASH_yaml = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_parser_go_DASH_yaml.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser.glj", kw_line, int(19), kw_column, int(7), kw_end_DASH_line, int(19), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Select the go-yaml parser plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser.clj", kw_line, int(19), kw_column, int(7), kw_end_DASH_line, int(19), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Select the go-yaml parser plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser))
 		}, false)
 	}
 	// name
@@ -206,7 +206,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_plugin_DOT_parser_name = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_parser_name.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser.glj", kw_line, int(4), kw_column, int(7), kw_end_DASH_line, int(4), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_parser_DASH_name)), kw_doc, "Select a parser plugin by name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser.clj", kw_line, int(4), kw_column, int(7), kw_end_DASH_line, int(4), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_parser_DASH_name)), kw_doc, "Select a parser plugin by name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser))
 		}, false)
 	}
 	// reference
@@ -220,7 +220,7 @@ func LoadNS() {
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_plugin_DOT_parser_reference = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_parser_reference.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser.glj", kw_line, int(9), kw_column, int(7), kw_end_DASH_line, int(9), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Select the built-in reference parser plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser.clj", kw_line, int(9), kw_column, int(7), kw_end_DASH_line, int(9), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Select the built-in reference parser plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser))
 		}, false)
 	}
 	// snakeyaml
@@ -234,7 +234,7 @@ func LoadNS() {
 		aotDirectFn3 = tmp1
 		var_yamlstar_DOT_plugin_DOT_parser_snakeyaml = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_parser_snakeyaml.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser.glj", kw_line, int(14), kw_column, int(7), kw_end_DASH_line, int(14), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Select the SnakeYAML parser plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser.clj", kw_line, int(14), kw_column, int(7), kw_end_DASH_line, int(14), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Select the SnakeYAML parser plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser))
 		}, false)
 	}
 }

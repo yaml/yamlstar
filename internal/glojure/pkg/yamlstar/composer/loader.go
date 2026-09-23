@@ -37,7 +37,7 @@ type aotKeywordMapStorage0 struct {
 	values [2]any
 }
 
-func aotKeywordMapNew0(v0 any, v1 any) *lang.Map {
+func aotKeywordMapNew0(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage0{}
 	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
@@ -54,7 +54,7 @@ type aotKeywordMapStorage1 struct {
 	values [1]any
 }
 
-func aotKeywordMapNew1(v0 any) *lang.Map {
+func aotKeywordMapNew1(v0 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage1{}
 	storage.values = [1]any{v0}
 	return lang.InitStaticKeywordMap(
@@ -71,7 +71,7 @@ type aotKeywordMapStorage2 struct {
 	values [2]any
 }
 
-func aotKeywordMapNew2(v0 any, v1 any) *lang.Map {
+func aotKeywordMapNew2(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage2{}
 	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
@@ -358,7 +358,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_composer_compose = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_composer_compose.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(174), kw_column, int(7), kw_end_DASH_line, int(174), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector(sym_events)), kw_doc, "Compose event stream into a single document node tree.\n\n  Args:\n    events: Sequence of event maps from parser\n\n  Returns:\n    A node tree representing the first YAML document", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.clj", kw_line, int(174), kw_column, int(7), kw_end_DASH_line, int(174), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector(sym_events)), kw_doc, "Compose event stream into a single document node tree.\n\n  Args:\n    events: Sequence of event maps from parser\n\n  Returns:\n    A node tree representing the first YAML document", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
 		}, false)
 	}
 	// compose-all
@@ -374,7 +374,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_composer_compose_DASH_all = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_composer_compose_DASH_all.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(185), kw_column, int(7), kw_end_DASH_line, int(185), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_events)), kw_doc, "Compose event stream into multiple document node trees.\n\n  Args:\n    events: Sequence of event maps from parser\n\n  Returns:\n    A sequence of node trees, one per YAML document", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.clj", kw_line, int(185), kw_column, int(7), kw_end_DASH_line, int(185), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_events)), kw_doc, "Compose event stream into multiple document node trees.\n\n  Args:\n    events: Sequence of event maps from parser\n\n  Returns:\n    A sequence of node trees, one per YAML document", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
 		}, false)
 	}
 	// compose-events
@@ -475,7 +475,7 @@ func LoadNS() {
 								_ = v27
 								var tmp28 any
 								{ // let
-									// let binding "G__6"
+									// let binding "G__33"
 									tmp29 := aotKeywordSite0.Get(kw_event, v25, nil)
 									var v30 any = tmp29
 									_ = v30
@@ -868,7 +868,7 @@ func LoadNS() {
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_composer_compose_DASH_events = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_composer_compose_DASH_events.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(97), kw_column, int(7), kw_end_DASH_line, int(97), kw_end_DASH_column, int(20), kw_arglists, lang.NewList(lang.NewVector(sym_events)), kw_doc, "Compose events into a node tree using a stack-based approach.\n\n  The algorithm maintains:\n  - stack: transient stack of finished nodes and pending start events\n  - marks: indexes into stack of the pending mapping and sequence starts\n  - documents: completed document nodes", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.clj", kw_line, int(97), kw_column, int(7), kw_end_DASH_line, int(97), kw_end_DASH_column, int(20), kw_arglists, lang.NewList(lang.NewVector(sym_events)), kw_doc, "Compose events into a node tree using a stack-based approach.\n\n  The algorithm maintains:\n  - stack: transient stack of finished nodes and pending start events\n  - marks: indexes into stack of the pending mapping and sequence starts\n  - documents: completed document nodes", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
 		}, false)
 	}
 	// end-mapping
@@ -943,7 +943,7 @@ func LoadNS() {
 		aotDirectFn3 = tmp1
 		var_yamlstar_DOT_composer_end_DASH_mapping = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_composer_end_DASH_mapping.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(59), kw_column, int(8), kw_end_DASH_line, int(59), kw_end_DASH_column, int(18), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_stack, sym_start)), kw_doc, "Replace the mapping start event at index start and the nodes above it\n  with the finished mapping node", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.clj", kw_line, int(59), kw_column, int(8), kw_end_DASH_line, int(59), kw_end_DASH_column, int(18), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_stack, sym_start)), kw_doc, "Replace the mapping start event at index start and the nodes above it\n  with the finished mapping node", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
 		}, false)
 	}
 	// end-sequence
@@ -1015,7 +1015,7 @@ func LoadNS() {
 		aotDirectFn4 = tmp1
 		var_yamlstar_DOT_composer_end_DASH_sequence = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_composer_end_DASH_sequence.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(75), kw_column, int(8), kw_end_DASH_line, int(75), kw_end_DASH_column, int(19), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_stack, sym_start)), kw_doc, "Replace the sequence start event at index start and the nodes above\n  it with the finished sequence node", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.clj", kw_line, int(75), kw_column, int(8), kw_end_DASH_line, int(75), kw_end_DASH_column, int(19), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_stack, sym_start)), kw_doc, "Replace the sequence start event at index start and the nodes above\n  it with the finished sequence node", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
 		}, false)
 	}
 	// make-alias-node
@@ -1031,7 +1031,7 @@ func LoadNS() {
 		aotDirectFn5 = tmp1
 		var_yamlstar_DOT_composer_make_DASH_alias_DASH_node = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_composer_make_DASH_alias_DASH_node.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(45), kw_column, int(7), kw_end_DASH_line, int(45), kw_end_DASH_column, int(21), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Create an alias node (reference to an anchor)", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.clj", kw_line, int(45), kw_column, int(7), kw_end_DASH_line, int(45), kw_end_DASH_column, int(21), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Create an alias node (reference to an anchor)", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
 		}, false)
 	}
 	// make-mapping-node
@@ -1077,11 +1077,11 @@ func LoadNS() {
 			if lang.IsTruthy(tmp7) {
 				var tmp8 any
 				{ // let
-					// let binding "G__4"
+					// let binding "G__31"
 					tmp9 := aotKeywordMapNew1(kw_mapping)
 					var v10 any = tmp9
 					_ = v10
-					// let binding "G__4"
+					// let binding "G__31"
 					var tmp11 any
 					if lang.IsTruthy(v3) {
 						var tmp12 any = v10
@@ -1092,7 +1092,7 @@ func LoadNS() {
 					}
 					var v13 any = tmp11
 					_ = v13
-					// let binding "G__4"
+					// let binding "G__31"
 					var tmp14 any
 					if lang.IsTruthy(v4) {
 						var tmp15 any = v13
@@ -1103,7 +1103,7 @@ func LoadNS() {
 					}
 					var v16 any = tmp14
 					_ = v16
-					// let binding "G__4"
+					// let binding "G__31"
 					var tmp17 any
 					if lang.IsTruthy(v5) {
 						var tmp18 any = v16
@@ -1128,7 +1128,7 @@ func LoadNS() {
 		aotDirectFn6 = tmp1
 		var_yamlstar_DOT_composer_make_DASH_mapping_DASH_node = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_composer_make_DASH_mapping_DASH_node.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(23), kw_column, int(7), kw_end_DASH_line, int(23), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym_pairs, sym_anchor, sym_tag, sym_flow)), kw_doc, "Create a mapping node", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.clj", kw_line, int(23), kw_column, int(7), kw_end_DASH_line, int(23), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym_pairs, sym_anchor, sym_tag, sym_flow)), kw_doc, "Create a mapping node", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
 		}, false)
 	}
 	// make-scalar-node
@@ -1140,10 +1140,10 @@ func LoadNS() {
 			_ = v2
 			var tmp3 any
 			{ // let
-				// let binding "map__2"
+				// let binding "map__29"
 				var v4 any = v2
 				_ = v4
-				// let binding "map__2"
+				// let binding "map__29"
 				var tmp5 any
 				tmp6 := aotExternalFn12(v4)
 				if lang.IsTruthy(tmp6) {
@@ -1217,11 +1217,11 @@ func LoadNS() {
 				if lang.IsTruthy(tmp25) {
 					var tmp26 any
 					{ // let
-						// let binding "G__3"
+						// let binding "G__30"
 						tmp27 := aotKeywordMapNew1(kw_scalar)
 						var v28 any = tmp27
 						_ = v28
-						// let binding "G__3"
+						// let binding "G__30"
 						var tmp29 any
 						var tmp30 any
 						{ // let
@@ -1246,7 +1246,7 @@ func LoadNS() {
 						}
 						var v32 any = tmp29
 						_ = v32
-						// let binding "G__3"
+						// let binding "G__30"
 						var tmp33 any
 						if lang.IsTruthy(v21) {
 							var tmp34 any = v32
@@ -1257,7 +1257,7 @@ func LoadNS() {
 						}
 						var v35 any = tmp33
 						_ = v35
-						// let binding "G__3"
+						// let binding "G__30"
 						var tmp36 any
 						if lang.IsTruthy(v23) {
 							var tmp37 any = v35
@@ -1284,7 +1284,7 @@ func LoadNS() {
 		aotDirectFn7 = tmp1
 		var_yamlstar_DOT_composer_make_DASH_scalar_DASH_node = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_composer_make_DASH_scalar_DASH_node.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(12), kw_column, int(7), kw_end_DASH_line, int(12), kw_end_DASH_column, int(22), kw_arglists, lang.NewList(lang.NewVector(lang.NewMap(kw_keys, lang.NewVector(sym_value, sym_style, sym_anchor, sym_tag)))), kw_doc, "Create a scalar node from event data", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.clj", kw_line, int(12), kw_column, int(7), kw_end_DASH_line, int(12), kw_end_DASH_column, int(22), kw_arglists, lang.NewList(lang.NewVector(lang.NewMap(kw_keys, lang.NewVector(sym_value, sym_style, sym_anchor, sym_tag)))), kw_doc, "Create a scalar node from event data", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
 		}, false)
 	}
 	// make-sequence-node
@@ -1330,11 +1330,11 @@ func LoadNS() {
 			if lang.IsTruthy(tmp7) {
 				var tmp8 any
 				{ // let
-					// let binding "G__5"
+					// let binding "G__32"
 					tmp9 := aotKeywordMapNew1(kw_sequence)
 					var v10 any = tmp9
 					_ = v10
-					// let binding "G__5"
+					// let binding "G__32"
 					var tmp11 any
 					if lang.IsTruthy(v3) {
 						var tmp12 any = v10
@@ -1345,7 +1345,7 @@ func LoadNS() {
 					}
 					var v13 any = tmp11
 					_ = v13
-					// let binding "G__5"
+					// let binding "G__32"
 					var tmp14 any
 					if lang.IsTruthy(v4) {
 						var tmp15 any = v13
@@ -1356,7 +1356,7 @@ func LoadNS() {
 					}
 					var v16 any = tmp14
 					_ = v16
-					// let binding "G__5"
+					// let binding "G__32"
 					var tmp17 any
 					if lang.IsTruthy(v5) {
 						var tmp18 any = v16
@@ -1381,7 +1381,7 @@ func LoadNS() {
 		aotDirectFn8 = tmp1
 		var_yamlstar_DOT_composer_make_DASH_sequence_DASH_node = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_composer_make_DASH_sequence_DASH_node.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(34), kw_column, int(7), kw_end_DASH_line, int(34), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector(sym_items, sym_anchor, sym_tag, sym_flow)), kw_doc, "Create a sequence node", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.clj", kw_line, int(34), kw_column, int(7), kw_end_DASH_line, int(34), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector(sym_items, sym_anchor, sym_tag, sym_flow)), kw_doc, "Create a sequence node", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
 		}, false)
 	}
 	// pop-children
@@ -1419,7 +1419,7 @@ func LoadNS() {
 		aotDirectFn9 = tmp1
 		var_yamlstar_DOT_composer_pop_DASH_children = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_composer_pop_DASH_children.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(51), kw_column, int(8), kw_end_DASH_line, int(51), kw_end_DASH_column, int(19), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_stack, sym_start)), kw_doc, "Pop the nodes above index start off the transient stack", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.clj", kw_line, int(51), kw_column, int(8), kw_end_DASH_line, int(51), kw_end_DASH_column, int(19), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_stack, sym_start)), kw_doc, "Pop the nodes above index start off the transient stack", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
 		}, false)
 	}
 	// top
@@ -1450,7 +1450,7 @@ func LoadNS() {
 		aotDirectFn10 = tmp1
 		var_yamlstar_DOT_composer_top = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_composer_top.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.glj", kw_line, int(90), kw_column, int(8), kw_end_DASH_line, int(90), kw_end_DASH_column, int(10), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_stack)), kw_doc, "The node on top of the transient stack, or nil when it is empty", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/composer.clj", kw_line, int(90), kw_column, int(8), kw_end_DASH_line, int(90), kw_end_DASH_column, int(10), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_stack)), kw_doc, "The node on top of the transient stack, or nil when it is empty", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_composer))
 		}, false)
 	}
 }

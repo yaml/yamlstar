@@ -1,0 +1,177 @@
+#!/usr/bin/env perl
+
+use v5.20;
+use warnings;
+use autodie qw(chdir close closedir open opendir);
+use Cwd qw(abs_path getcwd);
+use File::Copy qw(copy);
+use File::Path qw(make_path remove_tree);
+use File::Spec;
+
+my ($go, $version) = @ARGV;
+die "Usage: $0 GO VERSION\n" unless $go and $version;
+
+my $root = abs_path(getcwd());
+my $work = File::Spec->catdir($root, '.cache', 'go-generate');
+my $gloat = File::Spec->catdir($work, 'gloat');
+my $stage = File::Spec->catdir($work, 'stage');
+my $binary = File::Spec->catfile($work, 'yaml');
+
+for my $file (
+    File::Spec->catfile($gloat, 'main.go'),
+    File::Spec->catfile($gloat, 'pkg', 'libyamlstar', 'loader.go'),
+    File::Spec->catfile(
+        $gloat, 'pkg', 'yamlstar', 'cli', 'loader.go'),
+) {
+    die "Missing generated file: $file\n" unless -f $file;
+}
+
+remove_tree($stage);
+make_path(
+    File::Spec->catdir($stage, 'cmd', 'yaml'),
+    File::Spec->catdir($stage, 'internal', 'glojure'),
+    File::Spec->catdir($stage, 'internal', 'goyamlparser'),
+);
+
+copy_tree(
+    File::Spec->catdir($gloat, 'pkg'),
+    File::Spec->catdir($stage, 'internal', 'glojure', 'pkg'),
+);
+remove_tree(
+    File::Spec->catdir($stage, 'internal', 'glojure', 'pkg', 'glj'),
+);
+copy_tree(
+    File::Spec->catdir($work, 'goyamlparser'),
+    File::Spec->catdir($stage, 'internal', 'goyamlparser'),
+);
+my $main_go = File::Spec->catfile($stage, 'cmd', 'yaml', 'main.go');
+copy(
+    File::Spec->catfile($gloat, 'main.go'),
+    $main_go,
+) or die "Unable to copy generated main.go: $!\n";
+normalize_application_requires($main_go);
+copy(
+    File::Spec->catfile($root, 'go.mod'),
+    File::Spec->catfile($stage, 'go.mod'),
+) or die "Unable to copy go.mod: $!\n";
+copy(
+    File::Spec->catfile($root, 'go.sum'),
+    File::Spec->catfile($stage, 'go.sum'),
+) or die "Unable to copy go.sum: $!\n";
+
+local $ENV{GOWORK} = 'off';
+local $ENV{GOPATH} = File::Spec->catdir($work, 'gopath');
+local $ENV{GOCACHE} = File::Spec->catdir($work, 'go-build');
+local $ENV{GOMODCACHE} = File::Spec->catdir($work, 'go-mod');
+
+run_in($stage, $go, 'fmt', './...');
+run_in($stage, $go, 'test', './...');
+run_in(
+    $stage,
+    $go,
+    'build',
+    '-tags=glj_aot_runtime,glj_no_goimports',
+    '-o',
+    $binary,
+    './cmd/yaml',
+);
+
+run($binary, '--help');
+my $actual_version = capture($binary, '--version');
+chomp $actual_version;
+die "Unexpected version: $actual_version\n"
+    unless $actual_version eq "yaml v$version";
+
+my $json = capture($binary, '--eval', 'answer: 42', '-j');
+chomp $json;
+die "Unexpected YAML conversion: $json\n"
+    unless $json eq '{"answer":42}';
+
+my $cmd_dir = File::Spec->catdir($root, 'cmd', 'yaml');
+my $generated_dir = File::Spec->catdir($root, 'internal', 'glojure');
+my $parser_dir = File::Spec->catdir($root, 'internal', 'goyamlparser');
+remove_tree($cmd_dir, $generated_dir, $parser_dir);
+make_path($cmd_dir, $generated_dir, $parser_dir);
+copy_tree(
+    File::Spec->catdir($stage, 'cmd', 'yaml'),
+    $cmd_dir,
+);
+copy_tree(
+    File::Spec->catdir($stage, 'internal', 'glojure'),
+    $generated_dir,
+);
+copy_tree(
+    File::Spec->catdir($stage, 'internal', 'goyamlparser'),
+    $parser_dir,
+);
+
+sub copy_tree {
+    my ($source, $destination) = @_;
+    make_path($destination);
+    opendir(my $directory, $source);
+    for my $name (grep { $_ ne '.' and $_ ne '..' } readdir $directory) {
+        my $from = File::Spec->catfile($source, $name);
+        my $to = File::Spec->catfile($destination, $name);
+        if (-d $from) {
+            copy_tree($from, $to);
+        }
+        else {
+            copy($from, $to) or die "Unable to copy $from: $!\n";
+        }
+    }
+    closedir($directory);
+}
+
+sub normalize_application_requires {
+    my ($file) = @_;
+    open my $input, '<', $file;
+    my @lines = <$input>;
+    close $input;
+
+    my $runtime_imports = grep {
+        m{^\s*_ "github\.com/gloathub/ys-v0-glj/}
+            or m{^\s*_ "github\.com/glojurelang/glojure/pkg/stdlib/}
+    } @lines;
+    my @requires = grep {
+        $lines[$_] =~
+            /^\s*require\.Invoke\(lang\.NewSymbol\("[^"]+"\)\)\s*$/
+    } 0 .. $#lines;
+
+    die "Unable to identify generated require calls in $file\n"
+        unless @requires >= $runtime_imports + 1;
+
+    # Gloat emits runtime namespaces in dependency order and the program's
+    # main namespace last.  The application namespaces between them come
+    # from a collection whose iteration order varies across hosts.
+    if (@requires > $runtime_imports + 1) {
+        my @application = @requires[$runtime_imports .. $#requires - 1];
+        @lines[@application] = sort @lines[@application];
+    }
+
+    open my $output, '>', $file;
+    print {$output} @lines;
+    close $output;
+}
+
+sub run_in {
+    my ($directory, @command) = @_;
+    my $previous = getcwd();
+    chdir $directory;
+    run(@command);
+    chdir $previous;
+}
+
+sub run {
+    my (@command) = @_;
+    system @command;
+    die "Command failed: @command\n" if $?;
+}
+
+sub capture {
+    my (@command) = @_;
+    open my $handle, '-|', @command;
+    local $/;
+    my $output = <$handle> // '';
+    close $handle;
+    return $output;
+}

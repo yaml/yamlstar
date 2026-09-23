@@ -1,0 +1,39 @@
+name: Fedora RPM
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fedora-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rpm:
+    name: Build and test Rawhide RPM
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v5
+
+    - name: Build and test RPM
+      run: make test-fedora-rpm DOCKER-OR-PODMAN=docker
+
+    - name: Upload RPM artifacts
+      if: ${{ always() && hashFiles('.cache/fedora/RPMS/**/*.rpm') != '' }}
+      uses: actions/upload-artifact@v6
+      with:
+        name: yamlstar-fedora-rawhide-x86_64
+        path: |
+          .cache/fedora/RPMS/**/*.rpm
+          .cache/fedora/SRPMS/*.rpm
+        if-no-files-found: error
+        include-hidden-files: true
+        retention-days: 7

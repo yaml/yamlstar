@@ -1,0 +1,231 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+action=${1:-}
+runtime_arg=${2:-}
+root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+perl=${PERL:-perl}
+cache=$root/.cache/fedora
+sources=$cache/sources
+topdir=$cache/rpmbuild
+image=yamlstar-fedora-builder:rawhide
+
+if [[ $action != build && $action != test ]]; then
+  echo "Usage: $0 {build|test} DOCKER-OR-PODMAN" >&2
+  exit 2
+fi
+
+if [[ $runtime_arg == */* ]]; then
+  runtime=$runtime_arg
+else
+  runtime=$(command -v "$runtime_arg" 2>/dev/null || true)
+fi
+if [[ ! -x $runtime ]]; then
+  echo "Docker or Podman is required for Fedora package builds." >&2
+  exit 1
+fi
+if [[ ${runtime##*/} == docker ]]; then
+  export DOCKER_CONFIG=$cache/docker-config
+  mkdir -p "$DOCKER_CONFIG"
+fi
+
+# The program and its captures are evaluated by Perl.
+# shellcheck disable=SC2016
+version=$(
+  "$perl" -ne '
+    if (/^version:\s*(\S+)/) {
+      print "$1\n";
+      exit;
+    }
+  ' "$root/Meta"
+)
+# The program and its captures are evaluated by Perl.
+# shellcheck disable=SC2016
+spec_version=$(
+  "$perl" -ne '
+    if (/^%global yamlstar_version\s+(\S+)/) {
+      print "$1\n";
+      exit;
+    }
+  ' "$root/fedora/yamlstar.spec"
+)
+if [[ -z $version || $version != "$spec_version" ]]; then
+  echo "Meta and Fedora spec versions do not match." >&2
+  exit 1
+fi
+
+source_name=yamlstar-$version.tar.gz
+vendor_name=yamlstar-$version-vendor.tar.bz2
+uid=$(id -u)
+gid=$(id -g)
+
+create_source_archive() {
+  local index tree
+
+  if [[ $cache != "$root/.cache/fedora" ]]; then
+    echo "Refusing to clean unexpected cache path: $cache" >&2
+    exit 1
+  fi
+  rm -rf "$sources" "$topdir" "$cache/RPMS" "$cache/SRPMS"
+  mkdir -p "$sources" "$topdir/SOURCES" "$topdir/SPECS"
+
+  index=$cache/git-index
+  rm -f "$index"
+  GIT_INDEX_FILE=$index git -C "$root" read-tree HEAD
+  GIT_INDEX_FILE=$index git -C "$root" add -A
+  tree=$(GIT_INDEX_FILE=$index git -C "$root" write-tree)
+  git -C "$root" archive \
+    --format=tar.gz \
+    --prefix="yamlstar-$version/" \
+    --output="$sources/$source_name" \
+    "$tree"
+  rm -f "$index"
+}
+
+build_image() {
+  "$runtime" build --pull \
+    --tag "$image" \
+    --file "$root/fedora/Containerfile" \
+    "$root/fedora"
+}
+
+create_vendor_archive() {
+  # Variables in the command string are evaluated inside the container.
+  # shellcheck disable=SC2016
+  "$runtime" run --rm \
+    --user "$uid:$gid" \
+    --env HOME=/tmp/yamlstar-home \
+    --env GOCACHE=/tmp/yamlstar-go-build \
+    --env GOMODCACHE=/tmp/yamlstar-go-mod \
+    --env "SOURCE_ARCHIVE=$source_name" \
+    --env "VENDOR_ARCHIVE=$vendor_name" \
+    --volume "$root:/source:ro,Z" \
+    --volume "$cache:/fedora:Z" \
+    "$image" \
+    bash -euc '
+      mkdir -p "$HOME" "$GOCACHE" "$GOMODCACHE"
+      go_vendor_archive create \
+        --config /source/fedora/go-vendor-tools.toml \
+        --output "/fedora/sources/$VENDOR_ARCHIVE" \
+        "/fedora/sources/$SOURCE_ARCHIVE"
+    '
+}
+
+build_rpm() {
+  install -m 0644 \
+    "$root/fedora/yamlstar.spec" \
+    "$topdir/SPECS/yamlstar.spec"
+  install -m 0644 \
+    "$root/fedora/go-vendor-tools.toml" \
+    "$topdir/SOURCES/go-vendor-tools.toml"
+  install -m 0644 \
+    "$sources/$source_name" \
+    "$topdir/SOURCES/$source_name"
+  install -m 0644 \
+    "$sources/$vendor_name" \
+    "$topdir/SOURCES/$vendor_name"
+  mkdir -p "$cache/RPMS" "$cache/SRPMS"
+
+  # Variables in the command string are evaluated inside the container.
+  # shellcheck disable=SC2016
+  "$runtime" run --rm \
+    --network none \
+    --user "$uid:$gid" \
+    --env HOME=/tmp/yamlstar-home \
+    --volume "$cache:/fedora:Z" \
+    "$image" \
+    bash -euc '
+      mkdir -p "$HOME"
+      rpmbuild \
+        --define "_topdir /fedora/rpmbuild" \
+        --define "_rpmdir /fedora/RPMS" \
+        --define "_srcrpmdir /fedora/SRPMS" \
+        -ba /fedora/rpmbuild/SPECS/yamlstar.spec
+    '
+}
+
+build_package() {
+  create_source_archive
+  build_image
+  create_vendor_archive
+  build_rpm
+}
+
+run_rpmlint() {
+  local package
+  local -a packages container_packages
+
+  mapfile -d '' packages < <(
+    find "$cache/RPMS" "$cache/SRPMS" \
+      -type f -name '*.rpm' -print0
+  )
+  if ((${#packages[@]} == 0)); then
+    echo "No RPM artifacts were produced." >&2
+    exit 1
+  fi
+  for package in "${packages[@]}"; do
+    container_packages+=("/fedora/${package#"$cache/"}")
+  done
+  "$runtime" run --rm \
+    --user "$uid:$gid" \
+    --volume "$cache:/fedora:ro,Z" \
+    "$image" \
+    rpmlint "${container_packages[@]}"
+}
+
+run_install_test() {
+  local -a rpms
+  local rpm_path relative
+
+  mapfile -d '' rpms < <(
+    find "$cache/RPMS" \
+      -type f -name "yamlstar-$version-*.rpm" -print0
+  )
+  if ((${#rpms[@]} != 1)); then
+    echo "Expected one installable yamlstar RPM, found ${#rpms[@]}." >&2
+    exit 1
+  fi
+  rpm_path=${rpms[0]}
+  relative=${rpm_path#"$cache/"}
+
+  # Variables in the command string are evaluated inside the container.
+  # shellcheck disable=SC2016
+  "$runtime" run --rm \
+    --env "RPM_PATH=/fedora/$relative" \
+    --env "VERSION=$version" \
+    --volume "$cache:/fedora:ro,Z" \
+    fedora:rawhide \
+    bash -euo pipefail -c '
+      dnf -y --setopt=install_weak_deps=False install "$RPM_PATH"
+      test "$(readlink -f "$(command -v yaml)")" = /usr/bin/yaml
+      test "$(rpm -qf /usr/bin/yaml)" = "$(rpm -q yamlstar)"
+      test "$(yaml --version)" = "yaml v$VERSION"
+      test "$(printf "answer: 42\n" | yaml -j)" = "{\"answer\":42}"
+      test "$(printf "answer: 42\n" | yaml -y)" = "answer: 42"
+
+      event=$(printf "answer: 42\n" | yaml -e)
+      [[ $event == *"event: STREAM-START"* ]]
+      [[ $event == *"event: MAPPING-START"* ]]
+      node=$(printf "answer: 42\n" | yaml -n)
+      [[ $node == *"mapping:"* ]]
+      [[ $node == *"plain: answer"* ]]
+
+      test ! -e /usr/bin/yamlstar-plugin
+      while IFS= read -r requirement; do
+        requirement=${requirement,,}
+        case $requirement in
+          *java*|*jvm*|*clojure*|*gloat*|*makes*)
+            echo "Unexpected runtime requirement: $requirement" >&2
+            exit 1
+            ;;
+        esac
+      done < <(rpm -q --requires yamlstar)
+    '
+}
+
+build_package
+if [[ $action == test ]]; then
+  run_rpmlint
+  run_install_test
+fi
