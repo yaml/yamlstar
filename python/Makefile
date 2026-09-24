@@ -31,12 +31,7 @@ RELEASE-WHEEL-ARCHIVES := \
 PYTHON-BINDING-DEPS := $(PYTHON-VENV)/.yamlstar-binding-deps
 YAML-TEST-SUITE-DIR ?= ../yaml-test-suite
 YAML-TEST-SUITE-ENV := YAMLSTAR_TEST_SUITE_DIR='$(YAML-TEST-SUITE-DIR)'
-YAMLSTAR_ENGINE ?= $(if $(YAMLSTAR_GLOJURE),glojure,graalvm)
-WHEEL-LIB-ENGINE := \
-  $(if $(filter glojure,$(YAMLSTAR_ENGINE)),libyamlstar-glojure,libyamlstar-graalvm)
-ifeq ($(YAMLSTAR_ENGINE),glojure)
 YAML-TEST-SUITE-ENV += YAMLSTAR_TEST_SUITE_EXPECTED_FAILS_FLAVOR='glojure'
-endif
 ifdef t
 YAML-TEST-SUITE-ENV += YAMLSTAR_TEST_SUITE_CASES='$t'
 endif
@@ -77,7 +72,6 @@ wheel: $(PYTHON-VENV) MANIFEST.in Meta $(WHEEL-LIB)
 $(WHEEL-LIB): $(PYTHON-SO)
 	rm -rf $(WHEEL-LIB-DIR)
 	mkdir -p $(dir $@)
-	cp -pL $(dir $<)/$(WHEEL-LIB-ENGINE).$(SO)* $(WHEEL-LIB-DIR)/
 	cp -pL $(dir $<)/libyamlstar.$(SO)* $(WHEEL-LIB-DIR)/
 ifneq ($(OS-NAME),windows)
 	cp -p ../util/yamlstar-plugin $(WHEEL-LIB-DIR)/

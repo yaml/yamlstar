@@ -44,12 +44,6 @@ on:
         default: false
         required: false
         type: boolean
-      graalvm:
-        description: 'Also build the -graalvm CLI and library assets'
-        default: false
-        required: false
-        type: boolean
-
 defaults:
   run:
     shell: bash
@@ -60,7 +54,6 @@ concurrency:
 
 env:
   VERSION: ${{ inputs.version }}
-  JAVA_VERSION: '17'
   YS_RELEASE_CI: '1'
   YS_RELEASE_BINDINGS: ${{ inputs.bindings }}
   YS_RELEASE_BINDINGS_SKIP: ${{ inputs.bindings_skip }}
@@ -121,15 +114,6 @@ jobs:
       with:
         ref: v${{ inputs.version }}
 
-    - name: Set up GraalVM
-      if: ${{ inputs.graalvm }}
-      uses: graalvm/setup-graalvm@v1
-      with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: graalvm
-        github-token: ${{ github.token }}
-        native-image-job-reports: 'true'
-
     - name: Use GitHub Leiningen mirror
       run: |
         make --no-print-directory -n default >/dev/null
@@ -150,15 +134,9 @@ jobs:
 
     - name: Build release archives and Python wheel
       run: |
-        make release-lib VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
-        make release-cli VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
-        make -C python wheel VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
-
-    - name: Build GraalVM release archives
-      if: ${{ inputs.graalvm }}
-      run: |
-        make release-lib VERSION="$VERSION" YAMLSTAR_ENGINE=graalvm
-        make release-cli VERSION="$VERSION" YAMLSTAR_ENGINE=graalvm
+        make release-lib VERSION="$VERSION"
+        make release-cli VERSION="$VERSION"
+        make -C python wheel VERSION="$VERSION"
 
     - name: Upload Linux artifacts
       uses: actions/upload-artifact@v6
@@ -167,8 +145,6 @@ jobs:
         path: |
           dist/yamlstar-${{ inputs.version }}-linux-x64.tar.xz
           dist/libyamlstar-${{ inputs.version }}-linux-x64.tar.xz
-          dist/yamlstar-${{ inputs.version }}-linux-x64-graalvm.tar.xz
-          dist/libyamlstar-${{ inputs.version }}-linux-x64-graalvm.tar.xz
           python/dist/*.whl
         retention-days: 7
 
@@ -193,15 +169,6 @@ jobs:
       run: |
         git config --global --add safe.directory "$GITHUB_WORKSPACE"
         git rev-parse --git-common-dir
-
-    - name: Set up GraalVM
-      if: ${{ inputs.graalvm }}
-      uses: graalvm/setup-graalvm@v1
-      with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: graalvm
-        github-token: ${{ github.token }}
-        native-image-job-reports: 'true'
 
     - name: Install build dependencies
       run: |
@@ -228,14 +195,8 @@ jobs:
 
     - name: Build release archives
       run: |
-        make release-lib VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
-        make release-cli VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
-
-    - name: Build GraalVM release archives
-      if: ${{ inputs.graalvm }}
-      run: |
-        make release-lib VERSION="$VERSION" YAMLSTAR_ENGINE=graalvm
-        make release-cli VERSION="$VERSION" YAMLSTAR_ENGINE=graalvm
+        make release-lib VERSION="$VERSION"
+        make release-cli VERSION="$VERSION"
 
     - name: Upload Linux AArch64 artifacts
       uses: actions/upload-artifact@v6
@@ -244,8 +205,6 @@ jobs:
         path: |
           dist/yamlstar-${{ inputs.version }}-linux-aarch64.tar.xz
           dist/libyamlstar-${{ inputs.version }}-linux-aarch64.tar.xz
-          dist/yamlstar-${{ inputs.version }}-linux-aarch64-graalvm.tar.xz
-          dist/libyamlstar-${{ inputs.version }}-linux-aarch64-graalvm.tar.xz
         retention-days: 7
 
   build-macos-arm64:
@@ -258,15 +217,6 @@ jobs:
       uses: actions/checkout@v5
       with:
         ref: v${{ inputs.version }}
-
-    - name: Set up GraalVM
-      if: ${{ inputs.graalvm }}
-      uses: graalvm/setup-graalvm@v1
-      with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: graalvm
-        github-token: ${{ github.token }}
-        native-image-job-reports: 'true'
 
     - name: Use GitHub Leiningen mirror
       run: |
@@ -288,15 +238,9 @@ jobs:
 
     - name: Build release archives and Python wheel
       run: |
-        make release-lib VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
-        make release-cli VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
-        make -C python wheel VERSION="$VERSION" YAMLSTAR_ENGINE=glojure
-
-    - name: Build GraalVM release archives
-      if: ${{ inputs.graalvm }}
-      run: |
-        make release-lib VERSION="$VERSION" YAMLSTAR_ENGINE=graalvm
-        make release-cli VERSION="$VERSION" YAMLSTAR_ENGINE=graalvm
+        make release-lib VERSION="$VERSION"
+        make release-cli VERSION="$VERSION"
+        make -C python wheel VERSION="$VERSION"
 
     - name: Upload macOS artifacts
       uses: actions/upload-artifact@v6
@@ -305,8 +249,6 @@ jobs:
         path: |
           dist/yamlstar-${{ inputs.version }}-macos-arm64.tar.xz
           dist/libyamlstar-${{ inputs.version }}-macos-arm64.tar.xz
-          dist/yamlstar-${{ inputs.version }}-macos-arm64-graalvm.tar.xz
-          dist/libyamlstar-${{ inputs.version }}-macos-arm64-graalvm.tar.xz
           python/dist/*.whl
         retention-days: 7
 
@@ -320,15 +262,6 @@ jobs:
       uses: actions/checkout@v5
       with:
         ref: v${{ inputs.version }}
-
-    - name: Set up GraalVM
-      if: ${{ inputs.graalvm }}
-      uses: graalvm/setup-graalvm@v1
-      with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: graalvm
-        github-token: ${{ github.token }}
-        native-image-job-reports: 'true'
 
     - name: Use GitHub Leiningen mirror
       run: |
@@ -360,13 +293,10 @@ jobs:
     - name: Build release archives and Python wheel
       run: |
         make release-lib VERSION="$VERSION" \
-          YAMLSTAR_ENGINE=glojure \
           TEST-WITH-GLOJURE="$PWD/.cache/glojure-source"
         make release-cli VERSION="$VERSION" \
-          YAMLSTAR_ENGINE=glojure \
           TEST-WITH-GLOJURE="$PWD/.cache/glojure-source"
         make -C python wheel VERSION="$VERSION" \
-          YAMLSTAR_ENGINE=glojure \
           'PYTHON-NAME=cpython-$(PYTHON-VERSION)-macos-x86_64-none'
 
     - name: Upload macOS x64 artifacts
@@ -679,7 +609,6 @@ jobs:
     - name: Run tests
       run: |
         make test-all \
-          YAMLSTAR_ENGINE=glojure \
           TEST-TIME='date; time' \
           'PYTHON-NAME=cpython-$(PYTHON-VERSION)-macos-x86_64-none' \
           BINDING-LANGS='go python'
@@ -1199,7 +1128,6 @@ jobs:
     - name: Run tests
       run: |
         make test-all \
-          YAMLSTAR_ENGINE=glojure \
           TEST-TIME='date; time' \
           'PYTHON-NAME=cpython-$(PYTHON-VERSION)-macos-x86_64-none' \
           BINDING-LANGS='go python'

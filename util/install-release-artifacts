@@ -154,15 +154,6 @@ mkdir -p libyamlstar/lib
 rm -f libyamlstar/lib/libyamlstar*
 cp -pP "$lib_dir"/libyamlstar* libyamlstar/lib/
 cp -pP "$lib_dir"/*.h libyamlstar/lib/
-while IFS= read -r extra_lib_dir; do
-  [[ $extra_lib_dir == "$lib_dir" ]] && continue
-  for lib_file in \
-    "$extra_lib_dir"/libyamlstar-glojure.* \
-    "$extra_lib_dir"/libyamlstar-graalvm.*; do
-    [[ -e "$lib_file" || -L "$lib_file" ]] || continue
-    cp -pP "$lib_file" libyamlstar/lib/
-  done
-done <<< "$lib_dirs"
 if [[ -f libyamlstar/lib/libyamlstar.dll ]]; then
   cp -pP libyamlstar/lib/libyamlstar.dll \
     "libyamlstar/lib/libyamlstar.dll.$version"

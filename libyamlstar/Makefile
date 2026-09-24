@@ -1,6 +1,6 @@
 include ../common/init.mk
 
-YAMLSTAR_ENGINE ?= $(if $(YAMLSTAR_GLOJURE),glojure,graalvm)
+YAMLSTAR_ENGINE ?= glojure
 
 # Load platform tools before common.mk (which includes shell.mk last)
 # Avoids graalvm.mk/java.mk conflict when both platforms are present
@@ -40,9 +40,8 @@ MAKES-REALCLEAN := \
 SO ?= so
 LIB-DIR := lib
 LIB-NAME ?= libyamlstar-graalvm
-LIB-NAME-GLOAT ?= libyamlstar-glojure
+LIB-NAME-GLOAT ?= libyamlstar
 LIB-SO-GLOAT := $(LIB-DIR)/$(LIB-NAME-GLOAT).$(SO)
-LIB-SO-GLOAT-DEFAULT := $(LIB-DIR)/libyamlstar.$(SO)
 LIB-SO := $(LIB-DIR)/$(LIB-NAME).$(SO)
 PLUGIN-INSTALLER := $(LIB-DIR)/yamlstar-plugin
 LIBYAMLSTAR-GLOAT-ABI := export-load-opts-v2
@@ -82,7 +81,13 @@ YAML-PARSER-VERSION := 0.2.5
 YAML-PARSER-JAR := cache/yaml-parser-$(YAML-PARSER-VERSION).jar
 YAML-PARSER-URL := https://repo.clojars.org/org/yamlstar/yaml-parser/$(YAML-PARSER-VERSION)/yaml-parser-$(YAML-PARSER-VERSION).jar
 GO-YAML-REF ?= 3f63103ff885a8a94f62eb5f036a5d6050c6a3c0
-GO-YAML-REPO ?= https://github.com/yaml/go-yaml
+GO-YAML-LOCAL-REPO ?= $(ROOT)/repos/go-yaml
+GO-YAML-LOCAL-SOURCE := $(shell \
+  git -C '$(GO-YAML-LOCAL-REPO)' cat-file -e \
+    '$(GO-YAML-REF)^{commit}' 2>/dev/null && \
+  printf '%s' '$(GO-YAML-LOCAL-REPO)')
+GO-YAML-REPO ?= $(or \
+  $(GO-YAML-LOCAL-SOURCE),https://github.com/yaml/go-yaml)
 GO-YAML-SRC-DIR := cache/go-yaml-$(GO-YAML-REF)
 GO-YAML-STAMP := $(GO-YAML-SRC-DIR)/.fetched
 GO-YAML-GENERATED-DIR := ../internal/goyamlparser
@@ -297,28 +302,18 @@ endif
 
 
 LIB-HEADER := $(LIB-DIR)/libyamlstar.h
-LIB-HEADER-GLOAT := $(LIB-DIR)/$(LIB-NAME-GLOAT).h
 
-build: build-graalvm build-glojure
+build: $(if $(filter-out windows,$(OS-NAME)),$(PLUGIN-INSTALLER))
+	rm -f $(LIB-DIR)/libyamlstar-glojure.$(SO) \
+	  $(LIB-DIR)/libyamlstar-glojure.$(SO).*
+	test ! -L $(LIB-SO-GLOAT) || rm $(LIB-SO-GLOAT)
+	$(MAKE) _build YAMLSTAR_ENGINE=glojure
 
-build-glojure: $(if $(filter-out windows,$(OS-NAME)),$(PLUGIN-INSTALLER))
-	$(MAKE) _build-glojure YAMLSTAR_ENGINE=glojure
-
-_build-glojure: $(LIB-SO-GLOAT)
+_build: $(LIB-SO-GLOAT)
 	cp $(GLOAT-LIB-HEADER) $(LIB-HEADER)
-	cp $(GLOAT-LIB-HEADER) $(LIB-HEADER-GLOAT)
 	cp $(GLOAT-ISOLATE-HEADER) $(LIB-DIR)/graal_isolate.h
-ifeq ($(OS-NAME),windows)
-	cp $(LIB-SO-GLOAT) $(LIB-SO-GLOAT-DEFAULT)
-else ifneq (,$(GLOAT-WINDOWS-TARGET))
-	cp $(LIB-SO-GLOAT) $(LIB-SO-GLOAT-DEFAULT)
-else
-	ln -sf $(notdir $(LIB-SO-GLOAT)) $(LIB-SO-GLOAT-DEFAULT)
-endif
 ifneq ($(OS-NAME),windows)
 ifeq (,$(GLOAT-WINDOWS-TARGET))
-	ln -sf $(notdir $(LIB-SO-GLOAT)) \
-	  $(LIB-DIR)/$(LIB-NAME-GLOAT).$(SO).$(VERSION)
 	ln -sf $(notdir $(LIB-SO-GLOAT)) \
 	  $(LIB-DIR)/libyamlstar.$(SO).$(VERSION)
 endif
@@ -328,29 +323,15 @@ build-graalvm: $(if $(filter-out windows,$(OS-NAME)),$(PLUGIN-INSTALLER))
 	$(MAKE) _build-graalvm YAMLSTAR_ENGINE=graalvm
 
 _build-graalvm: $(LIB-SO)
-	if test -f $(LIB-DIR)/$(LIB-NAME).h; then \
-	  cp $(LIB-DIR)/$(LIB-NAME).h $(LIB-HEADER); \
-	fi
-ifeq ($(OS-NAME),windows)
-	cp $(LIB-SO) $(LIB-DIR)/libyamlstar.$(SO)
-else
-	ln -sf $(notdir $(LIB-SO)) $(LIB-DIR)/libyamlstar.$(SO)
-endif
 ifneq ($(OS-NAME),windows)
 	ln -sf $(notdir $(LIB-SO)) $(LIB-DIR)/$(LIB-NAME).$(SO).$(VERSION)
 endif
 
 test:
 
-ifeq ($(YAMLSTAR_ENGINE),glojure)
 INSTALL-LIB := $(LIB-SO-GLOAT)
-install: build-glojure
-else
-INSTALL-LIB := $(LIB-SO)
-install: build-graalvm
-endif
 
-install:
+install: build
 	mkdir -p $(PREFIX)/lib/
 	install -m 644 $(INSTALL-LIB) $(PREFIX)/lib/
 ifneq ($(OS-NAME),windows)
@@ -414,7 +395,7 @@ $(LIB-SO): $(LIB-JAR) $(REFLECTION-JSON) $(GRAALVM) $(PLUGIN-HOST-LIB)
 	  -o $(LIB-DIR)/$(LIB-NAME)
 	test -f $@
 	@echo "GraalVM shared library created at: $@"
-	@echo "Header: $(LIB-HEADER)"
+	@echo "Header: $(LIB-DIR)/$(LIB-NAME).h"
 
 # graal_isolate.h is a side effect of building the GraalVM SO
 $(LIB-DIR)/graal_isolate.h: $(LIB-SO)

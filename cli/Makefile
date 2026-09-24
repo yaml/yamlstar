@@ -3,7 +3,7 @@ M := ../.cache/makes
 
 MAKE-BASH := bash ../util/make.bash
 
-RT ?= $(if $(YAMLSTAR_GLOJURE),glj,graal)
+RT ?= glj
 PARSER ?= $(if $(filter glj,$(RT)),go,ref)
 
 VALID-RT := graal glj go
@@ -26,7 +26,6 @@ CLI-DEFAULT-REQUIRE := $(strip \
     [yamlstar.plugin.parser.snakeyaml], \
     $(if $(filter glj,$(RT)),[yamlstar.plugin.parser.go-yaml])))
 CLI-GRAALVM-NAME := yaml-graalvm
-CLI-GLOJURE-NAME := yaml-glojure
 
 ifeq ($(RT),graal)
 ifneq (,$(filter go,$(PARSER)))
@@ -72,12 +71,8 @@ MAKES-CLEAN := \
 
 ifeq ($(OS-NAME),windows)
 CLI-BIN := bin/$(CLI-NAME).exe
-CLI-COMPAT := bin/yaml.exe
-CLI-GRAALVM-BIN := bin/$(CLI-GRAALVM-NAME).exe
 else
 CLI-BIN := bin/$(CLI-NAME)
-CLI-COMPAT := bin/yaml
-CLI-GRAALVM-BIN := bin/$(CLI-GRAALVM-NAME)
 PLUGIN-INSTALLER := bin/yamlstar-plugin
 endif
 CLI-OUT := bin/$(CLI-NAME)
@@ -101,14 +96,7 @@ $(GLOAT-BASH-SHIM): | $(GLOAT-DIR)
 	  'exec /usr/bin/bash "$$@"' > $@
 	chmod +x $@
 endif
-ifeq ($(YAMLSTAR_ENGINE),glojure)
-CLI-GLOAT-NAME ?= $(CLI-NAME)
-else
-CLI-GLOAT-NAME ?= yaml-glojure
-endif
-BUILD-GLOAT-NAME := \
-  $(if $(filter command line,$(origin CLI-GLOAT-NAME)),$(CLI-GLOAT-NAME),$(CLI-GLOJURE-NAME))
-BUILD-GLOAT-BIN := bin/$(BUILD-GLOAT-NAME)
+CLI-GLOAT-NAME ?= $(if $(filter windows,$(OS-NAME)),yaml.exe,yaml)
 CLI-BIN-GLOAT := bin/$(CLI-GLOAT-NAME)
 GLOAT-CACHE := ../libyamlstar/cache/gloat-srcs
 GLOAT-CORE := ../core/src/yamlstar
@@ -183,7 +171,19 @@ else
 _build-selected: $(CLI-BIN)
 endif
 
-build: build-graalvm build-glojure
+build: $(if $(filter-out windows,$(OS-NAME)),$(PLUGIN-INSTALLER))
+	rm -f bin/yaml-glojure bin/yaml-glojure.exe
+	test ! -L $(CLI-BIN-GLOAT) || rm $(CLI-BIN-GLOAT)
+	$(MAKE) _build-gloat \
+	  RT=glj \
+	  PARSER=go \
+	  YAMLSTAR_ENGINE=glojure \
+	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
+	  CLI-GLOAT-NAME=$(CLI-GLOAT-NAME) \
+	  $(if $(GLOAT-DIR),GLOAT-DIR=$(GLOAT-DIR)) \
+	  $(if $(LET_GO_SRC),LET_GO_SRC=$(LET_GO_SRC)) \
+	  $(if $(YAML-PARSER-DIR),YAML-PARSER-DIR=$(YAML-PARSER-DIR)) \
+	  $(if $(TEST-WITH-GLOJURE),TEST-WITH-GLOJURE=$(TEST-WITH-GLOJURE))
 
 jar: $(CLI-JAR)
 
@@ -195,28 +195,6 @@ build-graalvm: $(if $(filter-out windows,$(OS-NAME)),$(PLUGIN-INSTALLER))
 	  PARSER=snake \
 	  YAMLSTAR_ENGINE=graalvm \
 	  CLI-NAME=$(CLI-GRAALVM-NAME)
-ifeq ($(OS-NAME),windows)
-	cp $(CLI-GRAALVM-BIN) $(CLI-COMPAT)
-else
-	ln -sf $(notdir $(CLI-GRAALVM-BIN)) $(CLI-COMPAT)
-endif
-
-build-glojure: $(if $(filter-out windows,$(OS-NAME)),$(PLUGIN-INSTALLER))
-	$(MAKE) _build-gloat \
-	  RT=glj \
-	  PARSER=go \
-	  YAMLSTAR_ENGINE=glojure \
-	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
-	  CLI-GLOAT-NAME=$(BUILD-GLOAT-NAME) \
-	  $(if $(GLOAT-DIR),GLOAT-DIR=$(GLOAT-DIR)) \
-	  $(if $(LET_GO_SRC),LET_GO_SRC=$(LET_GO_SRC)) \
-	  $(if $(YAML-PARSER-DIR),YAML-PARSER-DIR=$(YAML-PARSER-DIR)) \
-	  $(if $(TEST-WITH-GLOJURE),TEST-WITH-GLOJURE=$(TEST-WITH-GLOJURE))
-ifeq ($(OS-NAME),windows)
-	cp $(BUILD-GLOAT-BIN) $(CLI-COMPAT)
-else
-	ln -sf $(notdir $(BUILD-GLOAT-BIN)) $(CLI-COMPAT)
-endif
 
 $(PLUGIN-INSTALLER): ../util/yamlstar-plugin
 	mkdir -p $(dir $@)

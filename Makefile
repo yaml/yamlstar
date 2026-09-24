@@ -18,7 +18,6 @@ MAKE-BASH := bash util/make.bash
 
 # Extract version from Meta file
 VERSION := $(shell grep '^version:' Meta | cut -d' ' -f2)
-YAMLSTAR_ENGINE ?= $(if $(YAMLSTAR_GLOJURE),glojure,graalvm)
 RELEASE-LOG := release-$n.log
 RELEASE-SECRETS := \
   $(wildcard $(HOME)/.yamlstar-secrets.yaml) \
@@ -85,12 +84,8 @@ BINDING-LANGS ?= \
   swift \
   zig \
 
-# Gloat build cannot run JVM-based bindings (clojure, java)
-ifeq ($(YAMLSTAR_ENGINE),glojure)
+# Glojure builds cannot run JVM-based bindings (clojure, java).
 BINDING-SKIP ?= clojure java
-else
-BINDING-SKIP ?=
-endif
 
 BINDING-LANGS := $(filter-out $(BINDING-SKIP),$(BINDING-LANGS))
 
@@ -115,11 +110,9 @@ ALL-TESTS := \
   test-cli \
   test-libyamlstar \
   $(BINDING-TESTS)
-ifeq ($(YAMLSTAR_ENGINE),glojure)
 # The JVM CLI suite requires GraalVM classes and does not test the released
 # Glojure CLI. Release jobs smoke-test the installed native CLI directly.
 ALL-TESTS := $(filter-out test-cli,$(ALL-TESTS))
-endif
 TEST-TIME ?=
 
 build:: build-libyamlstar
@@ -158,13 +151,8 @@ test-unit: $(TEST-UNIT-DEPS)
 	perl -x "$$(command -v prove)"$(if $(v), -v,) $(test)
 endif
 
-ifeq ($(YAMLSTAR_ENGINE),glojure)
 test-suite test-suite-load test-suite-roundtrip test-suite-emit:
-	$(MAKE) -C python $@ YAMLSTAR_ENGINE=glojure
-else
-test-suite test-suite-load test-suite-roundtrip test-suite-emit:
-	$(MAKE) -C core $@
-endif
+	$(MAKE) -C python $@
 
 test-all: $(ALL-TESTS)
 
@@ -175,7 +163,7 @@ test-examples:
 
 go-generate: $(GLOAT)
 	$(MAKE) -C libyamlstar generate-go \
-	  YAMLSTAR_ENGINE=glojure GOROOT=
+	  GOROOT=
 
 go-generate-check: go-generate
 	git diff --exit-code -- internal/glojure/ internal/goyamlparser/
@@ -223,29 +211,24 @@ cli-graalvm:
 build-cli-graalvm:
 	$(MAKE) -C cli build-graalvm
 
-build-cli-glojure:
-	$(MAKE) -C cli build-glojure
-
-build-libyamlstar: build-libyamlstar-graalvm build-libyamlstar-glojure
+build-libyamlstar:
+	$(MAKE) -C libyamlstar build
 
 build-libyamlstar-graalvm:
-	$(MAKE) -C libyamlstar build-graalvm YAMLSTAR_ENGINE=graalvm
-
-build-libyamlstar-glojure:
-	$(MAKE) -C libyamlstar build-glojure YAMLSTAR_ENGINE=glojure
+	$(MAKE) -C libyamlstar build-graalvm
 
 cli-gloat-glj:
-	$(MAKE) -C cli build-glojure \
+	$(MAKE) -C cli build \
 	  CLI-GLOAT-NAME=yaml-gloat-glj \
 	  GLOAT_ENGINE=glj
 
 cli-gloat-lgvm:
-	$(MAKE) -C cli build-glojure \
+	$(MAKE) -C cli build \
 	  CLI-GLOAT-NAME=yaml-gloat-lgvm \
 	  GLOAT_ENGINE=lgvm
 
 cli-gloat-lglvm:
-	$(MAKE) -C cli build-glojure \
+	$(MAKE) -C cli build \
 	  CLI-GLOAT-NAME=yaml-gloat-lglvm \
 	  GLOAT_ENGINE=lglvm
 
@@ -256,7 +239,7 @@ define CLI-LOCAL-BUILD
 	  glojure "$(glojure-dir)" "$(glojure-commit)" "$(CLI-LOCAL-CACHE)"); \
 	$(if $(2),let_go_dir=$$($(ROOT)/util/cli-local-source \
 	  let-go "$(let-go-dir)" "$(let-go-commit)" "$(CLI-LOCAL-CACHE)");) \
-	$(MAKE) -C cli build-glojure \
+	$(MAKE) -C cli build \
 	  CLI-GLOAT-NAME=yaml-local-$(1) \
 	  GLOAT_ENGINE=$(1) \
 	  GLOAT-DIR="$$gloat_dir" \

@@ -37,7 +37,6 @@ engines:
         directory: ~/src/yaml-reference-parser-clj
     build:
       command: >-
-        env -u YAMLSTAR_GLOJURE
         make -C libyamlstar build-graalvm
         YAML-PARSER-DIR="${source.yaml-parser}"
         LIB-NAME=libyamlstar-graalvm
@@ -54,9 +53,9 @@ engines:
         directory: ~/src/yaml-reference-parser-clj
     build:
       command: >-
-        YAMLSTAR_GLOJURE=1 GLOAT_ENGINE=lgvm
+        GLOAT_ENGINE=lgvm
         LET_GO_SRC="${source.let-go}"
-        make -C libyamlstar build-gloat
+        make -C libyamlstar build
         GLOAT-DIR="${source.gloat}"
         YAML-PARSER-DIR="${source.yaml-parser}"
         LIB-NAME-GLOAT=libyamlstar-gloat-lgvm
@@ -73,8 +72,7 @@ engines:
         directory: ~/src/yaml-reference-parser-clj
     build:
       command: >-
-        YAMLSTAR_GLOJURE=1
-        make -C libyamlstar build-gloat
+        make -C libyamlstar build
         GLOAT-DIR="${source.gloat}"
         TEST-WITH-GLOJURE="${source.glojure}"
         YAML-PARSER-DIR="${source.yaml-parser}"
