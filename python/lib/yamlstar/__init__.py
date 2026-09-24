@@ -211,9 +211,14 @@ class Options:
     return dict(self._options)
 
 
-def parser(name):
-  """Return a parser plugin option fragment."""
-  return {'parser': {'name': name}}
+def yaml_parser(name):
+  """Return a YAML parser plugin option fragment."""
+  return {'yaml-parser': {'name': name}}
+
+
+def yaml_emitter(name):
+  """Return a YAML emitter plugin option fragment."""
+  return {'yaml-emitter': {'name': name}}
 
 
 def json_comments(name='sanitizer'):

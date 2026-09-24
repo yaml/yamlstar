@@ -264,7 +264,7 @@ def test_requested_plugin_names():
     """Extract plugin distribution names from native plugin options."""
     options = {
         'plugin': {
-            'parser': {'name': 'reference'},
+            'yaml-parser': {'name': 'reference'},
             'json-comments': {},
             'tab-indent': {},
             'ignored': 'not-a-plugin',
@@ -464,7 +464,7 @@ def test_parallel_calls_keep_plugin_paths_isolated(monkeypatch, tmp_path):
 
 def test_load_with_options_dict(ys):
     """Test loading with a full options dict."""
-    options = {'plugin': {'parser': {'name': 'reference'}}}
+    options = {'plugin': {'yaml-parser': {'name': 'reference'}}}
     assert yamlstar.YAMLStar(options).load("key: value") == {"key": "value"}
 
 
@@ -472,6 +472,14 @@ def test_json_comments_options():
     """Test the JSON comments plugin option helper."""
     assert yamlstar.json_comments() == {
         'json-comments': {'name': 'sanitizer'}}
+
+
+def test_yaml_plugin_options():
+    """Build YAML parser and emitter plugin option fragments."""
+    assert yamlstar.yaml_parser('reference') == {
+        'yaml-parser': {'name': 'reference'}}
+    assert yamlstar.yaml_emitter('reference') == {
+        'yaml-emitter': {'name': 'reference'}}
 
 
 def test_plugin_install_options():
@@ -523,13 +531,27 @@ def test_plugin_install_constructor_option():
 
 def test_load_with_reference_parser(ys):
     """Test explicitly selecting the reference parser."""
-    opts = yamlstar.Options().plugin(yamlstar.parser('reference'))
+    opts = yamlstar.Options().plugin(yamlstar.yaml_parser('reference'))
     assert yamlstar.YAMLStar(opts).load("key: value") == {"key": "value"}
 
 
 def test_load_with_unknown_parser(ys):
     """Test that an unknown parser name raises a useful error."""
-    opts = yamlstar.Options().plugin(yamlstar.parser('no-such-parser'))
+    opts = yamlstar.Options().plugin(yamlstar.yaml_parser('no-such-parser'))
     unknown = yamlstar.YAMLStar(opts)
     with pytest.raises(Exception, match="Unknown YAML parser plugin"):
         unknown.load("key: value")
+
+
+def test_dump_with_reference_emitter(ys):
+    """Test explicitly selecting the reference emitter."""
+    opts = yamlstar.Options().plugin(yamlstar.yaml_emitter('reference'))
+    assert yamlstar.YAMLStar(opts).dump({'foo': ['bar']}) == 'foo:\n- bar\n'
+
+
+def test_dump_with_unknown_emitter(ys):
+    """Test that an unknown emitter name raises a useful error."""
+    opts = yamlstar.Options().plugin(yamlstar.yaml_emitter('no-such-emitter'))
+    unknown = yamlstar.YAMLStar(opts)
+    with pytest.raises(Exception, match="Unknown YAML emitter plugin"):
+        unknown.dump({'key': 'value'})

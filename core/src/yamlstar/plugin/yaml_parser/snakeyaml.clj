@@ -1,16 +1,10 @@
-(ns yamlstar.plugin.parser.snakeyaml
-  "SnakeYAML parser plugin for YAMLStar.
-
-  Wraps snakeyaml-engine's low level event parser and adapts its Java
-  event objects to the standard YAMLStar event stream, so it can be
-  selected with:
-
-    (yamlstar.api/load yaml {:plugin {:parser {:name \"snakeyaml\"}}})"
+(ns yamlstar.plugin.yaml-parser.snakeyaml
+  "SnakeYAML parser plugin for YAMLStar."
   (:require [yamlstar.plugin :as plugin])
   (:import (java.util Optional)
            (org.snakeyaml.engine.v2.api LoadSettings)
            (org.snakeyaml.engine.v2.api.lowlevel Parse)
-           (org.snakeyaml.engine.v2.common ScalarStyle)
+           (org.snakeyaml.engine.v2.common ScalarStyle SpecVersion)
            (org.snakeyaml.engine.v2.events
              Event
              AliasEvent
@@ -61,7 +55,7 @@
   (cond-> {:event "document_start"}
     (.isExplicit e) (assoc :explicit true)
     (.isPresent (.getSpecVersion e))
-    (assoc :version (let [v (.get (.getSpecVersion e))]
+    (assoc :version (let [^SpecVersion v (.get (.getSpecVersion e))]
                       (str (.getMajor v) "." (.getMinor v))))))
 
 (defn- scalar [^ScalarEvent e]
@@ -72,9 +66,7 @@
     (assoc :style (scalar-style (.getScalarStyle e)))))
 
 (defn- event->map
-  "Convert a snakeyaml event object to a YAMLStar event map.
-
-  Returns nil for events with no YAMLStar equivalent (comments)."
+  "Convert a snakeyaml event object to a YAMLStar event map."
   [^Event e]
   (condp instance? e
     StreamStartEvent {:event "stream_start"}
@@ -93,10 +85,7 @@
     nil))
 
 (defn parse
-  "Parse a YAML string into a YAMLStar event stream using snakeyaml.
-
-  The input is normalized to end with a newline, matching the reference
-  parser, so both parsers produce identical event streams."
+  "Parse a YAML string into a YAMLStar event stream using snakeyaml."
   [yaml-str _config]
   (let [yaml-str (or yaml-str "")
         yaml-str (if (or (= "" yaml-str)
@@ -111,4 +100,4 @@
    :parse parse
    :default-config {}})
 
-(plugin/register-parser! plugin)
+(plugin/register-yaml-parser! plugin)

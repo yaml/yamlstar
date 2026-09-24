@@ -151,19 +151,22 @@ CLI-DEFAULT-SRC() (
   output=$1
   requires=$2
   parser=$3
+  emitter=$4
   mkdir -p "$(dirname "$output")"
   if test -n "$requires"; then
     printf '%s\n' \
       '(ns yamlstar.cli-default' \
       "  (:require $requires))" \
       '' \
-      "(def default-parser \"$parser\")" \
+      "(def default-yaml-parser \"$parser\")" \
+      "(def default-yaml-emitter \"$emitter\")" \
       > "$output"
   else
     printf '%s\n' \
       '(ns yamlstar.cli-default)' \
       '' \
-      "(def default-parser \"$parser\")" \
+      "(def default-yaml-parser \"$parser\")" \
+      "(def default-yaml-emitter \"$emitter\")" \
       > "$output"
   fi
 )

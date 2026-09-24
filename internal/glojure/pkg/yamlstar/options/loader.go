@@ -224,7 +224,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_options_add = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_options_add.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/options.glj", kw_line, int(9), kw_column, int(7), kw_end_DASH_line, int(9), kw_end_DASH_column, int(9), kw_arglists, lang.NewList(lang.NewVector(sym_options, sym_m)), kw_doc, "Shallow-merge m into options.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_options))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/options.clj", kw_line, int(9), kw_column, int(7), kw_end_DASH_line, int(9), kw_end_DASH_column, int(9), kw_arglists, lang.NewList(lang.NewVector(sym_options, sym_m)), kw_doc, "Shallow-merge m into options.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_options))
 		}, false)
 	}
 	// options
@@ -238,7 +238,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_options_options = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_options_options.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/options.glj", kw_line, int(4), kw_column, int(7), kw_end_DASH_line, int(4), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Return an empty YAMLStar options map.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_options))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/options.clj", kw_line, int(4), kw_column, int(7), kw_end_DASH_line, int(4), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Return an empty YAMLStar options map.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_options))
 		}, false)
 	}
 	// plugin
@@ -257,7 +257,7 @@ func LoadNS() {
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_options_plugin = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_options_plugin.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/options.glj", kw_line, int(14), kw_column, int(7), kw_end_DASH_line, int(14), kw_end_DASH_column, int(12), kw_arglists, lang.NewList(lang.NewVector(sym_options, sym_plugin_DASH_options)), kw_doc, "Add a plugin option fragment under :plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_options))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/options.clj", kw_line, int(14), kw_column, int(7), kw_end_DASH_line, int(14), kw_end_DASH_column, int(12), kw_arglists, lang.NewList(lang.NewVector(sym_options, sym_plugin_DASH_options)), kw_doc, "Add a plugin option fragment under :plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_options))
 		}, false)
 	}
 }

@@ -362,7 +362,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_api_dump = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_api_dump.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(75), kw_column, int(7), kw_end_DASH_line, int(75), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_value), lang.NewVector(sym_value, sym_opts)), kw_doc, "Dump a supported native value to a YAML string.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.clj", kw_line, int(75), kw_column, int(7), kw_end_DASH_line, int(75), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_value), lang.NewVector(sym_value, sym_opts)), kw_doc, "Dump a supported native value to a YAML string.\n\n  The optional opts map may select a :yaml-emitter plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
 		}, false)
 	}
 	// load
@@ -403,7 +403,7 @@ func LoadNS() {
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_api_load = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_api_load.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(23), kw_column, int(7), kw_end_DASH_line, int(23), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str), lang.NewVector(sym_yaml_DASH_str, sym_opts)), kw_doc, "Parse a YAML string and return a Clojure data structure.\n\n  Supports YAML 1.2 core schema with standard types:\n  - Scalars: strings, integers, floats, booleans, null\n  - Collections: maps (mappings) and vectors (sequences)\n  - Anchors and aliases\n\n  Args:\n    yaml-str: A string containing YAML content\n    opts: (optional) Options map; {:plugin {:parser {:name \"name\"}}}\n          selects a parser plugin\n\n  Returns:\n    A Clojure data structure representing the YAML document\n\n  Throws:\n    Exception if the YAML is malformed", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.clj", kw_line, int(23), kw_column, int(7), kw_end_DASH_line, int(23), kw_end_DASH_column, int(10), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str), lang.NewVector(sym_yaml_DASH_str, sym_opts)), kw_doc, "Parse a YAML string and return a Clojure data structure.\n\n  Supports YAML 1.2 core schema with standard types:\n  - Scalars: strings, integers, floats, booleans, null\n  - Collections: maps (mappings) and vectors (sequences)\n  - Anchors and aliases\n\n  Args:\n    yaml-str: A string containing YAML content\n    opts: (optional) Options map; {:plugin {:yaml-parser {:name \"name\"}}}\n          selects a YAML parser plugin\n\n  Returns:\n    A Clojure data structure representing the YAML document\n\n  Throws:\n    Exception if the YAML is malformed", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
 		}, false)
 	}
 	// load-all
@@ -444,7 +444,7 @@ func LoadNS() {
 		aotDirectFn3 = tmp1
 		var_yamlstar_DOT_api_load_DASH_all = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_api_load_DASH_all.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(50), kw_column, int(7), kw_end_DASH_line, int(50), kw_end_DASH_column, int(14), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str), lang.NewVector(sym_yaml_DASH_str, sym_opts)), kw_doc, "Parse a multi-document YAML string and return a sequence of documents.\n\n  YAML files can contain multiple documents separated by '---'.\n  This function returns all documents as a sequence.\n\n  Args:\n    yaml-str: A string containing one or more YAML documents\n    opts: (optional) Options map; {:plugin {:parser {:name \"name\"}}}\n          selects a parser plugin\n\n  Returns:\n    A sequence of Clojure data structures, one per YAML document\n\n  Throws:\n    Exception if the YAML is malformed", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.clj", kw_line, int(50), kw_column, int(7), kw_end_DASH_line, int(50), kw_end_DASH_column, int(14), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str), lang.NewVector(sym_yaml_DASH_str, sym_opts)), kw_doc, "Parse a multi-document YAML string and return a sequence of documents.\n\n  YAML files can contain multiple documents separated by '---'.\n  This function returns all documents as a sequence.\n\n  Args:\n    yaml-str: A string containing one or more YAML documents\n    opts: (optional) Options map; {:plugin {:yaml-parser {:name \"name\"}}}\n          selects a YAML parser plugin\n\n  Returns:\n    A sequence of Clojure data structures, one per YAML document\n\n  Throws:\n    Exception if the YAML is malformed", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
 		}, false)
 	}
 	// version
@@ -457,7 +457,7 @@ func LoadNS() {
 		aotDirectFn4 = tmp1
 		var_yamlstar_DOT_api_version = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_api_version.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(96), kw_column, int(7), kw_end_DASH_line, int(96), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Return the YAMLStar version string", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.clj", kw_line, int(100), kw_column, int(7), kw_end_DASH_line, int(100), kw_end_DASH_column, int(13), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Return the YAMLStar version string", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
 		}, false)
 	}
 	// dump-all
@@ -494,7 +494,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_api_dump_DASH_all = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_api_dump_DASH_all.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.glj", kw_line, int(86), kw_column, int(7), kw_end_DASH_line, int(86), kw_end_DASH_column, int(14), kw_arglists, lang.NewList(lang.NewVector(sym_values), lang.NewVector(sym_values, sym_opts)), kw_doc, "Dump a sequence of supported native values to a YAML stream.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/api.clj", kw_line, int(88), kw_column, int(7), kw_end_DASH_line, int(88), kw_end_DASH_column, int(14), kw_arglists, lang.NewList(lang.NewVector(sym_values), lang.NewVector(sym_values, sym_opts)), kw_doc, "Dump a sequence of supported native values to a YAML stream.\n\n  The optional opts map may select a :yaml-emitter plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_api))
 		}, false)
 	}
 }

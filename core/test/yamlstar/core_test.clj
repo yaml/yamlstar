@@ -323,16 +323,18 @@
                                     :load "auto"
                                     :dump "tabs"
                                     :auto "document"}}}]
-    (is (= "root:\n\tchild:\n\t\tvalue: true\n"
-           (yaml/dump
-            {"root" {"child" {"value" true}}} opts)))
-    (is (= "---\nroot:\n\tvalue: true\n"
-           (yaml/dump-all
-            [{"root" {"value" true}}] opts)))
+    (is (thrown-with-msg?
+         Exception
+         #"requires the native go-yaml emitter"
+         (yaml/dump {"root" {"child" {"value" true}}} opts)))
     (is (= "root:\n  value: true\n"
            (yaml/dump
             {"root" {"value" true}}
             {:plugin {:tab-indent {:dump "spaces"}}})))))
+
+(deftest test-compact-sequence-indentation
+  (is (= "foo:\n- bar\n"
+         (yaml/dump {"foo" ["bar"]}))))
 
 (deftest test-tab-indent-load-needs-go-yaml
   (is (thrown-with-msg?
@@ -340,12 +342,12 @@
        #"tab-indent loading requires the native go-yaml parser"
        (yaml/load
         "root:\n\tvalue: true\n"
-        {:plugin {:parser {:name "reference"}
+        {:plugin {:yaml-parser {:name "reference"}
                   :tab-indent {}}})))
   (is (= {"root" {"value" true}}
          (yaml/load
           "root:\n  value: true\n"
-          {:plugin {:parser {:name "reference"}
+          {:plugin {:yaml-parser {:name "reference"}
                     :tab-indent {:load "spaces"}}})))
   (is (thrown-with-msg?
        Exception

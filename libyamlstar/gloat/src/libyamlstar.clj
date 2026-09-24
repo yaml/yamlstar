@@ -3,21 +3,28 @@
   (:require [clojure.data.json :as json]
             [clojure.string :as str]
             [yamlstar.api :as yaml]
+            [yamlstar.emitter :as emitter]
             [yamlstar.parser :as parser]
             [yamlstar.plugin.shared-host :as shared-host]
-            [yamlstar.plugin.parser.reference]
-            [yamlstar.plugin.parser.go-yaml]))
+            [yamlstar.plugin.yaml-parser.reference]
+            [yamlstar.plugin.yaml-parser.go-yaml]
+            [yamlstar.plugin.yaml-emitter.reference]
+            [yamlstar.plugin.yaml-emitter.go-yaml]))
 
-(parser/register-parsers! "reference" "go-yaml")
-(parser/set-default-parser! "go-yaml")
+(parser/register-yaml-parsers! "reference" "go-yaml")
+(emitter/register-yaml-emitters! "reference" "go-yaml")
+(parser/set-default-yaml-parser! "go-yaml")
+(emitter/set-default-yaml-emitter! "go-yaml")
 
 (defn install-shared-host! []
   (when (bound? #'shared-host/install!)
     (shared-host/install!)))
 
-(defn install-parsers! []
-  (parser/register-parsers! "reference" "go-yaml")
-  (parser/set-default-parser! "go-yaml"))
+(defn install-yaml-plugins! []
+  (parser/register-yaml-parsers! "reference" "go-yaml")
+  (emitter/register-yaml-emitters! "reference" "go-yaml")
+  (parser/set-default-yaml-parser! "go-yaml")
+  (emitter/set-default-yaml-emitter! "go-yaml"))
 
 (install-shared-host!)
 
@@ -99,7 +106,7 @@
   "Load YAML string, return JSON string with {:data ...} or {:error ...}"
   [_thread yaml-str opts-json]
   (install-shared-host!)
-  (install-parsers!)
+  (install-yaml-plugins!)
   (try
     (let [result (yaml/load yaml-str (parse-opts opts-json))]
       (json/write-str {:data (nil-keys->string result)}))
@@ -115,7 +122,7 @@
   "Load all YAML documents, return JSON string with {:data [...]} or {:error ...}"
   [_thread yaml-str opts-json]
   (install-shared-host!)
-  (install-parsers!)
+  (install-yaml-plugins!)
   (try
     (let [result (yaml/load-all yaml-str (parse-opts opts-json))]
       (json/write-str {:data (nil-keys->string result)}))
@@ -127,6 +134,7 @@
 (defn yamlstar-dump
   "Dump one JSON-encoded value to YAML, return JSON string with {:data ...} or {:error ...}"
   [_thread data-json opts-json]
+  (install-yaml-plugins!)
   (try
     (let [opts (parse-opts opts-json)
           result (yaml/dump (json/read-str data-json) opts)]
@@ -142,6 +150,7 @@
 (defn yamlstar-dump-all
   "Dump JSON-encoded documents to YAML, return JSON string with {:data ...} or {:error ...}"
   [_thread data-json opts-json]
+  (install-yaml-plugins!)
   (try
     (let [opts (parse-opts opts-json)
           result (yaml/dump-all (json/read-str data-json) opts)]

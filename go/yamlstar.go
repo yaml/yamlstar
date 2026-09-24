@@ -61,17 +61,17 @@ const (
 // TabIndentConfig configures the built-in tab-indent plugin.
 type TabIndentConfig = core.TabIndentConfig
 
-// Parser selects the parser plugin used for loading.
-var Parser = core.Parser
+// YAMLParser selects the YAML parser plugin used for loading.
+var YAMLParser = core.YAMLParser
+
+// YAMLEmitter selects the YAML emitter plugin used for dumping.
+var YAMLEmitter = core.YAMLEmitter
 
 // TabIndent enables tab-aware loading and tab-indented dumping.
 var TabIndent = core.TabIndent
 
 // WithPlugin adds a plugin option fragment.
 var WithPlugin = core.WithPlugin
-
-// WithParser selects the parser plugin used for loading.
-var WithParser = core.WithParser
 
 // Load parses a YAML string and returns its first document as a Go value.
 func Load(input string, opts ...Option) (any, error) {

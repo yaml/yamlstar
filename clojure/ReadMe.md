@@ -29,8 +29,8 @@ org.yamlstar/yamlstar {:mvn/version "0.1.21"}
 (yaml/load-all "---\ndoc1\n---\ndoc2")
 ;=> ["doc1" "doc2"]
 
-;; Load with a parser plugin (see https://yamlstar.org/plugins/)
-(yaml/load "key: value" {:plugin {:parser {:name "snakeyaml"}}})
+;; Load with a YAML parser plugin (see https://yamlstar.org/plugins/)
+(yaml/load "key: value" {:plugin {:yaml-parser {:name "snakeyaml"}}})
 ;=> {"key" "value"}
 ```
 

@@ -8,8 +8,8 @@
 (def default-suite-dir "../yaml-test-suite")
 
 (def parser-name
-  "The parser plugin under test, per the YAMLSTAR_PARSER env var."
-  (or (System/getenv "YAMLSTAR_PARSER") "reference"))
+  "The YAML parser plugin under test, per YAMLSTAR_YAML_PARSER."
+  (or (System/getenv "YAMLSTAR_YAML_PARSER") "reference"))
 
 (defn expected-failures-resource
   "Resource path for a kind's expected failures manifest.

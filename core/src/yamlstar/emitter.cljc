@@ -5,15 +5,8 @@
 
 (declare emit-node flow-text)
 
-(def ^:dynamic *tab-indent* false)
-
 (defn- indent [n]
-  (if *tab-indent*
-    (apply str (repeat (quot n 2) "\t"))
-    (apply str (repeat n " "))))
-
-(defn- logical-width [text]
-  (reduce + (map #(if (= % \tab) 2 1) text)))
+  (apply str (repeat n " ")))
 
 (defn- quote-double [s]
   (str "\""
@@ -292,7 +285,7 @@
       (let [props-header (emit-collection-header start level prefix)
             child-level (cond
                           props-header (+ level 2)
-                          prefix (logical-width prefix)
+                          prefix (count prefix)
                           :else level)
             first-prefix (when-not props-header prefix)]
         (loop [remaining items
@@ -305,17 +298,12 @@
                                 (str first-prefix "- ")
                                 (str (indent child-level) "- "))
                   next-level (if (and first? first-prefix)
-                               (+ level (logical-width first-prefix))
+                               (+ level (count first-prefix))
                                child-level)
                   rendered (if-let [value (inline-text item-events)]
                              (str item-prefix value "\n")
-                             (if *tab-indent*
-                               (str (str/replace item-prefix #" $" "")
-                                    "\n"
-                                    (emit-node item-events
-                                               (+ child-level 2) nil))
-                               (emit-node item-events
-                                          next-level item-prefix)))]
+                             (emit-node item-events
+                                        next-level item-prefix))]
               (recur (rest remaining) false (conj out rendered)))))))))
 
 (defn- emit-node
@@ -347,7 +335,7 @@
           (recur (rest remaining) groups))))))
 
 (defn emit
-  "Emit one or more serialized documents as YAML."
+  "Emit one or more serialized documents with the reference emitter."
   ([events] (emit events false))
   ([events multi?]
    (let [docs (document-event-groups events)]
@@ -360,11 +348,36 @@
          (if (seq doc) (emit-node doc 0) "null\n")
          "null\n")))))
 
+(defn register-yaml-emitters!
+  "Register named YAML emitter plugins whose namespaces are loaded."
+  [& names]
+  (mapv #(plugin/register-yaml-emitter!
+          (plugin/resolve-yaml-emitter %)) names))
+
+(def ^:private fallback-default-yaml-emitter (atom "reference"))
+
+(defn set-default-yaml-emitter!
+  "Set the runtime fallback YAML emitter name."
+  [name]
+  (reset! fallback-default-yaml-emitter name)
+  name)
+
+(defn- current-default-yaml-emitter
+  []
+  (or @fallback-default-yaml-emitter "reference"))
+
 (defn emit-with-options
-  "Emit serialized documents using YAMLStar options."
+  "Emit serialized documents using the selected YAML emitter plugin."
   ([events opts]
    (emit-with-options events false opts))
   ([events multi? opts]
-   (let [tabs (plugin/tab-indent-config opts)]
-     (binding [*tab-indent* (= "tabs" (:dump tabs))]
-       (emit events multi?)))))
+   (let [tabs (plugin/tab-indent-config opts)
+         [name config] (or (plugin/yaml-emitter-opts opts)
+                           [(current-default-yaml-emitter) {}])]
+     (when (and (= "tabs" (:dump tabs)) (not= name "go-yaml"))
+       (throw
+        (ex-info
+         "tab-indent dumping requires the native go-yaml emitter"
+         {:yaml-emitter name})))
+     (plugin/emit-with
+      name (cond-> config tabs (assoc :tab-indent tabs)) events multi?))))

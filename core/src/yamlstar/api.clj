@@ -30,8 +30,8 @@
 
   Args:
     yaml-str: A string containing YAML content
-    opts: (optional) Options map; {:plugin {:parser {:name \"name\"}}}
-          selects a parser plugin
+    opts: (optional) Options map; {:plugin {:yaml-parser {:name \"name\"}}}
+          selects a YAML parser plugin
 
   Returns:
     A Clojure data structure representing the YAML document
@@ -55,8 +55,8 @@
 
   Args:
     yaml-str: A string containing one or more YAML documents
-    opts: (optional) Options map; {:plugin {:parser {:name \"name\"}}}
-          selects a parser plugin
+    opts: (optional) Options map; {:plugin {:yaml-parser {:name \"name\"}}}
+          selects a YAML parser plugin
 
   Returns:
     A sequence of Clojure data structures, one per YAML document
@@ -73,7 +73,9 @@
          constructor/construct-all))))
 
 (defn dump
-  "Dump a supported native value to a YAML string."
+  "Dump a supported native value to a YAML string.
+
+  The optional opts map may select a :yaml-emitter plugin."
   ([value]
    (dump value nil))
   ([value opts]
@@ -84,7 +86,9 @@
        (emitter/emit-with-options opts))))
 
 (defn dump-all
-  "Dump a sequence of supported native values to a YAML stream."
+  "Dump a sequence of supported native values to a YAML stream.
+
+  The optional opts map may select a :yaml-emitter plugin."
   ([values]
    (dump-all values nil))
   ([values opts]

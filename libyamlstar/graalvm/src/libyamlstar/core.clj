@@ -3,8 +3,11 @@
   (:require [clojure.data.json :as json]
             [clojure.string :as str]
             [yamlstar.api :as yaml]
+            [yamlstar.emitter :as emitter]
+            [yamlstar.parser :as parser]
             [yamlstar.plugin.shared-host-java :as shared-host]
-            [yamlstar.plugin.parser.snakeyaml])
+            [yamlstar.plugin.yaml-parser.snakeyaml]
+            [yamlstar.plugin.yaml-emitter.snakeyaml])
   (:gen-class
    :methods [^:static [loadYaml [String String] String]
              ^:static [loadYamlAll [String String] String]
@@ -13,6 +16,8 @@
              ^:static [version [] String]]))
 
 (shared-host/install!)
+(parser/set-default-yaml-parser! "snakeyaml")
+(emitter/set-default-yaml-emitter! "snakeyaml")
 
 (declare json-write-str error-map debug)
 

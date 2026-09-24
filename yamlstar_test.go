@@ -51,6 +51,18 @@ func TestPureGoAPI(t *testing.T) {
 	}
 }
 
+func TestPureGoCompactSequenceIndent(t *testing.T) {
+	output, err := yamlstar.Dump(map[string]any{
+		"foo": []any{"bar"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := "foo:\n- bar\n"; output != want {
+		t.Fatalf("Dump returned %q, want %q", output, want)
+	}
+}
+
 func TestPureGoTabIndentPlugin(t *testing.T) {
 	option := yamlstar.WithPlugin(yamlstar.TabIndent())
 	value, err := yamlstar.Load(
@@ -106,7 +118,7 @@ func TestTabIndentNestedRoundTrip(t *testing.T) {
 func TestTabIndentRejectsReferenceParser(t *testing.T) {
 	_, err := yamlstar.Load(
 		"root:\n\tvalue: true\n",
-		yamlstar.WithPlugin(yamlstar.Parser("reference")),
+		yamlstar.WithPlugin(yamlstar.YAMLParser("reference")),
 		yamlstar.WithPlugin(yamlstar.TabIndent()))
 	if err == nil || !strings.Contains(
 		err.Error(), "requires the native go-yaml parser") {
@@ -114,7 +126,7 @@ func TestTabIndentRejectsReferenceParser(t *testing.T) {
 	}
 	value, err := yamlstar.Load(
 		"root:\n  value: true\n",
-		yamlstar.WithPlugin(yamlstar.Parser("reference")),
+		yamlstar.WithPlugin(yamlstar.YAMLParser("reference")),
 		yamlstar.WithPlugin(yamlstar.TabIndent(
 			yamlstar.TabIndentConfig{Load: yamlstar.TabIndentLoadSpaces})))
 	if err != nil {
@@ -203,5 +215,35 @@ func TestPureGoConcurrentLoads(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
+	}
+}
+
+func BenchmarkDumpEmitter(b *testing.B) {
+	value := map[string]any{
+		"name":    "yamlstar",
+		"enabled": true,
+		"plugins": []any{
+			map[string]any{"name": "yaml-parser", "default": "go-yaml"},
+			map[string]any{"name": "yaml-emitter", "default": "go-yaml"},
+		},
+		"metadata": map[string]any{
+			"version": 1,
+			"tags":    []any{"yaml", "plugins", "benchmark"},
+		},
+	}
+	for _, name := range []string{"reference", "go-yaml"} {
+		b.Run(name, func(b *testing.B) {
+			option := yamlstar.WithPlugin(yamlstar.YAMLEmitter(name))
+			if _, err := yamlstar.Dump(value, option); err != nil {
+				b.Fatal(err)
+			}
+			b.ReportAllocs()
+			b.ResetTimer()
+			for b.Loop() {
+				if _, err := yamlstar.Dump(value, option); err != nil {
+					b.Fatal(err)
+				}
+			}
+		})
 	}
 }

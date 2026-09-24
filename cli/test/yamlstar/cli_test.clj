@@ -2,13 +2,16 @@
   (:require [clojure.test :refer :all]
             [yamlstar.api :as yaml]
             [yamlstar.cli :as cli]
+            [yamlstar.cli-default :as cli-default]
             [yamlstar.plugin :as plugin]))
 
 (def sample "a: &x [1, \"two\"]\nb: *x\n")
 
-(deftest bundled-parser-plugins
-  (is (= #{"reference" "snakeyaml"}
-         (set (plugin/registered-parsers)))))
+(deftest bundled-yaml-plugins
+  (is (= #{"reference" cli-default/default-yaml-parser}
+         (set (plugin/registered-yaml-parsers))))
+  (is (= #{"reference" cli-default/default-yaml-emitter}
+         (set (plugin/registered-yaml-emitters)))))
 
 (deftest bundled-json-comments-plugin
   (is (= {"a" true}

@@ -21,7 +21,7 @@ type aotKeywordMapStorage0 struct {
 	values [1]any
 }
 
-func aotKeywordMapNew0(v0 any) *lang.Map {
+func aotKeywordMapNew0(v0 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage0{}
 	storage.values = [1]any{v0}
 	return lang.InitStaticKeywordMap(
@@ -40,7 +40,7 @@ type aotKeywordMapStorage1 struct {
 	values [2]any
 }
 
-func aotKeywordMapNew1(v0 any, v1 any) *lang.Map {
+func aotKeywordMapNew1(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage1{}
 	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
@@ -58,7 +58,7 @@ type aotKeywordMapStorage2 struct {
 	values [2]any
 }
 
-func aotKeywordMapNew2(v0 any, v1 any) *lang.Map {
+func aotKeywordMapNew2(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage2{}
 	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
@@ -359,7 +359,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_serializer_serialize = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_serializer_serialize.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/serializer.glj", kw_line, int(36), kw_column, int(7), kw_end_DASH_line, int(36), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_doc, "Serialize one YAML node tree to an event stream.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_serializer))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/serializer.clj", kw_line, int(36), kw_column, int(7), kw_end_DASH_line, int(36), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_doc, "Serialize one YAML node tree to an event stream.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_serializer))
 		}, false)
 	}
 	// serialize-all
@@ -398,7 +398,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_serializer_serialize_DASH_all = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_serializer_serialize_DASH_all.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/serializer.glj", kw_line, int(44), kw_column, int(7), kw_end_DASH_line, int(44), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector(sym_nodes)), kw_doc, "Serialize multiple YAML node trees to an event stream.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_serializer))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/serializer.clj", kw_line, int(44), kw_column, int(7), kw_end_DASH_line, int(44), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector(sym_nodes)), kw_doc, "Serialize multiple YAML node trees to an event stream.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_serializer))
 		}, false)
 	}
 	// serialize-node
@@ -642,7 +642,7 @@ func LoadNS() {
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_serializer_serialize_DASH_node = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_serializer_serialize_DASH_node.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/serializer.glj", kw_line, int(5), kw_column, int(8), kw_end_DASH_line, int(5), kw_end_DASH_column, int(21), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_serializer))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/serializer.clj", kw_line, int(5), kw_column, int(8), kw_end_DASH_line, int(5), kw_end_DASH_column, int(21), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_node)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_serializer))
 		}, false)
 	}
 }

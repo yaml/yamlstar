@@ -5,7 +5,7 @@ Python bindings for YAMLStar - a pure YAML 1.2 loader implemented in Clojure.
 ## Features
 
 - **YAML 1.2 Spec Compliance**: 100% compliant with YAML 1.2 core schema
-- **Pure Implementation**: No dependencies on SnakeYAML or other external parsers
+- **Pluggable YAML**: Select parser and emitter implementations per call
 - **Fast Native Performance**: Uses the native YAMLStar shared library
 - **Simple API**: Load YAML documents with a single function call
 - **Multi-Document Support**: Load multiple YAML documents from a single string
@@ -54,8 +54,10 @@ ys = yamlstar.YAMLStar()
 data = ys.load("key: value")
 print(data)  # {'key': 'value'}
 
-# Load with a parser plugin (see https://yamlstar.org/plugins/)
-opts = yamlstar.Options().plugin(yamlstar.parser('go-yaml'))
+# Select YAML parser and emitter plugins (see https://yamlstar.org/plugins/)
+opts = yamlstar.Options()
+opts.plugin(yamlstar.yaml_parser('go-yaml'))
+opts.plugin(yamlstar.yaml_emitter('go-yaml'))
 ys = yamlstar.YAMLStar(opts)
 data = ys.load("key: value")
 ```

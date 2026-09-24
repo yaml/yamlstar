@@ -4,7 +4,7 @@
             [yamlstar.api :as yaml]))
 
 (def reference-parser-options
-  {:plugin {:parser {:name "reference"}}})
+  {:plugin {:yaml-parser {:name "reference"}}})
 
 (defn normalize-key
   [k]
@@ -33,7 +33,7 @@
 
 (defn file-exists?
   [path]
-  #?(:clj (.exists (java.io.File. path))
+  #?(:clj (.exists (java.io.File. ^String path))
      :glj (let [[_ err] (os.Stat path)]
             (nil? err))))
 
@@ -56,12 +56,6 @@
                             {:config config
                              :value opts})))
           (normalize-keys opts))))))
-
-(defn parser-options
-  [name]
-  (if (str/blank? name)
-    {}
-    {:plugin {:parser {:name name}}}))
 
 (defn plugin-options
   [spec]
@@ -101,7 +95,6 @@
    (env-options #(System/getenv %)))
   ([getenv]
    (deep-merge
-     (parser-options (getenv "YAMLSTAR_PARSER"))
      (config-options (getenv "YAMLSTAR_CONFIG")))))
 
 (defn runtime-options

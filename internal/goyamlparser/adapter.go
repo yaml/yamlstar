@@ -13,6 +13,11 @@ var (
 	kwExplicit = lang.NewKeyword("explicit")
 	kwVersion  = lang.NewKeyword("version")
 	kwName     = lang.NewKeyword("name")
+	kwValue    = lang.NewKeyword("value")
+	kwStyle    = lang.NewKeyword("style")
+	kwAnchor   = lang.NewKeyword("anchor")
+	kwTag      = lang.NewKeyword("tag")
+	kwFlow     = lang.NewKeyword("flow")
 )
 
 // Shape masks for node start events. The key order of every event map is
@@ -220,4 +225,125 @@ func normalizeTag(tag string) string {
 		return "!!" + strings.TrimPrefix(tag, prefix)
 	}
 	return tag
+}
+
+func EmitYAMLStarEvents(events any, multi bool, dump string) (string, error) {
+	if dump != "" && dump != string(TabIndentDumpSpaces) &&
+		dump != string(TabIndentDumpTabs) {
+		return "", fmt.Errorf("invalid tab-indent dump %q", dump)
+	}
+	var output []byte
+	emitter := NewEmitter()
+	emitter.SetOutputString(&output)
+	emitter.SetUnicode(true)
+	emitter.SetWidth(-1)
+	emitter.BestIndent = 2
+	emitter.CompactSequenceIndent = true
+	emitter.tabIndent = dump == string(TabIndentDumpTabs)
+	defer emitter.Delete()
+
+	for items := lang.Seq(events); items != nil; items = items.Next() {
+		event, err := yamlstarEmitterEvent(items.First(), multi)
+		if err != nil {
+			return "", err
+		}
+		if event.Type == STREAM_END_EVENT {
+			emitter.OpenEnded = false
+		}
+		if err := emitter.Emit(&event); err != nil {
+			return "", err
+		}
+	}
+	return string(output), nil
+}
+
+func yamlstarEmitterEvent(value any, multi bool) (Event, error) {
+	name, _ := lang.Get(value, kwEvent).(string)
+	anchor, _ := lang.Get(value, kwAnchor).(string)
+	tag, _ := lang.Get(value, kwTag).(string)
+	text, _ := lang.Get(value, kwValue).(string)
+	style, _ := lang.Get(value, kwStyle).(string)
+	flow, _ := lang.Get(value, kwFlow).(bool)
+	explicit, _ := lang.Get(value, kwExplicit).(bool)
+
+	switch name {
+	case "stream_start":
+		return Event{Type: STREAM_START_EVENT, encoding: UTF8_ENCODING}, nil
+	case "stream_end":
+		return Event{Type: STREAM_END_EVENT}, nil
+	case "document_start":
+		var version *VersionDirective
+		if text, ok := lang.Get(value, kwVersion).(string); ok {
+			switch text {
+			case "1.1":
+				version = NewVersionDirective(1, 1)
+			case "1.2":
+				version = NewVersionDirective(1, 2)
+			default:
+				return Event{}, fmt.Errorf("unsupported YAML version %q", text)
+			}
+		}
+		return Event{Type: DOCUMENT_START_EVENT,
+			versionDirective: version, Implicit: !(multi || explicit)}, nil
+	case "document_end":
+		return Event{Type: DOCUMENT_END_EVENT, Implicit: !explicit}, nil
+	case "mapping_start":
+		style := BLOCK_MAPPING_STYLE
+		if flow {
+			style = FLOW_MAPPING_STYLE
+		}
+		return Event{Type: MAPPING_START_EVENT, Anchor: []byte(anchor),
+			Tag: emitterTag(tag), Implicit: implicitTag(tag),
+			Style: Style(style)}, nil
+	case "mapping_end":
+		return Event{Type: MAPPING_END_EVENT}, nil
+	case "sequence_start":
+		style := BLOCK_SEQUENCE_STYLE
+		if flow {
+			style = FLOW_SEQUENCE_STYLE
+		}
+		return Event{Type: SEQUENCE_START_EVENT, Anchor: []byte(anchor),
+			Tag: emitterTag(tag), Implicit: implicitTag(tag),
+			Style: Style(style)}, nil
+	case "sequence_end":
+		return Event{Type: SEQUENCE_END_EVENT}, nil
+	case "scalar":
+		implicit := implicitTag(tag)
+		return Event{Type: SCALAR_EVENT, Anchor: []byte(anchor),
+			Tag: emitterTag(tag), Value: []byte(text), Implicit: implicit,
+			quoted_implicit: implicit,
+			Style:           Style(emitterScalarStyle(style))}, nil
+	case "alias":
+		name, _ := lang.Get(value, kwName).(string)
+		return Event{Type: ALIAS_EVENT, Anchor: []byte(name)}, nil
+	default:
+		return Event{}, fmt.Errorf("unknown YAMLStar event %q", name)
+	}
+}
+
+func emitterScalarStyle(style string) ScalarStyle {
+	switch style {
+	case "single":
+		return SINGLE_QUOTED_SCALAR_STYLE
+	case "double":
+		return DOUBLE_QUOTED_SCALAR_STYLE
+	case "literal":
+		return LITERAL_SCALAR_STYLE
+	case "folded":
+		return FOLDED_SCALAR_STYLE
+	default:
+		return PLAIN_SCALAR_STYLE
+	}
+}
+
+func implicitTag(tag string) bool {
+	return tag == "" || strings.HasPrefix(tag, "!!") ||
+		strings.HasPrefix(tag, "tag:yaml.org,2002:")
+}
+
+func emitterTag(tag string) []byte {
+	if strings.HasPrefix(tag, "!!") {
+		return []byte("tag:yaml.org,2002:" + strings.TrimPrefix(tag, "!!"))
+	}
+	return []byte(tag)
 }

@@ -199,6 +199,28 @@ func TestDumpSimpleMapping(t *testing.T) {
 	assert.Equal(t, "key: value\n", yaml)
 }
 
+func TestDumpCompactSequence(t *testing.T) {
+	yaml, err := yamlstar.Dump(map[string]any{"foo": []any{"bar"}})
+	require.NoError(t, err)
+	assert.Equal(t, "foo:\n- bar\n", yaml)
+}
+
+func TestDumpWithReferenceEmitter(t *testing.T) {
+	yaml, err := yamlstar.Dump(
+		map[string]any{"foo": []any{"bar"}},
+		yamlstar.WithPlugin(yamlstar.YAMLEmitter("reference")))
+	require.NoError(t, err)
+	assert.Equal(t, "foo:\n- bar\n", yaml)
+}
+
+func TestDumpWithUnknownEmitter(t *testing.T) {
+	_, err := yamlstar.Dump(
+		map[string]any{"key": "value"},
+		yamlstar.WithPlugin(yamlstar.YAMLEmitter("no-such-emitter")))
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "Unknown YAML emitter plugin")
+}
+
 func TestDumpRoundTrip(t *testing.T) {
 	value := map[string]any{
 		"items": []any{"a", "b"},
@@ -259,14 +281,14 @@ func TestPackageVersion(t *testing.T) {
 
 func TestLoadWithReferenceParser(t *testing.T) {
 	data, err := yamlstar.Load(
-		"key: value", yamlstar.WithPlugin(yamlstar.Parser("reference")))
+		"key: value", yamlstar.WithPlugin(yamlstar.YAMLParser("reference")))
 	require.NoError(t, err)
 	assert.Equal(t, map[string]any{"key": "value"}, data)
 }
 
 func TestLoadWithUnknownParser(t *testing.T) {
 	_, err := yamlstar.Load(
-		"key: value", yamlstar.WithPlugin(yamlstar.Parser("no-such-parser")))
+		"key: value", yamlstar.WithPlugin(yamlstar.YAMLParser("no-such-parser")))
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "Unknown YAML parser plugin")
 }
