@@ -5,12 +5,18 @@ MAKE-BASH := bash ../util/make.bash
 
 RT ?= glj
 PARSER ?= $(if $(filter glj,$(RT)),go,ref)
+EMITTER ?= $(PARSER)
 
 VALID-RT := graal glj go
 VALID-PARSER := ref snake go
+VALID-EMITTER := ref snake go
 
 ifeq (,$(filter $(RT),$(VALID-RT)))
 $(error Unknown RT '$(RT)'. Expected one of: $(VALID-RT))
+endif
+
+ifeq (,$(filter $(EMITTER),$(VALID-EMITTER)))
+$(error Unknown EMITTER '$(EMITTER)'. Expected one of: $(VALID-EMITTER))
 endif
 
 ifeq (,$(filter $(PARSER),$(VALID-PARSER)))
@@ -18,18 +24,28 @@ $(error Unknown PARSER '$(PARSER)'. Expected one of: $(VALID-PARSER))
 endif
 
 PARSER-NAME := $(if $(filter ref,$(PARSER)),reference,$(if $(filter snake,$(PARSER)),snakeyaml,go-yaml))
+EMITTER-NAME := $(strip \
+  $(if $(filter ref,$(EMITTER)),reference, \
+    $(if $(filter snake,$(EMITTER)),snakeyaml,go-yaml)))
 YAMLSTAR_ENGINE ?= $(if $(filter graal,$(RT)),graalvm,glojure)
 CLI-NAME ?= yaml-$(RT)-$(PARSER)
 CLI-DEFAULT-REQUIRE := $(strip \
   $(if $(filter graal,$(RT)), \
-    [yamlstar.plugin.parser.reference] \
-    [yamlstar.plugin.parser.snakeyaml], \
-    $(if $(filter glj,$(RT)),[yamlstar.plugin.parser.go-yaml])))
+    [yamlstar.plugin.yaml-parser.reference] \
+    [yamlstar.plugin.yaml-parser.snakeyaml] \
+    [yamlstar.plugin.yaml-emitter.reference] \
+    [yamlstar.plugin.yaml-emitter.snakeyaml], \
+    $(if $(filter glj,$(RT)), \
+      [yamlstar.plugin.yaml-parser.go-yaml] \
+      [yamlstar.plugin.yaml-emitter.go-yaml])))
 CLI-GRAALVM-NAME := yaml-graalvm
 
 ifeq ($(RT),graal)
 ifneq (,$(filter go,$(PARSER)))
 $(error Unsupported parser/runtime pair: RT=graal PARSER=go)
+endif
+ifneq (,$(filter go,$(EMITTER)))
+$(error Unsupported emitter/runtime pair: RT=graal EMITTER=go)
 endif
 endif
 
@@ -37,11 +53,17 @@ ifeq ($(RT),glj)
 ifneq (,$(filter snake,$(PARSER)))
 $(error Unsupported parser/runtime pair: RT=glj PARSER=snake)
 endif
+ifneq (,$(filter snake,$(EMITTER)))
+$(error Unsupported emitter/runtime pair: RT=glj EMITTER=snake)
+endif
 endif
 
 ifeq ($(RT),go)
 ifneq (,$(filter snake go,$(PARSER)))
 $(error Unsupported parser/runtime pair: RT=go PARSER=$(PARSER))
+endif
+ifneq (,$(filter snake go,$(EMITTER)))
+$(error Unsupported emitter/runtime pair: RT=go EMITTER=$(EMITTER))
 endif
 endif
 
@@ -78,7 +100,8 @@ endif
 CLI-OUT := bin/$(CLI-NAME)
 CLI-UBERJAR := target/cli-$(LIBYAMLSTAR-VERSION)-SNAPSHOT-standalone.jar
 CLI-JAR := target/$(CLI-NAME)-$(LIBYAMLSTAR-VERSION)-SNAPSHOT-standalone.jar
-CLI-DEFAULT-DIR := cache/cli-defaults/$(CLI-NAME)-$(PARSER-NAME)
+CLI-DEFAULT-DIR := \
+  cache/cli-defaults/$(CLI-NAME)-$(PARSER-NAME)-$(EMITTER-NAME)
 CLI-DEFAULT-SRC := $(CLI-DEFAULT-DIR)/yamlstar/cli_default.clj
 
 GLOAT-ENGINE := $(or $(GLOAT_ENGINE),$(if $(filter go,$(RT)),lgvm,glj))
@@ -100,8 +123,12 @@ CLI-GLOAT-NAME ?= $(if $(filter windows,$(OS-NAME)),yaml.exe,yaml)
 CLI-BIN-GLOAT := bin/$(CLI-GLOAT-NAME)
 GLOAT-CACHE := ../libyamlstar/cache/gloat-srcs
 GLOAT-CORE := ../core/src/yamlstar
-GLOAT-GO-YAML-SRC := $(GLOAT-CACHE)/plugin/parser/go_yaml.clj
-GLOAT-REFERENCE-SRC := $(GLOAT-CACHE)/plugin/parser/reference.clj
+GLOAT-GO-YAML-PARSER-SRC := \
+  $(GLOAT-CACHE)/plugin/yaml_parser/go_yaml.clj
+GLOAT-GO-YAML-EMITTER-SRC := \
+  $(GLOAT-CACHE)/plugin/yaml_emitter/go_yaml.clj
+GLOAT-REFERENCE-SRC := \
+  $(GLOAT-CACHE)/plugin/yaml_parser/reference.clj
 REFERENCE-PARSER-DIR ?= $(if \
   $(wildcard ../../yamlstar-plugin-parser-reference/go.mod), \
   ../../yamlstar-plugin-parser-reference)
@@ -115,14 +142,18 @@ CORE-SRCS := \
   $(wildcard $(GLOAT-CORE)/*.cljc) \
   $(wildcard $(GLOAT-CORE)/plugin/*.clj) \
   $(wildcard $(GLOAT-CORE)/plugin/*.cljc) \
-  $(wildcard $(GLOAT-CORE)/plugin/parser/*.clj) \
-  $(wildcard $(GLOAT-CORE)/plugin/parser/*.cljc)
+  $(wildcard $(GLOAT-CORE)/plugin/yaml_parser/*.clj) \
+  $(wildcard $(GLOAT-CORE)/plugin/yaml_parser/*.cljc) \
+  $(wildcard $(GLOAT-CORE)/plugin/yaml_emitter/*.clj) \
+  $(wildcard $(GLOAT-CORE)/plugin/yaml_emitter/*.cljc)
 GLOAT-CLI-SRCS := \
   $(GLOAT-CORE)/plugin.clj \
   $(GLOAT-CORE)/options.clj \
-  $(GLOAT-CORE)/plugin/parser.clj \
+  $(GLOAT-CORE)/plugin/yaml_parser.clj \
+  $(GLOAT-CORE)/plugin/yaml_emitter.clj \
   $(GLOAT-REFERENCE-SRC) \
-  $(if $(filter glj,$(RT)),$(GLOAT-GO-YAML-SRC)) \
+  $(if $(filter glj,$(RT)),$(GLOAT-GO-YAML-PARSER-SRC)) \
+  $(if $(filter glj,$(RT)),$(GLOAT-GO-YAML-EMITTER-SRC)) \
   $(GLOAT-SHARED-PLUGIN-SRC) \
   $(GLOAT-SHARED-HOST-SRC) \
   $(GLOAT-CORE)/parser.clj \
@@ -134,6 +165,7 @@ GLOAT-CLI-SRCS := \
   $(GLOAT-CACHE)/desolver.clj \
   $(GLOAT-CACHE)/serializer.clj \
   $(GLOAT-CACHE)/emitter.clj \
+  $(GLOAT-CORE)/plugin/yaml_emitter/reference.clj \
   $(GLOAT-CORE)/api.clj \
   $(GLOAT-CLI-OPTIONS-SRC) \
   $(CLI-DEFAULT-SRC) \
@@ -177,6 +209,7 @@ build: $(if $(filter-out windows,$(OS-NAME)),$(PLUGIN-INSTALLER))
 	$(MAKE) _build-gloat \
 	  RT=glj \
 	  PARSER=go \
+	  EMITTER=go \
 	  YAMLSTAR_ENGINE=glojure \
 	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
 	  CLI-GLOAT-NAME=$(CLI-GLOAT-NAME) \
@@ -193,6 +226,7 @@ build-graalvm: $(if $(filter-out windows,$(OS-NAME)),$(PLUGIN-INSTALLER))
 	$(MAKE) _build-selected \
 	  RT=graal \
 	  PARSER=snake \
+	  EMITTER=snake \
 	  YAMLSTAR_ENGINE=graalvm \
 	  CLI-NAME=$(CLI-GRAALVM-NAME)
 
@@ -214,9 +248,11 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
   $(CLI-DEFAULT-SRC) \
   $(GLOAT-CORE)/plugin.clj \
   $(GLOAT-CORE)/options.clj \
-  $(GLOAT-CORE)/plugin/parser.clj \
+  $(GLOAT-CORE)/plugin/yaml_parser.clj \
+  $(GLOAT-CORE)/plugin/yaml_emitter.clj \
   $(GLOAT-REFERENCE-SRC) \
-  $(if $(filter glj,$(RT)),$(GLOAT-GO-YAML-SRC)) \
+  $(if $(filter glj,$(RT)),$(GLOAT-GO-YAML-PARSER-SRC)) \
+  $(if $(filter glj,$(RT)),$(GLOAT-GO-YAML-EMITTER-SRC)) \
   $(GLOAT-SHARED-PLUGIN-SRC) \
   $(GLOAT-SHARED-HOST-SRC) \
   $(GLOAT-CORE)/parser.clj \
@@ -246,7 +282,7 @@ $(GLOAT-CLI-OPTIONS-SRC): $(GLOAT-CORE)/cli_options.cljc
 
 $(CLI-DEFAULT-SRC): Makefile ../util/make.bash
 	@$(MAKE-BASH) CLI-DEFAULT-SRC "$@" \
-	  '$(CLI-DEFAULT-REQUIRE)' "$(PARSER-NAME)"
+	  '$(CLI-DEFAULT-REQUIRE)' "$(PARSER-NAME)" "$(EMITTER-NAME)"
 
 ifeq ($(YAMLSTAR_ENGINE),graalvm)
 PLUGIN-HOST-DIR := cache/plugin-host

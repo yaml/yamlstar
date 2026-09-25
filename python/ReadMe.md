@@ -75,7 +75,9 @@ The binding discovers the installed library when that plugin is selected:
 ```python
 opts = yamlstar.Options().plugin(yamlstar.json_comments())
 ys = yamlstar.YAMLStar(opts)
-data = ys.load('{"a": true // comment}')
+data = ys.load('''{
+  "a": true // comment
+}''')
 ```
 
 Setting `YAMLSTAR_LIBRARY_PATH` disables Python package discovery and uses

@@ -16,7 +16,7 @@
 (deftest bundled-json-comments-plugin
   (is (= {"a" true}
          (yaml/load "a: true // comment\n"
-                    {:plugin {:parser "reference@v0.2.5"
+                    {:plugin {:yaml-parser "reference@v0.2.5"
                               :json-comments true}}))))
 
 (deftest combined-plugin-selector
@@ -25,7 +25,8 @@
           (is (zero?
                (cli/main-status
                 "--eval" "a: true // comment\n"
-                "--plugin=parser=reference@0.2.5,json-comments"))))]
+                (str "--plugin=yaml-parser=reference@0.2.5,"
+                     "json-comments")))))]
     (is (= "{\"a\":true}\n" output))))
 
 (deftest version-output

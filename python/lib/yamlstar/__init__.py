@@ -226,6 +226,16 @@ def json_comments(name='sanitizer'):
   return {'json-comments': {'name': name}}
 
 
+def tab_indent(mode='auto', load=None, dump=None, auto='document'):
+  """Return a built-in tab-indentation plugin option fragment."""
+  config = {'mode': mode, 'auto': auto}
+  if load is not None:
+    config['load'] = load
+  if dump is not None:
+    config['dump'] = dump
+  return {'tab-indent': config}
+
+
 def _options_dict(options):
   if options is None:
     return {}

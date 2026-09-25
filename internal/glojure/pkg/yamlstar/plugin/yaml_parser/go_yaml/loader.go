@@ -12,8 +12,13 @@ import (
 )
 
 var aotDirectFn0 lang.FnFunc2
-var aotDirectFn1 lang.FnFunc0
 
+var aotKeywordSite0 lang.KeywordSite
+var aotKeywordSite1 lang.KeywordSite
+var aotKeywordSite2 lang.KeywordSite
+var aotKeywordSite3 lang.KeywordSite
+var aotKeywordSite4 lang.KeywordSite
+var aotKeywordSite5 lang.KeywordSite
 var aotKeywordMapShape0 = lang.NewKeywordMapShape("name", "parse", "default-config")
 
 type aotKeywordMapStorage0 struct {
@@ -21,7 +26,7 @@ type aotKeywordMapStorage0 struct {
 	values [3]any
 }
 
-func aotKeywordMapNew0(v0 any, v1 any, v2 any) *lang.Map {
+func aotKeywordMapNew0(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage0{}
 	storage.values = [3]any{v0, v1, v2}
 	return lang.InitStaticKeywordMap(
@@ -60,7 +65,7 @@ func aotLinkBoundFn3(vr *lang.Var) lang.FnFunc3 {
 }
 
 func init() {
-	runtime.RegisterNSLoader("yamlstar/plugin/parser/go_yaml", LoadNS)
+	runtime.RegisterNSLoader("yamlstar/plugin/yaml_parser/go_yaml", LoadNS)
 }
 
 func checkDerefVar(v *lang.Var) any {
@@ -82,36 +87,34 @@ func checkArityGTE(args []any, min int) {
 	}
 }
 
-// LoadNS initializes the namespace "yamlstar.plugin.parser.go-yaml"
+// LoadNS initializes the namespace "yamlstar.plugin.yaml-parser.go-yaml"
 func LoadNS() {
-	sym__config := lang.NewSymbolUnchecked("_config")
 	sym_clojure_DOT_core := lang.NewSymbolUnchecked("clojure.core")
+	sym_config := lang.NewSymbolUnchecked("config")
 	sym_parse := lang.NewSymbolUnchecked("parse")
 	sym_plugin := lang.NewSymbolUnchecked("plugin")
-	sym_require_DASH_glojure_DASH_runtime := lang.NewSymbolUnchecked("require-glojure-runtime")
 	sym_yaml_DASH_str := lang.NewSymbolUnchecked("yaml-str")
 	sym_yamlstar_DOT_plugin := lang.NewSymbolUnchecked("yamlstar.plugin")
-	sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml := lang.NewSymbolUnchecked("yamlstar.plugin.parser.go-yaml")
+	sym_yamlstar_DOT_plugin_DOT_yaml_DASH_parser_DOT_go_DASH_yaml := lang.NewSymbolUnchecked("yamlstar.plugin.yaml-parser.go-yaml")
 	kw_arglists := lang.NewKeyword("arglists")
+	kw_auto := lang.NewKeyword("auto")
 	kw_column := lang.NewKeyword("column")
-	kw_doc := lang.NewKeyword("doc")
 	kw_end_DASH_column := lang.NewKeyword("end-column")
 	kw_end_DASH_line := lang.NewKeyword("end-line")
 	kw_file := lang.NewKeyword("file")
 	kw_line := lang.NewKeyword("line")
+	kw_load := lang.NewKeyword("load")
 	kw_ns := lang.NewKeyword("ns")
-	kw_private := lang.NewKeyword("private")
-	// var yamlstar.plugin.parser.go-yaml/parse
-	var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_parse := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml, sym_parse)
-	// var yamlstar.plugin.parser.go-yaml/plugin
-	var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_plugin := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml, sym_plugin)
-	// var yamlstar.plugin.parser.go-yaml/require-glojure-runtime
-	var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_require_DASH_glojure_DASH_runtime := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml, sym_require_DASH_glojure_DASH_runtime)
+	kw_tab_DASH_indent := lang.NewKeyword("tab-indent")
+	// var yamlstar.plugin.yaml-parser.go-yaml/parse
+	var_yamlstar_DOT_plugin_DOT_yaml_DASH_parser_DOT_go_DASH_yaml_parse := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_yaml_DASH_parser_DOT_go_DASH_yaml, sym_parse)
+	// var yamlstar.plugin.yaml-parser.go-yaml/plugin
+	var_yamlstar_DOT_plugin_DOT_yaml_DASH_parser_DOT_go_DASH_yaml_plugin := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_yaml_DASH_parser_DOT_go_DASH_yaml, sym_plugin)
 	// reference fmt to avoid unused import error
 	_ = fmt.Printf
 	// reference reflect to avoid unused import error
 	_ = reflect.TypeOf
-	ns := lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml)
+	ns := lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_yaml_DASH_parser_DOT_go_DASH_yaml)
 	_ = ns
 	{ // refer vars from clojure.core
 		srcNS := lang.FindOrCreateNamespace(sym_clojure_DOT_core)
@@ -199,50 +202,86 @@ func LoadNS() {
 			_ = v2
 			v3 := p1
 			_ = v3
-			tmp4 := aotDirectFn1()
-			_ = tmp4
-			var tmp5 any
+			var tmp4 any
 			{ // let
-				// let binding "vec__19"
-				var tmp6 any
+				// let binding "tabs"
+				tmp5 := aotKeywordSite0.Get(kw_tab_DASH_indent, v3, nil)
+				var v6 any = tmp5
+				_ = v6
+				// let binding "load"
+				var tmp7 any
 				{ // let
 					// let binding "or__0__auto__"
-					var v7 any = v2
-					_ = v7
-					var tmp8 any
-					if lang.IsTruthy(v7) {
-						tmp8 = v7
+					tmp8 := aotKeywordSite1.Get(kw_load, v6, nil)
+					var v9 any = tmp8
+					_ = v9
+					var tmp10 any
+					if lang.IsTruthy(v9) {
+						tmp10 = v9
 					} else {
-						tmp8 = ""
+						tmp10 = ""
 					}
-					tmp6 = tmp8
+					tmp7 = tmp10
 				} // end let
-				tmp7 := lang.Apply1(goyamlparser4.ParseYAMLStarEvents, tmp6)
 				var v8 any = tmp7
 				_ = v8
-				// let binding "events"
-				tmp9 := runtime.RT.NthDefault(v8, lang.IntCast(int64(0)), nil)
+				// let binding "auto"
+				var tmp9 any
+				{ // let
+					// let binding "or__0__auto__"
+					tmp10 := aotKeywordSite2.Get(kw_auto, v6, nil)
+					var v11 any = tmp10
+					_ = v11
+					var tmp12 any
+					if lang.IsTruthy(v11) {
+						tmp12 = v11
+					} else {
+						tmp12 = ""
+					}
+					tmp9 = tmp12
+				} // end let
 				var v10 any = tmp9
 				_ = v10
+				// let binding "vec__139"
+				var tmp11 any
+				{ // let
+					// let binding "or__0__auto__"
+					var v12 any = v2
+					_ = v12
+					var tmp13 any
+					if lang.IsTruthy(v12) {
+						tmp13 = v12
+					} else {
+						tmp13 = ""
+					}
+					tmp11 = tmp13
+				} // end let
+				tmp12 := lang.Apply3(goyamlparser4.ParseYAMLStarEvents, tmp11, v8, v10)
+				var v13 any = tmp12
+				_ = v13
+				// let binding "events"
+				tmp14 := runtime.RT.NthDefault(v13, lang.IntCast(int64(0)), nil)
+				var v15 any = tmp14
+				_ = v15
 				// let binding "err"
-				tmp11 := runtime.RT.NthDefault(v8, lang.IntCast(int64(1)), nil)
-				var v12 any = tmp11
-				_ = v12
-				var tmp13 any
-				tmp14 := lang.Identical(v12, nil)
-				if lang.IsTruthy(tmp14) {
-					tmp13 = v10
+				tmp16 := runtime.RT.NthDefault(v13, lang.IntCast(int64(1)), nil)
+				var v17 any = tmp16
+				_ = v17
+				var tmp18 any
+				tmp19 := lang.Identical(v17, nil)
+				if lang.IsTruthy(tmp19) {
+					tmp18 = v15
 				} else {
-					panic(v12)
+					panic(v17)
 				}
-				tmp5 = tmp13
+				tmp4 = tmp18
 			} // end let
-			return tmp5
+			return tmp4
 		})
 		aotDirectFn0 = tmp1
-		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_parse = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_parse.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser/go_yaml.glj", kw_line, int(16), kw_column, int(7), kw_end_DASH_line, int(16), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str, sym__config)), kw_doc, "Parse a YAML string into a YAMLStar event stream using go-yaml.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
+		var_yamlstar_DOT_plugin_DOT_yaml_DASH_parser_DOT_go_DASH_yaml_parse = ns.InternWithValue(tmp0, tmp1, true)
+		var_yamlstar_DOT_plugin_DOT_yaml_DASH_parser_DOT_go_DASH_yaml_parse.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMap(kw_file, "yamlstar/plugin/yaml_parser/go_yaml.clj", kw_line, int(5), kw_column, int(7), kw_end_DASH_line, int(5), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str, sym_config)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_yaml_DASH_parser_DOT_go_DASH_yaml))
 		}, false)
 	}
 	// plugin
@@ -254,62 +293,85 @@ func LoadNS() {
 			_ = v2
 			v3 := p1
 			_ = v3
-			tmp4 := aotDirectFn1()
-			_ = tmp4
-			var tmp5 any
+			var tmp4 any
 			{ // let
-				// let binding "vec__19"
-				var tmp6 any
+				// let binding "tabs"
+				tmp5 := aotKeywordSite3.Get(kw_tab_DASH_indent, v3, nil)
+				var v6 any = tmp5
+				_ = v6
+				// let binding "load"
+				var tmp7 any
 				{ // let
 					// let binding "or__0__auto__"
-					var v7 any = v2
-					_ = v7
-					var tmp8 any
-					if lang.IsTruthy(v7) {
-						tmp8 = v7
+					tmp8 := aotKeywordSite4.Get(kw_load, v6, nil)
+					var v9 any = tmp8
+					_ = v9
+					var tmp10 any
+					if lang.IsTruthy(v9) {
+						tmp10 = v9
 					} else {
-						tmp8 = ""
+						tmp10 = ""
 					}
-					tmp6 = tmp8
+					tmp7 = tmp10
 				} // end let
-				tmp7 := lang.Apply1(goyamlparser4.ParseYAMLStarEvents, tmp6)
 				var v8 any = tmp7
 				_ = v8
-				// let binding "events"
-				tmp9 := runtime.RT.NthDefault(v8, lang.IntCast(int64(0)), nil)
+				// let binding "auto"
+				var tmp9 any
+				{ // let
+					// let binding "or__0__auto__"
+					tmp10 := aotKeywordSite5.Get(kw_auto, v6, nil)
+					var v11 any = tmp10
+					_ = v11
+					var tmp12 any
+					if lang.IsTruthy(v11) {
+						tmp12 = v11
+					} else {
+						tmp12 = ""
+					}
+					tmp9 = tmp12
+				} // end let
 				var v10 any = tmp9
 				_ = v10
+				// let binding "vec__139"
+				var tmp11 any
+				{ // let
+					// let binding "or__0__auto__"
+					var v12 any = v2
+					_ = v12
+					var tmp13 any
+					if lang.IsTruthy(v12) {
+						tmp13 = v12
+					} else {
+						tmp13 = ""
+					}
+					tmp11 = tmp13
+				} // end let
+				tmp12 := lang.Apply3(goyamlparser4.ParseYAMLStarEvents, tmp11, v8, v10)
+				var v13 any = tmp12
+				_ = v13
+				// let binding "events"
+				tmp14 := runtime.RT.NthDefault(v13, lang.IntCast(int64(0)), nil)
+				var v15 any = tmp14
+				_ = v15
 				// let binding "err"
-				tmp11 := runtime.RT.NthDefault(v8, lang.IntCast(int64(1)), nil)
-				var v12 any = tmp11
-				_ = v12
-				var tmp13 any
-				tmp14 := lang.Identical(v12, nil)
-				if lang.IsTruthy(tmp14) {
-					tmp13 = v10
+				tmp16 := runtime.RT.NthDefault(v13, lang.IntCast(int64(1)), nil)
+				var v17 any = tmp16
+				_ = v17
+				var tmp18 any
+				tmp19 := lang.Identical(v17, nil)
+				if lang.IsTruthy(tmp19) {
+					tmp18 = v15
 				} else {
-					panic(v12)
+					panic(v17)
 				}
-				tmp5 = tmp13
+				tmp4 = tmp18
 			} // end let
-			return tmp5
+			return tmp4
 		})
-		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_plugin = ns.InternWithValue(tmp0, aotKeywordMapNew0("go-yaml", tmp1, lang.NewMap()), true)
-		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_plugin.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/plugin/parser/go_yaml.glj", kw_line, int(32), kw_column, int(6), kw_end_DASH_line, int(32), kw_end_DASH_column, int(11), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
-		}, false)
-	}
-	// require-glojure-runtime
-	{
-		tmp0 := sym_require_DASH_glojure_DASH_runtime
-		var tmp1 lang.FnFunc0
-		tmp1 = lang.FnFunc0(func() any {
-			return nil
-		})
-		aotDirectFn1 = tmp1
-		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_require_DASH_glojure_DASH_runtime = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml_require_DASH_glojure_DASH_runtime.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/parser/go_yaml.glj", kw_line, int(9), kw_column, int(8), kw_end_DASH_line, int(9), kw_end_DASH_column, int(30), kw_private, true, kw_arglists, lang.NewList(lang.NewVector()), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_go_DASH_yaml))
+		var_yamlstar_DOT_plugin_DOT_yaml_DASH_parser_DOT_go_DASH_yaml_plugin = ns.InternWithValue(tmp0, aotKeywordMapNew0("go-yaml", tmp1, lang.NewMap()), true)
+		var_yamlstar_DOT_plugin_DOT_yaml_DASH_parser_DOT_go_DASH_yaml_plugin.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMap(kw_file, "yamlstar/plugin/yaml_parser/go_yaml.clj", kw_line, int(21), kw_column, int(6), kw_end_DASH_line, int(21), kw_end_DASH_column, int(11), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_yaml_DASH_parser_DOT_go_DASH_yaml))
 		}, false)
 	}
 }

@@ -6,9 +6,13 @@ The current APIs and implementations are:
 
 | API | Implementation | Availability |
 |---|---|---|
-| `parser` | `reference` | JVM and native |
-| `parser` | `go-yaml` | Glojure native runtime |
-| `parser` | `snakeyaml` | JVM runtime |
+| `yaml-parser` | `reference` | JVM and native |
+| `yaml-parser` | `go-yaml` | Native runtime |
+| `yaml-parser` | `snakeyaml` | JVM runtime |
+| `yaml-emitter` | `reference` | JVM and native |
+| `yaml-emitter` | `go-yaml` | Native runtime |
+| `yaml-emitter` | `snakeyaml` | JVM runtime |
+| `tab-indent` | built in | Native runtime with go-yaml |
 | `json-comments` | `sanitizer` | JVM artifact or native shared library |
 
 The JSON-comments sanitizer transforms source text before the selected parser
@@ -21,7 +25,8 @@ Options use a `plugin` mapping keyed by plugin API:
 
 ```yaml
 plugin:
-  parser: reference@v0.2.5
+  yaml-parser: reference@v0.2.5
+  yaml-emitter: reference
   json-comments: sanitizer@v0.1.9
 ```
 
@@ -29,9 +34,11 @@ An implementation can also use a mapping:
 
 ```yaml
 plugin:
-  parser:
+  yaml-parser:
     name: reference
     version: v0.2.5
+  yaml-emitter:
+    name: reference
   json-comments:
     name: sanitizer
     version: v0.1.9
@@ -61,18 +68,19 @@ API=IMPLEMENTATION@VERSION
 Several selectors can be comma-separated:
 
 ```bash
-yaml --plugin=parser=reference@v0.2.5,json-comments file.yaml
+yaml --plugin=yaml-parser=reference@v0.2.5,json-comments file.yaml
 ```
 
 The short `json-comments` selector chooses `sanitizer`.
-The short `parser` selector chooses the runtime's default parser.
+The short `yaml-parser` and `yaml-emitter` selectors choose the runtime
+defaults.
 Use `--config=FILE` for a YAML options file.
 The former `--parser` flag has been removed.
 
-`YAMLSTAR_PARSER` remains available as an environment override for existing
-applications and test runs.
+The old `parser` API name is rejected with a message directing callers to
+`yaml-parser`.
 
-## Parser implementations
+## YAML parser and emitter implementations
 
 The `reference` implementation uses release `v0.2.5` of the YAML reference
 parser.
@@ -81,12 +89,52 @@ JVM builds use its Clojars artifact directly.
 Glojure builds use the generated Go module
 `github.com/yamlstar/yamlstar-plugin-parser-reference`.
 
-The released native CLI also provides the built-in `go-yaml` implementation.
-The `snakeyaml` implementation is available to JVM applications.
+The released native CLI uses the built-in `go-yaml` implementation for both
+parsing and emitting.
+The `snakeyaml` implementations are available to JVM applications.
 
 All parser implementations return YAMLStar's standard event maps.
 Applications can select another parser without changing JSON-comments
 configuration.
+All emitter implementations consume that same event stream.
+
+## Tab indentation
+
+The built-in `tab-indent` plugin enables structural tab indentation on load
+and dump.
+It currently requires the `go-yaml` parser for tab-aware loading and the
+`go-yaml` emitter for tab-aware dumping.
+The native CLI selects those implementations by default.
+
+The short selector uses the defaults:
+
+```bash
+yaml --plugin=tab-indent file.yaml
+```
+
+The full configuration is:
+
+```yaml
+plugin:
+  tab-indent:
+    mode: auto
+    load: auto
+    dump: tabs
+    auto: document
+```
+
+`mode` accepts `tabs` or `auto`.
+`load` accepts `tabs`, `spaces`, or `auto`.
+`dump` accepts `tabs` or `spaces`.
+`auto` accepts `document` or `stream` and controls the scope used when
+detecting input indentation.
+
+The go-yaml emitter keeps block sequences compact under mapping keys:
+
+```yaml
+foo:
+- bar
+```
 
 ## JSON-comments implementation
 
@@ -103,10 +151,10 @@ JVM users add the independent Clojars artifact:
 ```
 
 YAMLStar resolves it from the classpath only when `json-comments` is selected.
-It needs no native library or GraalVM.
+It needs no native library.
 The standard JVM CLI includes this artifact.
 
-Native Glojure and GraalVM hosts load the implementation from
+Native hosts load the implementation from
 `libyamlstar-plugin-json-comments.so` on Linux and FreeBSD or the matching
 `.dylib` on macOS.
 The implementation name remains `sanitizer`; the native distribution and
@@ -160,7 +208,9 @@ pip install yamlstar-plugin-json-comments
 ```python
 opts = yamlstar.Options().plugin(yamlstar.json_comments())
 ys = yamlstar.YAMLStar(opts)
-data = ys.load('{"a": true // comment}')
+data = ys.load('''{
+  "a": true // comment
+}''')
 ```
 
 The Python helper produces this common configuration:
@@ -196,13 +246,13 @@ Status `1` returns a plugin error message.
 Status `2` reports an ABI or internal host failure.
 The host releases every returned buffer through the plugin's free function.
 
-## Writing a parser implementation
+## Writing a YAML parser implementation
 
 A Clojure parser implementation registers a map with
-`yamlstar.plugin/register-parser!`:
+`yamlstar.plugin/register-yaml-parser!`:
 
 ```clojure
-(plugin/register-parser!
+(plugin/register-yaml-parser!
  {:name "my-parser"
   :version "1.0.0"
   :parse (fn [yaml-str config] ...)
@@ -224,3 +274,20 @@ The parse function returns an ordered sequence of event maps:
 The `flow` key is always present on collection start events.
 Plain scalars omit `style`.
 Anchor and tag keys are present only when supplied by the parser.
+
+## Writing a YAML emitter implementation
+
+A Clojure emitter implementation registers a map with
+`yamlstar.plugin/register-yaml-emitter!`:
+
+```clojure
+(plugin/register-yaml-emitter!
+ {:name "my-emitter"
+  :version "1.0.0"
+  :emit (fn [events multi? config] ...)
+  :default-config {}})
+```
+
+The emit function receives the standard event stream, a boolean indicating
+multi-document output, and the merged configuration map.
+It returns the emitted YAML string.

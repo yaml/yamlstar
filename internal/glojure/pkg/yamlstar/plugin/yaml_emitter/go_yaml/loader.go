@@ -225,7 +225,7 @@ func LoadNS() {
 				} // end let
 				var v9 any = tmp8
 				_ = v9
-				// let binding "vec__29"
+				// let binding "vec__24"
 				tmp10 := lang.Apply3(goyamlparser4.EmitYAMLStarEvents, v2, v3, v9)
 				var v11 any = tmp10
 				_ = v11
@@ -288,7 +288,7 @@ func LoadNS() {
 				} // end let
 				var v9 any = tmp8
 				_ = v9
-				// let binding "vec__29"
+				// let binding "vec__24"
 				tmp10 := lang.Apply3(goyamlparser4.EmitYAMLStarEvents, v2, v3, v9)
 				var v11 any = tmp10
 				_ = v11

@@ -1,8 +1,9 @@
 (ns yamlstar.plugin
-  "YAMLStar parser and JSON-comments plugin support."
+  "YAMLStar parser, emitter, and JSON-comments plugin support."
   (:require [clojure.string :as str]))
 
-(defonce ^:private parser-registry (atom {}))
+(defonce ^:private yaml-parser-registry (atom {}))
+(defonce ^:private yaml-emitter-registry (atom {}))
 (defonce ^:private json-comments-registry (atom {}))
 (defonce ^:private json-comments-loader (atom nil))
 
@@ -19,8 +20,8 @@
       (throw (ex-info "Plugin version must be a release version"
                       {:version version}))))
 
-(defn register-parser!
-  "Register a parser plugin map under its :name."
+(defn register-yaml-parser!
+  "Register a YAML parser plugin map under its :name."
   [{:keys [name parse version] :as plugin}]
   (when-not (and (string? name) (not (str/blank? name)))
     (throw (ex-info "Parser plugin :name must be a string"
@@ -30,36 +31,80 @@
                     {:plugin plugin})))
   (let [plugin (cond-> plugin
                  version (assoc :version (normalize-version version)))]
-    (swap! parser-registry assoc name plugin)
+    (swap! yaml-parser-registry assoc name plugin)
     plugin))
 
-(defn unregister-parser!
-  "Remove the parser plugin registered under name."
+(defn unregister-yaml-parser!
+  "Remove the YAML parser plugin registered under name."
   [name]
-  (swap! parser-registry dissoc name)
+  (swap! yaml-parser-registry dissoc name)
   nil)
 
-(defn registered-parsers
-  "Return the registered parser names."
+(defn registered-yaml-parsers
+  "Return the registered YAML parser names."
   []
-  (sort (keys @parser-registry)))
+  (sort (keys @yaml-parser-registry)))
 
-(defn resolve-parser
-  "Look up a parser plugin by name."
+(defn resolve-yaml-parser
+  "Look up a YAML parser plugin by name."
   [name]
-  (or (get @parser-registry name)
+  (or (get @yaml-parser-registry name)
       (try
         (some-> (requiring-resolve
-                 (symbol (str "yamlstar.plugin.parser." name) "plugin"))
+                 (symbol (str "yamlstar.plugin.yaml-parser." name)
+                         "plugin"))
                 deref)
         (catch Exception _ nil))
       (throw (ex-info (str "Unknown YAML parser plugin: " name
                            ". Available: "
-                           (if-let [names (seq (registered-parsers))]
+                           (if-let [names (seq (registered-yaml-parsers))]
                              (str/join ", " names)
                              "none"))
-                      {:parser name
-                       :available (registered-parsers)}))))
+                      {:yaml-parser name
+                       :available (registered-yaml-parsers)}))))
+
+(defn register-yaml-emitter!
+  "Register a YAML emitter plugin map under its :name."
+  [{:keys [name emit version] :as plugin}]
+  (when-not (and (string? name) (not (str/blank? name)))
+    (throw (ex-info "Emitter plugin :name must be a string"
+                    {:plugin plugin})))
+  (when-not (fn? emit)
+    (throw (ex-info "Emitter plugin :emit must be a function"
+                    {:plugin plugin})))
+  (let [plugin (cond-> plugin
+                 version (assoc :version (normalize-version version)))]
+    (swap! yaml-emitter-registry assoc name plugin)
+    plugin))
+
+(defn unregister-yaml-emitter!
+  "Remove the YAML emitter plugin registered under name."
+  [name]
+  (swap! yaml-emitter-registry dissoc name)
+  nil)
+
+(defn registered-yaml-emitters
+  "Return the registered YAML emitter names."
+  []
+  (sort (keys @yaml-emitter-registry)))
+
+(defn resolve-yaml-emitter
+  "Look up a YAML emitter plugin by name."
+  [name]
+  (or (get @yaml-emitter-registry name)
+      (try
+        (some-> (requiring-resolve
+                 (symbol (str "yamlstar.plugin.yaml-emitter." name)
+                         "plugin"))
+                deref)
+        (catch Exception _ nil))
+      (throw (ex-info (str "Unknown YAML emitter plugin: " name
+                           ". Available: "
+                           (if-let [names (seq (registered-yaml-emitters))]
+                             (str/join ", " names)
+                             "none"))
+                      {:yaml-emitter name
+                       :available (registered-yaml-emitters)}))))
 
 (defn register-json-comments!
   "Register a JSON-comments sanitizer implementation."
@@ -142,6 +187,10 @@
     (when-not (map? config)
       (throw (ex-info "Option :plugin must be a map"
                       {:plugin config})))
+    (when (contains? config :parser)
+      (throw (ex-info (str "Plugin API :parser was renamed to "
+                           ":yaml-parser")
+                      {:plugin :parser})))
     config))
 
 (defn- short-config
@@ -173,23 +222,95 @@
     (throw (ex-info "Plugin config must be a map, string, or boolean"
                     {:api api :value value}))))
 
-(defn parser-opts
+(defn yaml-parser-opts
   "Extract [parser-name config] from load options."
   [opts]
   (when-let [plugins (plugin-config opts)]
-    (when (contains? plugins :parser)
-      (when-let [config (selection-config :parser (:parser plugins))]
+    (when (contains? plugins :yaml-parser)
+      (when-let [config
+                 (selection-config
+                  :yaml-parser (:yaml-parser plugins))]
         (let [name (:name config)]
           (when (and name (not (string? name)))
             (throw (ex-info "Parser plugin :name must be a string"
                             {:name name})))
           [name (dissoc config :name)])))))
 
+(defn yaml-emitter-opts
+  "Extract [emitter-name config] from dump options."
+  [opts]
+  (when-let [plugins (plugin-config opts)]
+    (when (contains? plugins :yaml-emitter)
+      (when-let [config
+                 (selection-config
+                  :yaml-emitter (:yaml-emitter plugins))]
+        (let [name (:name config)]
+          (when (and name (not (string? name)))
+            (throw (ex-info "Emitter plugin :name must be a string"
+                            {:name name})))
+          [name (dissoc config :name)])))))
+
+(defn tab-indent-config
+  "Validate and normalize the built-in tab-indent plugin configuration."
+  [opts]
+  (when-let [plugins (plugin-config opts)]
+    (let [raw (:tab-indent plugins)]
+      (when-not (or (nil? raw) (false? raw))
+        (let [config (cond
+                       (true? raw) {}
+                       (map? raw) raw
+                       :else
+                       (throw
+                        (ex-info
+                         "Plugin config :tab-indent must be a map or boolean"
+                         {:tab-indent raw})))
+              name (:name config)
+              disabled (:disable config)
+              config (dissoc config :name :disable)
+              unknown (seq
+                       (remove #{:mode :load :dump :auto} (keys config)))]
+          (when (and name (not= name "tab-indent"))
+            (throw (ex-info
+                    "Built-in tab-indent plugin name must be tab-indent"
+                    {:name name})))
+          (when-not (or (nil? disabled) (boolean? disabled))
+            (throw (ex-info "tab-indent :disable must be boolean"
+                            {:disable disabled})))
+          (when unknown
+            (throw (ex-info "Unknown tab-indent configuration key"
+                            {:keys unknown})))
+          (when-not disabled
+            (let [mode (or (:mode config) "auto")
+                  load (or (:load config)
+                           (if (= mode "tabs") "tabs" "auto"))
+                  dump (or (:dump config) "tabs")
+                  auto (or (:auto config) "document")]
+              (when-not (contains? #{"auto" "tabs"} mode)
+                (throw (ex-info "tab-indent mode must be auto or tabs"
+                                {:mode mode})))
+              (when-not (contains? #{"auto" "spaces" "tabs"} load)
+                (throw (ex-info
+                        "tab-indent load must be auto, spaces, or tabs"
+                        {:load load})))
+              (when-not (contains? #{"spaces" "tabs"} dump)
+                (throw (ex-info
+                        "tab-indent dump must be spaces or tabs"
+                        {:dump dump})))
+              (when-not (contains? #{"document" "stream"} auto)
+                (throw (ex-info
+                        "tab-indent auto must be document or stream"
+                        {:auto auto})))
+              {:mode mode :load load :dump dump :auto auto})))))))
+
 (defn json-comments-opts
   "Resolve the configured JSON-comments sanitizer."
   [opts]
   (when-let [plugins (plugin-config opts)]
-    (doseq [api (keys (dissoc plugins :parser :json-comments))]
+    (doseq [api (keys (dissoc plugins
+                              :yaml-parser
+                              :yaml-emitter
+                              :tab-indent
+                              :json-comments))]
       (throw (ex-info (str "Unknown YAMLStar plugin API: " (name api))
                       {:api api})))
     (when (contains? plugins :json-comments)
@@ -210,7 +331,7 @@
 (defn parse-with
   "Resolve the named parser plugin and parse yaml-str with it."
   [name config yaml-str]
-  (let [{:keys [parse default-config version]} (resolve-parser name)
+  (let [{:keys [parse default-config version]} (resolve-yaml-parser name)
         requested (:version config)]
     (when requested
       (let [requested (normalize-version requested)]
@@ -219,5 +340,26 @@
            (ex-info
             (str "Parser plugin version mismatch: linked "
                  (or version "unversioned") ", requested " requested)
-            {:parser name :linked version :requested requested})))))
+            {:yaml-parser name
+             :linked version
+             :requested requested})))))
     (parse yaml-str (merge default-config (dissoc config :version)))))
+
+(defn emit-with
+  "Resolve the named YAML emitter plugin and emit an event stream."
+  [name config events multi?]
+  (let [{:keys [emit default-config version]}
+        (resolve-yaml-emitter name)
+        requested (:version config)]
+    (when requested
+      (let [requested (normalize-version requested)]
+        (when (not= requested version)
+          (throw
+           (ex-info
+            (str "Emitter plugin version mismatch: linked "
+                 (or version "unversioned") ", requested " requested)
+            {:yaml-emitter name
+             :linked version
+             :requested requested})))))
+    (emit events multi?
+          (merge default-config (dissoc config :version)))))

@@ -12,11 +12,7 @@
 36F6: emit-mismatch
 3MYT: emit-mismatch
 3R3P: emit-mismatch
-3RLN/00: emit-mismatch
-3RLN/01: emit-mismatch
 3RLN/02: emit-mismatch
-3RLN/03: emit-mismatch
-3RLN/04: emit-mismatch
 3RLN/05: emit-mismatch
 3UYS: emit-mismatch
 4MUZ/00: emit-mismatch
@@ -51,7 +47,6 @@
 735Y: emit-mismatch
 74H7: emit-mismatch
 753E: emit-mismatch
-7A4E: emit-mismatch
 7BMT: emit-mismatch
 7BUB: emit-mismatch
 7FWL: emit-mismatch
@@ -60,7 +55,6 @@
 7W2P: emit-mismatch
 7Z25: emit-mismatch
 7ZZ5: emit-mismatch
-82AN: emit-mismatch
 '87E4': emit-mismatch
 8CWC: emit-mismatch
 8KB6: emit-mismatch
@@ -91,10 +85,6 @@ CPZ3: emit-mismatch
 CUP7: emit-mismatch
 D83L: emit-mismatch
 DBG4: emit-mismatch
-DE56/00: emit-mismatch
-DE56/01: emit-mismatch
-DE56/02: emit-mismatch
-DE56/03: emit-mismatch
 DE56/04: emit-mismatch
 DE56/05: emit-mismatch
 DK3J: emit-mismatch
@@ -128,7 +118,6 @@ HM87/01: emit-mismatch
 HMK4: emit-mismatch
 HMQ5: emit-mismatch
 HS5T: emit-mismatch
-J3BT: emit-mismatch
 J7PZ: emit-mismatch
 J9HZ: emit-mismatch
 JEF9/00: emit-mismatch
@@ -140,8 +129,6 @@ K3WX: emit-mismatch
 K527: emit-mismatch
 K54U: emit-mismatch
 K858: emit-mismatch
-KH5V/01: emit-mismatch
-KH5V/02: emit-mismatch
 KSS4: emit-mismatch
 L24T/00: emit-mismatch
 L24T/01: emit-mismatch
@@ -154,7 +141,6 @@ M5C3: emit-mismatch
 M6YH: emit-mismatch
 M7A3: emit-mismatch
 M7NX: emit-mismatch
-MJS9: emit-mismatch
 MUS6/02: emit-mismatch
 MUS6/03: emit-mismatch
 MUS6/04: emit-mismatch
@@ -184,7 +170,6 @@ SSW6: emit-mismatch
 T26H: emit-mismatch
 T4YY: emit-mismatch
 T5N4: emit-mismatch
-TL85: emit-mismatch
 TS54: emit-mismatch
 U3C3: emit-mismatch
 U3XV: emit-mismatch

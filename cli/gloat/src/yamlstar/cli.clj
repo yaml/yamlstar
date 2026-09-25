@@ -7,6 +7,7 @@
             [yamlstar.composer :as composer]
             [yamlstar.contract :as contract]
             [yamlstar.constructor :as constructor]
+            [yamlstar.emitter :as emitter]
             [yamlstar.parser :as parser]
             [yamlstar.plugin.shared-host :as shared-host]
             [yamlstar.resolver :as resolver]
@@ -364,8 +365,12 @@ Options:
      :lg nil))
 
 (defn -main [& argv]
-  (parser/register-parsers! "reference" cli-default/default-parser)
-  (parser/set-default-parser! cli-default/default-parser)
+  (parser/register-yaml-parsers!
+   "reference" cli-default/default-yaml-parser)
+  (emitter/register-yaml-emitters!
+   "reference" cli-default/default-yaml-emitter)
+  (parser/set-default-yaml-parser! cli-default/default-yaml-parser)
+  (emitter/set-default-yaml-emitter! cli-default/default-yaml-emitter)
   (shared-host/install!)
   (let [opts (parse-args argv)]
     (cond

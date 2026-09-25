@@ -22,7 +22,7 @@ type aotKeywordMapStorage0 struct {
 	values [2]any
 }
 
-func aotKeywordMapNew0(v0 any, v1 any) *lang.Map {
+func aotKeywordMapNew0(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage0{}
 	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
@@ -40,7 +40,7 @@ type aotKeywordMapStorage1 struct {
 	values [3]any
 }
 
-func aotKeywordMapNew1(v0 any, v1 any, v2 any) *lang.Map {
+func aotKeywordMapNew1(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage1{}
 	storage.values = [3]any{v0, v1, v2}
 	return lang.InitStaticKeywordMap(
@@ -57,7 +57,7 @@ type aotKeywordMapStorage2 struct {
 	values [4]any
 }
 
-func aotKeywordMapNew2(v0 any, v1 any, v2 any, v3 any) *lang.Map {
+func aotKeywordMapNew2(v0 any, v1 any, v2 any, v3 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage2{}
 	storage.values = [4]any{v0, v1, v2, v3}
 	return lang.InitStaticKeywordMap(
@@ -74,7 +74,7 @@ type aotKeywordMapStorage3 struct {
 	values [6]any
 }
 
-func aotKeywordMapNew3(v0 any, v1 any, v2 any, v3 any, v4 any, v5 any) *lang.Map {
+func aotKeywordMapNew3(v0 any, v1 any, v2 any, v3 any, v4 any, v5 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage3{}
 	storage.values = [6]any{v0, v1, v2, v3, v4, v5}
 	return lang.InitStaticKeywordMap(
@@ -91,7 +91,7 @@ type aotKeywordMapStorage4 struct {
 	values [2]any
 }
 
-func aotKeywordMapNew4(v0 any, v1 any) *lang.Map {
+func aotKeywordMapNew4(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage4{}
 	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
@@ -108,7 +108,7 @@ type aotKeywordMapStorage5 struct {
 	values [3]any
 }
 
-func aotKeywordMapNew5(v0 any, v1 any, v2 any) *lang.Map {
+func aotKeywordMapNew5(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage5{}
 	storage.values = [3]any{v0, v1, v2}
 	return lang.InitStaticKeywordMap(
@@ -125,7 +125,7 @@ type aotKeywordMapStorage6 struct {
 	values [1]any
 }
 
-func aotKeywordMapNew6(v0 any) *lang.Map {
+func aotKeywordMapNew6(v0 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage6{}
 	storage.values = [1]any{v0}
 	return lang.InitStaticKeywordMap(
@@ -425,7 +425,7 @@ func LoadNS() {
 		tmp0 := sym_abi_DASH_version
 		var_yamlstar_DOT_plugin_DOT_shared_abi_DASH_version = ns.InternWithValue(tmp0, int64(2), true)
 		var_yamlstar_DOT_plugin_DOT_shared_abi_DASH_version.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/plugin/shared.glj", kw_line, int(4), kw_column, int(6), kw_end_DASH_line, int(4), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
+			return lang.NewMap(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(4), kw_column, int(6), kw_end_DASH_line, int(4), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
 		}, false)
 	}
 	// make-loader
@@ -491,7 +491,7 @@ func LoadNS() {
 						_ = v23
 						var tmp24 any
 						{ // let
-							// let binding "vec__19"
+							// let binding "vec__24"
 							var tmp25 any
 							{ // let
 								// let binding "or__0__auto__"
@@ -519,7 +519,7 @@ func LoadNS() {
 							_ = v32
 							var tmp33 any
 							{ // let
-								// let binding "G__22"
+								// let binding "G__27"
 								tmp34 := lang.LongCastBoxed(v30)
 								var v35 any = tmp34
 								_ = v35
@@ -569,7 +569,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_make_DASH_loader = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_make_DASH_loader.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.glj", kw_line, int(35), kw_column, int(7), kw_end_DASH_line, int(35), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_manifest_DASH_fn, sym_transform_DASH_fn)), kw_doc, "Create a JSON-comments loader from native host functions.\n\n  manifest-fn receives api, artifact name, and install? and returns EDN.\n  transform-fn receives api, artifact name, input, and options EDN and\n  returns [status output].", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(35), kw_column, int(7), kw_end_DASH_line, int(35), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_manifest_DASH_fn, sym_transform_DASH_fn)), kw_doc, "Create a JSON-comments loader from native host functions.\n\n  manifest-fn receives api, artifact name, and install? and returns EDN.\n  transform-fn receives api, artifact name, input, and options EDN and\n  returns [status output].", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
 		}, false)
 	}
 	// read-edn
@@ -605,7 +605,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_read_DASH_edn = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_read_DASH_edn.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.glj", kw_line, int(6), kw_column, int(8), kw_end_DASH_line, int(6), kw_end_DASH_column, int(15), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_text, sym_context)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(6), kw_column, int(8), kw_end_DASH_line, int(6), kw_end_DASH_column, int(15), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_text, sym_context)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
 		}, false)
 	}
 	// require-value
@@ -637,7 +637,7 @@ func LoadNS() {
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_require_DASH_value = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_require_DASH_value.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.glj", kw_line, int(15), kw_column, int(8), kw_end_DASH_line, int(15), kw_end_DASH_column, int(20), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_manifest, sym_key, sym_expected)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(15), kw_column, int(8), kw_end_DASH_line, int(15), kw_end_DASH_column, int(20), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_manifest, sym_key, sym_expected)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
 		}, false)
 	}
 	// validate-manifest
@@ -674,7 +674,7 @@ func LoadNS() {
 		aotDirectFn3 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_validate_DASH_manifest = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_validate_DASH_manifest.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.glj", kw_line, int(23), kw_column, int(7), kw_end_DASH_line, int(23), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym_manifest, sym_api, sym_name)), kw_doc, "Validate a shared plugin manifest for the requested API and name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(23), kw_column, int(7), kw_end_DASH_line, int(23), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym_manifest, sym_api, sym_name)), kw_doc, "Validate a shared plugin manifest for the requested API and name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
 		}, false)
 	}
 }
