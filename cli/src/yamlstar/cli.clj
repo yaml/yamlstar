@@ -16,7 +16,7 @@
             [yamlstar.constructor :as constructor])
   (:gen-class))
 
-(def version "0.1.21-SNAPSHOT")
+(def version "0.1.22-SNAPSHOT")
 
 (defn display-version
   []

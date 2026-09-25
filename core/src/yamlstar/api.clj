@@ -100,4 +100,4 @@
 (defn version
   "Return the YAMLStar version string"
   []
-  "0.1.21-SNAPSHOT")
+  "0.1.22-SNAPSHOT")
