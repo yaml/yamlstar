@@ -26,8 +26,10 @@ import (
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/numbers"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/parser"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin"
-	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/parser/go_yaml"
-	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/parser/reference"
+	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/yaml_emitter/go_yaml"
+	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/yaml_emitter/reference"
+	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/yaml_parser/go_yaml"
+	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/yaml_parser/reference"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/representer"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/resolver"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/serializer"
@@ -63,8 +65,9 @@ type response struct {
 }
 
 type options struct {
-	parser    string
-	tabIndent *TabIndentConfig
+	yamlParser   string
+	yamlEmitter  string
+	indentConfig *IndentConfig
 }
 
 // Option configures a YAML load or dump operation.
@@ -73,71 +76,70 @@ type Option func(*options)
 // Plugin is a YAMLStar plugin option fragment.
 type Plugin func(*options)
 
-// Parser selects the parser plugin used for loading.
-func Parser(name string) Plugin {
+// YAMLParser selects the YAML parser plugin used for loading.
+func YAMLParser(name string) Plugin {
 	return func(o *options) {
-		o.parser = name
+		o.yamlParser = name
 	}
 }
 
-// TabIndentMode supplies loading and dumping defaults.
-type TabIndentMode string
+// YAMLEmitter selects the YAML emitter plugin used for dumping.
+func YAMLEmitter(name string) Plugin {
+	return func(o *options) {
+		o.yamlEmitter = name
+	}
+}
+
+// IndentMode supplies loading and dumping defaults.
+type IndentMode string
 
 const (
-	TabIndentModeAuto TabIndentMode = "auto"
-	TabIndentModeTabs TabIndentMode = "tabs"
+	IndentModeAuto IndentMode = "auto"
+	IndentModeTabs IndentMode = "tabs"
 )
 
-// TabIndentLoad controls accepted structural indentation.
-type TabIndentLoad string
+// IndentStyle identifies the characters used for structural indentation.
+type IndentStyle string
 
 const (
-	TabIndentLoadTabs   TabIndentLoad = "tabs"
-	TabIndentLoadSpaces TabIndentLoad = "spaces"
-	TabIndentLoadAuto   TabIndentLoad = "auto"
+	IndentStyleAuto   IndentStyle = "auto"
+	IndentStyleSpaces IndentStyle = "spaces"
+	IndentStyleTabs   IndentStyle = "tabs"
 )
 
-// TabIndentDump controls emitted structural indentation.
-type TabIndentDump string
+// IndentScope controls how long an auto-detected style remains active.
+type IndentScope string
 
 const (
-	TabIndentDumpTabs   TabIndentDump = "tabs"
-	TabIndentDumpSpaces TabIndentDump = "spaces"
+	IndentScopeDocument IndentScope = "document"
+	IndentScopeStream   IndentScope = "stream"
 )
 
-// TabIndentAuto controls how long auto-detected indentation remains active.
-type TabIndentAuto string
-
-const (
-	TabIndentAutoDocument TabIndentAuto = "document"
-	TabIndentAutoStream   TabIndentAuto = "stream"
-)
-
-// TabIndentConfig configures the built-in tab-indent plugin.
-type TabIndentConfig struct {
-	Mode TabIndentMode
-	Load TabIndentLoad
-	Dump TabIndentDump
-	Auto TabIndentAuto
+// IndentConfig configures the built-in tab-indent plugin.
+type IndentConfig struct {
+	Mode      IndentMode
+	LoadStyle IndentStyle
+	DumpStyle IndentStyle
+	Scope     IndentScope
 }
 
 // TabIndent enables tab-aware loading and tab-indented dumping.
-func TabIndent(config ...TabIndentConfig) Plugin {
+func TabIndent(config ...IndentConfig) Plugin {
 	return func(o *options) {
-		value := TabIndentConfig{
-			Mode: TabIndentModeAuto,
-			Auto: TabIndentAutoDocument,
+		value := IndentConfig{
+			Mode:  IndentModeAuto,
+			Scope: IndentScopeDocument,
 		}
 		if len(config) > 0 {
 			value = config[0]
 			if value.Mode == "" {
-				value.Mode = TabIndentModeAuto
+				value.Mode = IndentModeAuto
 			}
-			if value.Auto == "" {
-				value.Auto = TabIndentAutoDocument
+			if value.Scope == "" {
+				value.Scope = IndentScopeDocument
 			}
 		}
-		o.tabIndent = &value
+		o.indentConfig = &value
 	}
 }
 
@@ -146,13 +148,6 @@ func WithPlugin(plugin Plugin) Option {
 	return func(o *options) {
 		plugin(o)
 	}
-}
-
-// WithParser selects the parser plugin used for loading.
-//
-// Deprecated: use WithPlugin(Parser(name)).
-func WithParser(name string) Option {
-	return WithPlugin(Parser(name))
 }
 
 func applyOptions(opts []Option) options {
@@ -166,19 +161,22 @@ func applyOptions(opts []Option) options {
 func (o options) json() (string, error) {
 	cfg := map[string]any{}
 	plugins := map[string]any{}
-	if o.parser != "" {
-		plugins["parser"] = map[string]any{"name": o.parser}
+	if o.yamlParser != "" {
+		plugins["yaml-parser"] = map[string]any{"name": o.yamlParser}
 	}
-	if o.tabIndent != nil {
+	if o.yamlEmitter != "" {
+		plugins["yaml-emitter"] = map[string]any{"name": o.yamlEmitter}
+	}
+	if o.indentConfig != nil {
 		config := map[string]any{
-			"mode": o.tabIndent.Mode,
-			"auto": o.tabIndent.Auto,
+			"mode": o.indentConfig.Mode,
+			"auto": o.indentConfig.Scope,
 		}
-		if o.tabIndent.Load != "" {
-			config["load"] = o.tabIndent.Load
+		if o.indentConfig.LoadStyle != "" {
+			config["load"] = o.indentConfig.LoadStyle
 		}
-		if o.tabIndent.Dump != "" {
-			config["dump"] = o.tabIndent.Dump
+		if o.indentConfig.DumpStyle != "" {
+			config["dump"] = o.indentConfig.DumpStyle
 		}
 		plugins["tab-indent"] = config
 	}
@@ -190,13 +188,6 @@ func (o options) json() (string, error) {
 		return "", fmt.Errorf("yamlstar: failed to encode options: %w", err)
 	}
 	return string(data), nil
-}
-
-// withParser is retained for internal tests that configure options directly.
-func withParser(name string) Option {
-	return func(o *options) {
-		o.parser = name
-	}
 }
 
 func optsJSON(opts []Option) (string, error) {
@@ -216,8 +207,10 @@ var namespaces = []string{
 	"yamlstar.desolver",
 	"libyamlstar",
 	"yamlstar.plugin",
-	"yamlstar.plugin.parser.reference",
-	"yamlstar.plugin.parser.go-yaml",
+	"yamlstar.plugin.yaml-parser.reference",
+	"yamlstar.plugin.yaml-parser.go-yaml",
+	"yamlstar.plugin.yaml-emitter.reference",
+	"yamlstar.plugin.yaml-emitter.go-yaml",
 	"yamlstar.composer",
 	"yamlstar.parser",
 	"yamlstar.representer",
@@ -238,8 +231,12 @@ func initialize() error {
 		for _, namespace := range namespaces {
 			require.Invoke(lang.NewSymbol(namespace))
 		}
-		glj.Var("yamlstar.parser", "register-parsers!").Invoke("reference", "go-yaml")
-		glj.Var("yamlstar.parser", "set-default-parser!").Invoke("go-yaml")
+		glj.Var("yamlstar.parser", "register-yaml-parsers!").Invoke(
+			"reference", "go-yaml")
+		glj.Var("yamlstar.emitter", "register-yaml-emitters!").Invoke(
+			"reference", "go-yaml")
+		glj.Var("yamlstar.parser", "set-default-yaml-parser!").Invoke("go-yaml")
+		glj.Var("yamlstar.emitter", "set-default-yaml-emitter!").Invoke("go-yaml")
 	})
 	return initializeErr
 }

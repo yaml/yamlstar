@@ -128,7 +128,9 @@ func TestTabIndentRejectsReferenceParser(t *testing.T) {
 		"root:\n  value: true\n",
 		yamlstar.WithPlugin(yamlstar.YAMLParser("reference")),
 		yamlstar.WithPlugin(yamlstar.TabIndent(
-			yamlstar.TabIndentConfig{Load: yamlstar.TabIndentLoadSpaces})))
+			yamlstar.IndentConfig{
+				LoadStyle: yamlstar.IndentStyleSpaces,
+			})))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -140,24 +142,24 @@ func TestTabIndentRejectsReferenceParser(t *testing.T) {
 
 func TestTabIndentConfiguration(t *testing.T) {
 	tabsOnly := yamlstar.WithPlugin(yamlstar.TabIndent(
-		yamlstar.TabIndentConfig{Mode: yamlstar.TabIndentModeTabs},
+		yamlstar.IndentConfig{Mode: yamlstar.IndentModeTabs},
 	))
 	if _, err := yamlstar.Load("root:\n  value: true\n", tabsOnly); err == nil {
 		t.Fatal("tabs mode accepted space indentation")
 	}
 	stream := yamlstar.WithPlugin(yamlstar.TabIndent(
-		yamlstar.TabIndentConfig{Auto: yamlstar.TabIndentAutoStream},
+		yamlstar.IndentConfig{Scope: yamlstar.IndentScopeStream},
 	))
 	input := "---\nroot:\n\tvalue: true\n---\nroot:\n  value: true\n"
 	if _, err := yamlstar.LoadAll(input, stream); err == nil {
 		t.Fatal("stream scope accepted mixed document indentation")
 	}
 	spaces := yamlstar.WithPlugin(yamlstar.TabIndent(
-		yamlstar.TabIndentConfig{
-			Mode: yamlstar.TabIndentModeTabs,
-			Load: yamlstar.TabIndentLoadSpaces,
-			Dump: yamlstar.TabIndentDumpSpaces,
-			Auto: yamlstar.TabIndentAutoStream,
+		yamlstar.IndentConfig{
+			Mode:      yamlstar.IndentModeTabs,
+			LoadStyle: yamlstar.IndentStyleSpaces,
+			DumpStyle: yamlstar.IndentStyleSpaces,
+			Scope:     yamlstar.IndentScopeStream,
 		},
 	))
 	output, err := yamlstar.Dump(
@@ -167,6 +169,49 @@ func TestTabIndentConfiguration(t *testing.T) {
 	}
 	if output != "root:\n  value: true\n" {
 		t.Fatalf("unexpected space-indented output: %q", output)
+	}
+}
+
+func TestTabIndentFlowWhitespace(t *testing.T) {
+	tests := []struct {
+		name   string
+		input  string
+		config yamlstar.IndentConfig
+	}{
+		{
+			name: "spaces with tab mode",
+			input: "items: [\n  one,\n  two\n]\n" +
+				"root:\n\tvalue: true\n",
+			config: yamlstar.IndentConfig{Mode: yamlstar.IndentModeTabs},
+		},
+		{
+			name: "tabs with space loading",
+			input: "items: [\n\tone,\n\ttwo\n]\n" +
+				"root:\n  value: true\n",
+			config: yamlstar.IndentConfig{
+				LoadStyle: yamlstar.IndentStyleSpaces,
+			},
+		},
+		{
+			name: "spaces before automatic tabs",
+			input: "items: [\n  one,\n  two\n]\n" +
+				"root:\n\tvalue: true\n",
+		},
+		{
+			name: "tabs before automatic spaces",
+			input: "items: [\n\tone,\n\ttwo\n]\n" +
+				"root:\n  value: true\n",
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			_, err := yamlstar.Load(
+				test.input,
+				yamlstar.WithPlugin(yamlstar.TabIndent(test.config)))
+			if err != nil {
+				t.Fatal(err)
+			}
+		})
 	}
 }
 

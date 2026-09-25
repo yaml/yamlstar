@@ -78,22 +78,22 @@ func ParseYAMLStarEvents(input, load, auto string) (any, error) {
 	parser := NewParser()
 	if load != "" || auto != "" {
 		if load == "" {
-			load = string(TabIndentLoadAuto)
+			load = string(IndentStyleAuto)
 		}
 		if auto == "" {
-			auto = string(TabIndentAutoDocument)
+			auto = string(IndentScopeDocument)
 		}
-		if load != string(TabIndentLoadAuto) &&
-			load != string(TabIndentLoadSpaces) &&
-			load != string(TabIndentLoadTabs) {
+		if load != string(IndentStyleAuto) &&
+			load != string(IndentStyleSpaces) &&
+			load != string(IndentStyleTabs) {
 			return nil, fmt.Errorf("invalid tab-indent load %q", load)
 		}
-		if auto != string(TabIndentAutoDocument) &&
-			auto != string(TabIndentAutoStream) {
+		if auto != string(IndentScopeDocument) &&
+			auto != string(IndentScopeStream) {
 			return nil, fmt.Errorf("invalid tab-indent auto %q", auto)
 		}
-		parser.SetTabIndent(&TabIndentConfig{
-			Load: TabIndentLoad(load), Auto: TabIndentAuto(auto),
+		parser.SetIndentConfig(&IndentConfig{
+			LoadStyle: IndentStyle(load), Scope: IndentScope(auto),
 		})
 	}
 	parser.SetInputString([]byte(input))
@@ -228,8 +228,8 @@ func normalizeTag(tag string) string {
 }
 
 func EmitYAMLStarEvents(events any, multi bool, dump string) (string, error) {
-	if dump != "" && dump != string(TabIndentDumpSpaces) &&
-		dump != string(TabIndentDumpTabs) {
+	if dump != "" && dump != string(IndentStyleSpaces) &&
+		dump != string(IndentStyleTabs) {
 		return "", fmt.Errorf("invalid tab-indent dump %q", dump)
 	}
 	var output []byte
@@ -239,7 +239,7 @@ func EmitYAMLStarEvents(events any, multi bool, dump string) (string, error) {
 	emitter.SetWidth(-1)
 	emitter.BestIndent = 2
 	emitter.CompactSequenceIndent = true
-	emitter.tabIndent = dump == string(TabIndentDumpTabs)
+	emitter.tabIndent = dump == string(IndentStyleTabs)
 	defer emitter.Delete()
 
 	for items := lang.Seq(events); items != nil; items = items.Next() {

@@ -221,6 +221,21 @@ func TestDumpWithUnknownEmitter(t *testing.T) {
 	assert.Contains(t, err.Error(), "Unknown YAML emitter plugin")
 }
 
+func TestTabIndentConfiguration(t *testing.T) {
+	option := yamlstar.WithPlugin(yamlstar.TabIndent(
+		yamlstar.IndentConfig{
+			Mode:      yamlstar.IndentModeTabs,
+			LoadStyle: yamlstar.IndentStyleSpaces,
+			DumpStyle: yamlstar.IndentStyleSpaces,
+			Scope:     yamlstar.IndentScopeStream,
+		}))
+	value, err := yamlstar.Load("root:\n  value: true\n", option)
+	require.NoError(t, err)
+	output, err := yamlstar.Dump(value, option)
+	require.NoError(t, err)
+	assert.Equal(t, "root:\n  value: true\n", output)
+}
+
 func TestDumpRoundTrip(t *testing.T) {
 	value := map[string]any{
 		"items": []any{"a", "b"},

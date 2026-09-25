@@ -25,41 +25,33 @@ type Option = core.Option
 // Plugin is a YAMLStar plugin option fragment.
 type Plugin = core.Plugin
 
-// TabIndentMode supplies loading and dumping defaults.
-type TabIndentMode = core.TabIndentMode
+// IndentMode supplies loading and dumping defaults.
+type IndentMode = core.IndentMode
 
 const (
-	TabIndentModeAuto = core.TabIndentModeAuto
-	TabIndentModeTabs = core.TabIndentModeTabs
+	IndentModeAuto = core.IndentModeAuto
+	IndentModeTabs = core.IndentModeTabs
 )
 
-// TabIndentLoad controls accepted structural indentation.
-type TabIndentLoad = core.TabIndentLoad
+// IndentStyle identifies the characters used for structural indentation.
+type IndentStyle = core.IndentStyle
 
 const (
-	TabIndentLoadTabs   = core.TabIndentLoadTabs
-	TabIndentLoadSpaces = core.TabIndentLoadSpaces
-	TabIndentLoadAuto   = core.TabIndentLoadAuto
+	IndentStyleAuto   = core.IndentStyleAuto
+	IndentStyleSpaces = core.IndentStyleSpaces
+	IndentStyleTabs   = core.IndentStyleTabs
 )
 
-// TabIndentDump controls emitted structural indentation.
-type TabIndentDump = core.TabIndentDump
+// IndentScope controls how long an auto-detected style remains active.
+type IndentScope = core.IndentScope
 
 const (
-	TabIndentDumpTabs   = core.TabIndentDumpTabs
-	TabIndentDumpSpaces = core.TabIndentDumpSpaces
+	IndentScopeDocument = core.IndentScopeDocument
+	IndentScopeStream   = core.IndentScopeStream
 )
 
-// TabIndentAuto controls auto-detection scope.
-type TabIndentAuto = core.TabIndentAuto
-
-const (
-	TabIndentAutoDocument = core.TabIndentAutoDocument
-	TabIndentAutoStream   = core.TabIndentAutoStream
-)
-
-// TabIndentConfig configures the built-in tab-indent plugin.
-type TabIndentConfig = core.TabIndentConfig
+// IndentConfig configures the built-in tab-indent plugin.
+type IndentConfig = core.IndentConfig
 
 // YAMLParser selects the YAML parser plugin used for loading.
 var YAMLParser = core.YAMLParser

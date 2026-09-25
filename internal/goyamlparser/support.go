@@ -15,40 +15,33 @@ type DepthContext struct {
 	Kind DepthKind
 }
 
-type TabIndentMode string
+type IndentMode string
 
 const (
-	TabIndentModeAuto TabIndentMode = "auto"
-	TabIndentModeTabs TabIndentMode = "tabs"
+	IndentModeAuto IndentMode = "auto"
+	IndentModeTabs IndentMode = "tabs"
 )
 
-type TabIndentLoad string
+type IndentStyle string
 
 const (
-	TabIndentLoadTabs   TabIndentLoad = "tabs"
-	TabIndentLoadSpaces TabIndentLoad = "spaces"
-	TabIndentLoadAuto   TabIndentLoad = "auto"
+	IndentStyleAuto   IndentStyle = "auto"
+	IndentStyleSpaces IndentStyle = "spaces"
+	IndentStyleTabs   IndentStyle = "tabs"
 )
 
-type TabIndentDump string
+type IndentScope string
 
 const (
-	TabIndentDumpTabs   TabIndentDump = "tabs"
-	TabIndentDumpSpaces TabIndentDump = "spaces"
+	IndentScopeDocument IndentScope = "document"
+	IndentScopeStream   IndentScope = "stream"
 )
 
-type TabIndentAuto string
-
-const (
-	TabIndentAutoDocument TabIndentAuto = "document"
-	TabIndentAutoStream   TabIndentAuto = "stream"
-)
-
-type TabIndentConfig struct {
-	Mode TabIndentMode
-	Load TabIndentLoad
-	Dump TabIndentDump
-	Auto TabIndentAuto
+type IndentConfig struct {
+	Mode      IndentMode
+	LoadStyle IndentStyle
+	DumpStyle IndentStyle
+	Scope     IndentScope
 }
 
 func DefaultDepthCheck(depth int, ctx *DepthContext) error {
