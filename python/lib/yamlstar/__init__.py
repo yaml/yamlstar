@@ -236,6 +236,20 @@ def tab_indent(mode='auto', load=None, dump=None, auto='document'):
   return {'tab-indent': config}
 
 
+def alias_data(data=None, path=None, env=None, stream=False):
+  """Return a built-in Alias-Data plugin option fragment."""
+  config = {}
+  if data is not None:
+    config['data'] = data
+  if path is not None:
+    config['file'] = path
+  if env is not None:
+    config['env'] = env
+  if stream:
+    config['stream'] = True
+  return {'alias-data': config}
+
+
 def _options_dict(options):
   if options is None:
     return {}

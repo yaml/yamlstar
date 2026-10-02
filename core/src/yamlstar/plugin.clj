@@ -1,11 +1,17 @@
 (ns yamlstar.plugin
   "YAMLStar parser, emitter, and JSON-comments plugin support."
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [yamlstar.plugin.alias-data :as alias-data]))
 
 (defonce ^:private yaml-parser-registry (atom {}))
 (defonce ^:private yaml-emitter-registry (atom {}))
 (defonce ^:private json-comments-registry (atom {}))
 (defonce ^:private json-comments-loader (atom nil))
+(defonce ^:private alias-data-registry
+  (atom {"alias-data"
+         {:api "alias-data"
+          :name "alias-data"
+          :new-context alias-data/new-context}}))
 
 (def ^:private release-version-pattern
   #"^v?([0-9]+\.[0-9]+\.[0-9]+)$")
@@ -181,6 +187,43 @@
              :linked linked :requested requested})))))
     plugin))
 
+(defn register-alias-data!
+  "Register an Alias-Data policy implementation."
+  [{:keys [api name new-context version] :as plugin}]
+  (when-not (= api "alias-data")
+    (throw (ex-info "Alias-Data plugin :api must be alias-data"
+                    {:plugin plugin})))
+  (when-not (and (string? name) (not (str/blank? name)))
+    (throw (ex-info "Alias-Data plugin :name must be a string"
+                    {:plugin plugin})))
+  (when-not (fn? new-context)
+    (throw (ex-info "Alias-Data plugin :new-context must be a function"
+                    {:plugin plugin})))
+  (let [plugin (cond-> plugin
+                 version (assoc :version (normalize-version version)))]
+    (swap! alias-data-registry assoc name plugin)
+    plugin))
+
+(defn unregister-alias-data!
+  "Remove an Alias-Data implementation."
+  [name]
+  (swap! alias-data-registry dissoc name)
+  nil)
+
+(defn registered-alias-data
+  "Return the registered Alias-Data implementation names."
+  []
+  (sort (keys @alias-data-registry)))
+
+(defn resolve-alias-data
+  "Resolve a named Alias-Data implementation."
+  [name]
+  (or (get @alias-data-registry name)
+      (throw (ex-info
+              (str "Unknown YAMLStar alias-data implementation: " name)
+              {:api "alias-data" :name name
+               :available (registered-alias-data)}))))
+
 (defn- plugin-config
   [opts]
   (when-let [config (:plugin opts)]
@@ -310,6 +353,7 @@
                               :yaml-parser
                               :yaml-emitter
                               :tab-indent
+                              :alias-data
                               :json-comments))]
       (throw (ex-info (str "Unknown YAMLStar plugin API: " (name api))
                       {:api api})))
@@ -322,6 +366,32 @@
               plugin (resolve-json-comments
                       name version (true? (:plugin-install opts)))]
           [plugin (dissoc config :name :version)])))))
+
+(defn alias-data-context
+  "Create the per-load Alias-Data context selected by opts."
+  [opts services]
+  (let [plugins (plugin-config opts)]
+    (if-not (and plugins (contains? plugins :alias-data))
+      (alias-data/default-context)
+      (if-let [selection
+               (selection-config :alias-data (:alias-data plugins))]
+        (let [name (or (:name selection) "alias-data")
+              requested (:version selection)
+              plugin (resolve-alias-data name)
+              linked (:version plugin)
+              config (dissoc selection :name :version)
+              config (if (empty? config) {:stream true} config)]
+          (when requested
+            (let [requested (normalize-version requested)]
+              (when (not= requested linked)
+                (throw
+                 (ex-info
+                  (str "Alias-Data plugin version mismatch: linked "
+                       (or linked "unversioned") ", requested " requested)
+                  {:api "alias-data" :name name
+                   :linked linked :requested requested})))))
+          ((:new-context plugin) config services))
+        (alias-data/default-context)))))
 
 (defn sanitize-with
   "Sanitize YAML input with a resolved JSON-comments plugin."

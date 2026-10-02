@@ -165,6 +165,11 @@ $(GLOAT-LINK-DIR)/emitter.clj: $(CORE-YAMLSTAR)/emitter.cljc
 	@mkdir -p $(dir $@)
 	ln -sf $(abspath $<) $@
 
+$(GLOAT-LINK-DIR)/plugin/alias_data.clj: \
+  $(CORE-YAMLSTAR)/plugin/alias_data.cljc
+	@mkdir -p $(dir $@)
+	ln -sf $(abspath $<) $@
+
 $(GLOAT-LINK-DIR)/plugin/yaml_parser/go_yaml.clj: \
   $(CORE-YAMLSTAR)/plugin/yaml_parser/go_yaml.cljc
 	@mkdir -p $(dir $@)
@@ -224,6 +229,7 @@ GLOAT-LINKS := \
   $(GLOAT-LINK-DIR)/desolver.clj \
   $(GLOAT-LINK-DIR)/serializer.clj \
   $(GLOAT-LINK-DIR)/emitter.clj \
+  $(GLOAT-LINK-DIR)/plugin/alias_data.clj \
   $(GLOAT-LINK-DIR)/plugin/yaml_parser/go_yaml.clj \
   $(GLOAT-LINK-DIR)/plugin/yaml_parser/reference.clj \
   $(GLOAT-LINK-DIR)/plugin/yaml_emitter/go_yaml.clj \
@@ -232,6 +238,7 @@ GLOAT-LINKS := \
 
 # Clojure source files compiled by gloat (order matters for namespaces)
 GLOAT-SRCS := \
+  $(GLOAT-LINK-DIR)/plugin/alias_data.clj \
   $(CORE-YAMLSTAR)/plugin.clj \
   $(CORE-YAMLSTAR)/options.clj \
   $(CORE-YAMLSTAR)/plugin/yaml_parser.clj \

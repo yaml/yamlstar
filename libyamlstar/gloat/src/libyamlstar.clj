@@ -81,18 +81,22 @@
     :else x))
 
 (defn normalize-keys
-  "Keywordize map keys recursively, converting snake_case to kebab-case.
-
-  Only keys are rewritten; values are never touched."
-  [x]
-  (cond
-    (map? x) (into {}
-                   (map (fn [[k v]]
-                          [(keyword (str/replace (name k) "_" "-"))
-                           (normalize-keys v)]))
-                   x)
-    (vector? x) (mapv normalize-keys x)
-    :else x))
+  "Keywordize option keys while preserving Alias-Data mapping names."
+  ([x]
+   (normalize-keys x []))
+  ([x path]
+   (cond
+     (map? x)
+     (if (= path [:plugin :alias-data :data])
+       (into {} (map (fn [[k v]] [(name k) v])) x)
+       (into {}
+             (map (fn [[k v]]
+                    (let [key (keyword
+                               (str/replace (name k) "_" "-"))]
+                      [key (normalize-keys v (conj path key))])))
+             x))
+     (vector? x) (mapv #(normalize-keys % path) x)
+     :else x)))
 
 (defn parse-opts
   "Parse a JSON options string into a normalized opts map.

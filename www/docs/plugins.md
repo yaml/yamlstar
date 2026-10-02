@@ -14,6 +14,7 @@ The current APIs and implementations are:
 | `yaml-emitter` | `snakeyaml` | JVM runtime |
 | `tab-indent` | built in | Native runtime with go-yaml |
 | `json-comments` | `sanitizer` | JVM artifact or native shared library |
+| `alias-data` | `alias-data` | JVM and native, built in |
 
 The JSON-comments sanitizer transforms source text before the selected parser
 runs.
@@ -28,6 +29,10 @@ plugin:
   yaml-parser: reference@v0.2.5
   yaml-emitter: reference
   json-comments: sanitizer@v0.1.9
+  alias-data:
+    data:
+      defaults: {color: blue}
+    env: APP_*
 ```
 
 An implementation can also use a mapping:
@@ -79,6 +84,55 @@ The former `--parser` flag has been removed.
 
 The old `parser` API name is rejected with a message directing callers to
 `yaml-parser`.
+
+## Alias data
+
+The built-in `alias-data` implementation controls anchor storage and alias
+resolution during loading.
+With no Alias-Data selection, anchors follow standard YAML document scope.
+
+```yaml
+plugin:
+  alias-data:
+    data:
+      defaults:
+        color: blue
+        size: 3
+    file: aliases.yaml
+    env: APP_*
+    stream: true
+```
+
+`data` is a mapping from anchor names to arbitrary YAML values.
+`file` names one YAML document whose root must be a mapping.
+Relative paths use the current working directory.
+
+`env` accepts `true` for the complete environment, a sequence of exact names,
+or a string pattern.
+Only `*` is a wildcard.
+Environment values are strings.
+Missing exact names and selected invalid names are errors.
+
+Names from every source must match `[A-Za-z0-9_-]+`.
+Files and environment variables are read once when the per-load policy is
+created.
+
+Aliases resolve in this order: current-document anchors, inline data, file
+data, environment data, and anchors retained from previous documents.
+Mappings supplied by any source work with the YAML merge key.
+
+`stream: true` retains anchors for later documents in the same input stream.
+The short selector and an explicit empty configuration both enable stream
+mode:
+
+```bash
+yaml --plugin=alias-data stream.yaml
+```
+
+Alias-Data is an in-process policy API, not a native shared-library plugin.
+Both the JVM and generated native runtime perform the same lifecycle actions:
+begin stream, begin document, define anchor, resolve alias, end document, and
+end stream.
 
 ## YAML parser and emitter implementations
 

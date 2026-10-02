@@ -11,41 +11,50 @@ import (
 	atomic "sync/atomic"
 )
 
-var aotDirectFn0 lang.FnFunc1
-var aotDirectFn1 lang.FnFunc4
-var aotDirectFn2 lang.FnFunc1
+var aotDirectFn0 lang.FnFunc2
+var aotDirectFn1 lang.FnFunc1
+var aotDirectFn2 lang.FnFunc4
 var aotDirectFn3 lang.FnFunc1
-var aotDirectFn4 lang.FnFunc3
-var aotDirectFn5 lang.FnFunc1
+var aotDirectFn4 lang.FnFunc1
+var aotDirectFn5 lang.FnFunc3
 var aotDirectFn6 lang.FnFunc1
 var aotDirectFn7 lang.FnFunc1
 var aotDirectFn8 lang.FnFunc1
-var aotDirectFn9 lang.FnFunc0
-var aotDirectFn10 lang.FnFunc0
-var aotDirectFn11 lang.FnFunc3
-var aotDirectFn12 lang.FnFunc1
-var aotDirectFn13 lang.FnFunc1
-var aotDirectFn14 lang.FnFunc2
-var aotDirectFn15 lang.FnFunc2
+var aotDirectFn9 lang.FnFunc1
+var aotDirectFn10 lang.FnFunc1
+var aotDirectFn11 lang.FnFunc0
+var aotDirectFn12 lang.FnFunc0
+var aotDirectFn13 lang.FnFunc0
+var aotDirectFn14 lang.FnFunc1
+var aotDirectFn15 lang.FnFunc3
 var aotDirectFn16 lang.FnFunc1
-var aotDirectFn17 lang.FnFunc2
-var aotDirectFn18 lang.FnFunc1
-var aotDirectFn19 lang.FnFunc1
+var aotDirectFn17 lang.FnFunc1
+var aotDirectFn18 lang.FnFunc2
+var aotDirectFn19 lang.FnFunc2
 var aotDirectFn20 lang.FnFunc1
-var aotDirectFn21 lang.FnFunc1
+var aotDirectFn21 lang.FnFunc2
 var aotDirectFn22 lang.FnFunc1
 var aotDirectFn23 lang.FnFunc1
+var aotDirectFn24 lang.FnFunc1
+var aotDirectFn25 lang.FnFunc1
+var aotDirectFn26 lang.FnFunc1
+var aotDirectFn27 lang.FnFunc1
+var aotDirectFn28 lang.FnFunc1
 
-var aotKeywordMapShape0 = lang.NewKeywordMapShape("api", "name", "version", "sanitize", "default-config")
+var aotKeywordSite0 lang.KeywordSite
+var aotKeywordSite1 lang.KeywordSite
+var aotKeywordSite2 lang.KeywordSite
+var aotKeywordSite3 lang.KeywordSite
+var aotKeywordMapShape0 = lang.NewKeywordMapShape("stream")
 
 type aotKeywordMapStorage0 struct {
 	lang.Map
-	values [5]any
+	values [1]any
 }
 
-func aotKeywordMapNew0(v0 any, v1 any, v2 any, v3 any, v4 any) lang.IPersistentMap {
+func aotKeywordMapNew0(v0 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage0{}
-	storage.values = [5]any{v0, v1, v2, v3, v4}
+	storage.values = [1]any{v0}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape0,
@@ -53,17 +62,16 @@ func aotKeywordMapNew0(v0 any, v1 any, v2 any, v3 any, v4 any) lang.IPersistentM
 	)
 }
 
-var aotKeywordSite0 lang.KeywordSite
-var aotKeywordMapShape1 = lang.NewKeywordMapShape("yaml-emitter", "linked", "requested")
+var aotKeywordMapShape1 = lang.NewKeywordMapShape("api", "name", "linked", "requested")
 
 type aotKeywordMapStorage1 struct {
 	lang.Map
-	values [3]any
+	values [4]any
 }
 
-func aotKeywordMapNew1(v0 any, v1 any, v2 any) lang.IPersistentMap {
+func aotKeywordMapNew1(v0 any, v1 any, v2 any, v3 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage1{}
-	storage.values = [3]any{v0, v1, v2}
+	storage.values = [4]any{v0, v1, v2, v3}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape1,
@@ -71,16 +79,21 @@ func aotKeywordMapNew1(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape2 = lang.NewKeywordMapShape("api")
+var aotKeywordSite4 lang.KeywordSite
+var aotKeywordSite5 lang.KeywordSite
+var aotKeywordSite6 lang.KeywordSite
+var aotKeywordSite7 lang.KeywordSite
+var aotKeywordSite8 lang.KeywordSite
+var aotKeywordMapShape2 = lang.NewKeywordMapShape("begin-stream", "begin-document", "define-anchor", "resolve-alias", "end-document", "end-stream")
 
 type aotKeywordMapStorage2 struct {
 	lang.Map
-	values [1]any
+	values [6]any
 }
 
-func aotKeywordMapNew2(v0 any) lang.IPersistentMap {
+func aotKeywordMapNew2(v0 any, v1 any, v2 any, v3 any, v4 any, v5 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage2{}
-	storage.values = [1]any{v0}
+	storage.values = [6]any{v0, v1, v2, v3, v4, v5}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape2,
@@ -88,20 +101,16 @@ func aotKeywordMapNew2(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite1 lang.KeywordSite
-var aotKeywordSite2 lang.KeywordSite
-var aotKeywordSite3 lang.KeywordSite
-var aotKeywordSite4 lang.KeywordSite
-var aotKeywordMapShape3 = lang.NewKeywordMapShape("version")
+var aotKeywordMapShape3 = lang.NewKeywordMapShape("api", "name", "new-context")
 
 type aotKeywordMapStorage3 struct {
 	lang.Map
-	values [1]any
+	values [3]any
 }
 
-func aotKeywordMapNew3(v0 any) lang.IPersistentMap {
+func aotKeywordMapNew3(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage3{}
-	storage.values = [1]any{v0}
+	storage.values = [3]any{v0, v1, v2}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape3,
@@ -109,17 +118,16 @@ func aotKeywordMapNew3(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite5 lang.KeywordSite
-var aotKeywordMapShape4 = lang.NewKeywordMapShape("yaml-parser", "linked", "requested")
+var aotKeywordMapShape4 = lang.NewKeywordMapShape("api", "name", "version", "sanitize", "default-config")
 
 type aotKeywordMapStorage4 struct {
 	lang.Map
-	values [3]any
+	values [5]any
 }
 
-func aotKeywordMapNew4(v0 any, v1 any, v2 any) lang.IPersistentMap {
+func aotKeywordMapNew4(v0 any, v1 any, v2 any, v3 any, v4 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage4{}
-	storage.values = [3]any{v0, v1, v2}
+	storage.values = [5]any{v0, v1, v2, v3, v4}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape4,
@@ -127,17 +135,17 @@ func aotKeywordMapNew4(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite6 lang.KeywordSite
-var aotKeywordMapShape5 = lang.NewKeywordMapShape("plugin")
+var aotKeywordSite9 lang.KeywordSite
+var aotKeywordMapShape5 = lang.NewKeywordMapShape("yaml-emitter", "linked", "requested")
 
 type aotKeywordMapStorage5 struct {
 	lang.Map
-	values [1]any
+	values [3]any
 }
 
-func aotKeywordMapNew5(v0 any) lang.IPersistentMap {
+func aotKeywordMapNew5(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage5{}
-	storage.values = [1]any{v0}
+	storage.values = [3]any{v0, v1, v2}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape5,
@@ -145,16 +153,16 @@ func aotKeywordMapNew5(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape6 = lang.NewKeywordMapShape("api", "name")
+var aotKeywordMapShape6 = lang.NewKeywordMapShape("api")
 
 type aotKeywordMapStorage6 struct {
 	lang.Map
-	values [2]any
+	values [1]any
 }
 
-func aotKeywordMapNew6(v0 any, v1 any) lang.IPersistentMap {
+func aotKeywordMapNew6(v0 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage6{}
-	storage.values = [2]any{v0, v1}
+	storage.values = [1]any{v0}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape6,
@@ -162,17 +170,20 @@ func aotKeywordMapNew6(v0 any, v1 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite7 lang.KeywordSite
-var aotKeywordMapShape7 = lang.NewKeywordMapShape("api", "name", "linked", "requested")
+var aotKeywordSite10 lang.KeywordSite
+var aotKeywordSite11 lang.KeywordSite
+var aotKeywordSite12 lang.KeywordSite
+var aotKeywordSite13 lang.KeywordSite
+var aotKeywordMapShape7 = lang.NewKeywordMapShape("version")
 
 type aotKeywordMapStorage7 struct {
 	lang.Map
-	values [4]any
+	values [1]any
 }
 
-func aotKeywordMapNew7(v0 any, v1 any, v2 any, v3 any) lang.IPersistentMap {
+func aotKeywordMapNew7(v0 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage7{}
-	storage.values = [4]any{v0, v1, v2, v3}
+	storage.values = [1]any{v0}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape7,
@@ -180,16 +191,17 @@ func aotKeywordMapNew7(v0 any, v1 any, v2 any, v3 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape8 = lang.NewKeywordMapShape("yaml-emitter", "available")
+var aotKeywordSite14 lang.KeywordSite
+var aotKeywordMapShape8 = lang.NewKeywordMapShape("yaml-parser", "linked", "requested")
 
 type aotKeywordMapStorage8 struct {
 	lang.Map
-	values [2]any
+	values [3]any
 }
 
-func aotKeywordMapNew8(v0 any, v1 any) lang.IPersistentMap {
+func aotKeywordMapNew8(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage8{}
-	storage.values = [2]any{v0, v1}
+	storage.values = [3]any{v0, v1, v2}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape8,
@@ -197,16 +209,17 @@ func aotKeywordMapNew8(v0 any, v1 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape9 = lang.NewKeywordMapShape("yaml-parser", "available")
+var aotKeywordSite15 lang.KeywordSite
+var aotKeywordMapShape9 = lang.NewKeywordMapShape("plugin")
 
 type aotKeywordMapStorage9 struct {
 	lang.Map
-	values [2]any
+	values [1]any
 }
 
-func aotKeywordMapNew9(v0 any, v1 any) lang.IPersistentMap {
+func aotKeywordMapNew9(v0 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage9{}
-	storage.values = [2]any{v0, v1}
+	storage.values = [1]any{v0}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape9,
@@ -214,17 +227,16 @@ func aotKeywordMapNew9(v0 any, v1 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite8 lang.KeywordSite
-var aotKeywordMapShape10 = lang.NewKeywordMapShape("api", "value")
+var aotKeywordMapShape10 = lang.NewKeywordMapShape("api", "name", "available")
 
 type aotKeywordMapStorage10 struct {
 	lang.Map
-	values [2]any
+	values [3]any
 }
 
-func aotKeywordMapNew10(v0 any, v1 any) lang.IPersistentMap {
+func aotKeywordMapNew10(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage10{}
-	storage.values = [2]any{v0, v1}
+	storage.values = [3]any{v0, v1, v2}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape10,
@@ -232,17 +244,16 @@ func aotKeywordMapNew10(v0 any, v1 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite9 lang.KeywordSite
-var aotKeywordMapShape11 = lang.NewKeywordMapShape("loader")
+var aotKeywordMapShape11 = lang.NewKeywordMapShape("api", "name")
 
 type aotKeywordMapStorage11 struct {
 	lang.Map
-	values [1]any
+	values [2]any
 }
 
-func aotKeywordMapNew11(v0 any) lang.IPersistentMap {
+func aotKeywordMapNew11(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage11{}
-	storage.values = [1]any{v0}
+	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape11,
@@ -250,16 +261,17 @@ func aotKeywordMapNew11(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape12 = lang.NewKeywordMapShape("name")
+var aotKeywordSite16 lang.KeywordSite
+var aotKeywordMapShape12 = lang.NewKeywordMapShape("yaml-emitter", "available")
 
 type aotKeywordMapStorage12 struct {
 	lang.Map
-	values [1]any
+	values [2]any
 }
 
-func aotKeywordMapNew12(v0 any) lang.IPersistentMap {
+func aotKeywordMapNew12(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage12{}
-	storage.values = [1]any{v0}
+	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape12,
@@ -267,17 +279,16 @@ func aotKeywordMapNew12(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite10 lang.KeywordSite
-var aotKeywordMapShape13 = lang.NewKeywordMapShape("tab-indent")
+var aotKeywordMapShape13 = lang.NewKeywordMapShape("yaml-parser", "available")
 
 type aotKeywordMapStorage13 struct {
 	lang.Map
-	values [1]any
+	values [2]any
 }
 
-func aotKeywordMapNew13(v0 any) lang.IPersistentMap {
+func aotKeywordMapNew13(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage13{}
-	storage.values = [1]any{v0}
+	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape13,
@@ -285,18 +296,17 @@ func aotKeywordMapNew13(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite11 lang.KeywordSite
-var aotKeywordSite12 lang.KeywordSite
-var aotKeywordMapShape14 = lang.NewKeywordMapShape("disable")
+var aotKeywordSite17 lang.KeywordSite
+var aotKeywordMapShape14 = lang.NewKeywordMapShape("api", "value")
 
 type aotKeywordMapStorage14 struct {
 	lang.Map
-	values [1]any
+	values [2]any
 }
 
-func aotKeywordMapNew14(v0 any) lang.IPersistentMap {
+func aotKeywordMapNew14(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage14{}
-	storage.values = [1]any{v0}
+	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape14,
@@ -304,7 +314,8 @@ func aotKeywordMapNew14(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape15 = lang.NewKeywordMapShape("keys")
+var aotKeywordSite18 lang.KeywordSite
+var aotKeywordMapShape15 = lang.NewKeywordMapShape("loader")
 
 type aotKeywordMapStorage15 struct {
 	lang.Map
@@ -321,11 +332,7 @@ func aotKeywordMapNew15(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite13 lang.KeywordSite
-var aotKeywordSite14 lang.KeywordSite
-var aotKeywordSite15 lang.KeywordSite
-var aotKeywordSite16 lang.KeywordSite
-var aotKeywordMapShape16 = lang.NewKeywordMapShape("mode")
+var aotKeywordMapShape16 = lang.NewKeywordMapShape("name")
 
 type aotKeywordMapStorage16 struct {
 	lang.Map
@@ -342,7 +349,8 @@ func aotKeywordMapNew16(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape17 = lang.NewKeywordMapShape("load")
+var aotKeywordSite19 lang.KeywordSite
+var aotKeywordMapShape17 = lang.NewKeywordMapShape("tab-indent")
 
 type aotKeywordMapStorage17 struct {
 	lang.Map
@@ -359,7 +367,9 @@ func aotKeywordMapNew17(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape18 = lang.NewKeywordMapShape("dump")
+var aotKeywordSite20 lang.KeywordSite
+var aotKeywordSite21 lang.KeywordSite
+var aotKeywordMapShape18 = lang.NewKeywordMapShape("disable")
 
 type aotKeywordMapStorage18 struct {
 	lang.Map
@@ -376,7 +386,7 @@ func aotKeywordMapNew18(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape19 = lang.NewKeywordMapShape("auto")
+var aotKeywordMapShape19 = lang.NewKeywordMapShape("keys")
 
 type aotKeywordMapStorage19 struct {
 	lang.Map
@@ -393,16 +403,20 @@ func aotKeywordMapNew19(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape20 = lang.NewKeywordMapShape("mode", "load", "dump", "auto")
+var aotKeywordSite22 lang.KeywordSite
+var aotKeywordSite23 lang.KeywordSite
+var aotKeywordSite24 lang.KeywordSite
+var aotKeywordSite25 lang.KeywordSite
+var aotKeywordMapShape20 = lang.NewKeywordMapShape("mode")
 
 type aotKeywordMapStorage20 struct {
 	lang.Map
-	values [4]any
+	values [1]any
 }
 
-func aotKeywordMapNew20(v0 any, v1 any, v2 any, v3 any) lang.IPersistentMap {
+func aotKeywordMapNew20(v0 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage20{}
-	storage.values = [4]any{v0, v1, v2, v3}
+	storage.values = [1]any{v0}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape20,
@@ -410,10 +424,107 @@ func aotKeywordMapNew20(v0 any, v1 any, v2 any, v3 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite17 lang.KeywordSite
-var aotKeywordSite18 lang.KeywordSite
-var aotKeywordSite19 lang.KeywordSite
-var aotKeywordSite20 lang.KeywordSite
+var aotKeywordMapShape21 = lang.NewKeywordMapShape("load")
+
+type aotKeywordMapStorage21 struct {
+	lang.Map
+	values [1]any
+}
+
+func aotKeywordMapNew21(v0 any) lang.IPersistentMap {
+	storage := &aotKeywordMapStorage21{}
+	storage.values = [1]any{v0}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape21,
+		storage.values[:],
+	)
+}
+
+var aotKeywordMapShape22 = lang.NewKeywordMapShape("dump")
+
+type aotKeywordMapStorage22 struct {
+	lang.Map
+	values [1]any
+}
+
+func aotKeywordMapNew22(v0 any) lang.IPersistentMap {
+	storage := &aotKeywordMapStorage22{}
+	storage.values = [1]any{v0}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape22,
+		storage.values[:],
+	)
+}
+
+var aotKeywordMapShape23 = lang.NewKeywordMapShape("auto")
+
+type aotKeywordMapStorage23 struct {
+	lang.Map
+	values [1]any
+}
+
+func aotKeywordMapNew23(v0 any) lang.IPersistentMap {
+	storage := &aotKeywordMapStorage23{}
+	storage.values = [1]any{v0}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape23,
+		storage.values[:],
+	)
+}
+
+var aotKeywordMapShape24 = lang.NewKeywordMapShape("mode", "load", "dump", "auto")
+
+type aotKeywordMapStorage24 struct {
+	lang.Map
+	values [4]any
+}
+
+func aotKeywordMapNew24(v0 any, v1 any, v2 any, v3 any) lang.IPersistentMap {
+	storage := &aotKeywordMapStorage24{}
+	storage.values = [4]any{v0, v1, v2, v3}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape24,
+		storage.values[:],
+	)
+}
+
+var aotKeywordSite26 lang.KeywordSite
+var aotKeywordSite27 lang.KeywordSite
+var aotKeywordSite28 lang.KeywordSite
+var aotKeywordSite29 lang.KeywordSite
+
+func aotLinkFn0(vr *lang.Var) lang.FnFunc0 {
+	if vr.IsBound() {
+		return aotLinkBoundFn0(vr)
+	}
+	var linked atomic.Pointer[lang.FnFunc0]
+	return func() any {
+		if fn := linked.Load(); fn != nil {
+			return (*fn)()
+		}
+		if !vr.IsBound() {
+			return lang.Apply0(checkDerefVar(vr))
+		}
+		fn := aotLinkBoundFn0(vr)
+		linked.Store(&fn)
+		return fn()
+	}
+}
+
+func aotLinkBoundFn0(vr *lang.Var) lang.FnFunc0 {
+	fn := checkDerefVar(vr)
+	if direct, ok := fn.(lang.FnFunc0); ok {
+		return direct
+	}
+	if fixed, ok := fn.(lang.FixedArityFn0); ok {
+		return fixed.Invoke0
+	}
+	return func() any { return lang.Apply0(fn) }
+}
 
 func aotLinkFn1(vr *lang.Var) lang.FnFunc1 {
 	if vr.IsBound() {
@@ -531,35 +642,6 @@ func aotLinkBoundFn4(vr *lang.Var) lang.FnFunc4 {
 	return func(p0 any, p1 any, p2 any, p3 any) any { return lang.Apply4(fn, p0, p1, p2, p3) }
 }
 
-func aotLinkFn5(vr *lang.Var) lang.FnFunc5 {
-	if vr.IsBound() {
-		return aotLinkBoundFn5(vr)
-	}
-	var linked atomic.Pointer[lang.FnFunc5]
-	return func(p0 any, p1 any, p2 any, p3 any, p4 any) any {
-		if fn := linked.Load(); fn != nil {
-			return (*fn)(p0, p1, p2, p3, p4)
-		}
-		if !vr.IsBound() {
-			return lang.Apply5(checkDerefVar(vr), p0, p1, p2, p3, p4)
-		}
-		fn := aotLinkBoundFn5(vr)
-		linked.Store(&fn)
-		return fn(p0, p1, p2, p3, p4)
-	}
-}
-
-func aotLinkBoundFn5(vr *lang.Var) lang.FnFunc5 {
-	fn := checkDerefVar(vr)
-	if direct, ok := fn.(lang.FnFunc5); ok {
-		return direct
-	}
-	if fixed, ok := fn.(lang.FixedArityFn5); ok {
-		return fixed.Invoke5
-	}
-	return func(p0 any, p1 any, p2 any, p3 any, p4 any) any { return lang.Apply5(fn, p0, p1, p2, p3, p4) }
-}
-
 func init() {
 	runtime.RegisterNSLoader("yamlstar/plugin", LoadNS)
 }
@@ -585,8 +667,12 @@ func checkArityGTE(args []any, min int) {
 
 // LoadNS initializes the namespace "yamlstar.plugin"
 func LoadNS() {
+	sym_alias_DASH_data := lang.NewSymbolUnchecked("alias-data")
+	sym_alias_DASH_data_DASH_context := lang.NewSymbolUnchecked("alias-data-context")
+	sym_alias_DASH_data_DASH_registry := lang.NewSymbolUnchecked("alias-data-registry")
 	sym_api := lang.NewSymbolUnchecked("api")
 	sym_assoc := lang.NewSymbolUnchecked("assoc")
+	sym_atom := lang.NewSymbolUnchecked("atom")
 	sym_blank_QMARK_ := lang.NewSymbolUnchecked("blank?")
 	sym_boolean_QMARK_ := lang.NewSymbolUnchecked("boolean?")
 	sym_chunk_DASH_first := lang.NewSymbolUnchecked("chunk-first")
@@ -598,9 +684,11 @@ func LoadNS() {
 	sym_config := lang.NewSymbolUnchecked("config")
 	sym_contains_QMARK_ := lang.NewSymbolUnchecked("contains?")
 	sym_default_DASH_config := lang.NewSymbolUnchecked("default-config")
+	sym_default_DASH_context := lang.NewSymbolUnchecked("default-context")
 	sym_dissoc := lang.NewSymbolUnchecked("dissoc")
 	sym_emit := lang.NewSymbolUnchecked("emit")
 	sym_emit_DASH_with := lang.NewSymbolUnchecked("emit-with")
+	sym_environment := lang.NewSymbolUnchecked("environment")
 	sym_events := lang.NewSymbolUnchecked("events")
 	sym_ex_DASH_info := lang.NewSymbolUnchecked("ex-info")
 	sym_false_QMARK_ := lang.NewSymbolUnchecked("false?")
@@ -614,6 +702,8 @@ func LoadNS() {
 	sym_merge := lang.NewSymbolUnchecked("merge")
 	sym_multi_QMARK_ := lang.NewSymbolUnchecked("multi?")
 	sym_name := lang.NewSymbolUnchecked("name")
+	sym_new_DASH_context := lang.NewSymbolUnchecked("new-context")
+	sym_normalize_DASH_data := lang.NewSymbolUnchecked("normalize-data")
 	sym_normalize_DASH_version := lang.NewSymbolUnchecked("normalize-version")
 	sym_not_EQ_ := lang.NewSymbolUnchecked("not=")
 	sym_opts := lang.NewSymbolUnchecked("opts")
@@ -622,23 +712,28 @@ func LoadNS() {
 	sym_plugin := lang.NewSymbolUnchecked("plugin")
 	sym_plugin_DASH_config := lang.NewSymbolUnchecked("plugin-config")
 	sym_re_DASH_matches := lang.NewSymbolUnchecked("re-matches")
+	sym_register_DASH_alias_DASH_data_BANG_ := lang.NewSymbolUnchecked("register-alias-data!")
 	sym_register_DASH_json_DASH_comments_BANG_ := lang.NewSymbolUnchecked("register-json-comments!")
 	sym_register_DASH_yaml_DASH_emitter_BANG_ := lang.NewSymbolUnchecked("register-yaml-emitter!")
 	sym_register_DASH_yaml_DASH_parser_BANG_ := lang.NewSymbolUnchecked("register-yaml-parser!")
+	sym_registered_DASH_alias_DASH_data := lang.NewSymbolUnchecked("registered-alias-data")
 	sym_registered_DASH_yaml_DASH_emitters := lang.NewSymbolUnchecked("registered-yaml-emitters")
 	sym_registered_DASH_yaml_DASH_parsers := lang.NewSymbolUnchecked("registered-yaml-parsers")
 	sym_release_DASH_version_DASH_pattern := lang.NewSymbolUnchecked("release-version-pattern")
 	sym_remove := lang.NewSymbolUnchecked("remove")
 	sym_requiring_DASH_resolve := lang.NewSymbolUnchecked("requiring-resolve")
 	sym_reset_BANG_ := lang.NewSymbolUnchecked("reset!")
+	sym_resolve_DASH_alias_DASH_data := lang.NewSymbolUnchecked("resolve-alias-data")
 	sym_resolve_DASH_json_DASH_comments := lang.NewSymbolUnchecked("resolve-json-comments")
 	sym_resolve_DASH_yaml_DASH_emitter := lang.NewSymbolUnchecked("resolve-yaml-emitter")
 	sym_resolve_DASH_yaml_DASH_parser := lang.NewSymbolUnchecked("resolve-yaml-parser")
 	sym_sanitize := lang.NewSymbolUnchecked("sanitize")
 	sym_sanitize_DASH_with := lang.NewSymbolUnchecked("sanitize-with")
 	sym_second := lang.NewSymbolUnchecked("second")
+	sym_select_DASH_environment := lang.NewSymbolUnchecked("select-environment")
 	sym_selection_DASH_config := lang.NewSymbolUnchecked("selection-config")
 	sym_seq_QMARK_ := lang.NewSymbolUnchecked("seq?")
+	sym_services := lang.NewSymbolUnchecked("services")
 	sym_set_DASH_json_DASH_comments_DASH_loader_BANG_ := lang.NewSymbolUnchecked("set-json-comments-loader!")
 	sym_short_DASH_config := lang.NewSymbolUnchecked("short-config")
 	sym_sort := lang.NewSymbolUnchecked("sort")
@@ -650,9 +745,11 @@ func LoadNS() {
 	sym_text := lang.NewSymbolUnchecked("text")
 	sym_to_DASH_array := lang.NewSymbolUnchecked("to-array")
 	sym_true_QMARK_ := lang.NewSymbolUnchecked("true?")
+	sym_unregister_DASH_alias_DASH_data_BANG_ := lang.NewSymbolUnchecked("unregister-alias-data!")
 	sym_unregister_DASH_json_DASH_comments_BANG_ := lang.NewSymbolUnchecked("unregister-json-comments!")
 	sym_unregister_DASH_yaml_DASH_emitter_BANG_ := lang.NewSymbolUnchecked("unregister-yaml-emitter!")
 	sym_unregister_DASH_yaml_DASH_parser_BANG_ := lang.NewSymbolUnchecked("unregister-yaml-parser!")
+	sym_validate_DASH_config := lang.NewSymbolUnchecked("validate-config")
 	sym_value := lang.NewSymbolUnchecked("value")
 	sym_version := lang.NewSymbolUnchecked("version")
 	sym_yaml_DASH_emitter_DASH_opts := lang.NewSymbolUnchecked("yaml-emitter-opts")
@@ -663,11 +760,14 @@ func LoadNS() {
 	sym_yamlstar_DASH_plugin_DOT_json_DASH_comments_SLASH_sanitize_DASH_comments := lang.NewSymbolUnchecked("yamlstar-plugin.json-comments/sanitize-comments")
 	sym_yamlstar_DASH_plugin_DOT_json_DASH_comments_SLASH_version := lang.NewSymbolUnchecked("yamlstar-plugin.json-comments/version")
 	sym_yamlstar_DOT_plugin := lang.NewSymbolUnchecked("yamlstar.plugin")
+	sym_yamlstar_DOT_plugin_DOT_alias_DASH_data := lang.NewSymbolUnchecked("yamlstar.plugin.alias-data")
+	kw_alias_DASH_data := lang.NewKeyword("alias-data")
 	kw_api := lang.NewKeyword("api")
 	kw_arglists := lang.NewKeyword("arglists")
 	kw_as := lang.NewKeyword("as")
 	kw_auto := lang.NewKeyword("auto")
 	kw_column := lang.NewKeyword("column")
+	kw_data := lang.NewKeyword("data")
 	kw_default_DASH_config := lang.NewKeyword("default-config")
 	kw_disable := lang.NewKeyword("disable")
 	kw_doc := lang.NewKeyword("doc")
@@ -675,13 +775,17 @@ func LoadNS() {
 	kw_emit := lang.NewKeyword("emit")
 	kw_end_DASH_column := lang.NewKeyword("end-column")
 	kw_end_DASH_line := lang.NewKeyword("end-line")
+	kw_env := lang.NewKeyword("env")
 	kw_file := lang.NewKeyword("file")
+	kw_get_DASH_environment := lang.NewKeyword("get-environment")
 	kw_json_DASH_comments := lang.NewKeyword("json-comments")
 	kw_keys := lang.NewKeyword("keys")
 	kw_line := lang.NewKeyword("line")
 	kw_load := lang.NewKeyword("load")
+	kw_load_DASH_file := lang.NewKeyword("load-file")
 	kw_mode := lang.NewKeyword("mode")
 	kw_name := lang.NewKeyword("name")
+	kw_new_DASH_context := lang.NewKeyword("new-context")
 	kw_ns := lang.NewKeyword("ns")
 	kw_parse := lang.NewKeyword("parse")
 	kw_parser := lang.NewKeyword("parser")
@@ -689,12 +793,15 @@ func LoadNS() {
 	kw_plugin_DASH_install := lang.NewKeyword("plugin-install")
 	kw_private := lang.NewKeyword("private")
 	kw_sanitize := lang.NewKeyword("sanitize")
+	kw_stream := lang.NewKeyword("stream")
 	kw_tab_DASH_indent := lang.NewKeyword("tab-indent")
 	kw_version := lang.NewKeyword("version")
 	kw_yaml_DASH_emitter := lang.NewKeyword("yaml-emitter")
 	kw_yaml_DASH_parser := lang.NewKeyword("yaml-parser")
 	// var clojure.core/assoc
 	var_clojure_DOT_core_assoc := lang.InternVarName(sym_clojure_DOT_core, sym_assoc)
+	// var clojure.core/atom
+	var_clojure_DOT_core_atom := lang.InternVarName(sym_clojure_DOT_core, sym_atom)
 	// var clojure.core/boolean?
 	var_clojure_DOT_core_boolean_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_boolean_QMARK_)
 	// var clojure.core/chunk-first
@@ -749,6 +856,20 @@ func LoadNS() {
 	var_clojure_DOT_string_join := lang.InternVarName(sym_clojure_DOT_string, sym_join)
 	// var clojure.string/split
 	var_clojure_DOT_string_split := lang.InternVarName(sym_clojure_DOT_string, sym_split)
+	// var yamlstar.plugin.alias-data/default-context
+	var_yamlstar_DOT_plugin_DOT_alias_DASH_data_default_DASH_context := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_alias_DASH_data, sym_default_DASH_context)
+	// var yamlstar.plugin.alias-data/environment
+	var_yamlstar_DOT_plugin_DOT_alias_DASH_data_environment := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_alias_DASH_data, sym_environment)
+	// var yamlstar.plugin.alias-data/normalize-data
+	var_yamlstar_DOT_plugin_DOT_alias_DASH_data_normalize_DASH_data := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_alias_DASH_data, sym_normalize_DASH_data)
+	// var yamlstar.plugin.alias-data/select-environment
+	var_yamlstar_DOT_plugin_DOT_alias_DASH_data_select_DASH_environment := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_alias_DASH_data, sym_select_DASH_environment)
+	// var yamlstar.plugin.alias-data/validate-config
+	var_yamlstar_DOT_plugin_DOT_alias_DASH_data_validate_DASH_config := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_alias_DASH_data, sym_validate_DASH_config)
+	// var yamlstar.plugin/alias-data-context
+	var_yamlstar_DOT_plugin_alias_DASH_data_DASH_context := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_alias_DASH_data_DASH_context)
+	// var yamlstar.plugin/alias-data-registry
+	var_yamlstar_DOT_plugin_alias_DASH_data_DASH_registry := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_alias_DASH_data_DASH_registry)
 	// var yamlstar.plugin/classpath-json-comments
 	var_yamlstar_DOT_plugin_classpath_DASH_json_DASH_comments := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_classpath_DASH_json_DASH_comments)
 	// var yamlstar.plugin/emit-with
@@ -765,18 +886,24 @@ func LoadNS() {
 	var_yamlstar_DOT_plugin_parse_DASH_with := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_parse_DASH_with)
 	// var yamlstar.plugin/plugin-config
 	var_yamlstar_DOT_plugin_plugin_DASH_config := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_plugin_DASH_config)
+	// var yamlstar.plugin/register-alias-data!
+	var_yamlstar_DOT_plugin_register_DASH_alias_DASH_data_BANG_ := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_register_DASH_alias_DASH_data_BANG_)
 	// var yamlstar.plugin/register-json-comments!
 	var_yamlstar_DOT_plugin_register_DASH_json_DASH_comments_BANG_ := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_register_DASH_json_DASH_comments_BANG_)
 	// var yamlstar.plugin/register-yaml-emitter!
 	var_yamlstar_DOT_plugin_register_DASH_yaml_DASH_emitter_BANG_ := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_register_DASH_yaml_DASH_emitter_BANG_)
 	// var yamlstar.plugin/register-yaml-parser!
 	var_yamlstar_DOT_plugin_register_DASH_yaml_DASH_parser_BANG_ := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_register_DASH_yaml_DASH_parser_BANG_)
+	// var yamlstar.plugin/registered-alias-data
+	var_yamlstar_DOT_plugin_registered_DASH_alias_DASH_data := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_registered_DASH_alias_DASH_data)
 	// var yamlstar.plugin/registered-yaml-emitters
 	var_yamlstar_DOT_plugin_registered_DASH_yaml_DASH_emitters := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_registered_DASH_yaml_DASH_emitters)
 	// var yamlstar.plugin/registered-yaml-parsers
 	var_yamlstar_DOT_plugin_registered_DASH_yaml_DASH_parsers := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_registered_DASH_yaml_DASH_parsers)
 	// var yamlstar.plugin/release-version-pattern
 	var_yamlstar_DOT_plugin_release_DASH_version_DASH_pattern := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_release_DASH_version_DASH_pattern)
+	// var yamlstar.plugin/resolve-alias-data
+	var_yamlstar_DOT_plugin_resolve_DASH_alias_DASH_data := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_resolve_DASH_alias_DASH_data)
 	// var yamlstar.plugin/resolve-json-comments
 	var_yamlstar_DOT_plugin_resolve_DASH_json_DASH_comments := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_resolve_DASH_json_DASH_comments)
 	// var yamlstar.plugin/resolve-yaml-emitter
@@ -793,6 +920,8 @@ func LoadNS() {
 	var_yamlstar_DOT_plugin_short_DASH_config := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_short_DASH_config)
 	// var yamlstar.plugin/tab-indent-config
 	var_yamlstar_DOT_plugin_tab_DASH_indent_DASH_config := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_tab_DASH_indent_DASH_config)
+	// var yamlstar.plugin/unregister-alias-data!
+	var_yamlstar_DOT_plugin_unregister_DASH_alias_DASH_data_BANG_ := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_unregister_DASH_alias_DASH_data_BANG_)
 	// var yamlstar.plugin/unregister-json-comments!
 	var_yamlstar_DOT_plugin_unregister_DASH_json_DASH_comments_BANG_ := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_unregister_DASH_json_DASH_comments_BANG_)
 	// var yamlstar.plugin/unregister-yaml-emitter!
@@ -807,37 +936,41 @@ func LoadNS() {
 	var_yamlstar_DOT_plugin_yaml_DASH_parser_DASH_opts := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_yaml_DASH_parser_DASH_opts)
 	// var yamlstar.plugin/yaml-parser-registry
 	var_yamlstar_DOT_plugin_yaml_DASH_parser_DASH_registry := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_yaml_DASH_parser_DASH_registry)
-	aotExternalFn1 := aotLinkFn1(var_clojure_DOT_core_requiring_DASH_resolve)
-	aotExternalFn10 := aotLinkFn4(var_clojure_DOT_core_str)
-	aotExternalFn11 := aotLinkFn2(var_clojure_DOT_core_merge)
-	aotExternalFn12 := aotLinkFn2(var_clojure_DOT_core_dissoc)
-	aotExternalFn13 := aotLinkFn1(var_clojure_DOT_core_keys)
-	aotExternalFn14 := aotLinkFn5(var_clojure_DOT_core_dissoc)
-	aotExternalFn15 := aotLinkFn2(var_clojure_DOT_core_str)
-	aotExternalFn16 := aotLinkFn1(var_clojure_DOT_core_name)
-	aotExternalFn17 := aotLinkFn1(var_clojure_DOT_core_chunked_DASH_seq_QMARK_)
-	aotExternalFn18 := aotLinkFn1(var_clojure_DOT_core_chunk_DASH_first)
-	aotExternalFn19 := aotLinkFn1(var_clojure_DOT_core_chunk_DASH_rest)
-	aotExternalFn21 := aotLinkFn2(var_clojure_DOT_core_contains_QMARK_)
-	aotExternalFn22 := aotLinkFn1(var_clojure_DOT_core_true_QMARK_)
-	aotExternalFn23 := aotLinkFn3(var_clojure_DOT_core_dissoc)
-	aotExternalFn25 := aotLinkFn1(var_clojure_DOT_core_second)
-	aotExternalFn26 := aotLinkFn2(var_clojure_DOT_core_re_DASH_matches)
-	aotExternalFn29 := aotLinkFn1(var_clojure_DOT_string_blank_QMARK_)
-	aotExternalFn3 := aotLinkFn1(var_clojure_DOT_core_seq_QMARK_)
-	aotExternalFn31 := aotLinkFn4(var_clojure_DOT_core_swap_BANG_)
-	aotExternalFn32 := aotLinkFn1(var_clojure_DOT_core_sort)
-	aotExternalFn33 := aotLinkFn2(var_clojure_DOT_core_symbol)
-	aotExternalFn34 := aotLinkFn2(var_clojure_DOT_string_join)
-	aotExternalFn36 := aotLinkFn1(var_clojure_DOT_core_false_QMARK_)
-	aotExternalFn37 := aotLinkFn1(var_clojure_DOT_core_boolean_QMARK_)
-	aotExternalFn38 := aotLinkFn2(var_clojure_DOT_core_reset_BANG_)
-	aotExternalFn39 := aotLinkFn3(var_clojure_DOT_string_split)
-	aotExternalFn40 := aotLinkFn2(var_clojure_DOT_core_remove)
-	aotExternalFn41 := aotLinkFn3(var_clojure_DOT_core_swap_BANG_)
-	aotExternalFn5 := aotLinkFn1(var_clojure_DOT_core_to_DASH_array)
-	aotExternalFn8 := aotLinkFn2(var_clojure_DOT_core_not_EQ_)
-	aotExternalFn9 := aotLinkFn2(var_clojure_DOT_core_ex_DASH_info)
+	aotExternalFn1 := aotLinkFn2(var_clojure_DOT_core_contains_QMARK_)
+	aotExternalFn10 := aotLinkFn1(var_clojure_DOT_core_to_DASH_array)
+	aotExternalFn13 := aotLinkFn1(var_yamlstar_DOT_plugin_DOT_alias_DASH_data_validate_DASH_config)
+	aotExternalFn14 := aotLinkFn2(var_yamlstar_DOT_plugin_DOT_alias_DASH_data_normalize_DASH_data)
+	aotExternalFn15 := aotLinkFn2(var_yamlstar_DOT_plugin_DOT_alias_DASH_data_select_DASH_environment)
+	aotExternalFn16 := aotLinkFn1(var_clojure_DOT_core_atom)
+	aotExternalFn17 := aotLinkFn1(var_clojure_DOT_core_true_QMARK_)
+	aotExternalFn18 := aotLinkFn2(var_clojure_DOT_core_reset_BANG_)
+	aotExternalFn19 := aotLinkFn4(var_clojure_DOT_core_swap_BANG_)
+	aotExternalFn2 := aotLinkFn0(var_yamlstar_DOT_plugin_DOT_alias_DASH_data_default_DASH_context)
+	aotExternalFn21 := aotLinkFn3(var_clojure_DOT_core_swap_BANG_)
+	aotExternalFn23 := aotLinkFn1(var_clojure_DOT_core_requiring_DASH_resolve)
+	aotExternalFn24 := aotLinkFn2(var_clojure_DOT_core_merge)
+	aotExternalFn25 := aotLinkFn2(var_clojure_DOT_core_dissoc)
+	aotExternalFn26 := aotLinkFn1(var_clojure_DOT_core_keys)
+	aotExternalFn27 := aotLinkFn2(var_clojure_DOT_core_str)
+	aotExternalFn28 := aotLinkFn1(var_clojure_DOT_core_name)
+	aotExternalFn29 := aotLinkFn1(var_clojure_DOT_core_chunked_DASH_seq_QMARK_)
+	aotExternalFn3 := aotLinkFn3(var_clojure_DOT_core_dissoc)
+	aotExternalFn30 := aotLinkFn1(var_clojure_DOT_core_chunk_DASH_first)
+	aotExternalFn31 := aotLinkFn1(var_clojure_DOT_core_chunk_DASH_rest)
+	aotExternalFn34 := aotLinkFn1(var_clojure_DOT_core_second)
+	aotExternalFn35 := aotLinkFn2(var_clojure_DOT_core_re_DASH_matches)
+	aotExternalFn37 := aotLinkFn1(var_clojure_DOT_string_blank_QMARK_)
+	aotExternalFn39 := aotLinkFn1(var_clojure_DOT_core_sort)
+	aotExternalFn40 := aotLinkFn2(var_clojure_DOT_core_symbol)
+	aotExternalFn41 := aotLinkFn2(var_clojure_DOT_string_join)
+	aotExternalFn43 := aotLinkFn1(var_clojure_DOT_core_false_QMARK_)
+	aotExternalFn44 := aotLinkFn1(var_clojure_DOT_core_boolean_QMARK_)
+	aotExternalFn45 := aotLinkFn3(var_clojure_DOT_string_split)
+	aotExternalFn46 := aotLinkFn2(var_clojure_DOT_core_remove)
+	aotExternalFn5 := aotLinkFn2(var_clojure_DOT_core_not_EQ_)
+	aotExternalFn6 := aotLinkFn2(var_clojure_DOT_core_ex_DASH_info)
+	aotExternalFn7 := aotLinkFn4(var_clojure_DOT_core_str)
+	aotExternalFn8 := aotLinkFn1(var_clojure_DOT_core_seq_QMARK_)
 	// reference fmt to avoid unused import error
 	_ = fmt.Printf
 	// reference reflect to avoid unused import error
@@ -921,9 +1054,166 @@ func LoadNS() {
 		})
 	}
 	ns.AddAlias(sym_str, lang.FindOrCreateNamespace(sym_clojure_DOT_string))
+	ns.AddAlias(sym_alias_DASH_data, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_alias_DASH_data))
 	var closed0 any
 	{
 		closed0 = regexp4.MustCompile("@")
+	}
+	// alias-data-context
+	{
+		tmp0 := sym_alias_DASH_data_DASH_context
+		var tmp1 lang.FnFunc2
+		tmp1 = lang.FnFunc2(func(p0, p1 any) any {
+			v2 := p0
+			_ = v2
+			v3 := p1
+			_ = v3
+			var tmp4 any
+			{ // let
+				// let binding "plugins"
+				tmp5 := aotDirectFn6(v2)
+				var v6 any = tmp5
+				_ = v6
+				var tmp7 any
+				var tmp8 any
+				{ // let
+					// let binding "and__0__auto__"
+					var v9 any = v6
+					_ = v9
+					var tmp10 any
+					if lang.IsTruthy(v9) {
+						tmp11 := aotExternalFn1(v6, kw_alias_DASH_data)
+						tmp10 = tmp11
+					} else {
+						tmp10 = v9
+					}
+					tmp8 = tmp10
+				} // end let
+				tmp9 := !lang.IsTruthy(tmp8)
+				if tmp9 {
+					tmp10 := aotExternalFn2()
+					tmp7 = tmp10
+				} else {
+					var tmp11 any
+					{ // let
+						// let binding "temp__0__auto__"
+						tmp12 := aotKeywordSite0.Get(kw_alias_DASH_data, v6, nil)
+						tmp13 := aotDirectFn19(kw_alias_DASH_data, tmp12)
+						var v14 any = tmp13
+						_ = v14
+						var tmp15 any
+						if lang.IsTruthy(v14) {
+							var tmp16 any
+							{ // let
+								// let binding "selection"
+								var v17 any = v14
+								_ = v17
+								var tmp18 any
+								{ // let
+									// let binding "name"
+									var tmp19 any
+									{ // let
+										// let binding "or__0__auto__"
+										tmp20 := aotKeywordSite1.Get(kw_name, v17, nil)
+										var v21 any = tmp20
+										_ = v21
+										var tmp22 any
+										if lang.IsTruthy(v21) {
+											tmp22 = v21
+										} else {
+											tmp22 = "alias-data"
+										}
+										tmp19 = tmp22
+									} // end let
+									var v20 any = tmp19
+									_ = v20
+									// let binding "requested"
+									tmp21 := aotKeywordSite2.Get(kw_version, v17, nil)
+									var v22 any = tmp21
+									_ = v22
+									// let binding "plugin"
+									tmp23 := aotDirectFn14(v20)
+									var v24 any = tmp23
+									_ = v24
+									// let binding "linked"
+									tmp25 := aotKeywordSite3.Get(kw_version, v24, nil)
+									var v26 any = tmp25
+									_ = v26
+									// let binding "config"
+									tmp27 := aotExternalFn3(v17, kw_name, kw_version)
+									var v28 any = tmp27
+									_ = v28
+									// let binding "config"
+									var tmp29 any
+									tmp30 := lang.IsEmpty(v28)
+									if tmp30 {
+										tmp31 := aotKeywordMapNew0(true)
+										tmp29 = tmp31
+									} else {
+										tmp29 = v28
+									}
+									var v32 any = tmp29
+									_ = v32
+									var tmp33 any
+									if lang.IsTruthy(v22) {
+										var tmp34 any
+										{ // let
+											// let binding "requested"
+											tmp35 := aotDirectFn4(v22)
+											var v36 any = tmp35
+											_ = v36
+											var tmp37 any
+											tmp38 := aotExternalFn5(v36, v26)
+											if lang.IsTruthy(tmp38) {
+												var tmp39 any
+												{ // let
+													// let binding "or__0__auto__"
+													var v40 any = v26
+													_ = v40
+													var tmp41 any
+													if lang.IsTruthy(v40) {
+														tmp41 = v40
+													} else {
+														tmp41 = "unversioned"
+													}
+													tmp39 = tmp41
+												} // end let
+												tmp40 := aotExternalFn7("Alias-Data plugin version mismatch: linked ", tmp39, ", requested ", v36)
+												tmp41 := aotKeywordMapNew1("alias-data", v20, v26, v36)
+												tmp42 := aotExternalFn6(tmp40, tmp41)
+												panic(tmp42)
+											} else {
+											}
+											tmp34 = tmp37
+										} // end let
+										tmp33 = tmp34
+									} else {
+									}
+									_ = tmp33
+									tmp35 := aotKeywordSite4.Get(kw_new_DASH_context, v24, nil)
+									tmp36 := lang.Apply2(tmp35, v32, v3)
+									tmp18 = tmp36
+								} // end let
+								tmp16 = tmp18
+							} // end let
+							tmp15 = tmp16
+						} else {
+							tmp17 := aotExternalFn2()
+							tmp15 = tmp17
+						}
+						tmp11 = tmp15
+					} // end let
+					tmp7 = tmp11
+				}
+				tmp4 = tmp7
+			} // end let
+			return tmp4
+		})
+		aotDirectFn0 = tmp1
+		var_yamlstar_DOT_plugin_alias_DASH_data_DASH_context = ns.InternWithValue(tmp0, tmp1, true)
+		var_yamlstar_DOT_plugin_alias_DASH_data_DASH_context.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(370), kw_column, int(7), kw_end_DASH_line, int(370), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector(sym_opts, sym_services)), kw_doc, "Create the per-load Alias-Data context selected by opts.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+		}, false)
 	}
 	// classpath-json-comments
 	{
@@ -952,11 +1242,11 @@ func LoadNS() {
 					var tmp8 any
 					{ // let
 						// let binding "sanitize"
-						tmp9 := aotExternalFn1(sym_yamlstar_DASH_plugin_DOT_json_DASH_comments_SLASH_sanitize_DASH_comments)
+						tmp9 := aotExternalFn23(sym_yamlstar_DASH_plugin_DOT_json_DASH_comments_SLASH_sanitize_DASH_comments)
 						var v10 any = tmp9
 						_ = v10
 						// let binding "version"
-						tmp11 := aotExternalFn1(sym_yamlstar_DASH_plugin_DOT_json_DASH_comments_SLASH_version)
+						tmp11 := aotExternalFn23(sym_yamlstar_DASH_plugin_DOT_json_DASH_comments_SLASH_version)
 						var v12 any = tmp11
 						_ = v12
 						var tmp13 any
@@ -977,7 +1267,7 @@ func LoadNS() {
 								return tmp19
 							})
 							tmp17 := lang.NewMap()
-							tmp18 := aotKeywordMapNew0("json-comments", "sanitizer", tmp14, tmp16, tmp17)
+							tmp18 := aotKeywordMapNew4("json-comments", "sanitizer", tmp14, tmp16, tmp17)
 							tmp13 = tmp18
 						} else {
 						}
@@ -990,10 +1280,10 @@ func LoadNS() {
 			}
 			return tmp3
 		})
-		aotDirectFn0 = tmp1
+		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_plugin_classpath_DASH_json_DASH_comments = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_classpath_DASH_json_DASH_comments.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(141), kw_column, int(8), kw_end_DASH_line, int(141), kw_end_DASH_column, int(30), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(147), kw_column, int(8), kw_end_DASH_line, int(147), kw_end_DASH_column, int(30), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// emit-with
@@ -1011,18 +1301,18 @@ func LoadNS() {
 			_ = v5
 			var tmp6 any
 			{ // let
-				// let binding "map__23"
-				tmp7 := aotDirectFn12(v2)
+				// let binding "map__39"
+				tmp7 := aotDirectFn16(v2)
 				var v8 any = tmp7
 				_ = v8
-				// let binding "map__23"
+				// let binding "map__39"
 				var tmp9 any
-				tmp10 := aotExternalFn3(v8)
+				tmp10 := aotExternalFn8(v8)
 				if lang.IsTruthy(tmp10) {
 					var tmp11 any
 					tmp12 := lang.Next(v8)
 					if lang.IsTruthy(tmp12) {
-						tmp13 := aotExternalFn5(v8)
+						tmp13 := aotExternalFn10(v8)
 						tmp14 := lang.Apply1(lang.NewPersistentArrayMapAsIfByAssoc, tmp13)
 						tmp11 = tmp14
 					} else {
@@ -1056,7 +1346,7 @@ func LoadNS() {
 				var v25 any = tmp24
 				_ = v25
 				// let binding "requested"
-				tmp26 := aotKeywordSite0.Get(kw_version, v3, nil)
+				tmp26 := aotKeywordSite9.Get(kw_version, v3, nil)
 				var v27 any = tmp26
 				_ = v27
 				var tmp28 any
@@ -1064,11 +1354,11 @@ func LoadNS() {
 					var tmp29 any
 					{ // let
 						// let binding "requested"
-						tmp30 := aotDirectFn3(v27)
+						tmp30 := aotDirectFn4(v27)
 						var v31 any = tmp30
 						_ = v31
 						var tmp32 any
-						tmp33 := aotExternalFn8(v31, v25)
+						tmp33 := aotExternalFn5(v31, v25)
 						if lang.IsTruthy(tmp33) {
 							var tmp34 any
 							{ // let
@@ -1083,9 +1373,9 @@ func LoadNS() {
 								}
 								tmp34 = tmp36
 							} // end let
-							tmp35 := aotExternalFn10("Emitter plugin version mismatch: linked ", tmp34, ", requested ", v31)
-							tmp36 := aotKeywordMapNew1(v2, v25, v31)
-							tmp37 := aotExternalFn9(tmp35, tmp36)
+							tmp35 := aotExternalFn7("Emitter plugin version mismatch: linked ", tmp34, ", requested ", v31)
+							tmp36 := aotKeywordMapNew5(v2, v25, v31)
+							tmp37 := aotExternalFn6(tmp35, tmp36)
 							panic(tmp37)
 						} else {
 						}
@@ -1095,17 +1385,17 @@ func LoadNS() {
 				} else {
 				}
 				_ = tmp28
-				tmp30 := aotExternalFn12(v3, kw_version)
-				tmp31 := aotExternalFn11(v23, tmp30)
+				tmp30 := aotExternalFn25(v3, kw_version)
+				tmp31 := aotExternalFn24(v23, tmp30)
 				tmp32 := lang.Apply3(v21, v4, v5, tmp31)
 				tmp6 = tmp32
 			} // end let
 			return tmp6
 		})
-		aotDirectFn1 = tmp1
+		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_plugin_emit_DASH_with = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_emit_DASH_with.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(348), kw_column, int(7), kw_end_DASH_line, int(348), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_name, sym_config, sym_events, sym_multi_QMARK_)), kw_doc, "Resolve the named YAML emitter plugin and emit an event stream.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(418), kw_column, int(7), kw_end_DASH_line, int(418), kw_end_DASH_column, int(15), kw_arglists, lang.NewList(lang.NewVector(sym_name, sym_config, sym_events, sym_multi_QMARK_)), kw_doc, "Resolve the named YAML emitter plugin and emit an event stream.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// json-comments-loader
@@ -1114,223 +1404,7 @@ func LoadNS() {
 		tmp1 := lang.NewAtom(nil)
 		var_yamlstar_DOT_plugin_json_DASH_comments_DASH_loader = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_json_DASH_comments_DASH_loader.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/plugin.clj", kw_line, int(8), kw_column, int(10), kw_end_DASH_line, int(8), kw_end_DASH_column, int(39), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
-		}, false)
-	}
-	// json-comments-opts
-	{
-		tmp0 := sym_json_DASH_comments_DASH_opts
-		var tmp1 lang.FnFunc1
-		tmp1 = lang.FnFunc1(func(p0 any) any {
-			v2 := p0
-			_ = v2
-			var tmp3 any
-			{ // let
-				// let binding "temp__0__auto__"
-				tmp4 := aotDirectFn5(v2)
-				var v5 any = tmp4
-				_ = v5
-				var tmp6 any
-				if lang.IsTruthy(v5) {
-					var tmp7 any
-					{ // let
-						// let binding "plugins"
-						var v8 any = v5
-						_ = v8
-						var tmp9 any
-						{ // let
-							// let binding "seq_13"
-							tmp10 := aotExternalFn14(v8, kw_yaml_DASH_parser, kw_yaml_DASH_emitter, kw_tab_DASH_indent, kw_json_DASH_comments)
-							tmp11 := aotExternalFn13(tmp10)
-							tmp12 := lang.Seq(tmp11)
-							var v13 any = tmp12
-							_ = v13
-							// let binding "chunk_14"
-							var v14 any = nil
-							_ = v14
-							// let binding "count_15"
-							var v15 any = int64(0)
-							_ = v15
-							// let binding "i_16"
-							var v16 any = int64(0)
-							_ = v16
-							for {
-								var tmp17 any
-								tmp18 := lang.Numbers.Lt(v16, v15)
-								if lang.IsTruthy(tmp18) {
-									var tmp19 any
-									{ // let
-										// let binding "api"
-										tmp20 := v14.(interface{ Nth(int) any }).Nth(lang.IntCast(v16))
-										var v21 any = tmp20
-										_ = v21
-										tmp22 := aotExternalFn16(v21)
-										tmp23 := aotExternalFn15("Unknown YAMLStar plugin API: ", tmp22)
-										tmp24 := aotKeywordMapNew2(v21)
-										tmp25 := aotExternalFn9(tmp23, tmp24)
-										panic(tmp25)
-										var tmp26 any = v13
-										var tmp27 any = v14
-										var tmp28 any = v15
-										tmp30 := lang.Numbers.Unchecked_inc(v16)
-										var tmp29 any = tmp30
-										v13 = tmp26
-										v14 = tmp27
-										v15 = tmp28
-										v16 = tmp29
-										continue
-									} // end let
-									tmp17 = tmp19
-								} else {
-									var tmp20 any
-									{ // let
-										// let binding "temp__0__auto__"
-										tmp21 := lang.Seq(v13)
-										var v22 any = tmp21
-										_ = v22
-										var tmp23 any
-										if lang.IsTruthy(v22) {
-											var tmp24 any
-											{ // let
-												// let binding "seq_13"
-												var v25 any = v22
-												_ = v25
-												var tmp26 any
-												tmp27 := aotExternalFn17(v25)
-												if lang.IsTruthy(tmp27) {
-													var tmp28 any
-													{ // let
-														// let binding "c__0__auto__"
-														tmp29 := aotExternalFn18(v25)
-														var v30 any = tmp29
-														_ = v30
-														tmp32 := aotExternalFn19(v25)
-														var tmp31 any = tmp32
-														var tmp33 any = v30
-														tmp35 := lang.Count(v30)
-														tmp36 := runtime.RT.IntCast(tmp35)
-														var tmp34 any = tmp36
-														tmp38 := runtime.RT.IntCast(int64(0))
-														var tmp37 any = tmp38
-														v13 = tmp31
-														v14 = tmp33
-														v15 = tmp34
-														v16 = tmp37
-														continue
-													} // end let
-													tmp26 = tmp28
-												} else {
-													var tmp29 any
-													{ // let
-														// let binding "api"
-														tmp30 := lang.First(v25)
-														var v31 any = tmp30
-														_ = v31
-														tmp32 := aotExternalFn16(v31)
-														tmp33 := aotExternalFn15("Unknown YAMLStar plugin API: ", tmp32)
-														tmp34 := aotKeywordMapNew2(v31)
-														tmp35 := aotExternalFn9(tmp33, tmp34)
-														panic(tmp35)
-														tmp37 := lang.Next(v25)
-														var tmp36 any = tmp37
-														var tmp38 any = nil
-														var tmp39 any = int64(0)
-														var tmp40 any = int64(0)
-														v13 = tmp36
-														v14 = tmp38
-														v15 = tmp39
-														v16 = tmp40
-														continue
-													} // end let
-													tmp26 = tmp29
-												}
-												tmp24 = tmp26
-											} // end let
-											tmp23 = tmp24
-										} else {
-										}
-										tmp20 = tmp23
-									} // end let
-									tmp17 = tmp20
-								}
-								tmp9 = tmp17
-								break
-							}
-						} // end let
-						_ = tmp9
-						var tmp10 any
-						tmp11 := aotExternalFn21(v8, kw_json_DASH_comments)
-						if lang.IsTruthy(tmp11) {
-							var tmp12 any
-							{ // let
-								// let binding "temp__0__auto__"
-								tmp13 := aotKeywordSite1.Get(kw_json_DASH_comments, v8, nil)
-								tmp14 := aotDirectFn15(kw_json_DASH_comments, tmp13)
-								var v15 any = tmp14
-								_ = v15
-								var tmp16 any
-								if lang.IsTruthy(v15) {
-									var tmp17 any
-									{ // let
-										// let binding "config"
-										var v18 any = v15
-										_ = v18
-										var tmp19 any
-										{ // let
-											// let binding "name"
-											var tmp20 any
-											{ // let
-												// let binding "or__0__auto__"
-												tmp21 := aotKeywordSite2.Get(kw_name, v18, nil)
-												var v22 any = tmp21
-												_ = v22
-												var tmp23 any
-												if lang.IsTruthy(v22) {
-													tmp23 = v22
-												} else {
-													tmp23 = "sanitizer"
-												}
-												tmp20 = tmp23
-											} // end let
-											var v21 any = tmp20
-											_ = v21
-											// let binding "version"
-											tmp22 := aotKeywordSite3.Get(kw_version, v18, nil)
-											var v23 any = tmp22
-											_ = v23
-											// let binding "plugin"
-											tmp24 := aotKeywordSite4.Get(kw_plugin_DASH_install, v2, nil)
-											tmp25 := aotExternalFn22(tmp24)
-											tmp26 := aotDirectFn11(v21, v23, tmp25)
-											var v27 any = tmp26
-											_ = v27
-											tmp28 := aotExternalFn23(v18, kw_name, kw_version)
-											tmp29 := lang.NewVector(v27, tmp28)
-											tmp19 = tmp29
-										} // end let
-										tmp17 = tmp19
-									} // end let
-									tmp16 = tmp17
-								} else {
-								}
-								tmp12 = tmp16
-							} // end let
-							tmp10 = tmp12
-						} else {
-						}
-						tmp7 = tmp10
-					} // end let
-					tmp6 = tmp7
-				} else {
-				}
-				tmp3 = tmp6
-			} // end let
-			return tmp3
-		})
-		aotDirectFn2 = tmp1
-		var_yamlstar_DOT_plugin_json_DASH_comments_DASH_opts = ns.InternWithValue(tmp0, tmp1, true)
-		var_yamlstar_DOT_plugin_json_DASH_comments_DASH_opts.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(305), kw_column, int(7), kw_end_DASH_line, int(305), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector(sym_opts)), kw_doc, "Resolve the configured JSON-comments sanitizer.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMap(kw_file, "yamlstar/plugin.clj", kw_line, int(9), kw_column, int(10), kw_end_DASH_line, int(9), kw_end_DASH_column, int(39), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// json-comments-registry
@@ -1339,7 +1413,7 @@ func LoadNS() {
 		tmp1 := lang.NewAtom(lang.NewMap())
 		var_yamlstar_DOT_plugin_json_DASH_comments_DASH_registry = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_json_DASH_comments_DASH_registry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/plugin.clj", kw_line, int(7), kw_column, int(10), kw_end_DASH_line, int(7), kw_end_DASH_column, int(41), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMap(kw_file, "yamlstar/plugin.clj", kw_line, int(8), kw_column, int(10), kw_end_DASH_line, int(8), kw_end_DASH_column, int(41), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// parse-with
@@ -1355,18 +1429,18 @@ func LoadNS() {
 			_ = v4
 			var tmp5 any
 			{ // let
-				// let binding "map__22"
-				tmp6 := aotDirectFn13(v2)
+				// let binding "map__38"
+				tmp6 := aotDirectFn17(v2)
 				var v7 any = tmp6
 				_ = v7
-				// let binding "map__22"
+				// let binding "map__38"
 				var tmp8 any
-				tmp9 := aotExternalFn3(v7)
+				tmp9 := aotExternalFn8(v7)
 				if lang.IsTruthy(tmp9) {
 					var tmp10 any
 					tmp11 := lang.Next(v7)
 					if lang.IsTruthy(tmp11) {
-						tmp12 := aotExternalFn5(v7)
+						tmp12 := aotExternalFn10(v7)
 						tmp13 := lang.Apply1(lang.NewPersistentArrayMapAsIfByAssoc, tmp12)
 						tmp10 = tmp13
 					} else {
@@ -1400,7 +1474,7 @@ func LoadNS() {
 				var v24 any = tmp23
 				_ = v24
 				// let binding "requested"
-				tmp25 := aotKeywordSite5.Get(kw_version, v3, nil)
+				tmp25 := aotKeywordSite14.Get(kw_version, v3, nil)
 				var v26 any = tmp25
 				_ = v26
 				var tmp27 any
@@ -1408,11 +1482,11 @@ func LoadNS() {
 					var tmp28 any
 					{ // let
 						// let binding "requested"
-						tmp29 := aotDirectFn3(v26)
+						tmp29 := aotDirectFn4(v26)
 						var v30 any = tmp29
 						_ = v30
 						var tmp31 any
-						tmp32 := aotExternalFn8(v30, v24)
+						tmp32 := aotExternalFn5(v30, v24)
 						if lang.IsTruthy(tmp32) {
 							var tmp33 any
 							{ // let
@@ -1427,9 +1501,9 @@ func LoadNS() {
 								}
 								tmp33 = tmp35
 							} // end let
-							tmp34 := aotExternalFn10("Parser plugin version mismatch: linked ", tmp33, ", requested ", v30)
-							tmp35 := aotKeywordMapNew4(v2, v24, v30)
-							tmp36 := aotExternalFn9(tmp34, tmp35)
+							tmp34 := aotExternalFn7("Parser plugin version mismatch: linked ", tmp33, ", requested ", v30)
+							tmp35 := aotKeywordMapNew8(v2, v24, v30)
+							tmp36 := aotExternalFn6(tmp34, tmp35)
 							panic(tmp36)
 						} else {
 						}
@@ -1439,17 +1513,17 @@ func LoadNS() {
 				} else {
 				}
 				_ = tmp27
-				tmp29 := aotExternalFn12(v3, kw_version)
-				tmp30 := aotExternalFn11(v22, tmp29)
+				tmp29 := aotExternalFn25(v3, kw_version)
+				tmp30 := aotExternalFn24(v22, tmp29)
 				tmp31 := lang.Apply2(v20, v4, tmp30)
 				tmp5 = tmp31
 			} // end let
 			return tmp5
 		})
-		aotDirectFn4 = tmp1
+		aotDirectFn5 = tmp1
 		var_yamlstar_DOT_plugin_parse_DASH_with = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_parse_DASH_with.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(331), kw_column, int(7), kw_end_DASH_line, int(331), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_name, sym_config, sym_yaml_DASH_str)), kw_doc, "Resolve the named parser plugin and parse yaml-str with it.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(401), kw_column, int(7), kw_end_DASH_line, int(401), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_name, sym_config, sym_yaml_DASH_str)), kw_doc, "Resolve the named parser plugin and parse yaml-str with it.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// plugin-config
@@ -1462,7 +1536,7 @@ func LoadNS() {
 			var tmp3 any
 			{ // let
 				// let binding "temp__0__auto__"
-				tmp4 := aotKeywordSite6.Get(kw_plugin, v2, nil)
+				tmp4 := aotKeywordSite15.Get(kw_plugin, v2, nil)
 				var v5 any = tmp4
 				_ = v5
 				var tmp6 any
@@ -1476,17 +1550,17 @@ func LoadNS() {
 						tmp10 := lang.IsMap(v8)
 						if tmp10 {
 						} else {
-							tmp11 := aotKeywordMapNew5(v8)
-							tmp12 := aotExternalFn9("Option :plugin must be a map", tmp11)
+							tmp11 := aotKeywordMapNew9(v8)
+							tmp12 := aotExternalFn6("Option :plugin must be a map", tmp11)
 							panic(tmp12)
 						}
 						_ = tmp9
 						var tmp13 any
-						tmp14 := aotExternalFn21(v8, kw_parser)
+						tmp14 := aotExternalFn1(v8, kw_parser)
 						if lang.IsTruthy(tmp14) {
-							tmp15 := aotExternalFn15("Plugin API :parser was renamed to ", ":yaml-parser")
-							tmp16 := aotKeywordMapNew5(kw_parser)
-							tmp17 := aotExternalFn9(tmp15, tmp16)
+							tmp15 := aotExternalFn27("Plugin API :parser was renamed to ", ":yaml-parser")
+							tmp16 := aotKeywordMapNew9(kw_parser)
+							tmp17 := aotExternalFn6(tmp15, tmp16)
 							panic(tmp17)
 						} else {
 						}
@@ -1500,10 +1574,10 @@ func LoadNS() {
 			} // end let
 			return tmp3
 		})
-		aotDirectFn5 = tmp1
+		aotDirectFn6 = tmp1
 		var_yamlstar_DOT_plugin_plugin_DASH_config = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_plugin_DASH_config.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(184), kw_column, int(8), kw_end_DASH_line, int(184), kw_end_DASH_column, int(20), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_opts)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(227), kw_column, int(8), kw_end_DASH_line, int(227), kw_end_DASH_column, int(20), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_opts)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// release-version-pattern
@@ -1511,7 +1585,7 @@ func LoadNS() {
 		tmp0 := sym_release_DASH_version_DASH_pattern
 		var_yamlstar_DOT_plugin_release_DASH_version_DASH_pattern = ns.InternWithValue(tmp0, regexp4.MustCompile("^v?([0-9]+\\.[0-9]+\\.[0-9]+)$"), true)
 		var_yamlstar_DOT_plugin_release_DASH_version_DASH_pattern.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/plugin.clj", kw_line, int(10), kw_column, int(6), kw_end_DASH_line, int(10), kw_end_DASH_column, int(38), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMap(kw_file, "yamlstar/plugin.clj", kw_line, int(16), kw_column, int(6), kw_end_DASH_line, int(16), kw_end_DASH_column, int(38), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// resolve-json-comments
@@ -1546,7 +1620,7 @@ func LoadNS() {
 							var tmp13 any
 							{ // let
 								// let binding "temp__0__auto__"
-								tmp14 := aotDirectFn0(v2)
+								tmp14 := aotDirectFn1(v2)
 								var v15 any = tmp14
 								_ = v15
 								var tmp16 any
@@ -1556,7 +1630,7 @@ func LoadNS() {
 										// let binding "loaded"
 										var v18 any = v15
 										_ = v18
-										tmp19 := aotDirectFn6(v18)
+										tmp19 := aotDirectFn8(v18)
 										tmp17 = tmp19
 									} // end let
 									tmp16 = tmp17
@@ -1600,7 +1674,7 @@ func LoadNS() {
 															// let binding "loaded"
 															var v29 any = v26
 															_ = v29
-															tmp30 := aotDirectFn6(v29)
+															tmp30 := aotDirectFn8(v29)
 															tmp28 = tmp30
 														} // end let
 														tmp27 = tmp28
@@ -1621,9 +1695,9 @@ func LoadNS() {
 									if lang.IsTruthy(v18) {
 										tmp19 = v18
 									} else {
-										tmp20 := aotExternalFn15("Unknown YAMLStar json-comments implementation: ", v2)
-										tmp21 := aotKeywordMapNew6("json-comments", v2)
-										tmp22 := aotExternalFn9(tmp20, tmp21)
+										tmp20 := aotExternalFn27("Unknown YAMLStar json-comments implementation: ", v2)
+										tmp21 := aotKeywordMapNew11("json-comments", v2)
+										tmp22 := aotExternalFn6(tmp20, tmp21)
 										panic(tmp22)
 									}
 									tmp16 = tmp19
@@ -1643,15 +1717,15 @@ func LoadNS() {
 					var tmp9 any
 					{ // let
 						// let binding "requested"
-						tmp10 := aotDirectFn3(v3)
+						tmp10 := aotDirectFn4(v3)
 						var v11 any = tmp10
 						_ = v11
 						// let binding "linked"
-						tmp12 := aotKeywordSite7.Get(kw_version, v7, nil)
+						tmp12 := aotKeywordSite16.Get(kw_version, v7, nil)
 						var v13 any = tmp12
 						_ = v13
 						var tmp14 any
-						tmp15 := aotExternalFn8(v11, v13)
+						tmp15 := aotExternalFn5(v11, v13)
 						if lang.IsTruthy(tmp15) {
 							var tmp16 any
 							{ // let
@@ -1666,9 +1740,9 @@ func LoadNS() {
 								}
 								tmp16 = tmp18
 							} // end let
-							tmp17 := aotExternalFn10("JSON-comments plugin version mismatch: linked ", tmp16, ", requested ", v11)
-							tmp18 := aotKeywordMapNew7("json-comments", v2, v13, v11)
-							tmp19 := aotExternalFn9(tmp17, tmp18)
+							tmp17 := aotExternalFn7("JSON-comments plugin version mismatch: linked ", tmp16, ", requested ", v11)
+							tmp18 := aotKeywordMapNew1("json-comments", v2, v13, v11)
+							tmp19 := aotExternalFn6(tmp17, tmp18)
 							panic(tmp19)
 						} else {
 						}
@@ -1682,10 +1756,10 @@ func LoadNS() {
 			} // end let
 			return tmp5
 		})
-		aotDirectFn11 = tmp1
+		aotDirectFn15 = tmp1
 		var_yamlstar_DOT_plugin_resolve_DASH_json_DASH_comments = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_resolve_DASH_json_DASH_comments.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(157), kw_column, int(7), kw_end_DASH_line, int(157), kw_end_DASH_column, int(27), kw_arglists, lang.NewList(lang.NewVector(sym_name, sym_version, sym_install_QMARK_)), kw_doc, "Resolve a JSON-comments implementation, loading it when needed.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(163), kw_column, int(7), kw_end_DASH_line, int(163), kw_end_DASH_column, int(27), kw_arglists, lang.NewList(lang.NewVector(sym_name, sym_version, sym_install_QMARK_)), kw_doc, "Resolve a JSON-comments implementation, loading it when needed.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// sanitize-with
@@ -1699,21 +1773,21 @@ func LoadNS() {
 			_ = v3
 			var tmp4 any
 			{ // let
-				// let binding "vec__18"
+				// let binding "vec__34"
 				var v5 any = v2
 				_ = v5
-				// let binding "map__21"
+				// let binding "map__37"
 				tmp6 := runtime.RT.NthDefault(v5, lang.IntCast(int64(0)), nil)
 				var v7 any = tmp6
 				_ = v7
-				// let binding "map__21"
+				// let binding "map__37"
 				var tmp8 any
-				tmp9 := aotExternalFn3(v7)
+				tmp9 := aotExternalFn8(v7)
 				if lang.IsTruthy(tmp9) {
 					var tmp10 any
 					tmp11 := lang.Next(v7)
 					if lang.IsTruthy(tmp11) {
-						tmp12 := aotExternalFn5(v7)
+						tmp12 := aotExternalFn10(v7)
 						tmp13 := lang.Apply1(lang.NewPersistentArrayMapAsIfByAssoc, tmp12)
 						tmp10 = tmp13
 					} else {
@@ -1759,16 +1833,16 @@ func LoadNS() {
 					}
 					tmp25 = tmp27
 				} // end let
-				tmp26 := aotExternalFn11(v22, v24)
+				tmp26 := aotExternalFn24(v22, v24)
 				tmp27 := lang.Apply2(v20, tmp25, tmp26)
 				tmp4 = tmp27
 			} // end let
 			return tmp4
 		})
-		aotDirectFn14 = tmp1
+		aotDirectFn18 = tmp1
 		var_yamlstar_DOT_plugin_sanitize_DASH_with = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_sanitize_DASH_with.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(326), kw_column, int(7), kw_end_DASH_line, int(326), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector(lang.NewVector(lang.NewMap(kw_keys, lang.NewVector(sym_sanitize, sym_default_DASH_config)), sym_config), sym_yaml_DASH_str)), kw_doc, "Sanitize YAML input with a resolved JSON-comments plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(396), kw_column, int(7), kw_end_DASH_line, int(396), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector(lang.NewVector(lang.NewMap(kw_keys, lang.NewVector(sym_sanitize, sym_default_DASH_config)), sym_config), sym_yaml_DASH_str)), kw_doc, "Sanitize YAML input with a resolved JSON-comments plugin.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// selection-config
@@ -1781,19 +1855,19 @@ func LoadNS() {
 			v3 := p1
 			_ = v3
 			var tmp4 any
-			tmp5 := aotExternalFn22(v3)
+			tmp5 := aotExternalFn17(v3)
 			if lang.IsTruthy(tmp5) {
 				tmp6 := lang.NewMap()
 				tmp4 = tmp6
 			} else {
 				var tmp7 any
-				tmp8 := aotExternalFn36(v3)
+				tmp8 := aotExternalFn43(v3)
 				if lang.IsTruthy(tmp8) {
 				} else {
 					var tmp9 any
 					tmp10 := lang.IsString(v3)
 					if tmp10 {
-						tmp11 := aotDirectFn17(v2, v3)
+						tmp11 := aotDirectFn21(v2, v3)
 						tmp9 = tmp11
 					} else {
 						var tmp12 any
@@ -1803,13 +1877,13 @@ func LoadNS() {
 							var tmp15 any
 							{ // let
 								// let binding "and__0__auto__"
-								tmp16 := aotExternalFn21(v3, kw_disable)
+								tmp16 := aotExternalFn1(v3, kw_disable)
 								var v17 any = tmp16
 								_ = v17
 								var tmp18 any
 								if lang.IsTruthy(v17) {
-									tmp19 := aotKeywordSite8.Get(kw_disable, v3, nil)
-									tmp20 := aotExternalFn37(tmp19)
+									tmp19 := aotKeywordSite17.Get(kw_disable, v3, nil)
+									tmp20 := aotExternalFn44(tmp19)
 									tmp21 := !lang.IsTruthy(tmp20)
 									tmp18 = tmp21
 								} else {
@@ -1818,23 +1892,23 @@ func LoadNS() {
 								tmp15 = tmp18
 							} // end let
 							if lang.IsTruthy(tmp15) {
-								tmp16 := aotKeywordMapNew10(v2, v3)
-								tmp17 := aotExternalFn9("Plugin :disable must be a boolean", tmp16)
+								tmp16 := aotKeywordMapNew14(v2, v3)
+								tmp17 := aotExternalFn6("Plugin :disable must be a boolean", tmp16)
 								panic(tmp17)
 							} else {
 							}
 							_ = tmp14
 							var tmp18 any
-							tmp19 := aotKeywordSite9.Get(kw_disable, v3, nil)
+							tmp19 := aotKeywordSite18.Get(kw_disable, v3, nil)
 							if lang.IsTruthy(tmp19) {
 							} else {
-								tmp20 := aotExternalFn12(v3, kw_disable)
+								tmp20 := aotExternalFn25(v3, kw_disable)
 								tmp18 = tmp20
 							}
 							tmp12 = tmp18
 						} else {
-							tmp21 := aotKeywordMapNew10(v2, v3)
-							tmp22 := aotExternalFn9("Plugin config must be a map, string, or boolean", tmp21)
+							tmp21 := aotKeywordMapNew14(v2, v3)
+							tmp22 := aotExternalFn6("Plugin config must be a map, string, or boolean", tmp21)
 							panic(tmp22)
 						}
 						tmp9 = tmp12
@@ -1845,10 +1919,10 @@ func LoadNS() {
 			}
 			return tmp4
 		})
-		aotDirectFn15 = tmp1
+		aotDirectFn19 = tmp1
 		var_yamlstar_DOT_plugin_selection_DASH_config = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_selection_DASH_config.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(207), kw_column, int(8), kw_end_DASH_line, int(207), kw_end_DASH_column, int(23), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_api, sym_value)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(250), kw_column, int(8), kw_end_DASH_line, int(250), kw_end_DASH_column, int(23), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_api, sym_value)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// set-json-comments-loader!
@@ -1876,20 +1950,20 @@ func LoadNS() {
 			} // end let
 			if lang.IsTruthy(tmp4) {
 			} else {
-				tmp5 := aotKeywordMapNew11(v2)
-				tmp6 := aotExternalFn9("JSON-comments loader must be a function or nil", tmp5)
+				tmp5 := aotKeywordMapNew15(v2)
+				tmp6 := aotExternalFn6("JSON-comments loader must be a function or nil", tmp5)
 				panic(tmp6)
 			}
 			_ = tmp3
 			tmp7 := checkDerefVar(var_yamlstar_DOT_plugin_json_DASH_comments_DASH_loader)
-			tmp8 := aotExternalFn38(tmp7, v2)
+			tmp8 := aotExternalFn18(tmp7, v2)
 			_ = tmp8
 			return v2
 		})
-		aotDirectFn16 = tmp1
+		aotDirectFn20 = tmp1
 		var_yamlstar_DOT_plugin_set_DASH_json_DASH_comments_DASH_loader_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_set_DASH_json_DASH_comments_DASH_loader_BANG_.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(132), kw_column, int(7), kw_end_DASH_line, int(132), kw_end_DASH_column, int(31), kw_arglists, lang.NewList(lang.NewVector(sym_loader)), kw_doc, "Install a lazy JSON-comments implementation loader.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(138), kw_column, int(7), kw_end_DASH_line, int(138), kw_end_DASH_column, int(31), kw_arglists, lang.NewList(lang.NewVector(sym_loader)), kw_doc, "Install a lazy JSON-comments implementation loader.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// short-config
@@ -1904,7 +1978,7 @@ func LoadNS() {
 			var tmp4 any
 			{ // let
 				// let binding "parts"
-				tmp5 := aotExternalFn39(v3, closed0, int64(-1))
+				tmp5 := aotExternalFn45(v3, closed0, int64(-1))
 				var v6 any = tmp5
 				_ = v6
 				var tmp7 any
@@ -1923,7 +1997,7 @@ func LoadNS() {
 						{ // let
 							// let binding "or__0__auto__"
 							tmp14 := lang.First(v6)
-							tmp15 := aotExternalFn29(tmp14)
+							tmp15 := aotExternalFn37(tmp14)
 							var v16 any = tmp15
 							_ = v16
 							var tmp17 any
@@ -1939,8 +2013,8 @@ func LoadNS() {
 									_ = v21
 									var tmp22 any
 									if lang.IsTruthy(v21) {
-										tmp23 := aotExternalFn25(v6)
-										tmp24 := aotExternalFn29(tmp23)
+										tmp23 := aotExternalFn34(v6)
+										tmp24 := aotExternalFn37(tmp23)
 										tmp22 = tmp24
 									} else {
 										tmp22 = v21
@@ -1956,25 +2030,25 @@ func LoadNS() {
 					tmp8 = tmp12
 				} // end let
 				if lang.IsTruthy(tmp8) {
-					tmp9 := aotKeywordMapNew10(v2, v3)
-					tmp10 := aotExternalFn9("Invalid plugin short form", tmp9)
+					tmp9 := aotKeywordMapNew14(v2, v3)
+					tmp10 := aotExternalFn6("Invalid plugin short form", tmp9)
 					panic(tmp10)
 				} else {
 				}
 				_ = tmp7
 				var tmp11 any
 				{ // let
-					// let binding "G__12"
+					// let binding "G__28"
 					tmp12 := lang.First(v6)
-					tmp13 := aotKeywordMapNew12(tmp12)
+					tmp13 := aotKeywordMapNew16(tmp12)
 					var v14 any = tmp13
 					_ = v14
 					var tmp15 any
 					tmp16 := lang.Count(v6)
 					tmp17 := lang.Equals(int64(2), tmp16)
 					if tmp17 {
-						tmp18 := aotExternalFn25(v6)
-						tmp19 := aotDirectFn3(tmp18)
+						tmp18 := aotExternalFn34(v6)
+						tmp19 := aotDirectFn4(tmp18)
 						var tmp20 any = v14
 						tmp20 = lang.Assoc(tmp20, kw_version, tmp19)
 						tmp15 = tmp20
@@ -1987,10 +2061,10 @@ func LoadNS() {
 			} // end let
 			return tmp4
 		})
-		aotDirectFn17 = tmp1
+		aotDirectFn21 = tmp1
 		var_yamlstar_DOT_plugin_short_DASH_config = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_short_DASH_config.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(196), kw_column, int(8), kw_end_DASH_line, int(196), kw_end_DASH_column, int(19), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_api, sym_text)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(239), kw_column, int(8), kw_end_DASH_line, int(239), kw_end_DASH_column, int(19), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_api, sym_text)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// tab-indent-config
@@ -2003,7 +2077,7 @@ func LoadNS() {
 			var tmp3 any
 			{ // let
 				// let binding "temp__0__auto__"
-				tmp4 := aotDirectFn5(v2)
+				tmp4 := aotDirectFn6(v2)
 				var v5 any = tmp4
 				_ = v5
 				var tmp6 any
@@ -2016,7 +2090,7 @@ func LoadNS() {
 						var tmp9 any
 						{ // let
 							// let binding "raw"
-							tmp10 := aotKeywordSite10.Get(kw_tab_DASH_indent, v8, nil)
+							tmp10 := aotKeywordSite19.Get(kw_tab_DASH_indent, v8, nil)
 							var v11 any = tmp10
 							_ = v11
 							var tmp12 any
@@ -2030,7 +2104,7 @@ func LoadNS() {
 								if lang.IsTruthy(v15) {
 									tmp16 = v15
 								} else {
-									tmp17 := aotExternalFn36(v11)
+									tmp17 := aotExternalFn43(v11)
 									tmp16 = tmp17
 								}
 								tmp13 = tmp16
@@ -2041,7 +2115,7 @@ func LoadNS() {
 								{ // let
 									// let binding "config"
 									var tmp15 any
-									tmp16 := aotExternalFn22(v11)
+									tmp16 := aotExternalFn17(v11)
 									if lang.IsTruthy(tmp16) {
 										tmp17 := lang.NewMap()
 										tmp15 = tmp17
@@ -2051,8 +2125,8 @@ func LoadNS() {
 										if tmp19 {
 											tmp18 = v11
 										} else {
-											tmp20 := aotKeywordMapNew13(v11)
-											tmp21 := aotExternalFn9("Plugin config :tab-indent must be a map or boolean", tmp20)
+											tmp20 := aotKeywordMapNew17(v11)
+											tmp21 := aotExternalFn6("Plugin config :tab-indent must be a map or boolean", tmp20)
 											panic(tmp21)
 										}
 										tmp15 = tmp18
@@ -2060,21 +2134,21 @@ func LoadNS() {
 									var v22 any = tmp15
 									_ = v22
 									// let binding "name"
-									tmp23 := aotKeywordSite11.Get(kw_name, v22, nil)
+									tmp23 := aotKeywordSite20.Get(kw_name, v22, nil)
 									var v24 any = tmp23
 									_ = v24
 									// let binding "disabled"
-									tmp25 := aotKeywordSite12.Get(kw_disable, v22, nil)
+									tmp25 := aotKeywordSite21.Get(kw_disable, v22, nil)
 									var v26 any = tmp25
 									_ = v26
 									// let binding "config"
-									tmp27 := aotExternalFn23(v22, kw_name, kw_disable)
+									tmp27 := aotExternalFn3(v22, kw_name, kw_disable)
 									var v28 any = tmp27
 									_ = v28
 									// let binding "unknown"
 									tmp29 := lang.NewSet(kw_mode, kw_auto, kw_dump, kw_load)
-									tmp30 := aotExternalFn13(v28)
-									tmp31 := aotExternalFn40(tmp29, tmp30)
+									tmp30 := aotExternalFn26(v28)
+									tmp31 := aotExternalFn46(tmp29, tmp30)
 									tmp32 := lang.Seq(tmp31)
 									var v33 any = tmp32
 									_ = v33
@@ -2086,7 +2160,7 @@ func LoadNS() {
 										_ = v36
 										var tmp37 any
 										if lang.IsTruthy(v36) {
-											tmp38 := aotExternalFn8(v24, "tab-indent")
+											tmp38 := aotExternalFn5(v24, "tab-indent")
 											tmp37 = tmp38
 										} else {
 											tmp37 = v36
@@ -2094,8 +2168,8 @@ func LoadNS() {
 										tmp35 = tmp37
 									} // end let
 									if lang.IsTruthy(tmp35) {
-										tmp36 := aotKeywordMapNew12(v24)
-										tmp37 := aotExternalFn9("Built-in tab-indent plugin name must be tab-indent", tmp36)
+										tmp36 := aotKeywordMapNew16(v24)
+										tmp37 := aotExternalFn6("Built-in tab-indent plugin name must be tab-indent", tmp36)
 										panic(tmp37)
 									} else {
 									}
@@ -2111,22 +2185,22 @@ func LoadNS() {
 										if lang.IsTruthy(v41) {
 											tmp42 = v41
 										} else {
-											tmp43 := aotExternalFn37(v26)
+											tmp43 := aotExternalFn44(v26)
 											tmp42 = tmp43
 										}
 										tmp39 = tmp42
 									} // end let
 									if lang.IsTruthy(tmp39) {
 									} else {
-										tmp40 := aotKeywordMapNew14(v26)
-										tmp41 := aotExternalFn9("tab-indent :disable must be boolean", tmp40)
+										tmp40 := aotKeywordMapNew18(v26)
+										tmp41 := aotExternalFn6("tab-indent :disable must be boolean", tmp40)
 										panic(tmp41)
 									}
 									_ = tmp38
 									var tmp42 any
 									if lang.IsTruthy(v33) {
-										tmp43 := aotKeywordMapNew15(v33)
-										tmp44 := aotExternalFn9("Unknown tab-indent configuration key", tmp43)
+										tmp43 := aotKeywordMapNew19(v33)
+										tmp44 := aotExternalFn6("Unknown tab-indent configuration key", tmp43)
 										panic(tmp44)
 									} else {
 									}
@@ -2140,7 +2214,7 @@ func LoadNS() {
 											var tmp47 any
 											{ // let
 												// let binding "or__0__auto__"
-												tmp48 := aotKeywordSite13.Get(kw_mode, v28, nil)
+												tmp48 := aotKeywordSite22.Get(kw_mode, v28, nil)
 												var v49 any = tmp48
 												_ = v49
 												var tmp50 any
@@ -2157,7 +2231,7 @@ func LoadNS() {
 											var tmp49 any
 											{ // let
 												// let binding "or__0__auto__"
-												tmp50 := aotKeywordSite14.Get(kw_load, v28, nil)
+												tmp50 := aotKeywordSite23.Get(kw_load, v28, nil)
 												var v51 any = tmp50
 												_ = v51
 												var tmp52 any
@@ -2181,7 +2255,7 @@ func LoadNS() {
 											var tmp51 any
 											{ // let
 												// let binding "or__0__auto__"
-												tmp52 := aotKeywordSite15.Get(kw_dump, v28, nil)
+												tmp52 := aotKeywordSite24.Get(kw_dump, v28, nil)
 												var v53 any = tmp52
 												_ = v53
 												var tmp54 any
@@ -2198,7 +2272,7 @@ func LoadNS() {
 											var tmp53 any
 											{ // let
 												// let binding "or__0__auto__"
-												tmp54 := aotKeywordSite16.Get(kw_auto, v28, nil)
+												tmp54 := aotKeywordSite25.Get(kw_auto, v28, nil)
 												var v55 any = tmp54
 												_ = v55
 												var tmp56 any
@@ -2213,45 +2287,45 @@ func LoadNS() {
 											_ = v54
 											var tmp55 any
 											tmp56 := lang.NewSet("tabs", "auto")
-											tmp57 := aotExternalFn21(tmp56, v48)
+											tmp57 := aotExternalFn1(tmp56, v48)
 											if lang.IsTruthy(tmp57) {
 											} else {
-												tmp58 := aotKeywordMapNew16(v48)
-												tmp59 := aotExternalFn9("tab-indent mode must be auto or tabs", tmp58)
+												tmp58 := aotKeywordMapNew20(v48)
+												tmp59 := aotExternalFn6("tab-indent mode must be auto or tabs", tmp58)
 												panic(tmp59)
 											}
 											_ = tmp55
 											var tmp60 any
 											tmp61 := lang.NewSet("tabs", "auto", "spaces")
-											tmp62 := aotExternalFn21(tmp61, v50)
+											tmp62 := aotExternalFn1(tmp61, v50)
 											if lang.IsTruthy(tmp62) {
 											} else {
-												tmp63 := aotKeywordMapNew17(v50)
-												tmp64 := aotExternalFn9("tab-indent load must be auto, spaces, or tabs", tmp63)
+												tmp63 := aotKeywordMapNew21(v50)
+												tmp64 := aotExternalFn6("tab-indent load must be auto, spaces, or tabs", tmp63)
 												panic(tmp64)
 											}
 											_ = tmp60
 											var tmp65 any
 											tmp66 := lang.NewSet("tabs", "spaces")
-											tmp67 := aotExternalFn21(tmp66, v52)
+											tmp67 := aotExternalFn1(tmp66, v52)
 											if lang.IsTruthy(tmp67) {
 											} else {
-												tmp68 := aotKeywordMapNew18(v52)
-												tmp69 := aotExternalFn9("tab-indent dump must be spaces or tabs", tmp68)
+												tmp68 := aotKeywordMapNew22(v52)
+												tmp69 := aotExternalFn6("tab-indent dump must be spaces or tabs", tmp68)
 												panic(tmp69)
 											}
 											_ = tmp65
 											var tmp70 any
 											tmp71 := lang.NewSet("stream", "document")
-											tmp72 := aotExternalFn21(tmp71, v54)
+											tmp72 := aotExternalFn1(tmp71, v54)
 											if lang.IsTruthy(tmp72) {
 											} else {
-												tmp73 := aotKeywordMapNew19(v54)
-												tmp74 := aotExternalFn9("tab-indent auto must be document or stream", tmp73)
+												tmp73 := aotKeywordMapNew23(v54)
+												tmp74 := aotExternalFn6("tab-indent auto must be document or stream", tmp73)
 												panic(tmp74)
 											}
 											_ = tmp70
-											tmp75 := aotKeywordMapNew20(v48, v50, v52, v54)
+											tmp75 := aotKeywordMapNew24(v48, v50, v52, v54)
 											tmp46 = tmp75
 										} // end let
 										tmp45 = tmp46
@@ -2271,10 +2345,10 @@ func LoadNS() {
 			} // end let
 			return tmp3
 		})
-		aotDirectFn18 = tmp1
+		aotDirectFn22 = tmp1
 		var_yamlstar_DOT_plugin_tab_DASH_indent_DASH_config = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_tab_DASH_indent_DASH_config.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(253), kw_column, int(7), kw_end_DASH_line, int(253), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym_opts)), kw_doc, "Validate and normalize the built-in tab-indent plugin configuration.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(296), kw_column, int(7), kw_end_DASH_line, int(296), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym_opts)), kw_doc, "Validate and normalize the built-in tab-indent plugin configuration.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// yaml-emitter-opts
@@ -2287,7 +2361,7 @@ func LoadNS() {
 			var tmp3 any
 			{ // let
 				// let binding "temp__0__auto__"
-				tmp4 := aotDirectFn5(v2)
+				tmp4 := aotDirectFn6(v2)
 				var v5 any = tmp4
 				_ = v5
 				var tmp6 any
@@ -2298,13 +2372,13 @@ func LoadNS() {
 						var v8 any = v5
 						_ = v8
 						var tmp9 any
-						tmp10 := aotExternalFn21(v8, kw_yaml_DASH_emitter)
+						tmp10 := aotExternalFn1(v8, kw_yaml_DASH_emitter)
 						if lang.IsTruthy(tmp10) {
 							var tmp11 any
 							{ // let
 								// let binding "temp__0__auto__"
-								tmp12 := aotKeywordSite17.Get(kw_yaml_DASH_emitter, v8, nil)
-								tmp13 := aotDirectFn15(kw_yaml_DASH_emitter, tmp12)
+								tmp12 := aotKeywordSite26.Get(kw_yaml_DASH_emitter, v8, nil)
+								tmp13 := aotDirectFn19(kw_yaml_DASH_emitter, tmp12)
 								var v14 any = tmp13
 								_ = v14
 								var tmp15 any
@@ -2317,7 +2391,7 @@ func LoadNS() {
 										var tmp18 any
 										{ // let
 											// let binding "name"
-											tmp19 := aotKeywordSite18.Get(kw_name, v17, nil)
+											tmp19 := aotKeywordSite27.Get(kw_name, v17, nil)
 											var v20 any = tmp19
 											_ = v20
 											var tmp21 any
@@ -2337,13 +2411,13 @@ func LoadNS() {
 												tmp22 = tmp24
 											} // end let
 											if lang.IsTruthy(tmp22) {
-												tmp23 := aotKeywordMapNew12(v20)
-												tmp24 := aotExternalFn9("Emitter plugin :name must be a string", tmp23)
+												tmp23 := aotKeywordMapNew16(v20)
+												tmp24 := aotExternalFn6("Emitter plugin :name must be a string", tmp23)
 												panic(tmp24)
 											} else {
 											}
 											_ = tmp21
-											tmp25 := aotExternalFn12(v17, kw_name)
+											tmp25 := aotExternalFn25(v17, kw_name)
 											tmp26 := lang.NewVector(v20, tmp25)
 											tmp18 = tmp26
 										} // end let
@@ -2366,10 +2440,10 @@ func LoadNS() {
 			} // end let
 			return tmp3
 		})
-		aotDirectFn22 = tmp1
+		aotDirectFn27 = tmp1
 		var_yamlstar_DOT_plugin_yaml_DASH_emitter_DASH_opts = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_yaml_DASH_emitter_DASH_opts.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(239), kw_column, int(7), kw_end_DASH_line, int(239), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym_opts)), kw_doc, "Extract [emitter-name config] from dump options.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(282), kw_column, int(7), kw_end_DASH_line, int(282), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym_opts)), kw_doc, "Extract [emitter-name config] from dump options.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// yaml-emitter-registry
@@ -2378,7 +2452,7 @@ func LoadNS() {
 		tmp1 := lang.NewAtom(lang.NewMap())
 		var_yamlstar_DOT_plugin_yaml_DASH_emitter_DASH_registry = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_yaml_DASH_emitter_DASH_registry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/plugin.clj", kw_line, int(6), kw_column, int(10), kw_end_DASH_line, int(6), kw_end_DASH_column, int(40), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMap(kw_file, "yamlstar/plugin.clj", kw_line, int(7), kw_column, int(10), kw_end_DASH_line, int(7), kw_end_DASH_column, int(40), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// yaml-parser-opts
@@ -2391,7 +2465,7 @@ func LoadNS() {
 			var tmp3 any
 			{ // let
 				// let binding "temp__0__auto__"
-				tmp4 := aotDirectFn5(v2)
+				tmp4 := aotDirectFn6(v2)
 				var v5 any = tmp4
 				_ = v5
 				var tmp6 any
@@ -2402,13 +2476,13 @@ func LoadNS() {
 						var v8 any = v5
 						_ = v8
 						var tmp9 any
-						tmp10 := aotExternalFn21(v8, kw_yaml_DASH_parser)
+						tmp10 := aotExternalFn1(v8, kw_yaml_DASH_parser)
 						if lang.IsTruthy(tmp10) {
 							var tmp11 any
 							{ // let
 								// let binding "temp__0__auto__"
-								tmp12 := aotKeywordSite19.Get(kw_yaml_DASH_parser, v8, nil)
-								tmp13 := aotDirectFn15(kw_yaml_DASH_parser, tmp12)
+								tmp12 := aotKeywordSite28.Get(kw_yaml_DASH_parser, v8, nil)
+								tmp13 := aotDirectFn19(kw_yaml_DASH_parser, tmp12)
 								var v14 any = tmp13
 								_ = v14
 								var tmp15 any
@@ -2421,7 +2495,7 @@ func LoadNS() {
 										var tmp18 any
 										{ // let
 											// let binding "name"
-											tmp19 := aotKeywordSite20.Get(kw_name, v17, nil)
+											tmp19 := aotKeywordSite29.Get(kw_name, v17, nil)
 											var v20 any = tmp19
 											_ = v20
 											var tmp21 any
@@ -2441,13 +2515,13 @@ func LoadNS() {
 												tmp22 = tmp24
 											} // end let
 											if lang.IsTruthy(tmp22) {
-												tmp23 := aotKeywordMapNew12(v20)
-												tmp24 := aotExternalFn9("Parser plugin :name must be a string", tmp23)
+												tmp23 := aotKeywordMapNew16(v20)
+												tmp24 := aotExternalFn6("Parser plugin :name must be a string", tmp23)
 												panic(tmp24)
 											} else {
 											}
 											_ = tmp21
-											tmp25 := aotExternalFn12(v17, kw_name)
+											tmp25 := aotExternalFn25(v17, kw_name)
 											tmp26 := lang.NewVector(v20, tmp25)
 											tmp18 = tmp26
 										} // end let
@@ -2470,10 +2544,10 @@ func LoadNS() {
 			} // end let
 			return tmp3
 		})
-		aotDirectFn23 = tmp1
+		aotDirectFn28 = tmp1
 		var_yamlstar_DOT_plugin_yaml_DASH_parser_DASH_opts = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_yaml_DASH_parser_DASH_opts.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(225), kw_column, int(7), kw_end_DASH_line, int(225), kw_end_DASH_column, int(22), kw_arglists, lang.NewList(lang.NewVector(sym_opts)), kw_doc, "Extract [parser-name config] from load options.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(268), kw_column, int(7), kw_end_DASH_line, int(268), kw_end_DASH_column, int(22), kw_arglists, lang.NewList(lang.NewVector(sym_opts)), kw_doc, "Extract [parser-name config] from load options.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// yaml-parser-registry
@@ -2482,7 +2556,7 @@ func LoadNS() {
 		tmp1 := lang.NewAtom(lang.NewMap())
 		var_yamlstar_DOT_plugin_yaml_DASH_parser_DASH_registry = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_yaml_DASH_parser_DASH_registry.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMap(kw_file, "yamlstar/plugin.clj", kw_line, int(5), kw_column, int(10), kw_end_DASH_line, int(5), kw_end_DASH_column, int(39), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMap(kw_file, "yamlstar/plugin.clj", kw_line, int(6), kw_column, int(10), kw_end_DASH_line, int(6), kw_end_DASH_column, int(39), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// normalize-version
@@ -2496,8 +2570,8 @@ func LoadNS() {
 			tmp4 := lang.IsString(v2)
 			if tmp4 {
 			} else {
-				tmp5 := aotKeywordMapNew3(v2)
-				tmp6 := aotExternalFn9("Plugin version must be a release version", tmp5)
+				tmp5 := aotKeywordMapNew7(v2)
+				tmp6 := aotExternalFn6("Plugin version must be a release version", tmp5)
 				panic(tmp6)
 			}
 			_ = tmp3
@@ -2505,26 +2579,26 @@ func LoadNS() {
 			{ // let
 				// let binding "or__0__auto__"
 				tmp8 := checkDerefVar(var_yamlstar_DOT_plugin_release_DASH_version_DASH_pattern)
-				tmp9 := aotExternalFn26(tmp8, v2)
-				tmp10 := aotExternalFn25(tmp9)
+				tmp9 := aotExternalFn35(tmp8, v2)
+				tmp10 := aotExternalFn34(tmp9)
 				var v11 any = tmp10
 				_ = v11
 				var tmp12 any
 				if lang.IsTruthy(v11) {
 					tmp12 = v11
 				} else {
-					tmp13 := aotKeywordMapNew3(v2)
-					tmp14 := aotExternalFn9("Plugin version must be a release version", tmp13)
+					tmp13 := aotKeywordMapNew7(v2)
+					tmp14 := aotExternalFn6("Plugin version must be a release version", tmp13)
 					panic(tmp14)
 				}
 				tmp7 = tmp12
 			} // end let
 			return tmp7
 		})
-		aotDirectFn3 = tmp1
+		aotDirectFn4 = tmp1
 		var_yamlstar_DOT_plugin_normalize_DASH_version = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_normalize_DASH_version.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(13), kw_column, int(7), kw_end_DASH_line, int(13), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym_version)), kw_doc, "Normalize VERSION to digits without a leading v.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(19), kw_column, int(7), kw_end_DASH_line, int(19), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym_version)), kw_doc, "Normalize VERSION to digits without a leading v.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// registered-yaml-emitters
@@ -2534,14 +2608,14 @@ func LoadNS() {
 		tmp1 = lang.FnFunc0(func() any {
 			tmp2 := checkDerefVar(var_yamlstar_DOT_plugin_yaml_DASH_emitter_DASH_registry)
 			tmp3 := lang.DerefValue(tmp2)
-			tmp4 := aotExternalFn13(tmp3)
-			tmp5 := aotExternalFn32(tmp4)
+			tmp4 := aotExternalFn26(tmp3)
+			tmp5 := aotExternalFn39(tmp4)
 			return tmp5
 		})
-		aotDirectFn9 = tmp1
+		aotDirectFn12 = tmp1
 		var_yamlstar_DOT_plugin_registered_DASH_yaml_DASH_emitters = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_registered_DASH_yaml_DASH_emitters.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(86), kw_column, int(7), kw_end_DASH_line, int(86), kw_end_DASH_column, int(30), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Return the registered YAML emitter names.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(92), kw_column, int(7), kw_end_DASH_line, int(92), kw_end_DASH_column, int(30), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Return the registered YAML emitter names.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// registered-yaml-parsers
@@ -2551,14 +2625,14 @@ func LoadNS() {
 		tmp1 = lang.FnFunc0(func() any {
 			tmp2 := checkDerefVar(var_yamlstar_DOT_plugin_yaml_DASH_parser_DASH_registry)
 			tmp3 := lang.DerefValue(tmp2)
-			tmp4 := aotExternalFn13(tmp3)
-			tmp5 := aotExternalFn32(tmp4)
+			tmp4 := aotExternalFn26(tmp3)
+			tmp5 := aotExternalFn39(tmp4)
 			return tmp5
 		})
-		aotDirectFn10 = tmp1
+		aotDirectFn13 = tmp1
 		var_yamlstar_DOT_plugin_registered_DASH_yaml_DASH_parsers = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_registered_DASH_yaml_DASH_parsers.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(43), kw_column, int(7), kw_end_DASH_line, int(43), kw_end_DASH_column, int(29), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Return the registered YAML parser names.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(49), kw_column, int(7), kw_end_DASH_line, int(49), kw_end_DASH_column, int(29), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Return the registered YAML parser names.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// resolve-yaml-emitter
@@ -2599,10 +2673,10 @@ func LoadNS() {
 							}()
 							var tmp13 any
 							{ // let
-								// let binding "G__8"
-								tmp14 := aotExternalFn15("yamlstar.plugin.yaml-emitter.", v2)
-								tmp15 := aotExternalFn33(tmp14, "plugin")
-								tmp16 := aotExternalFn1(tmp15)
+								// let binding "G__21"
+								tmp14 := aotExternalFn27("yamlstar.plugin.yaml-emitter.", v2)
+								tmp15 := aotExternalFn40(tmp14, "plugin")
+								tmp16 := aotExternalFn23(tmp15)
 								var v17 any = tmp16
 								_ = v17
 								var tmp18 any
@@ -2625,7 +2699,7 @@ func LoadNS() {
 							var tmp16 any
 							{ // let
 								// let binding "temp__0__auto__"
-								tmp17 := aotDirectFn9()
+								tmp17 := aotDirectFn12()
 								tmp18 := lang.Seq(tmp17)
 								var v19 any = tmp18
 								_ = v19
@@ -2636,7 +2710,7 @@ func LoadNS() {
 										// let binding "names"
 										var v22 any = v19
 										_ = v22
-										tmp23 := aotExternalFn34(", ", v22)
+										tmp23 := aotExternalFn41(", ", v22)
 										tmp21 = tmp23
 									} // end let
 									tmp20 = tmp21
@@ -2645,10 +2719,10 @@ func LoadNS() {
 								}
 								tmp16 = tmp20
 							} // end let
-							tmp17 := aotExternalFn10("Unknown YAML emitter plugin: ", v2, ". Available: ", tmp16)
-							tmp18 := aotDirectFn9()
-							tmp19 := aotKeywordMapNew8(v2, tmp18)
-							tmp20 := aotExternalFn9(tmp17, tmp19)
+							tmp17 := aotExternalFn7("Unknown YAML emitter plugin: ", v2, ". Available: ", tmp16)
+							tmp18 := aotDirectFn12()
+							tmp19 := aotKeywordMapNew12(v2, tmp18)
+							tmp20 := aotExternalFn6(tmp17, tmp19)
 							panic(tmp20)
 						}
 						tmp9 = tmp15
@@ -2659,10 +2733,10 @@ func LoadNS() {
 			} // end let
 			return tmp3
 		})
-		aotDirectFn12 = tmp1
+		aotDirectFn16 = tmp1
 		var_yamlstar_DOT_plugin_resolve_DASH_yaml_DASH_emitter = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_resolve_DASH_yaml_DASH_emitter.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(91), kw_column, int(7), kw_end_DASH_line, int(91), kw_end_DASH_column, int(26), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Look up a YAML emitter plugin by name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(97), kw_column, int(7), kw_end_DASH_line, int(97), kw_end_DASH_column, int(26), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Look up a YAML emitter plugin by name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// resolve-yaml-parser
@@ -2703,10 +2777,10 @@ func LoadNS() {
 							}()
 							var tmp13 any
 							{ // let
-								// let binding "G__4"
-								tmp14 := aotExternalFn15("yamlstar.plugin.yaml-parser.", v2)
-								tmp15 := aotExternalFn33(tmp14, "plugin")
-								tmp16 := aotExternalFn1(tmp15)
+								// let binding "G__17"
+								tmp14 := aotExternalFn27("yamlstar.plugin.yaml-parser.", v2)
+								tmp15 := aotExternalFn40(tmp14, "plugin")
+								tmp16 := aotExternalFn23(tmp15)
 								var v17 any = tmp16
 								_ = v17
 								var tmp18 any
@@ -2729,7 +2803,7 @@ func LoadNS() {
 							var tmp16 any
 							{ // let
 								// let binding "temp__0__auto__"
-								tmp17 := aotDirectFn10()
+								tmp17 := aotDirectFn13()
 								tmp18 := lang.Seq(tmp17)
 								var v19 any = tmp18
 								_ = v19
@@ -2740,7 +2814,7 @@ func LoadNS() {
 										// let binding "names"
 										var v22 any = v19
 										_ = v22
-										tmp23 := aotExternalFn34(", ", v22)
+										tmp23 := aotExternalFn41(", ", v22)
 										tmp21 = tmp23
 									} // end let
 									tmp20 = tmp21
@@ -2749,10 +2823,10 @@ func LoadNS() {
 								}
 								tmp16 = tmp20
 							} // end let
-							tmp17 := aotExternalFn10("Unknown YAML parser plugin: ", v2, ". Available: ", tmp16)
-							tmp18 := aotDirectFn10()
-							tmp19 := aotKeywordMapNew9(v2, tmp18)
-							tmp20 := aotExternalFn9(tmp17, tmp19)
+							tmp17 := aotExternalFn7("Unknown YAML parser plugin: ", v2, ". Available: ", tmp16)
+							tmp18 := aotDirectFn13()
+							tmp19 := aotKeywordMapNew13(v2, tmp18)
+							tmp20 := aotExternalFn6(tmp17, tmp19)
 							panic(tmp20)
 						}
 						tmp9 = tmp15
@@ -2763,10 +2837,670 @@ func LoadNS() {
 			} // end let
 			return tmp3
 		})
-		aotDirectFn13 = tmp1
+		aotDirectFn17 = tmp1
 		var_yamlstar_DOT_plugin_resolve_DASH_yaml_DASH_parser = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_resolve_DASH_yaml_DASH_parser.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(48), kw_column, int(7), kw_end_DASH_line, int(48), kw_end_DASH_column, int(25), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Look up a YAML parser plugin by name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(54), kw_column, int(7), kw_end_DASH_line, int(54), kw_end_DASH_column, int(25), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Look up a YAML parser plugin by name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+		}, false)
+	}
+	// alias-data-registry
+	{
+		tmp0 := sym_alias_DASH_data_DASH_registry
+		var tmp2 lang.FnFunc2
+		tmp2 = lang.FnFunc2(func(p0, p1 any) any {
+			v3 := p0
+			_ = v3
+			v4 := p1
+			_ = v4
+			var tmp5 any
+			{ // let
+				// let binding "map__13"
+				var v6 any = v4
+				_ = v6
+				// let binding "map__13"
+				var tmp7 any
+				tmp8 := aotExternalFn8(v6)
+				if lang.IsTruthy(tmp8) {
+					var tmp9 any
+					tmp10 := lang.Next(v6)
+					if lang.IsTruthy(tmp10) {
+						tmp11 := aotExternalFn10(v6)
+						tmp12 := lang.Apply1(lang.NewPersistentArrayMapAsIfByAssoc, tmp11)
+						tmp9 = tmp12
+					} else {
+						var tmp13 any
+						tmp14 := lang.IsSeqTruthy(v6)
+						if tmp14 {
+							tmp15 := lang.First(v6)
+							tmp13 = tmp15
+						} else {
+							tmp16 := lang.Apply0(lang.NewMap)
+							tmp13 = tmp16
+						}
+						tmp9 = tmp13
+					}
+					tmp7 = tmp9
+				} else {
+					tmp7 = v6
+				}
+				var v17 any = tmp7
+				_ = v17
+				// let binding "load-file"
+				tmp18 := runtime.RT.Get(v17, kw_load_DASH_file)
+				var v19 any = tmp18
+				_ = v19
+				// let binding "get-environment"
+				tmp20 := runtime.RT.Get(v17, kw_get_DASH_environment)
+				var v21 any = tmp20
+				_ = v21
+				var tmp22 any
+				{ // let
+					// let binding "config"
+					tmp23 := aotExternalFn13(v3)
+					var v24 any = tmp23
+					_ = v24
+					// let binding "inline"
+					var tmp25 any
+					{ // let
+						// let binding "or__0__auto__"
+						tmp26 := aotKeywordSite5.Get(kw_data, v24, nil)
+						var v27 any = tmp26
+						_ = v27
+						var tmp28 any
+						if lang.IsTruthy(v27) {
+							tmp28 = v27
+						} else {
+							tmp29 := lang.NewMap()
+							tmp28 = tmp29
+						}
+						tmp25 = tmp28
+					} // end let
+					tmp26 := aotExternalFn14(tmp25, "data")
+					var v27 any = tmp26
+					_ = v27
+					// let binding "file"
+					var tmp28 any
+					{ // let
+						// let binding "temp__0__auto__"
+						tmp29 := aotKeywordSite6.Get(kw_file, v24, nil)
+						var v30 any = tmp29
+						_ = v30
+						var tmp31 any
+						if lang.IsTruthy(v30) {
+							var tmp32 any
+							{ // let
+								// let binding "path"
+								var v33 any = v30
+								_ = v33
+								tmp34 := lang.Apply1(v19, v33)
+								tmp35 := aotExternalFn14(tmp34, "file")
+								tmp32 = tmp35
+							} // end let
+							tmp31 = tmp32
+						} else {
+							tmp33 := lang.NewMap()
+							tmp31 = tmp33
+						}
+						tmp28 = tmp31
+					} // end let
+					var v29 any = tmp28
+					_ = v29
+					// let binding "env"
+					var tmp30 any
+					tmp31 := aotExternalFn1(v24, kw_env)
+					if lang.IsTruthy(tmp31) {
+						tmp32 := aotKeywordSite7.Get(kw_env, v24, nil)
+						var tmp33 any
+						{ // let
+							// let binding "or__0__auto__"
+							var v34 any = v21
+							_ = v34
+							var tmp35 any
+							if lang.IsTruthy(v34) {
+								tmp35 = v34
+							} else {
+								tmp36 := checkDerefVar(var_yamlstar_DOT_plugin_DOT_alias_DASH_data_environment)
+								tmp35 = tmp36
+							}
+							tmp33 = tmp35
+						} // end let
+						tmp34 := lang.Apply0(tmp33)
+						tmp35 := aotExternalFn15(tmp32, tmp34)
+						tmp30 = tmp35
+					} else {
+						tmp36 := lang.NewMap()
+						tmp30 = tmp36
+					}
+					var v37 any = tmp30
+					_ = v37
+					// let binding "current"
+					tmp38 := lang.NewMap()
+					tmp39 := aotExternalFn16(tmp38)
+					var v40 any = tmp39
+					_ = v40
+					// let binding "prior"
+					tmp41 := lang.NewMap()
+					tmp42 := aotExternalFn16(tmp41)
+					var v43 any = tmp42
+					_ = v43
+					// let binding "stream?"
+					tmp44 := aotKeywordSite8.Get(kw_stream, v24, nil)
+					tmp45 := aotExternalFn17(tmp44)
+					var v46 any = tmp45
+					_ = v46
+					var tmp47 lang.FnFunc0
+					tmp47 = lang.FnFunc0(func() any {
+						tmp48 := lang.NewMap()
+						tmp49 := aotExternalFn18(v43, tmp48)
+						_ = tmp49
+						return nil
+					})
+					var tmp48 lang.FnFunc0
+					tmp48 = lang.FnFunc0(func() any {
+						tmp49 := lang.NewMap()
+						tmp50 := aotExternalFn18(v40, tmp49)
+						_ = tmp50
+						return nil
+					})
+					var tmp49 lang.FnFunc2
+					tmp49 = lang.FnFunc2(func(p0, p1 any) any {
+						v50 := p0
+						_ = v50
+						v51 := p1
+						_ = v51
+						tmp52 := checkDerefVar(var_clojure_DOT_core_assoc)
+						tmp53 := aotExternalFn19(v40, tmp52, v50, v51)
+						_ = tmp53
+						return nil
+					})
+					var tmp50 lang.FnFunc1
+					tmp50 = lang.FnFunc1(func(p0 any) any {
+						v51 := p0
+						_ = v51
+						var tmp52 any
+						{ // let
+							// let binding "sources"
+							tmp53 := lang.DerefValue(v40)
+							tmp54 := lang.DerefValue(v43)
+							tmp55 := lang.NewVector(tmp53, v27, v29, v37, tmp54)
+							var v56 any = tmp55
+							_ = v56
+							for {
+								var tmp57 any
+								{ // let
+									// let binding "temp__0__auto__"
+									tmp58 := lang.First(v56)
+									var v59 any = tmp58
+									_ = v59
+									var tmp60 any
+									if lang.IsTruthy(v59) {
+										var tmp61 any
+										{ // let
+											// let binding "source"
+											var v62 any = v59
+											_ = v62
+											var tmp63 any
+											tmp64 := aotExternalFn1(v62, v51)
+											if lang.IsTruthy(tmp64) {
+												tmp65 := runtime.RT.Get(v62, v51)
+												tmp66 := lang.NewVector(true, tmp65)
+												tmp63 = tmp66
+											} else {
+												tmp68 := lang.Next(v56)
+												var tmp67 any = tmp68
+												v56 = tmp67
+												continue
+											}
+											tmp61 = tmp63
+										} // end let
+										tmp60 = tmp61
+									} else {
+										tmp62 := lang.NewVector(false, nil)
+										tmp60 = tmp62
+									}
+									tmp57 = tmp60
+								} // end let
+								tmp52 = tmp57
+								break
+							}
+						} // end let
+						return tmp52
+					})
+					var tmp51 lang.FnFunc0
+					tmp51 = lang.FnFunc0(func() any {
+						var tmp52 any
+						if lang.IsTruthy(v46) {
+							tmp53 := checkDerefVar(var_clojure_DOT_core_merge)
+							tmp54 := lang.DerefValue(v40)
+							tmp55 := aotExternalFn21(v43, tmp53, tmp54)
+							tmp52 = tmp55
+						} else {
+						}
+						_ = tmp52
+						return nil
+					})
+					var tmp52 lang.FnFunc0
+					tmp52 = lang.FnFunc0(func() any {
+						return nil
+					})
+					tmp53 := aotKeywordMapNew2(tmp47, tmp48, tmp49, tmp50, tmp51, tmp52)
+					tmp22 = tmp53
+				} // end let
+				tmp5 = tmp22
+			} // end let
+			return tmp5
+		})
+		tmp1 := lang.NewAtom(lang.NewMap("alias-data", aotKeywordMapNew3("alias-data", "alias-data", tmp2)))
+		var_yamlstar_DOT_plugin_alias_DASH_data_DASH_registry = ns.InternWithValue(tmp0, tmp1, true)
+		var_yamlstar_DOT_plugin_alias_DASH_data_DASH_registry.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMap(kw_file, "yamlstar/plugin.clj", kw_line, int(10), kw_column, int(10), kw_end_DASH_line, int(10), kw_end_DASH_column, int(38), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+		}, false)
+	}
+	// registered-alias-data
+	{
+		tmp0 := sym_registered_DASH_alias_DASH_data
+		var tmp1 lang.FnFunc0
+		tmp1 = lang.FnFunc0(func() any {
+			tmp2 := checkDerefVar(var_yamlstar_DOT_plugin_alias_DASH_data_DASH_registry)
+			tmp3 := lang.DerefValue(tmp2)
+			tmp4 := aotExternalFn26(tmp3)
+			tmp5 := aotExternalFn39(tmp4)
+			return tmp5
+		})
+		aotDirectFn11 = tmp1
+		var_yamlstar_DOT_plugin_registered_DASH_alias_DASH_data = ns.InternWithValue(tmp0, tmp1, true)
+		var_yamlstar_DOT_plugin_registered_DASH_alias_DASH_data.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(213), kw_column, int(7), kw_end_DASH_line, int(213), kw_end_DASH_column, int(27), kw_arglists, lang.NewList(lang.NewVector()), kw_doc, "Return the registered Alias-Data implementation names.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+		}, false)
+	}
+	// resolve-alias-data
+	{
+		tmp0 := sym_resolve_DASH_alias_DASH_data
+		var tmp1 lang.FnFunc1
+		tmp1 = lang.FnFunc1(func(p0 any) any {
+			v2 := p0
+			_ = v2
+			var tmp3 any
+			{ // let
+				// let binding "or__0__auto__"
+				tmp4 := checkDerefVar(var_yamlstar_DOT_plugin_alias_DASH_data_DASH_registry)
+				tmp5 := lang.DerefValue(tmp4)
+				tmp6 := runtime.RT.Get(tmp5, v2)
+				var v7 any = tmp6
+				_ = v7
+				var tmp8 any
+				if lang.IsTruthy(v7) {
+					tmp8 = v7
+				} else {
+					tmp9 := aotExternalFn27("Unknown YAMLStar alias-data implementation: ", v2)
+					tmp10 := aotDirectFn11()
+					tmp11 := aotKeywordMapNew10("alias-data", v2, tmp10)
+					tmp12 := aotExternalFn6(tmp9, tmp11)
+					panic(tmp12)
+				}
+				tmp3 = tmp8
+			} // end let
+			return tmp3
+		})
+		aotDirectFn14 = tmp1
+		var_yamlstar_DOT_plugin_resolve_DASH_alias_DASH_data = ns.InternWithValue(tmp0, tmp1, true)
+		var_yamlstar_DOT_plugin_resolve_DASH_alias_DASH_data.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(218), kw_column, int(7), kw_end_DASH_line, int(218), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Resolve a named Alias-Data implementation.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+		}, false)
+	}
+	// json-comments-opts
+	{
+		tmp0 := sym_json_DASH_comments_DASH_opts
+		var tmp1 lang.FnFunc1
+		tmp1 = lang.FnFunc1(func(p0 any) any {
+			v2 := p0
+			_ = v2
+			var tmp3 any
+			{ // let
+				// let binding "temp__0__auto__"
+				tmp4 := aotDirectFn6(v2)
+				var v5 any = tmp4
+				_ = v5
+				var tmp6 any
+				if lang.IsTruthy(v5) {
+					var tmp7 any
+					{ // let
+						// let binding "plugins"
+						var v8 any = v5
+						_ = v8
+						var tmp9 any
+						{ // let
+							// let binding "seq_29"
+							tmp10 := checkDerefVar(var_clojure_DOT_core_dissoc)
+							tmp11 := lang.Apply6(tmp10, v8, kw_yaml_DASH_parser, kw_yaml_DASH_emitter, kw_tab_DASH_indent, kw_alias_DASH_data, kw_json_DASH_comments)
+							tmp12 := aotExternalFn26(tmp11)
+							tmp13 := lang.Seq(tmp12)
+							var v14 any = tmp13
+							_ = v14
+							// let binding "chunk_30"
+							var v15 any = nil
+							_ = v15
+							// let binding "count_31"
+							var v16 any = int64(0)
+							_ = v16
+							// let binding "i_32"
+							var v17 any = int64(0)
+							_ = v17
+							for {
+								var tmp18 any
+								tmp19 := lang.Numbers.Lt(v17, v16)
+								if lang.IsTruthy(tmp19) {
+									var tmp20 any
+									{ // let
+										// let binding "api"
+										tmp21 := v15.(interface{ Nth(int) any }).Nth(lang.IntCast(v17))
+										var v22 any = tmp21
+										_ = v22
+										tmp23 := aotExternalFn28(v22)
+										tmp24 := aotExternalFn27("Unknown YAMLStar plugin API: ", tmp23)
+										tmp25 := aotKeywordMapNew6(v22)
+										tmp26 := aotExternalFn6(tmp24, tmp25)
+										panic(tmp26)
+										var tmp27 any = v14
+										var tmp28 any = v15
+										var tmp29 any = v16
+										tmp31 := lang.Numbers.Unchecked_inc(v17)
+										var tmp30 any = tmp31
+										v14 = tmp27
+										v15 = tmp28
+										v16 = tmp29
+										v17 = tmp30
+										continue
+									} // end let
+									tmp18 = tmp20
+								} else {
+									var tmp21 any
+									{ // let
+										// let binding "temp__0__auto__"
+										tmp22 := lang.Seq(v14)
+										var v23 any = tmp22
+										_ = v23
+										var tmp24 any
+										if lang.IsTruthy(v23) {
+											var tmp25 any
+											{ // let
+												// let binding "seq_29"
+												var v26 any = v23
+												_ = v26
+												var tmp27 any
+												tmp28 := aotExternalFn29(v26)
+												if lang.IsTruthy(tmp28) {
+													var tmp29 any
+													{ // let
+														// let binding "c__0__auto__"
+														tmp30 := aotExternalFn30(v26)
+														var v31 any = tmp30
+														_ = v31
+														tmp33 := aotExternalFn31(v26)
+														var tmp32 any = tmp33
+														var tmp34 any = v31
+														tmp36 := lang.Count(v31)
+														tmp37 := runtime.RT.IntCast(tmp36)
+														var tmp35 any = tmp37
+														tmp39 := runtime.RT.IntCast(int64(0))
+														var tmp38 any = tmp39
+														v14 = tmp32
+														v15 = tmp34
+														v16 = tmp35
+														v17 = tmp38
+														continue
+													} // end let
+													tmp27 = tmp29
+												} else {
+													var tmp30 any
+													{ // let
+														// let binding "api"
+														tmp31 := lang.First(v26)
+														var v32 any = tmp31
+														_ = v32
+														tmp33 := aotExternalFn28(v32)
+														tmp34 := aotExternalFn27("Unknown YAMLStar plugin API: ", tmp33)
+														tmp35 := aotKeywordMapNew6(v32)
+														tmp36 := aotExternalFn6(tmp34, tmp35)
+														panic(tmp36)
+														tmp38 := lang.Next(v26)
+														var tmp37 any = tmp38
+														var tmp39 any = nil
+														var tmp40 any = int64(0)
+														var tmp41 any = int64(0)
+														v14 = tmp37
+														v15 = tmp39
+														v16 = tmp40
+														v17 = tmp41
+														continue
+													} // end let
+													tmp27 = tmp30
+												}
+												tmp25 = tmp27
+											} // end let
+											tmp24 = tmp25
+										} else {
+										}
+										tmp21 = tmp24
+									} // end let
+									tmp18 = tmp21
+								}
+								tmp9 = tmp18
+								break
+							}
+						} // end let
+						_ = tmp9
+						var tmp10 any
+						tmp11 := aotExternalFn1(v8, kw_json_DASH_comments)
+						if lang.IsTruthy(tmp11) {
+							var tmp12 any
+							{ // let
+								// let binding "temp__0__auto__"
+								tmp13 := aotKeywordSite10.Get(kw_json_DASH_comments, v8, nil)
+								tmp14 := aotDirectFn19(kw_json_DASH_comments, tmp13)
+								var v15 any = tmp14
+								_ = v15
+								var tmp16 any
+								if lang.IsTruthy(v15) {
+									var tmp17 any
+									{ // let
+										// let binding "config"
+										var v18 any = v15
+										_ = v18
+										var tmp19 any
+										{ // let
+											// let binding "name"
+											var tmp20 any
+											{ // let
+												// let binding "or__0__auto__"
+												tmp21 := aotKeywordSite11.Get(kw_name, v18, nil)
+												var v22 any = tmp21
+												_ = v22
+												var tmp23 any
+												if lang.IsTruthy(v22) {
+													tmp23 = v22
+												} else {
+													tmp23 = "sanitizer"
+												}
+												tmp20 = tmp23
+											} // end let
+											var v21 any = tmp20
+											_ = v21
+											// let binding "version"
+											tmp22 := aotKeywordSite12.Get(kw_version, v18, nil)
+											var v23 any = tmp22
+											_ = v23
+											// let binding "plugin"
+											tmp24 := aotKeywordSite13.Get(kw_plugin_DASH_install, v2, nil)
+											tmp25 := aotExternalFn17(tmp24)
+											tmp26 := aotDirectFn15(v21, v23, tmp25)
+											var v27 any = tmp26
+											_ = v27
+											tmp28 := aotExternalFn3(v18, kw_name, kw_version)
+											tmp29 := lang.NewVector(v27, tmp28)
+											tmp19 = tmp29
+										} // end let
+										tmp17 = tmp19
+									} // end let
+									tmp16 = tmp17
+								} else {
+								}
+								tmp12 = tmp16
+							} // end let
+							tmp10 = tmp12
+						} else {
+						}
+						tmp7 = tmp10
+					} // end let
+					tmp6 = tmp7
+				} else {
+				}
+				tmp3 = tmp6
+			} // end let
+			return tmp3
+		})
+		aotDirectFn3 = tmp1
+		var_yamlstar_DOT_plugin_json_DASH_comments_DASH_opts = ns.InternWithValue(tmp0, tmp1, true)
+		var_yamlstar_DOT_plugin_json_DASH_comments_DASH_opts.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(348), kw_column, int(7), kw_end_DASH_line, int(348), kw_end_DASH_column, int(24), kw_arglists, lang.NewList(lang.NewVector(sym_opts)), kw_doc, "Resolve the configured JSON-comments sanitizer.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+		}, false)
+	}
+	// register-alias-data!
+	{
+		tmp0 := sym_register_DASH_alias_DASH_data_BANG_
+		var tmp1 lang.FnFunc1
+		tmp1 = lang.FnFunc1(func(p0 any) any {
+			v2 := p0
+			_ = v2
+			var tmp3 any
+			{ // let
+				// let binding "map__26"
+				var v4 any = v2
+				_ = v4
+				// let binding "map__26"
+				var tmp5 any
+				tmp6 := aotExternalFn8(v4)
+				if lang.IsTruthy(tmp6) {
+					var tmp7 any
+					tmp8 := lang.Next(v4)
+					if lang.IsTruthy(tmp8) {
+						tmp9 := aotExternalFn10(v4)
+						tmp10 := lang.Apply1(lang.NewPersistentArrayMapAsIfByAssoc, tmp9)
+						tmp7 = tmp10
+					} else {
+						var tmp11 any
+						tmp12 := lang.IsSeqTruthy(v4)
+						if tmp12 {
+							tmp13 := lang.First(v4)
+							tmp11 = tmp13
+						} else {
+							tmp14 := lang.Apply0(lang.NewMap)
+							tmp11 = tmp14
+						}
+						tmp7 = tmp11
+					}
+					tmp5 = tmp7
+				} else {
+					tmp5 = v4
+				}
+				var v15 any = tmp5
+				_ = v15
+				// let binding "plugin"
+				var v16 any = v15
+				_ = v16
+				// let binding "api"
+				tmp17 := runtime.RT.Get(v15, kw_api)
+				var v18 any = tmp17
+				_ = v18
+				// let binding "name"
+				tmp19 := runtime.RT.Get(v15, kw_name)
+				var v20 any = tmp19
+				_ = v20
+				// let binding "new-context"
+				tmp21 := runtime.RT.Get(v15, kw_new_DASH_context)
+				var v22 any = tmp21
+				_ = v22
+				// let binding "version"
+				tmp23 := runtime.RT.Get(v15, kw_version)
+				var v24 any = tmp23
+				_ = v24
+				var tmp25 any
+				tmp26 := lang.Equals(v18, "alias-data")
+				if tmp26 {
+				} else {
+					tmp27 := aotKeywordMapNew9(v16)
+					tmp28 := aotExternalFn6("Alias-Data plugin :api must be alias-data", tmp27)
+					panic(tmp28)
+				}
+				_ = tmp25
+				var tmp29 any
+				var tmp30 any
+				{ // let
+					// let binding "and__0__auto__"
+					tmp31 := lang.IsString(v20)
+					var v32 any = tmp31
+					_ = v32
+					var tmp33 any
+					if lang.IsTruthy(v32) {
+						tmp34 := aotExternalFn37(v20)
+						tmp35 := !lang.IsTruthy(tmp34)
+						tmp33 = tmp35
+					} else {
+						tmp33 = v32
+					}
+					tmp30 = tmp33
+				} // end let
+				if lang.IsTruthy(tmp30) {
+				} else {
+					tmp31 := aotKeywordMapNew9(v16)
+					tmp32 := aotExternalFn6("Alias-Data plugin :name must be a string", tmp31)
+					panic(tmp32)
+				}
+				_ = tmp29
+				var tmp33 any
+				tmp34 := lang.IsFn(v22)
+				if tmp34 {
+				} else {
+					tmp35 := aotKeywordMapNew9(v16)
+					tmp36 := aotExternalFn6("Alias-Data plugin :new-context must be a function", tmp35)
+					panic(tmp36)
+				}
+				_ = tmp33
+				var tmp37 any
+				{ // let
+					// let binding "plugin"
+					var tmp38 any
+					{ // let
+						// let binding "G__27"
+						var v39 any = v16
+						_ = v39
+						var tmp40 any
+						if lang.IsTruthy(v24) {
+							tmp41 := aotDirectFn4(v24)
+							var tmp42 any = v39
+							tmp42 = lang.Assoc(tmp42, kw_version, tmp41)
+							tmp40 = tmp42
+						} else {
+							tmp40 = v39
+						}
+						tmp38 = tmp40
+					} // end let
+					var v39 any = tmp38
+					_ = v39
+					tmp40 := checkDerefVar(var_yamlstar_DOT_plugin_alias_DASH_data_DASH_registry)
+					tmp41 := checkDerefVar(var_clojure_DOT_core_assoc)
+					tmp42 := aotExternalFn19(tmp40, tmp41, v20, v39)
+					_ = tmp42
+					tmp37 = v39
+				} // end let
+				tmp3 = tmp37
+			} // end let
+			return tmp3
+		})
+		aotDirectFn7 = tmp1
+		var_yamlstar_DOT_plugin_register_DASH_alias_DASH_data_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
+		var_yamlstar_DOT_plugin_register_DASH_alias_DASH_data_BANG_.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(190), kw_column, int(7), kw_end_DASH_line, int(190), kw_end_DASH_column, int(26), kw_arglists, lang.NewList(lang.NewVector(lang.NewMap(kw_keys, lang.NewVector(sym_api, sym_name, sym_new_DASH_context, sym_version), kw_as, sym_plugin))), kw_doc, "Register an Alias-Data policy implementation.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// register-json-comments!
@@ -2778,17 +3512,17 @@ func LoadNS() {
 			_ = v2
 			var tmp3 any
 			{ // let
-				// let binding "map__10"
+				// let binding "map__23"
 				var v4 any = v2
 				_ = v4
-				// let binding "map__10"
+				// let binding "map__23"
 				var tmp5 any
-				tmp6 := aotExternalFn3(v4)
+				tmp6 := aotExternalFn8(v4)
 				if lang.IsTruthy(tmp6) {
 					var tmp7 any
 					tmp8 := lang.Next(v4)
 					if lang.IsTruthy(tmp8) {
-						tmp9 := aotExternalFn5(v4)
+						tmp9 := aotExternalFn10(v4)
 						tmp10 := lang.Apply1(lang.NewPersistentArrayMapAsIfByAssoc, tmp9)
 						tmp7 = tmp10
 					} else {
@@ -2832,8 +3566,8 @@ func LoadNS() {
 				tmp26 := lang.Equals(v18, "json-comments")
 				if tmp26 {
 				} else {
-					tmp27 := aotKeywordMapNew5(v16)
-					tmp28 := aotExternalFn9("JSON-comments plugin :api must be json-comments", tmp27)
+					tmp27 := aotKeywordMapNew9(v16)
+					tmp28 := aotExternalFn6("JSON-comments plugin :api must be json-comments", tmp27)
 					panic(tmp28)
 				}
 				_ = tmp25
@@ -2846,7 +3580,7 @@ func LoadNS() {
 					_ = v32
 					var tmp33 any
 					if lang.IsTruthy(v32) {
-						tmp34 := aotExternalFn29(v20)
+						tmp34 := aotExternalFn37(v20)
 						tmp35 := !lang.IsTruthy(tmp34)
 						tmp33 = tmp35
 					} else {
@@ -2856,8 +3590,8 @@ func LoadNS() {
 				} // end let
 				if lang.IsTruthy(tmp30) {
 				} else {
-					tmp31 := aotKeywordMapNew5(v16)
-					tmp32 := aotExternalFn9("JSON-comments plugin :name must be a string", tmp31)
+					tmp31 := aotKeywordMapNew9(v16)
+					tmp32 := aotExternalFn6("JSON-comments plugin :name must be a string", tmp31)
 					panic(tmp32)
 				}
 				_ = tmp29
@@ -2865,8 +3599,8 @@ func LoadNS() {
 				tmp34 := lang.IsFn(v22)
 				if tmp34 {
 				} else {
-					tmp35 := aotKeywordMapNew5(v16)
-					tmp36 := aotExternalFn9("JSON-comments plugin :sanitize must be a function", tmp35)
+					tmp35 := aotKeywordMapNew9(v16)
+					tmp36 := aotExternalFn6("JSON-comments plugin :sanitize must be a function", tmp35)
 					panic(tmp36)
 				}
 				_ = tmp33
@@ -2875,12 +3609,12 @@ func LoadNS() {
 					// let binding "plugin"
 					var tmp38 any
 					{ // let
-						// let binding "G__11"
+						// let binding "G__24"
 						var v39 any = v16
 						_ = v39
 						var tmp40 any
 						if lang.IsTruthy(v24) {
-							tmp41 := aotDirectFn3(v24)
+							tmp41 := aotDirectFn4(v24)
 							var tmp42 any = v39
 							tmp42 = lang.Assoc(tmp42, kw_version, tmp41)
 							tmp40 = tmp42
@@ -2893,7 +3627,7 @@ func LoadNS() {
 					_ = v39
 					tmp40 := checkDerefVar(var_yamlstar_DOT_plugin_json_DASH_comments_DASH_registry)
 					tmp41 := checkDerefVar(var_clojure_DOT_core_assoc)
-					tmp42 := aotExternalFn31(tmp40, tmp41, v20, v39)
+					tmp42 := aotExternalFn19(tmp40, tmp41, v20, v39)
 					_ = tmp42
 					tmp37 = v39
 				} // end let
@@ -2901,10 +3635,10 @@ func LoadNS() {
 			} // end let
 			return tmp3
 		})
-		aotDirectFn6 = tmp1
+		aotDirectFn8 = tmp1
 		var_yamlstar_DOT_plugin_register_DASH_json_DASH_comments_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_register_DASH_json_DASH_comments_BANG_.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(109), kw_column, int(7), kw_end_DASH_line, int(109), kw_end_DASH_column, int(29), kw_arglists, lang.NewList(lang.NewVector(lang.NewMap(kw_keys, lang.NewVector(sym_api, sym_name, sym_sanitize, sym_version), kw_as, sym_plugin))), kw_doc, "Register a JSON-comments sanitizer implementation.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(115), kw_column, int(7), kw_end_DASH_line, int(115), kw_end_DASH_column, int(29), kw_arglists, lang.NewList(lang.NewVector(lang.NewMap(kw_keys, lang.NewVector(sym_api, sym_name, sym_sanitize, sym_version), kw_as, sym_plugin))), kw_doc, "Register a JSON-comments sanitizer implementation.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// register-yaml-emitter!
@@ -2916,17 +3650,17 @@ func LoadNS() {
 			_ = v2
 			var tmp3 any
 			{ // let
-				// let binding "map__6"
+				// let binding "map__19"
 				var v4 any = v2
 				_ = v4
-				// let binding "map__6"
+				// let binding "map__19"
 				var tmp5 any
-				tmp6 := aotExternalFn3(v4)
+				tmp6 := aotExternalFn8(v4)
 				if lang.IsTruthy(tmp6) {
 					var tmp7 any
 					tmp8 := lang.Next(v4)
 					if lang.IsTruthy(tmp8) {
-						tmp9 := aotExternalFn5(v4)
+						tmp9 := aotExternalFn10(v4)
 						tmp10 := lang.Apply1(lang.NewPersistentArrayMapAsIfByAssoc, tmp9)
 						tmp7 = tmp10
 					} else {
@@ -2971,7 +3705,7 @@ func LoadNS() {
 					_ = v26
 					var tmp27 any
 					if lang.IsTruthy(v26) {
-						tmp28 := aotExternalFn29(v18)
+						tmp28 := aotExternalFn37(v18)
 						tmp29 := !lang.IsTruthy(tmp28)
 						tmp27 = tmp29
 					} else {
@@ -2981,8 +3715,8 @@ func LoadNS() {
 				} // end let
 				if lang.IsTruthy(tmp24) {
 				} else {
-					tmp25 := aotKeywordMapNew5(v16)
-					tmp26 := aotExternalFn9("Emitter plugin :name must be a string", tmp25)
+					tmp25 := aotKeywordMapNew9(v16)
+					tmp26 := aotExternalFn6("Emitter plugin :name must be a string", tmp25)
 					panic(tmp26)
 				}
 				_ = tmp23
@@ -2990,8 +3724,8 @@ func LoadNS() {
 				tmp28 := lang.IsFn(v20)
 				if tmp28 {
 				} else {
-					tmp29 := aotKeywordMapNew5(v16)
-					tmp30 := aotExternalFn9("Emitter plugin :emit must be a function", tmp29)
+					tmp29 := aotKeywordMapNew9(v16)
+					tmp30 := aotExternalFn6("Emitter plugin :emit must be a function", tmp29)
 					panic(tmp30)
 				}
 				_ = tmp27
@@ -3000,12 +3734,12 @@ func LoadNS() {
 					// let binding "plugin"
 					var tmp32 any
 					{ // let
-						// let binding "G__7"
+						// let binding "G__20"
 						var v33 any = v16
 						_ = v33
 						var tmp34 any
 						if lang.IsTruthy(v22) {
-							tmp35 := aotDirectFn3(v22)
+							tmp35 := aotDirectFn4(v22)
 							var tmp36 any = v33
 							tmp36 = lang.Assoc(tmp36, kw_version, tmp35)
 							tmp34 = tmp36
@@ -3018,7 +3752,7 @@ func LoadNS() {
 					_ = v33
 					tmp34 := checkDerefVar(var_yamlstar_DOT_plugin_yaml_DASH_emitter_DASH_registry)
 					tmp35 := checkDerefVar(var_clojure_DOT_core_assoc)
-					tmp36 := aotExternalFn31(tmp34, tmp35, v18, v33)
+					tmp36 := aotExternalFn19(tmp34, tmp35, v18, v33)
 					_ = tmp36
 					tmp31 = v33
 				} // end let
@@ -3026,10 +3760,10 @@ func LoadNS() {
 			} // end let
 			return tmp3
 		})
-		aotDirectFn7 = tmp1
+		aotDirectFn9 = tmp1
 		var_yamlstar_DOT_plugin_register_DASH_yaml_DASH_emitter_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_register_DASH_yaml_DASH_emitter_BANG_.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(66), kw_column, int(7), kw_end_DASH_line, int(66), kw_end_DASH_column, int(28), kw_arglists, lang.NewList(lang.NewVector(lang.NewMap(kw_keys, lang.NewVector(sym_name, sym_emit, sym_version), kw_as, sym_plugin))), kw_doc, "Register a YAML emitter plugin map under its :name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(72), kw_column, int(7), kw_end_DASH_line, int(72), kw_end_DASH_column, int(28), kw_arglists, lang.NewList(lang.NewVector(lang.NewMap(kw_keys, lang.NewVector(sym_name, sym_emit, sym_version), kw_as, sym_plugin))), kw_doc, "Register a YAML emitter plugin map under its :name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// register-yaml-parser!
@@ -3041,17 +3775,17 @@ func LoadNS() {
 			_ = v2
 			var tmp3 any
 			{ // let
-				// let binding "map__2"
+				// let binding "map__15"
 				var v4 any = v2
 				_ = v4
-				// let binding "map__2"
+				// let binding "map__15"
 				var tmp5 any
-				tmp6 := aotExternalFn3(v4)
+				tmp6 := aotExternalFn8(v4)
 				if lang.IsTruthy(tmp6) {
 					var tmp7 any
 					tmp8 := lang.Next(v4)
 					if lang.IsTruthy(tmp8) {
-						tmp9 := aotExternalFn5(v4)
+						tmp9 := aotExternalFn10(v4)
 						tmp10 := lang.Apply1(lang.NewPersistentArrayMapAsIfByAssoc, tmp9)
 						tmp7 = tmp10
 					} else {
@@ -3096,7 +3830,7 @@ func LoadNS() {
 					_ = v26
 					var tmp27 any
 					if lang.IsTruthy(v26) {
-						tmp28 := aotExternalFn29(v18)
+						tmp28 := aotExternalFn37(v18)
 						tmp29 := !lang.IsTruthy(tmp28)
 						tmp27 = tmp29
 					} else {
@@ -3106,8 +3840,8 @@ func LoadNS() {
 				} // end let
 				if lang.IsTruthy(tmp24) {
 				} else {
-					tmp25 := aotKeywordMapNew5(v16)
-					tmp26 := aotExternalFn9("Parser plugin :name must be a string", tmp25)
+					tmp25 := aotKeywordMapNew9(v16)
+					tmp26 := aotExternalFn6("Parser plugin :name must be a string", tmp25)
 					panic(tmp26)
 				}
 				_ = tmp23
@@ -3115,8 +3849,8 @@ func LoadNS() {
 				tmp28 := lang.IsFn(v20)
 				if tmp28 {
 				} else {
-					tmp29 := aotKeywordMapNew5(v16)
-					tmp30 := aotExternalFn9("Parser plugin :parse must be a function", tmp29)
+					tmp29 := aotKeywordMapNew9(v16)
+					tmp30 := aotExternalFn6("Parser plugin :parse must be a function", tmp29)
 					panic(tmp30)
 				}
 				_ = tmp27
@@ -3125,12 +3859,12 @@ func LoadNS() {
 					// let binding "plugin"
 					var tmp32 any
 					{ // let
-						// let binding "G__3"
+						// let binding "G__16"
 						var v33 any = v16
 						_ = v33
 						var tmp34 any
 						if lang.IsTruthy(v22) {
-							tmp35 := aotDirectFn3(v22)
+							tmp35 := aotDirectFn4(v22)
 							var tmp36 any = v33
 							tmp36 = lang.Assoc(tmp36, kw_version, tmp35)
 							tmp34 = tmp36
@@ -3143,7 +3877,7 @@ func LoadNS() {
 					_ = v33
 					tmp34 := checkDerefVar(var_yamlstar_DOT_plugin_yaml_DASH_parser_DASH_registry)
 					tmp35 := checkDerefVar(var_clojure_DOT_core_assoc)
-					tmp36 := aotExternalFn31(tmp34, tmp35, v18, v33)
+					tmp36 := aotExternalFn19(tmp34, tmp35, v18, v33)
 					_ = tmp36
 					tmp31 = v33
 				} // end let
@@ -3151,10 +3885,29 @@ func LoadNS() {
 			} // end let
 			return tmp3
 		})
-		aotDirectFn8 = tmp1
+		aotDirectFn10 = tmp1
 		var_yamlstar_DOT_plugin_register_DASH_yaml_DASH_parser_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_register_DASH_yaml_DASH_parser_BANG_.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(23), kw_column, int(7), kw_end_DASH_line, int(23), kw_end_DASH_column, int(27), kw_arglists, lang.NewList(lang.NewVector(lang.NewMap(kw_keys, lang.NewVector(sym_name, sym_parse, sym_version), kw_as, sym_plugin))), kw_doc, "Register a YAML parser plugin map under its :name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(29), kw_column, int(7), kw_end_DASH_line, int(29), kw_end_DASH_column, int(27), kw_arglists, lang.NewList(lang.NewVector(lang.NewMap(kw_keys, lang.NewVector(sym_name, sym_parse, sym_version), kw_as, sym_plugin))), kw_doc, "Register a YAML parser plugin map under its :name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+		}, false)
+	}
+	// unregister-alias-data!
+	{
+		tmp0 := sym_unregister_DASH_alias_DASH_data_BANG_
+		var tmp1 lang.FnFunc1
+		tmp1 = lang.FnFunc1(func(p0 any) any {
+			v2 := p0
+			_ = v2
+			tmp3 := checkDerefVar(var_yamlstar_DOT_plugin_alias_DASH_data_DASH_registry)
+			tmp4 := checkDerefVar(var_clojure_DOT_core_dissoc)
+			tmp5 := aotExternalFn21(tmp3, tmp4, v2)
+			_ = tmp5
+			return nil
+		})
+		aotDirectFn23 = tmp1
+		var_yamlstar_DOT_plugin_unregister_DASH_alias_DASH_data_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
+		var_yamlstar_DOT_plugin_unregister_DASH_alias_DASH_data_BANG_.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(207), kw_column, int(7), kw_end_DASH_line, int(207), kw_end_DASH_column, int(28), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Remove an Alias-Data implementation.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// unregister-json-comments!
@@ -3166,14 +3919,14 @@ func LoadNS() {
 			_ = v2
 			tmp3 := checkDerefVar(var_yamlstar_DOT_plugin_json_DASH_comments_DASH_registry)
 			tmp4 := checkDerefVar(var_clojure_DOT_core_dissoc)
-			tmp5 := aotExternalFn41(tmp3, tmp4, v2)
+			tmp5 := aotExternalFn21(tmp3, tmp4, v2)
 			_ = tmp5
 			return nil
 		})
-		aotDirectFn19 = tmp1
+		aotDirectFn24 = tmp1
 		var_yamlstar_DOT_plugin_unregister_DASH_json_DASH_comments_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_unregister_DASH_json_DASH_comments_BANG_.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(126), kw_column, int(7), kw_end_DASH_line, int(126), kw_end_DASH_column, int(31), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Remove a JSON-comments implementation.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(132), kw_column, int(7), kw_end_DASH_line, int(132), kw_end_DASH_column, int(31), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Remove a JSON-comments implementation.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// unregister-yaml-emitter!
@@ -3185,14 +3938,14 @@ func LoadNS() {
 			_ = v2
 			tmp3 := checkDerefVar(var_yamlstar_DOT_plugin_yaml_DASH_emitter_DASH_registry)
 			tmp4 := checkDerefVar(var_clojure_DOT_core_dissoc)
-			tmp5 := aotExternalFn41(tmp3, tmp4, v2)
+			tmp5 := aotExternalFn21(tmp3, tmp4, v2)
 			_ = tmp5
 			return nil
 		})
-		aotDirectFn20 = tmp1
+		aotDirectFn25 = tmp1
 		var_yamlstar_DOT_plugin_unregister_DASH_yaml_DASH_emitter_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_unregister_DASH_yaml_DASH_emitter_BANG_.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(80), kw_column, int(7), kw_end_DASH_line, int(80), kw_end_DASH_column, int(30), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Remove the YAML emitter plugin registered under name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(86), kw_column, int(7), kw_end_DASH_line, int(86), kw_end_DASH_column, int(30), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Remove the YAML emitter plugin registered under name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 	// unregister-yaml-parser!
@@ -3204,14 +3957,14 @@ func LoadNS() {
 			_ = v2
 			tmp3 := checkDerefVar(var_yamlstar_DOT_plugin_yaml_DASH_parser_DASH_registry)
 			tmp4 := checkDerefVar(var_clojure_DOT_core_dissoc)
-			tmp5 := aotExternalFn41(tmp3, tmp4, v2)
+			tmp5 := aotExternalFn21(tmp3, tmp4, v2)
 			_ = tmp5
 			return nil
 		})
-		aotDirectFn21 = tmp1
+		aotDirectFn26 = tmp1
 		var_yamlstar_DOT_plugin_unregister_DASH_yaml_DASH_parser_BANG_ = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_unregister_DASH_yaml_DASH_parser_BANG_.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(37), kw_column, int(7), kw_end_DASH_line, int(37), kw_end_DASH_column, int(29), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Remove the YAML parser plugin registered under name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin.clj", kw_line, int(43), kw_column, int(7), kw_end_DASH_line, int(43), kw_end_DASH_column, int(29), kw_arglists, lang.NewList(lang.NewVector(sym_name)), kw_doc, "Remove the YAML parser plugin registered under name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 		}, false)
 	}
 }

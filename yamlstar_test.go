@@ -5,6 +5,8 @@ package yamlstar_test
 
 import (
 	"errors"
+	"os"
+	"path/filepath"
 	"reflect"
 	"strings"
 	"sync"
@@ -48,6 +50,64 @@ func TestPureGoAPI(t *testing.T) {
 	}
 	if want := "---\none\n---\ntwo\n"; stream != want {
 		t.Fatalf("DumpAll returned %q, want %q", stream, want)
+	}
+}
+
+func TestPureGoAliasData(t *testing.T) {
+	got, err := yamlstar.Load(
+		"<<: *defaults\nsize: 5\n",
+		yamlstar.WithPlugin(yamlstar.AliasData(yamlstar.AliasDataConfig{
+			Data: map[string]any{
+				"defaults": map[string]any{"color": "blue", "size": 3},
+			}})),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := map[string]any{"color": "blue", "size": float64(5)}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %#v, want %#v", got, want)
+	}
+}
+
+func TestPureGoAliasDataSources(t *testing.T) {
+	directory := t.TempDir()
+	path := filepath.Join(directory, "aliases.yaml")
+	if err := os.WriteFile(path, []byte("from_file: {x: 1}\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("YAMLSTAR_ALIAS_ENV", "environment")
+	got, err := yamlstar.Load(
+		"file: *from_file\nenv: *YAMLSTAR_ALIAS_ENV\n",
+		yamlstar.WithPlugin(yamlstar.AliasData(yamlstar.AliasDataConfig{
+			File: path,
+			Env:  "YAMLSTAR_ALIAS_*",
+		})),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := map[string]any{
+		"file": map[string]any{"x": float64(1)},
+		"env":  "environment",
+	}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %#v, want %#v", got, want)
+	}
+}
+
+func TestPureGoAliasDataStream(t *testing.T) {
+	input := "--- &saved {x: 1}\n---\ncopy: *saved\n"
+	if _, err := yamlstar.LoadAll(input); err == nil {
+		t.Fatal("expected document-scoped anchors by default")
+	}
+	got, err := yamlstar.LoadAll(
+		input, yamlstar.WithPlugin(yamlstar.AliasData()))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(got) != 2 {
+		t.Fatalf("got %#v", got)
 	}
 }
 

@@ -3,7 +3,8 @@
 
   The constructor takes nodes with resolved tags and converts them to
   native Clojure data structures using a tag-based constructor lookup."
-  (:require [yamlstar.numbers :as numbers]))
+  (:require [yamlstar.numbers :as numbers]
+            [yamlstar.plugin.alias-data :as alias-data]))
 
 (def constructors
   "Constructor functions for YAML core schema tags.
@@ -47,16 +48,69 @@
      "!!str"                   str-fn
      "tag:yaml.org,2002:str"   str-fn}))
 
+(declare construct-node)
+
+(defn- merge-key?
+  [node]
+  (and (= :scalar (:kind node))
+       (= "<<" (:value node))
+       (or (= "!!merge" (:tag node))
+           (and (= "!!str" (:tag node))
+                (nil? (:style node))))))
+
+(defn- merge-value
+  [value]
+  (cond
+    (map? value) value
+    (sequential? value)
+    (reduce (fn [result mapping]
+              (when-not (map? mapping)
+                (throw (ex-info
+                        "Map merge requires a map or sequence of maps"
+                        {:value value})))
+              (merge result mapping))
+            {}
+            (reverse value))
+    :else
+    (throw (ex-info "Map merge requires a map or sequence of maps"
+                    {:value value}))))
+
+(defn- construct-mapping
+  [pairs context]
+  (let [{:keys [explicit merges]}
+        (reduce (fn [result [key-node value-node]]
+                  (if (merge-key? key-node)
+                    (update result :merges conj
+                            (construct-node value-node context))
+                    (update result :explicit conj
+                            [(construct-node key-node context)
+                             (construct-node value-node context)])))
+                {:explicit [] :merges []}
+                pairs)
+        merged (reduce (fn [result value]
+                         (merge result (merge-value value)))
+                       {}
+                       merges)
+        explicit-map (apply array-map (mapcat identity explicit))]
+    (if (empty? merges)
+      explicit-map
+      (apply array-map
+             (mapcat identity
+                     (concat (remove (fn [[key _]]
+                                       (contains? explicit-map key))
+                                     merged)
+                             explicit))))))
+
 (defn construct-node
   "Construct native data from a resolved node.
 
   Args:
     node: A node with resolved tags
-    anchors: An atom containing a map of anchor names to constructed values
+    context: The operation-local Alias-Data context
 
   Returns:
     Native Clojure data (nil, boolean, number, string, map, or vector)"
-  [node anchors]
+  [node context]
   (when node
     (let [result
           (case (:kind node)
@@ -69,25 +123,18 @@
                                 {:tag tag :node node}))))
 
             :mapping
-            (let [pairs (:value node)
-                  ;; Use reduce for eager evaluation to ensure anchors are stored before aliases are resolved
-                  entries (reduce (fn [acc [key-node val-node]]
-                                    (conj acc
-                                          (construct-node key-node anchors)
-                                          (construct-node val-node anchors)))
-                                  []
-                                  pairs)]
-              (apply array-map entries))
+            (construct-mapping (:value node) context)
 
             :sequence
             (let [items (:value node)]
-              (mapv #(construct-node % anchors) items))
+              (mapv #(construct-node % context) items))
 
             :alias
-            ;; Look up the anchor in the anchors map
-            (let [anchor-name (:name node)]
-              (if (contains? @anchors anchor-name)
-                (get @anchors anchor-name)
+            (let [anchor-name (:name node)
+                  [found value]
+                  (alias-data/resolve-alias context anchor-name)]
+              (if found
+                value
                 (throw (ex-info (str "Unknown anchor: " anchor-name)
                                 {:anchor anchor-name :node node}))))
 
@@ -96,7 +143,7 @@
                             {:node node})))]
       ;; If this node has an anchor, store the result
       (when-let [anchor-name (:anchor node)]
-        (swap! anchors assoc anchor-name result))
+        (alias-data/define-anchor context anchor-name result))
       result)))
 
 (defn construct
@@ -107,9 +154,17 @@
 
   Returns:
     Native Clojure data structure"
-  [node]
-  (let [anchors (atom {})]
-    (construct-node node anchors)))
+  ([node]
+   (construct node (alias-data/default-context)))
+  ([node context]
+   (alias-data/begin-stream context)
+   (try
+     (alias-data/begin-document context)
+     (let [result (construct-node node context)]
+       (alias-data/end-document context)
+       result)
+     (finally
+       (alias-data/end-stream context)))))
 
 (defn construct-all
   "Construct native data from multiple resolved node trees.
@@ -119,6 +174,16 @@
 
   Returns:
     Sequence of native Clojure data structures"
-  [nodes]
-  (let [anchors (atom {})]
-    (map #(construct-node % anchors) nodes)))
+  ([nodes]
+   (construct-all nodes (alias-data/default-context)))
+  ([nodes context]
+   (alias-data/begin-stream context)
+   (try
+     (mapv (fn [node]
+             (alias-data/begin-document context)
+             (let [result (construct-node node context)]
+               (alias-data/end-document context)
+               result))
+           nodes)
+     (finally
+       (alias-data/end-stream context)))))

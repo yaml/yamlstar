@@ -390,7 +390,7 @@ func LoadNS() {
 				} // end let
 				var v10 any = tmp9
 				_ = v10
-				// let binding "vec__24"
+				// let binding "vec__40"
 				var tmp11 any
 				{ // let
 					// let binding "or__0__auto__"
@@ -442,7 +442,7 @@ func LoadNS() {
 				_ = tmp17
 				var tmp21 any
 				{ // let
-					// let binding "G__27"
+					// let binding "G__43"
 					var v22 any = v16
 					_ = v22
 					var tmp23 any

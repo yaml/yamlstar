@@ -147,6 +147,7 @@ CORE-SRCS := \
   $(wildcard $(GLOAT-CORE)/plugin/yaml_emitter/*.clj) \
   $(wildcard $(GLOAT-CORE)/plugin/yaml_emitter/*.cljc)
 GLOAT-CLI-SRCS := \
+  $(GLOAT-CACHE)/plugin/alias_data.clj \
   $(GLOAT-CORE)/plugin.clj \
   $(GLOAT-CORE)/options.clj \
   $(GLOAT-CORE)/plugin/yaml_parser.clj \
@@ -246,6 +247,7 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
   $(GLOAT-RUN-DEPS) \
   $(GLOAT-CLI-GLJ-DEP) \
   $(CLI-DEFAULT-SRC) \
+  $(GLOAT-CACHE)/plugin/alias_data.clj \
   $(GLOAT-CORE)/plugin.clj \
   $(GLOAT-CORE)/options.clj \
   $(GLOAT-CORE)/plugin/yaml_parser.clj \

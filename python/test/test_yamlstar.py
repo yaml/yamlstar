@@ -202,6 +202,25 @@ b: 2
     assert result == [{"a": 1}, {"b": 2}]
 
 
+def test_alias_data_inline_and_merge():
+    """Resolve inline Alias-Data and use it as a merge value."""
+    options = yamlstar.Options().plugin(yamlstar.alias_data(
+        data={'defaults': {'color': 'blue', 'size': 3}}))
+    ys = yamlstar.YAMLStar(options)
+    assert ys.load('<<: *defaults\nsize: 5\n') == {
+        'color': 'blue',
+        'size': 5,
+    }
+
+
+def test_alias_data_stream():
+    """Retain anchors across documents with an empty selection."""
+    options = yamlstar.Options().plugin(yamlstar.alias_data())
+    ys = yamlstar.YAMLStar(options)
+    value = ys.load_all('--- &saved {x: 1}\n---\ncopy: *saved\n')
+    assert value == [{'x': 1}, {'copy': {'x': 1}}]
+
+
 def test_dump_simple_mapping(ys):
     """Test dumping a simple mapping."""
     assert ys.dump({"key": "value"}) == "key: value\n"

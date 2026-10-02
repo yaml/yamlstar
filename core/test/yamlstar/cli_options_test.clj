@@ -34,6 +34,11 @@
            (opts/config-options
             "{plugin: {test_plugin: {name: x}}}"))))
 
+  (testing "Alias-Data keys are preserved"
+    (is (= {:plugin {:alias-data {:data {"FOO_BAR" 1}}}}
+           (opts/config-options
+            "{plugin: {alias_data: {data: {FOO_BAR: 1}}}}"))))
+
   (testing "config must load to a mapping"
     (is (thrown-with-msg?
          Exception #"config must be a mapping"

@@ -26,6 +26,7 @@ import (
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/numbers"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/parser"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin"
+	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/alias_data"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/yaml_emitter/go_yaml"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/yaml_emitter/reference"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/yaml_parser/go_yaml"
@@ -68,6 +69,7 @@ type options struct {
 	yamlParser   string
 	yamlEmitter  string
 	indentConfig *IndentConfig
+	aliasData    *AliasDataConfig
 }
 
 // Option configures a YAML load or dump operation.
@@ -143,6 +145,27 @@ func TabIndent(config ...IndentConfig) Plugin {
 	}
 }
 
+// AliasDataConfig configures external alias values and stream anchor scope.
+// Env accepts true, a string pattern, or a sequence of exact names.
+type AliasDataConfig struct {
+	Data   map[string]any
+	File   string
+	Env    any
+	Stream bool
+}
+
+// AliasData enables the built-in Alias-Data policy.
+// With no configuration, it enables stream-scoped anchors.
+func AliasData(config ...AliasDataConfig) Plugin {
+	return func(o *options) {
+		value := AliasDataConfig{}
+		if len(config) > 0 {
+			value = config[0]
+		}
+		o.aliasData = &value
+	}
+}
+
 // WithPlugin adds a plugin option fragment.
 func WithPlugin(plugin Plugin) Option {
 	return func(o *options) {
@@ -180,6 +203,22 @@ func (o options) json() (string, error) {
 		}
 		plugins["tab-indent"] = config
 	}
+	if o.aliasData != nil {
+		config := map[string]any{}
+		if o.aliasData.Data != nil {
+			config["data"] = o.aliasData.Data
+		}
+		if o.aliasData.File != "" {
+			config["file"] = o.aliasData.File
+		}
+		if o.aliasData.Env != nil {
+			config["env"] = o.aliasData.Env
+		}
+		if o.aliasData.Stream {
+			config["stream"] = true
+		}
+		plugins["alias-data"] = config
+	}
 	if len(plugins) > 0 {
 		cfg["plugin"] = plugins
 	}
@@ -207,6 +246,7 @@ var namespaces = []string{
 	"yamlstar.desolver",
 	"libyamlstar",
 	"yamlstar.plugin",
+	"yamlstar.plugin.alias-data",
 	"yamlstar.plugin.yaml-parser.reference",
 	"yamlstar.plugin.yaml-parser.go-yaml",
 	"yamlstar.plugin.yaml-emitter.reference",

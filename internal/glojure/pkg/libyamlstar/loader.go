@@ -20,7 +20,9 @@ var aotDirectFn5 lang.FnFunc1
 var aotDirectFn6 lang.FnFunc0
 var aotDirectFn7 lang.FnFunc0
 var aotDirectFn8 lang.FnFunc1
-var aotDirectFn9 lang.FnFunc1
+var aotDirectFn9 lang.ArityFn
+var aotDirectFn9Arity1 lang.FnFunc1
+var aotDirectFn9Arity2 lang.FnFunc2
 var aotDirectFn10 lang.FnFunc1
 var aotDirectFn11 lang.FnFunc2
 var aotDirectFn12 lang.FnFunc3
@@ -286,6 +288,7 @@ func LoadNS() {
 	sym_opts_DASH_json := lang.NewSymbolUnchecked("opts-json")
 	sym_parse_DASH_opts := lang.NewSymbolUnchecked("parse-opts")
 	sym_parser := lang.NewSymbolUnchecked("parser")
+	sym_path := lang.NewSymbolUnchecked("path")
 	sym_read_DASH_str := lang.NewSymbolUnchecked("read-str")
 	sym_register_DASH_yaml_DASH_emitters_BANG_ := lang.NewSymbolUnchecked("register-yaml-emitters!")
 	sym_register_DASH_yaml_DASH_parsers_BANG_ := lang.NewSymbolUnchecked("register-yaml-parsers!")
@@ -312,8 +315,10 @@ func LoadNS() {
 	sym_yamlstar_DOT_emitter := lang.NewSymbolUnchecked("yamlstar.emitter")
 	sym_yamlstar_DOT_parser := lang.NewSymbolUnchecked("yamlstar.parser")
 	sym_yamlstar_DOT_plugin_DOT_shared_DASH_host := lang.NewSymbolUnchecked("yamlstar.plugin.shared-host")
+	kw_alias_DASH_data := lang.NewKeyword("alias-data")
 	kw_arglists := lang.NewKeyword("arglists")
 	kw_column := lang.NewKeyword("column")
+	kw_data := lang.NewKeyword("data")
 	kw_doc := lang.NewKeyword("doc")
 	kw_end_DASH_column := lang.NewKeyword("end-column")
 	kw_end_DASH_line := lang.NewKeyword("end-line")
@@ -321,6 +326,7 @@ func LoadNS() {
 	kw_int := lang.NewKeyword("int")
 	kw_line := lang.NewKeyword("line")
 	kw_ns := lang.NewKeyword("ns")
+	kw_plugin := lang.NewKeyword("plugin")
 	kw_str := lang.NewKeyword("str")
 	builtin_any := lang.Builtins["any"]
 	// var clojure.core/apply
@@ -418,23 +424,23 @@ func LoadNS() {
 	aotExternalFn11 := aotLinkFn2(var_clojure_DOT_core_mapv)
 	aotExternalFn12 := aotLinkFn1(var_clojure_DOT_core_sequential_QMARK_)
 	aotExternalFn13 := aotLinkFn2(var_clojure_DOT_core_map)
-	aotExternalFn14 := aotLinkFn3(var_clojure_DOT_core_into)
-	aotExternalFn15 := aotLinkFn1(var_clojure_DOT_core_map)
-	aotExternalFn16 := aotLinkFn1(var_clojure_DOT_core_keyword)
-	aotExternalFn17 := aotLinkFn3(var_clojure_DOT_string_replace)
-	aotExternalFn18 := aotLinkFn1(var_clojure_DOT_core_name)
-	aotExternalFn19 := aotLinkFn1(var_clojure_DOT_string_blank_QMARK_)
+	aotExternalFn15 := aotLinkFn3(var_clojure_DOT_core_into)
+	aotExternalFn16 := aotLinkFn1(var_clojure_DOT_core_map)
+	aotExternalFn17 := aotLinkFn1(var_clojure_DOT_core_name)
+	aotExternalFn18 := aotLinkFn1(var_clojure_DOT_core_keyword)
+	aotExternalFn19 := aotLinkFn3(var_clojure_DOT_string_replace)
 	aotExternalFn2 := aotLinkFn2(var_yamlstar_DOT_parser_register_DASH_yaml_DASH_parsers_BANG_)
-	aotExternalFn20 := aotLinkFn1(var_clojure_DOT_core_not_DASH_empty)
-	aotExternalFn21 := aotLinkFn1(var_clojure_DOT_data_DOT_json_read_DASH_str)
-	aotExternalFn22 := aotLinkFn1(var_clojure_DOT_data_DOT_json_write_DASH_str)
-	aotExternalFn23 := aotLinkFn2(var_yamlstar_DOT_api_dump)
-	aotExternalFn24 := aotLinkFn1(var_clojure_DOT_core_str)
-	aotExternalFn25 := aotLinkFn2(var_yamlstar_DOT_api_dump_DASH_all)
-	aotExternalFn26 := aotLinkFn2(var_yamlstar_DOT_api_load)
-	aotExternalFn27 := aotLinkFn2(var_yamlstar_DOT_api_load_DASH_all)
-	aotExternalFn28 := aotLinkFn0(var_yamlstar_DOT_api_version)
+	aotExternalFn21 := aotLinkFn1(var_clojure_DOT_string_blank_QMARK_)
+	aotExternalFn22 := aotLinkFn1(var_clojure_DOT_core_not_DASH_empty)
+	aotExternalFn23 := aotLinkFn1(var_clojure_DOT_data_DOT_json_read_DASH_str)
+	aotExternalFn24 := aotLinkFn1(var_clojure_DOT_data_DOT_json_write_DASH_str)
+	aotExternalFn25 := aotLinkFn2(var_yamlstar_DOT_api_dump)
+	aotExternalFn26 := aotLinkFn1(var_clojure_DOT_core_str)
+	aotExternalFn27 := aotLinkFn2(var_yamlstar_DOT_api_dump_DASH_all)
+	aotExternalFn28 := aotLinkFn2(var_yamlstar_DOT_api_load)
+	aotExternalFn29 := aotLinkFn2(var_yamlstar_DOT_api_load_DASH_all)
 	aotExternalFn3 := aotLinkFn2(var_yamlstar_DOT_emitter_register_DASH_yaml_DASH_emitters_BANG_)
+	aotExternalFn30 := aotLinkFn0(var_yamlstar_DOT_api_version)
 	aotExternalFn4 := aotLinkFn1(var_yamlstar_DOT_parser_set_DASH_default_DASH_yaml_DASH_parser_BANG_)
 	aotExternalFn5 := aotLinkFn1(var_yamlstar_DOT_emitter_set_DASH_default_DASH_yaml_DASH_emitter_BANG_)
 	aotExternalFn7 := aotLinkFn2(var_clojure_DOT_core_apply)
@@ -744,61 +750,127 @@ func LoadNS() {
 	// normalize-keys
 	{
 		tmp0 := sym_normalize_DASH_keys
-		var tmp1 lang.FnFunc1
-		tmp1 = lang.FnFunc1(func(p0 any) any {
+		var tmp1 lang.ArityFn
+		aotDirectFn9Arity1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			var tmp3 any
-			tmp4 := lang.IsMap(v2)
-			if tmp4 {
-				tmp5 := lang.NewMap()
-				var tmp6 lang.FnFunc1
-				tmp6 = lang.FnFunc1(func(p0 any) any {
-					v7 := p0
-					_ = v7
-					var tmp8 any
-					{ // let
-						// let binding "vec__150"
-						var v9 any = v7
-						_ = v9
-						// let binding "k"
-						tmp10 := runtime.RT.NthDefault(v9, lang.IntCast(int64(0)), nil)
-						var v11 any = tmp10
-						_ = v11
-						// let binding "v"
-						tmp12 := runtime.RT.NthDefault(v9, lang.IntCast(int64(1)), nil)
-						var v13 any = tmp12
-						_ = v13
-						tmp14 := aotExternalFn18(v11)
-						tmp15 := aotExternalFn17(tmp14, "_", "-")
-						tmp16 := aotExternalFn16(tmp15)
-						tmp17 := aotDirectFn9(v13)
-						tmp18 := lang.NewVector(tmp16, tmp17)
-						tmp8 = tmp18
-					} // end let
-					return tmp8
-				})
-				tmp7 := aotExternalFn15(tmp6)
-				tmp8 := aotExternalFn14(tmp5, tmp7, v2)
-				tmp3 = tmp8
-			} else {
-				var tmp9 any
-				tmp10 := lang.IsVector(v2)
-				if tmp10 {
-					tmp11 := checkDerefVar(var_libyamlstar_normalize_DASH_keys)
-					tmp12 := aotExternalFn11(tmp11, v2)
-					tmp9 = tmp12
-				} else {
-					tmp9 = v2
-				}
-				tmp3 = tmp9
-			}
-			return tmp3
+			tmp3 := lang.NewVector()
+			tmp4 := aotDirectFn9Arity2(v2, tmp3)
+			return tmp4
 		})
+		aotDirectFn9Arity2 = lang.FnFunc2(func(p0, p1 any) any {
+			v2 := p0
+			_ = v2
+			v3 := p1
+			_ = v3
+			var tmp4 any
+			tmp5 := lang.IsMap(v2)
+			if tmp5 {
+				var tmp6 any
+				tmp7 := lang.NewVector(kw_plugin, kw_alias_DASH_data, kw_data)
+				tmp8 := lang.Equals(v3, tmp7)
+				if tmp8 {
+					tmp9 := lang.NewMap()
+					var tmp10 lang.FnFunc1
+					tmp10 = lang.FnFunc1(func(p0 any) any {
+						v11 := p0
+						_ = v11
+						var tmp12 any
+						{ // let
+							// let binding "vec__174"
+							var v13 any = v11
+							_ = v13
+							// let binding "k"
+							tmp14 := runtime.RT.NthDefault(v13, lang.IntCast(int64(0)), nil)
+							var v15 any = tmp14
+							_ = v15
+							// let binding "v"
+							tmp16 := runtime.RT.NthDefault(v13, lang.IntCast(int64(1)), nil)
+							var v17 any = tmp16
+							_ = v17
+							tmp18 := aotExternalFn17(v15)
+							tmp19 := lang.NewVector(tmp18, v17)
+							tmp12 = tmp19
+						} // end let
+						return tmp12
+					})
+					tmp11 := aotExternalFn16(tmp10)
+					tmp12 := aotExternalFn15(tmp9, tmp11, v2)
+					tmp6 = tmp12
+				} else {
+					tmp13 := lang.NewMap()
+					var tmp14 lang.FnFunc1
+					tmp14 = lang.FnFunc1(func(p0 any) any {
+						v15 := p0
+						_ = v15
+						var tmp16 any
+						{ // let
+							// let binding "vec__178"
+							var v17 any = v15
+							_ = v17
+							// let binding "k"
+							tmp18 := runtime.RT.NthDefault(v17, lang.IntCast(int64(0)), nil)
+							var v19 any = tmp18
+							_ = v19
+							// let binding "v"
+							tmp20 := runtime.RT.NthDefault(v17, lang.IntCast(int64(1)), nil)
+							var v21 any = tmp20
+							_ = v21
+							var tmp22 any
+							{ // let
+								// let binding "key"
+								tmp23 := aotExternalFn17(v19)
+								tmp24 := aotExternalFn19(tmp23, "_", "-")
+								tmp25 := aotExternalFn18(tmp24)
+								var v26 any = tmp25
+								_ = v26
+								tmp27 := lang.ConjAny(v3, v26)
+								tmp28 := aotDirectFn9Arity2(v21, tmp27)
+								tmp29 := lang.NewVector(v26, tmp28)
+								tmp22 = tmp29
+							} // end let
+							tmp16 = tmp22
+						} // end let
+						return tmp16
+					})
+					tmp15 := aotExternalFn16(tmp14)
+					tmp16 := aotExternalFn15(tmp13, tmp15, v2)
+					tmp6 = tmp16
+				}
+				tmp4 = tmp6
+			} else {
+				var tmp17 any
+				tmp18 := lang.IsVector(v2)
+				if tmp18 {
+					var tmp19 lang.FnFunc1
+					tmp19 = lang.FnFunc1(func(p0 any) any {
+						v20 := p0
+						_ = v20
+						tmp21 := aotDirectFn9Arity2(v20, v3)
+						return tmp21
+					})
+					tmp20 := aotExternalFn11(tmp19, v2)
+					tmp17 = tmp20
+				} else {
+					tmp17 = v2
+				}
+				tmp4 = tmp17
+			}
+			return tmp4
+		})
+		tmp1 = lang.NewArityFn(
+			nil,
+			aotDirectFn9Arity1,
+			aotDirectFn9Arity2,
+			nil,
+			nil,
+			nil,
+			0,
+		)
 		aotDirectFn9 = tmp1
 		var_libyamlstar_normalize_DASH_keys = ns.InternWithValue(tmp0, tmp1, true)
 		var_libyamlstar_normalize_DASH_keys.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "libyamlstar.clj", kw_line, int(83), kw_column, int(7), kw_end_DASH_line, int(83), kw_end_DASH_column, int(20), kw_arglists, lang.NewList(lang.NewVector(sym_x)), kw_doc, "Keywordize map keys recursively, converting snake_case to kebab-case.\n\n  Only keys are rewritten; values are never touched.", kw_ns, lang.FindOrCreateNamespace(sym_libyamlstar))
+			return lang.NewMapUniqueKeys(kw_file, "libyamlstar.clj", kw_line, int(83), kw_column, int(7), kw_end_DASH_line, int(83), kw_end_DASH_column, int(20), kw_arglists, lang.NewList(lang.NewVector(sym_x), lang.NewVector(sym_x, sym_path)), kw_doc, "Keywordize option keys while preserving Alias-Data mapping names.", kw_ns, lang.FindOrCreateNamespace(sym_libyamlstar))
 		}, false)
 	}
 	// parse-opts
@@ -819,16 +891,16 @@ func LoadNS() {
 				if lang.IsTruthy(v6) {
 					tmp7 = v6
 				} else {
-					tmp8 := aotExternalFn19(v2)
+					tmp8 := aotExternalFn21(v2)
 					tmp7 = tmp8
 				}
 				tmp4 = tmp7
 			} // end let
 			if lang.IsTruthy(tmp4) {
 			} else {
-				tmp5 := aotExternalFn21(v2)
-				tmp6 := aotDirectFn9(tmp5)
-				tmp7 := aotExternalFn20(tmp6)
+				tmp5 := aotExternalFn23(v2)
+				tmp6 := aotDirectFn9Arity1(tmp5)
+				tmp7 := aotExternalFn22(tmp6)
 				tmp3 = tmp7
 			}
 			return tmp3
@@ -836,7 +908,7 @@ func LoadNS() {
 		aotDirectFn10 = tmp1
 		var_libyamlstar_parse_DASH_opts = ns.InternWithValue(tmp0, tmp1, true)
 		var_libyamlstar_parse_DASH_opts.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "libyamlstar.clj", kw_line, int(97), kw_column, int(7), kw_end_DASH_line, int(97), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_opts_DASH_json)), kw_doc, "Parse a JSON options string into a normalized opts map.\n\n  Returns nil for nil/blank/empty opts (the fast path).", kw_ns, lang.FindOrCreateNamespace(sym_libyamlstar))
+			return lang.NewMapUniqueKeys(kw_file, "libyamlstar.clj", kw_line, int(101), kw_column, int(7), kw_end_DASH_line, int(101), kw_end_DASH_column, int(16), kw_arglists, lang.NewList(lang.NewVector(sym_opts_DASH_json)), kw_doc, "Parse a JSON options string into a normalized opts map.\n\n  Returns nil for nil/blank/empty opts (the fast path).", kw_ns, lang.FindOrCreateNamespace(sym_libyamlstar))
 		}, false)
 	}
 	// set-environment!
@@ -889,7 +961,7 @@ func LoadNS() {
 							tmp9 := lang.Apply2(fmt.Sprintf, "%T", v7)
 							tmp10 := aotKeywordMapNew0(tmp8, tmp9)
 							tmp11 := aotKeywordMapNew1(tmp10)
-							tmp12 := aotExternalFn22(tmp11)
+							tmp12 := aotExternalFn24(tmp11)
 							tmp6 = tmp12
 						} else {
 							panic(r)
@@ -903,12 +975,12 @@ func LoadNS() {
 					var v9 any = tmp8
 					_ = v9
 					// let binding "result"
-					tmp10 := aotExternalFn21(v3)
-					tmp11 := aotExternalFn23(tmp10, v9)
+					tmp10 := aotExternalFn23(v3)
+					tmp11 := aotExternalFn25(tmp10, v9)
 					var v12 any = tmp11
 					_ = v12
 					tmp13 := aotKeywordMapNew2(v12)
-					tmp14 := aotExternalFn22(tmp13)
+					tmp14 := aotExternalFn24(tmp13)
 					tmp7 = tmp14
 				} // end let
 				tmp6 = tmp7
@@ -918,7 +990,7 @@ func LoadNS() {
 		aotDirectFn12 = tmp1
 		var_libyamlstar_yamlstar_DASH_dump = ns.InternWithValue(tmp0, tmp1, true)
 		var_libyamlstar_yamlstar_DASH_dump.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "libyamlstar.clj", kw_line, int(134), kw_column, int(7), kw_end_DASH_line, int(134), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector(sym__thread, sym_data_DASH_json, sym_opts_DASH_json)), kw_doc, "Dump one JSON-encoded value to YAML, return JSON string with {:data ...} or {:error ...}", kw_ns, lang.FindOrCreateNamespace(sym_libyamlstar))
+			return lang.NewMapUniqueKeys(kw_file, "libyamlstar.clj", kw_line, int(138), kw_column, int(7), kw_end_DASH_line, int(138), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector(sym__thread, sym_data_DASH_json, sym_opts_DASH_json)), kw_doc, "Dump one JSON-encoded value to YAML, return JSON string with {:data ...} or {:error ...}", kw_ns, lang.FindOrCreateNamespace(sym_libyamlstar))
 		}, false)
 	}
 	// yamlstar-dump-all
@@ -941,11 +1013,11 @@ func LoadNS() {
 						if lang.CatchMatches(r, builtin_any) {
 							v7 := r
 							_ = v7
-							tmp8 := aotExternalFn24(v7)
-							tmp9 := aotExternalFn24(v7)
+							tmp8 := aotExternalFn26(v7)
+							tmp9 := aotExternalFn26(v7)
 							tmp10 := aotKeywordMapNew3(tmp8, "Exception", tmp9)
 							tmp11 := aotKeywordMapNew1(tmp10)
-							tmp12 := aotExternalFn22(tmp11)
+							tmp12 := aotExternalFn24(tmp11)
 							tmp6 = tmp12
 						} else {
 							panic(r)
@@ -959,12 +1031,12 @@ func LoadNS() {
 					var v9 any = tmp8
 					_ = v9
 					// let binding "result"
-					tmp10 := aotExternalFn21(v3)
-					tmp11 := aotExternalFn25(tmp10, v9)
+					tmp10 := aotExternalFn23(v3)
+					tmp11 := aotExternalFn27(tmp10, v9)
 					var v12 any = tmp11
 					_ = v12
 					tmp13 := aotKeywordMapNew2(v12)
-					tmp14 := aotExternalFn22(tmp13)
+					tmp14 := aotExternalFn24(tmp13)
 					tmp7 = tmp14
 				} // end let
 				tmp6 = tmp7
@@ -974,7 +1046,7 @@ func LoadNS() {
 		aotDirectFn13 = tmp1
 		var_libyamlstar_yamlstar_DASH_dump_DASH_all = ns.InternWithValue(tmp0, tmp1, true)
 		var_libyamlstar_yamlstar_DASH_dump_DASH_all.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "libyamlstar.clj", kw_line, int(150), kw_column, int(7), kw_end_DASH_line, int(150), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym__thread, sym_data_DASH_json, sym_opts_DASH_json)), kw_doc, "Dump JSON-encoded documents to YAML, return JSON string with {:data ...} or {:error ...}", kw_ns, lang.FindOrCreateNamespace(sym_libyamlstar))
+			return lang.NewMapUniqueKeys(kw_file, "libyamlstar.clj", kw_line, int(154), kw_column, int(7), kw_end_DASH_line, int(154), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym__thread, sym_data_DASH_json, sym_opts_DASH_json)), kw_doc, "Dump JSON-encoded documents to YAML, return JSON string with {:data ...} or {:error ...}", kw_ns, lang.FindOrCreateNamespace(sym_libyamlstar))
 		}, false)
 	}
 	// yamlstar-load
@@ -1003,7 +1075,7 @@ func LoadNS() {
 							tmp10 := lang.Apply2(fmt.Sprintf, "%T", v8)
 							tmp11 := aotKeywordMapNew0(tmp9, tmp10)
 							tmp12 := aotKeywordMapNew1(tmp11)
-							tmp13 := aotExternalFn22(tmp12)
+							tmp13 := aotExternalFn24(tmp12)
 							tmp7 = tmp13
 						} else {
 							panic(r)
@@ -1014,12 +1086,12 @@ func LoadNS() {
 				{ // let
 					// let binding "result"
 					tmp9 := aotDirectFn10(v4)
-					tmp10 := aotExternalFn26(v3, tmp9)
+					tmp10 := aotExternalFn28(v3, tmp9)
 					var v11 any = tmp10
 					_ = v11
 					tmp12 := aotDirectFn8(v11)
 					tmp13 := aotKeywordMapNew2(tmp12)
-					tmp14 := aotExternalFn22(tmp13)
+					tmp14 := aotExternalFn24(tmp13)
 					tmp8 = tmp14
 				} // end let
 				tmp7 = tmp8
@@ -1029,7 +1101,7 @@ func LoadNS() {
 		aotDirectFn14 = tmp1
 		var_libyamlstar_yamlstar_DASH_load = ns.InternWithValue(tmp0, tmp1, true)
 		var_libyamlstar_yamlstar_DASH_load.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "libyamlstar.clj", kw_line, int(105), kw_column, int(7), kw_end_DASH_line, int(105), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector(sym__thread, sym_yaml_DASH_str, sym_opts_DASH_json)), kw_doc, "Load YAML string, return JSON string with {:data ...} or {:error ...}", kw_ns, lang.FindOrCreateNamespace(sym_libyamlstar))
+			return lang.NewMapUniqueKeys(kw_file, "libyamlstar.clj", kw_line, int(109), kw_column, int(7), kw_end_DASH_line, int(109), kw_end_DASH_column, int(19), kw_arglists, lang.NewList(lang.NewVector(sym__thread, sym_yaml_DASH_str, sym_opts_DASH_json)), kw_doc, "Load YAML string, return JSON string with {:data ...} or {:error ...}", kw_ns, lang.FindOrCreateNamespace(sym_libyamlstar))
 		}, false)
 	}
 	// yamlstar-load-all
@@ -1054,11 +1126,11 @@ func LoadNS() {
 						if lang.CatchMatches(r, builtin_any) {
 							v8 := r
 							_ = v8
-							tmp9 := aotExternalFn24(v8)
-							tmp10 := aotExternalFn24(v8)
+							tmp9 := aotExternalFn26(v8)
+							tmp10 := aotExternalFn26(v8)
 							tmp11 := aotKeywordMapNew3(tmp9, "Exception", tmp10)
 							tmp12 := aotKeywordMapNew1(tmp11)
-							tmp13 := aotExternalFn22(tmp12)
+							tmp13 := aotExternalFn24(tmp12)
 							tmp7 = tmp13
 						} else {
 							panic(r)
@@ -1069,12 +1141,12 @@ func LoadNS() {
 				{ // let
 					// let binding "result"
 					tmp9 := aotDirectFn10(v4)
-					tmp10 := aotExternalFn27(v3, tmp9)
+					tmp10 := aotExternalFn29(v3, tmp9)
 					var v11 any = tmp10
 					_ = v11
 					tmp12 := aotDirectFn8(v11)
 					tmp13 := aotKeywordMapNew2(tmp12)
-					tmp14 := aotExternalFn22(tmp13)
+					tmp14 := aotExternalFn24(tmp13)
 					tmp8 = tmp14
 				} // end let
 				tmp7 = tmp8
@@ -1084,7 +1156,7 @@ func LoadNS() {
 		aotDirectFn15 = tmp1
 		var_libyamlstar_yamlstar_DASH_load_DASH_all = ns.InternWithValue(tmp0, tmp1, true)
 		var_libyamlstar_yamlstar_DASH_load_DASH_all.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "libyamlstar.clj", kw_line, int(121), kw_column, int(7), kw_end_DASH_line, int(121), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym__thread, sym_yaml_DASH_str, sym_opts_DASH_json)), kw_doc, "Load all YAML documents, return JSON string with {:data [...]} or {:error ...}", kw_ns, lang.FindOrCreateNamespace(sym_libyamlstar))
+			return lang.NewMapUniqueKeys(kw_file, "libyamlstar.clj", kw_line, int(125), kw_column, int(7), kw_end_DASH_line, int(125), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym__thread, sym_yaml_DASH_str, sym_opts_DASH_json)), kw_doc, "Load all YAML documents, return JSON string with {:data [...]} or {:error ...}", kw_ns, lang.FindOrCreateNamespace(sym_libyamlstar))
 		}, false)
 	}
 	// yamlstar-set-plugin-environment
@@ -1144,13 +1216,13 @@ func LoadNS() {
 		tmp1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := aotExternalFn28()
+			tmp3 := aotExternalFn30()
 			return tmp3
 		})
 		aotDirectFn17 = tmp1
 		var_libyamlstar_yamlstar_DASH_version = ns.InternWithValue(tmp0, tmp1, true)
 		var_libyamlstar_yamlstar_DASH_version.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "libyamlstar.clj", kw_line, int(163), kw_column, int(7), kw_end_DASH_line, int(163), kw_end_DASH_column, int(22), kw_arglists, lang.NewList(lang.NewVector(sym__thread)), kw_doc, "Return the YAMLStar version string", kw_ns, lang.FindOrCreateNamespace(sym_libyamlstar))
+			return lang.NewMapUniqueKeys(kw_file, "libyamlstar.clj", kw_line, int(167), kw_column, int(7), kw_end_DASH_line, int(167), kw_end_DASH_column, int(22), kw_arglists, lang.NewList(lang.NewVector(sym__thread)), kw_doc, "Return the YAMLStar version string", kw_ns, lang.FindOrCreateNamespace(sym_libyamlstar))
 		}, false)
 	}
 	// nil-keys->string
@@ -1170,7 +1242,7 @@ func LoadNS() {
 					_ = v7
 					var tmp8 any
 					{ // let
-						// let binding "vec__146"
+						// let binding "vec__170"
 						var v9 any = v7
 						_ = v9
 						// let binding "k"

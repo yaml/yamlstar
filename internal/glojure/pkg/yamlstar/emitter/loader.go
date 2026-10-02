@@ -745,10 +745,10 @@ func LoadNS() {
 				} else {
 					var tmp13 any
 					{ // let
-						// let binding "vec__26"
+						// let binding "vec__42"
 						var tmp14 any
 						{ // let
-							// let binding "G__32"
+							// let binding "G__48"
 							var v15 any = v6
 							_ = v15
 							// case
@@ -792,7 +792,7 @@ func LoadNS() {
 						tmp18 := runtime.RT.NthDefault(v15, lang.IntCast(int64(1)), nil)
 						var v19 any = tmp18
 						_ = v19
-						// let binding "vec__29"
+						// let binding "vec__45"
 						var tmp20 any
 						{ // let
 							// let binding "remaining"
@@ -933,7 +933,7 @@ func LoadNS() {
 							_ = v11
 							var tmp12 any
 							{ // let
-								// let binding "G__54"
+								// let binding "G__70"
 								tmp13 := aotKeywordSite2.Get(kw_event, v11, nil)
 								var v14 any = tmp13
 								_ = v14
@@ -1242,7 +1242,7 @@ func LoadNS() {
 			} else {
 				var tmp10 any
 				{ // let
-					// let binding "G__53"
+					// let binding "G__69"
 					tmp11 := lang.First(v2)
 					tmp12 := aotKeywordSite12.Get(kw_event, tmp11, nil)
 					var v13 any = tmp12
@@ -1398,7 +1398,7 @@ func LoadNS() {
 				tmp6 := aotExternalFn28(v4)
 				var v7 any = tmp6
 				_ = v7
-				// let binding "vec__55"
+				// let binding "vec__71"
 				var tmp8 any
 				{ // let
 					// let binding "or__0__auto__"
@@ -1452,7 +1452,7 @@ func LoadNS() {
 				_ = tmp14
 				var tmp18 any
 				{ // let
-					// let binding "G__58"
+					// let binding "G__74"
 					var v19 any = v13
 					_ = v19
 					var tmp20 any
@@ -1509,7 +1509,7 @@ func LoadNS() {
 				_ = v5
 				var tmp6 any
 				{ // let
-					// let binding "G__42"
+					// let binding "G__58"
 					tmp7 := aotKeywordSite15.Get(kw_event, v5, nil)
 					var v8 any = tmp7
 					_ = v8
@@ -1579,7 +1579,7 @@ func LoadNS() {
 								_ = v29
 								var tmp30 any
 								{ // let
-									// let binding "vec__44"
+									// let binding "vec__60"
 									var v31 any = v29
 									_ = v31
 									// let binding "key"
@@ -1977,7 +1977,7 @@ func LoadNS() {
 			_ = v4
 			var tmp5 any
 			{ // let
-				// let binding "G__24"
+				// let binding "G__40"
 				var v6 any = v2
 				_ = v6
 				// case
@@ -2061,7 +2061,7 @@ func LoadNS() {
 					} else {
 						var tmp9 any
 						{ // let
-							// let binding "vec__36"
+							// let binding "vec__52"
 							tmp10 := aotDirectFn3(v4)
 							var v11 any = tmp10
 							_ = v11
@@ -2073,7 +2073,7 @@ func LoadNS() {
 							tmp14 := runtime.RT.NthDefault(v11, lang.IntCast(int64(1)), nil)
 							var v15 any = tmp14
 							_ = v15
-							// let binding "vec__39"
+							// let binding "vec__55"
 							tmp16 := aotDirectFn3(v15)
 							var v17 any = tmp16
 							_ = v17
@@ -2393,7 +2393,7 @@ func LoadNS() {
 				_ = v5
 				var tmp6 any
 				{ // let
-					// let binding "G__25"
+					// let binding "G__41"
 					tmp7 := aotDirectFn30(v2)
 					var v8 any = tmp7
 					_ = v8
@@ -2501,7 +2501,7 @@ func LoadNS() {
 					} else {
 						var tmp9 any
 						{ // let
-							// let binding "vec__33"
+							// let binding "vec__49"
 							tmp10 := aotDirectFn3(v4)
 							var v11 any = tmp10
 							_ = v11
@@ -2829,22 +2829,22 @@ func LoadNS() {
 								} else {
 									var tmp37 any
 									{ // let
-										// let binding "vec__47"
+										// let binding "vec__63"
 										var v38 any = v29
 										_ = v38
-										// let binding "seq__48"
+										// let binding "seq__64"
 										tmp39 := lang.Seq(v38)
 										var v40 any = tmp39
 										_ = v40
-										// let binding "first__49"
+										// let binding "first__65"
 										tmp41 := lang.First(v40)
 										var v42 any = tmp41
 										_ = v42
-										// let binding "seq__48"
+										// let binding "seq__64"
 										tmp43 := lang.Next(v40)
 										var v44 any = tmp43
 										_ = v44
-										// let binding "vec__50"
+										// let binding "vec__66"
 										var v45 any = v42
 										_ = v45
 										// let binding "key-events"

@@ -491,7 +491,7 @@ func LoadNS() {
 						_ = v23
 						var tmp24 any
 						{ // let
-							// let binding "vec__24"
+							// let binding "vec__40"
 							var tmp25 any
 							{ // let
 								// let binding "or__0__auto__"
@@ -519,7 +519,7 @@ func LoadNS() {
 							_ = v32
 							var tmp33 any
 							{ // let
-								// let binding "G__27"
+								// let binding "G__43"
 								tmp34 := lang.LongCastBoxed(v30)
 								var v35 any = tmp34
 								_ = v35

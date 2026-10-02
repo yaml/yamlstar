@@ -53,11 +53,17 @@ const (
 // IndentConfig configures the built-in tab-indent plugin.
 type IndentConfig = core.IndentConfig
 
+// AliasDataConfig configures external alias values and stream anchor scope.
+type AliasDataConfig = core.AliasDataConfig
+
 // YAMLParser selects the YAML parser plugin used for loading.
 var YAMLParser = core.YAMLParser
 
 // YAMLEmitter selects the YAML emitter plugin used for dumping.
 var YAMLEmitter = core.YAMLEmitter
+
+// AliasData enables the built-in Alias-Data policy.
+var AliasData = core.AliasData
 
 // TabIndent enables tab-aware loading and tab-indented dumping.
 var TabIndent = core.TabIndent

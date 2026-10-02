@@ -11,14 +11,20 @@
   (-> k name (str/replace "_" "-") keyword))
 
 (defn normalize-keys
-  [x]
-  (cond
-    (map? x) (into {}
-                   (map (fn [[k v]]
-                          [(normalize-key k) (normalize-keys v)]))
-                   x)
-    (vector? x) (mapv normalize-keys x)
-    :else x))
+  ([x]
+   (normalize-keys x []))
+  ([x path]
+   (cond
+     (map? x)
+     (if (= path [:plugin :alias-data :data])
+       (into {} (map (fn [[k v]] [(name k) v])) x)
+       (into {}
+             (map (fn [[k v]]
+                    (let [key (normalize-key k)]
+                      [key (normalize-keys v (conj path key))])))
+             x))
+     (vector? x) (mapv #(normalize-keys % path) x)
+     :else x)))
 
 (defn deep-merge
   [& maps]

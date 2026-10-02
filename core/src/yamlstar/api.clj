@@ -18,7 +18,30 @@
             [yamlstar.representer :as representer]
             [yamlstar.desolver :as desolver]
             [yamlstar.serializer :as serializer]
-            [yamlstar.emitter :as emitter]))
+            [yamlstar.emitter :as emitter]
+            [yamlstar.plugin :as plugin]))
+
+(defn- load-alias-data-file
+  [path opts]
+  (let [opts (update opts :plugin dissoc :alias-data)
+        nodes (-> (slurp path)
+                  (parser/parse opts)
+                  composer/compose-all
+                  resolver/resolve-all)]
+    (when-not (= 1 (count nodes))
+      (throw (ex-info "Alias-Data file must contain exactly one document"
+                      {:file path :documents (count nodes)})))
+    (let [value (constructor/construct (first nodes))]
+      (when-not (map? value)
+        (throw (ex-info "Alias-Data file root must be a mapping"
+                        {:file path :value value})))
+      value)))
+
+(defn- alias-data-context
+  [opts]
+  (plugin/alias-data-context
+   opts
+   {:load-file #(load-alias-data-file % opts)}))
 
 (defn load
   "Parse a YAML string and return a Clojure data structure.
@@ -42,10 +65,11 @@
    (load yaml-str nil))
   ([yaml-str opts]
    (when yaml-str
-     (-> (parser/parse yaml-str opts)
-         composer/compose
-         resolver/resolve
-         constructor/construct))))
+     (let [context (alias-data-context opts)]
+       (-> (parser/parse yaml-str opts)
+           composer/compose
+           resolver/resolve
+           (constructor/construct context))))))
 
 (defn load-all
   "Parse a multi-document YAML string and return a sequence of documents.
@@ -67,10 +91,11 @@
    (load-all yaml-str nil))
   ([yaml-str opts]
    (when yaml-str
-     (-> (parser/parse yaml-str opts)
-         composer/compose-all
-         resolver/resolve-all
-         constructor/construct-all))))
+     (let [context (alias-data-context opts)]
+       (-> (parser/parse yaml-str opts)
+           composer/compose-all
+           resolver/resolve-all
+           (constructor/construct-all context))))))
 
 (defn dump
   "Dump a supported native value to a YAML string.
