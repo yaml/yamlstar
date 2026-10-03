@@ -1,0 +1,23 @@
+use strict;
+use warnings;
+
+local $/;
+my $source = <STDIN>;
+
+my $namespace = <<'CLOJURE';
+(ns ^{:author "Gareth Jones, Sung Pae, Sean Corfield"
+      :doc "Tools for working with command line arguments."}
+  clojure.tools.cli
+  (:require [clojure.string :as s]
+            #?(:cljs goog.string.format)))
+CLOJURE
+
+my $gloat_namespace = <<'CLOJURE';
+(ns clojure.tools.cli
+  (:require [clojure.string :as s]))
+CLOJURE
+
+my $count = $source =~ s/\Q$namespace\E/$gloat_namespace/;
+die "tools.cli namespace form did not match\n" unless $count == 1;
+
+print $source;

@@ -84,6 +84,17 @@ Write output to a file:
 yaml config.yaml -o config.json
 ```
 
+Long options that take values accept both `--option value` and
+`--option=value`.
+Short options can be combined, and a value-taking short option consumes the
+rest of the same argument.
+For example, this selects preserved YAML output and the last document, then
+writes it to `file`:
+
+```bash
+yaml -YZofile stream.yaml
+```
+
 ## Options
 
 ```text

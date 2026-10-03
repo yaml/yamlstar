@@ -1,5 +1,6 @@
 (ns yamlstar.cli-test
   (:require [clojure.test :refer :all]
+            [clojure.tools.cli :as tools-cli]
             [yamlstar.api :as yaml]
             [yamlstar.cli :as cli]
             [yamlstar.cli-default :as cli-default]
@@ -34,6 +35,30 @@
               (clojure.string/replace cli/version #"-SNAPSHOT$" ""))
          (clojure.string/trim-newline
           (with-out-str (cli/print-version))))))
+
+(deftest compact-command-line-options
+  (let [{:keys [options arguments errors]}
+        (tools-cli/parse-opts
+         ["-YZofile"
+          "--from=yaml"
+          "--file=input.yaml"
+          "--eval=x: 1"
+          "--config={plugin: {alias-data: true}}"
+          "--plugin=alias-data"
+          "--plugin=yaml-parser=go-yaml"
+          "--debug-stage=parse"]
+         cli/cli-options)]
+    (is (nil? errors))
+    (is (empty? arguments))
+    (is (= true (:YAML options)))
+    (is (= true (:last options)))
+    (is (= "file" (:output options)))
+    (is (= "yaml" (:from options)))
+    (is (= "input.yaml" (:file options)))
+    (is (= "x: 1" (:eval options)))
+    (is (= "{plugin: {alias-data: true}}" (:config options)))
+    (is (= ["alias-data" "yaml-parser=go-yaml"] (:plugin options)))
+    (is (= "parse" (:debug-stage options)))))
 
 (deftest yaml-event-node-yaml-chain
   (let [events (cli/convert-input sample {:event true} {})

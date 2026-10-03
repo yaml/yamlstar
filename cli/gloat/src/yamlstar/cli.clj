@@ -1,6 +1,7 @@
 (ns yamlstar.cli
   "Gloat-compatible YAMLStar command-line interface."
   (:require [clojure.string :as str]
+            [clojure.tools.cli :refer [parse-opts]]
             [yamlstar.api :as yaml]
             [yamlstar.cli-options :as runtime]
             [yamlstar.cli-default :as cli-default]
@@ -65,122 +66,79 @@ Options:
   []
   (str "yaml v" (str/replace (yaml/version) #"-SNAPSHOT$" "")))
 
-(defn parse-args [argv]
-  (loop [args argv
-         opts {}
-         positional []]
-    (if (empty? args)
-      (assoc opts :arguments positional)
-      (let [arg (first args)
-            more (rest args)]
-        (cond
-          (or (= arg "-h") (= arg "--help"))
-          (recur more (assoc opts :help true) positional)
+(def cli-options
+  [["-f" "--from STAGE"]
+   [nil "--file FILE"]
+   [nil "--eval YAML"]
+   ["-e" "--event"]
+   ["-E" "--EVENT"]
+   ["-n" "--node"]
+   ["-N" "--NODE"]
+   ["-j" "--json"]
+   ["-J" "--JSON"]
+   ["-y" "--yaml"]
+   ["-Y" "--YAML"]
+   ["-o" "--output FILE"]
+   ["-A" "--first"]
+   ["-Z" "--last"]
+   [nil "--config CONFIG"]
+   [nil "--no-plugin-install"]
+   ["-d" "--debug"]
+   ["-D" "--debug-stage STAGE"]
+   ["-v" "--version"]
+   ["-h" "--help"]])
 
-          (or (= arg "-v") (= arg "--version"))
-          (recur more (assoc opts :version true) positional)
+(defn extract-special-options [argv]
+  (loop [args argv
+         options {}
+         remaining []]
+    (if (empty? args)
+      [remaining options]
+      (let [arg (first args)]
+        (cond
+          (= arg "--")
+          [(into remaining args) options]
 
           (= arg "--path")
-          (recur more (assoc opts :print-path true) positional)
+          (recur (rest args) (assoc options :print-path true) remaining)
 
           (str/starts-with? arg "--path=")
-          (recur more
-                 (assoc opts :library-path
+          (recur (rest args)
+                 (assoc options :library-path
                         (subs arg (count "--path=")))
-                 positional)
-
-          (or (= arg "-j") (= arg "--json"))
-          (recur more (assoc opts :json true) positional)
-
-          (or (= arg "-J") (= arg "--JSON"))
-          (recur more (assoc opts :JSON true) positional)
-
-          (or (= arg "-y") (= arg "--yaml"))
-          (recur more (assoc opts :yaml true) positional)
-
-          (or (= arg "-Y") (= arg "--YAML"))
-          (recur more (assoc opts :YAML true) positional)
-
-          (or (= arg "-e") (= arg "--event"))
-          (recur more (assoc opts :event true) positional)
-
-          (or (= arg "-E") (= arg "--EVENT"))
-          (recur more (assoc opts :EVENT true) positional)
-
-          (or (= arg "-n") (= arg "--node"))
-          (recur more (assoc opts :node true) positional)
-
-          (or (= arg "-N") (= arg "--NODE"))
-          (recur more (assoc opts :NODE true) positional)
-
-          (or (= arg "-A") (= arg "--first"))
-          (recur more (assoc opts :first true) positional)
-
-          (or (= arg "-Z") (= arg "--last"))
-          (recur more (assoc opts :last true) positional)
-
-          (or (= arg "-f") (= arg "--from"))
-          (if (empty? more)
-            (die (str arg " requires a stage"))
-            (recur (rest more) (assoc opts :from (first more)) positional))
-
-          (= arg "--config")
-          (if (empty? more)
-            (die (str arg " requires a config value"))
-            (recur (rest more) (assoc opts :config (first more)) positional))
+                 remaining)
 
           (= arg "--plugin")
-          (if (empty? more)
-            (die (str arg " requires a plugin selector"))
-            (recur (rest more)
-                   (update opts :plugin (fnil conj []) (first more))
-                   positional))
+          (if-let [selector (first (rest args))]
+            (if (str/blank? selector)
+              (die "--plugin requires a plugin selector")
+              (recur (rest (rest args))
+                     (update options :plugin (fnil conj []) selector)
+                     remaining))
+            (die "Missing required argument for --plugin"))
 
           (str/starts-with? arg "--plugin=")
-          (let [spec (subs arg (count "--plugin="))]
-            (if (str/blank? spec)
+          (let [selector (subs arg (count "--plugin="))]
+            (if (str/blank? selector)
               (die "--plugin requires a plugin selector")
-              (recur more
-                     (update opts :plugin (fnil conj []) spec)
-                     positional)))
-
-          (= arg "--no-plugin-install")
-          (recur more (assoc opts :no-plugin-install true) positional)
-
-          (or (= arg "-d") (= arg "--debug"))
-          (recur more (assoc opts :debug true) positional)
-
-          (or (= arg "-D") (= arg "--debug-stage"))
-          (if (empty? more)
-            (die (str arg " requires a stage"))
-            (let [stage (first more)]
-              (if (#{"parse" "compose" "resolve" "construct"} stage)
-                (recur (rest more) (assoc opts :debug-stage stage) positional)
-                (die (str arg " stage must be one of: parse, compose, resolve, construct")))))
-
-          (= arg "--file")
-          (if (empty? more)
-            (die (str arg " requires a filename"))
-            (recur (rest more) (assoc opts :file (first more)) positional))
-
-          (= arg "--eval")
-          (if (empty? more)
-            (die (str arg " requires a YAML string"))
-            (recur (rest more) (assoc opts :eval (first more)) positional))
-
-          (or (= arg "-o") (= arg "--output"))
-          (if (empty? more)
-            (die (str arg " requires a filename"))
-            (recur (rest more) (assoc opts :output (first more)) positional))
-
-          (= arg "--")
-          (assoc opts :arguments (into positional more))
-
-          (and (str/starts-with? arg "-") (not= arg "-"))
-          (die (str "unknown option: " arg))
+              (recur (rest args)
+                     (update options :plugin (fnil conj []) selector)
+                     remaining)))
 
           :else
-          (recur more opts (conj positional arg)))))))
+          (recur (rest args) options (conj remaining arg)))))))
+
+(defn parse-args [argv]
+  (let [[argv special-options] (extract-special-options argv)
+        {:keys [options arguments errors]} (parse-opts argv cli-options)]
+    (when (seq errors)
+      (die (first errors)))
+    (when (and (:debug-stage options)
+               (not (#{"parse" "compose" "resolve" "construct"}
+                     (:debug-stage options))))
+      (die (str "--debug-stage stage must be one of: "
+                "parse, compose, resolve, construct")))
+    (assoc (merge options special-options) :arguments arguments)))
 
 (defn- nil-key? [x]
   (cond
@@ -309,7 +267,14 @@ Options:
 
 (defn write-output [output opts]
   (if (:output opts)
-    (spit (:output opts) output)
+    #?(:glj
+       (when-let [error
+                  (os.WriteFile (:output opts)
+                                ((go/slice-of go/byte) output)
+                                0644)]
+         (throw error))
+       :lg
+       (spit (:output opts) output))
     (println output)))
 
 (defn output-stage [opts]

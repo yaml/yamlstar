@@ -77,6 +77,7 @@ include $M/lein.mk
 else
 $(error Unknown YAMLSTAR_ENGINE '$(YAMLSTAR_ENGINE)')
 endif
+include $M/perl.mk
 
 include $(COMMON)/common.mk
 
@@ -137,6 +138,15 @@ GLOAT-REFERENCE-ENV := $(if $(REFERENCE-PARSER-DIR), \
 GLOAT-CLI-OPTIONS-SRC := $(GLOAT-CACHE)/cli_options.clj
 GLOAT-SHARED-PLUGIN-SRC := $(GLOAT-CACHE)/plugin/shared.clj
 GLOAT-SHARED-HOST-SRC := $(GLOAT-CACHE)/plugin/shared_host.clj
+TOOLS-CLI-VERSION := 1.1.230
+TOOLS-CLI-JAR := cache/tools.cli-$(TOOLS-CLI-VERSION).jar
+TOOLS-CLI-BASE := https://repo1.maven.org/maven2/org/clojure/tools.cli
+TOOLS-CLI-ARTIFACT := tools.cli-$(TOOLS-CLI-VERSION).jar
+TOOLS-CLI-URL := \
+  $(TOOLS-CLI-BASE)/$(TOOLS-CLI-VERSION)/$(TOOLS-CLI-ARTIFACT)
+GLOAT-TOOLS-CLI-SRC := \
+  cache/gloat-srcs/clojure/tools/cli.clj
+PREPARE-TOOLS-CLI := gloat/prepare-tools-cli
 CORE-SRCS := \
   $(wildcard $(GLOAT-CORE)/*.clj) \
   $(wildcard $(GLOAT-CORE)/*.cljc) \
@@ -147,6 +157,7 @@ CORE-SRCS := \
   $(wildcard $(GLOAT-CORE)/plugin/yaml_emitter/*.clj) \
   $(wildcard $(GLOAT-CORE)/plugin/yaml_emitter/*.cljc)
 GLOAT-CLI-SRCS := \
+  $(GLOAT-TOOLS-CLI-SRC) \
   $(GLOAT-CACHE)/plugin/alias_data.clj \
   $(GLOAT-CORE)/plugin.clj \
   $(GLOAT-CORE)/options.clj \
@@ -247,6 +258,7 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
   $(GLOAT-RUN-DEPS) \
   $(GLOAT-CLI-GLJ-DEP) \
   $(CLI-DEFAULT-SRC) \
+  $(GLOAT-TOOLS-CLI-SRC) \
   $(GLOAT-CACHE)/plugin/alias_data.clj \
   $(GLOAT-CORE)/plugin.clj \
   $(GLOAT-CORE)/options.clj \
@@ -277,6 +289,20 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
 	  $(GLOAT-CLI-SRCS) -o $@
 	test -x $@
 	@echo "Gloat ($(GLOAT-ENGINE)) CLI created at: $@"
+
+$(TOOLS-CLI-JAR):
+	@mkdir -p $(dir $@)
+	curl --fail --location --silent --show-error '$(TOOLS-CLI-URL)' \
+	  -o '$@.tmp'
+	mv '$@.tmp' '$@'
+
+# Gloat needs a .clj extension and does not support metadata on ns forms.
+$(GLOAT-TOOLS-CLI-SRC): $(TOOLS-CLI-JAR) $(PREPARE-TOOLS-CLI) $(PERL)
+	@mkdir -p $(dir $@)
+	unzip -p $< clojure/tools/cli.cljc | \
+	  $(PERL) $(PREPARE-TOOLS-CLI) > '$@.tmp'
+	grep -q '^(ns clojure.tools.cli$$' '$@.tmp'
+	mv '$@.tmp' '$@'
 
 $(GLOAT-CLI-OPTIONS-SRC): $(GLOAT-CORE)/cli_options.cljc
 	@mkdir -p $(dir $@)
