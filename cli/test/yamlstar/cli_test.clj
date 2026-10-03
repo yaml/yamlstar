@@ -27,7 +27,7 @@
                 "--eval" "a: true // comment\n"
                 (str "--plugin=yaml-parser=reference@0.2.5,"
                      "json-comments")))))]
-    (is (= "{\"a\":true}\n" output))))
+    (is (= "[{\"a\":true}]\n" output))))
 
 (deftest version-output
   (is (= (str "yaml v"
@@ -67,3 +67,25 @@
          clojure.lang.ExceptionInfo
          #"cannot convert node input backward to event output"
          (cli/convert-input nodes {:event true} {})))))
+
+(deftest document-selection-applies-to-output-stages
+  (let [source "--- first\n--- second\n"]
+    (is (= "[\"first\",\"second\"]"
+           (cli/convert-input source {} {})))
+    (is (= "\"first\""
+           (cli/convert-input source {:first true} {})))
+    (is (= "\"second\""
+           (cli/convert-input source {:last true} {})))
+    (doseq [mode [:event :node :yaml :YAML]]
+      (let [first-output (cli/convert-input source {mode true :first true} {})
+            last-output (cli/convert-input source {mode true :last true} {})]
+        (is (clojure.string/includes? first-output "first") (name mode))
+        (is (not (clojure.string/includes? first-output "second"))
+            (name mode))
+        (is (clojure.string/includes? last-output "second") (name mode))
+        (is (not (clojure.string/includes? last-output "first"))
+            (name mode))))
+    (is (thrown-with-msg?
+         clojure.lang.ExceptionInfo
+         #"cannot be used together"
+         (cli/convert-input source {:first true :last true} {})))))

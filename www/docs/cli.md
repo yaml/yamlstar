@@ -59,16 +59,17 @@ when it is ambiguous. The short stage names `e`, `n`, and `y` are accepted.
 Token input is deliberately unsupported for now: it remains the explicit
 follow-up for `org.yamlstar/yaml-parser`.
 
-Load every document in a YAML stream:
+Every document in a YAML stream is loaded by default:
 
 ```bash
-yaml -s stream.yaml
+yaml stream.yaml
 ```
 
-Emit every document in a YAML stream:
+Select only the first or last document:
 
 ```bash
-yaml -y -s stream.yaml
+yaml --first stream.yaml
+yaml --last stream.yaml
 ```
 
 Evaluate a YAML string directly:
@@ -103,7 +104,8 @@ Options:
   -y, --yaml               Normalized YAML output
   -Y, --YAML               YAML output preserving representation details
   -o, --output FILE        Output file
-  -s, --stream             Output all documents
+  -A, --first              Select the first YAML document
+  -Z, --last               Select the last YAML document
   -d, --debug              Debug all stages
   -D, --debug-stage STAGE  Debug specific stage: parse, compose, resolve,
                            construct
@@ -123,8 +125,9 @@ native value
   -> YAML string
 ```
 
-With `-s`, it emits all input documents as a YAML stream with document
+By default, it emits all input documents as a YAML stream with document
 separators.
+Use `-A` or `-Z` to emit only the first or last document.
 
 ## Debugging
 

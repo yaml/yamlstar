@@ -60,3 +60,21 @@
         nodes (contract/contract-nodes [stream document stream])]
     (is (= 1 (count nodes)))
     (is (= "value" (yaml/load (contract/nodes-yaml nodes))))))
+
+(deftest document-selection
+  (let [source "--- first\n--- second\n"
+        events (contract/yaml-events source)]
+    (is (= ["first" "second"]
+           (contract/yaml-value source :all)))
+    (is (= "first" (contract/yaml-value source :first)))
+    (is (= "second" (contract/yaml-value source :last)))
+    (is (= 2 (count (filter #(= "document_start" (:event %))
+                            (contract/select-events events :all)))))
+    (is (= 1 (count (filter #(= "document_start" (:event %))
+                            (contract/select-events events :first)))))
+    (is (= 1 (count (filter #(= "document_start" (:event %))
+                            (contract/select-events events :last)))))
+    (is (= "first" (yaml/load
+                     (contract/yaml-output source false :first))))
+    (is (= "second" (yaml/load
+                      (contract/yaml-output source true :last))))))

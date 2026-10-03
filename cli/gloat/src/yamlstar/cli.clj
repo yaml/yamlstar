@@ -6,7 +6,6 @@
             [yamlstar.cli-default :as cli-default]
             [yamlstar.composer :as composer]
             [yamlstar.contract :as contract]
-            [yamlstar.constructor :as constructor]
             [yamlstar.emitter :as emitter]
             [yamlstar.parser :as parser]
             [yamlstar.plugin.shared-host :as shared-host]
@@ -31,7 +30,8 @@ Options:
   -y, --yaml         Normalized YAML output
   -Y, --YAML         YAML output preserving representation details
   -o, --output FILE  Write output to FILE
-  -s, --stream       Load all YAML documents
+  -A, --first        Select the first YAML document
+  -Z, --last         Select the last YAML document
       --config CONF  YAMLStar options file or inline YAML mapping
       --plugin SPEC   Plugin selector list
       --path[=PATH]   Print defaults or set the shared library path
@@ -113,8 +113,11 @@ Options:
           (or (= arg "-N") (= arg "--NODE"))
           (recur more (assoc opts :NODE true) positional)
 
-          (or (= arg "-s") (= arg "--stream"))
-          (recur more (assoc opts :stream true) positional)
+          (or (= arg "-A") (= arg "--first"))
+          (recur more (assoc opts :first true) positional)
+
+          (or (= arg "-Z") (= arg "--last"))
+          (recur more (assoc opts :last true) positional)
 
           (or (= arg "-f") (= arg "--from"))
           (if (empty? more)
@@ -203,41 +206,49 @@ Options:
     (nil-keys->string* x)
     x))
 
-(defn do-debug-parse [yaml-str runtime-opts]
+(defn document-selection [opts]
+  (when (and (:first opts) (:last opts))
+    (throw (ex-info "--first and --last cannot be used together" {})))
+  (cond
+    (:first opts) :first
+    (:last opts) :last
+    :else :all))
+
+(defn do-debug-parse [yaml-str runtime-opts selection]
   (let [events (with-timing "parse"
-                 (parser/parse yaml-str runtime-opts))]
+                 (contract/select-events
+                  (parser/parse yaml-str runtime-opts) selection))]
     (doseq [event events]
       (prn event))))
 
-(defn do-debug-compose [yaml-str runtime-opts]
+(defn do-debug-compose [yaml-str runtime-opts selection]
   (let [events (parser/parse yaml-str runtime-opts)
-        node (with-timing "compose"
-               (composer/compose events))]
-    (prn node)))
+        nodes (with-timing "compose"
+                (contract/select-documents
+                 (composer/compose-all events) selection))]
+    (prn (if (= selection :all) nodes (first nodes)))))
 
-(defn do-debug-resolve [yaml-str runtime-opts]
+(defn do-debug-resolve [yaml-str runtime-opts selection]
   (let [events (parser/parse yaml-str runtime-opts)
-        node (composer/compose events)
+        nodes (contract/select-documents
+               (composer/compose-all events) selection)
         resolved (with-timing "resolve"
-                   (resolver/resolve node))]
-    (prn resolved)))
+                   (mapv resolver/resolve nodes))]
+    (prn (if (= selection :all) resolved (first resolved)))))
 
-(defn do-debug-construct [yaml-str runtime-opts]
-  (let [events (parser/parse yaml-str runtime-opts)
-        node (composer/compose events)
-        resolved (resolver/resolve node)
-        data (with-timing "construct"
-               (constructor/construct resolved))]
+(defn do-debug-construct [yaml-str runtime-opts selection]
+  (let [data (with-timing "construct"
+               (contract/yaml-value yaml-str selection runtime-opts))]
     (prn data)))
 
-(defn do-debug-all [yaml-str runtime-opts]
-  (do-debug-parse yaml-str runtime-opts)
+(defn do-debug-all [yaml-str runtime-opts selection]
+  (do-debug-parse yaml-str runtime-opts selection)
   (println)
-  (do-debug-compose yaml-str runtime-opts)
+  (do-debug-compose yaml-str runtime-opts selection)
   (println)
-  (do-debug-resolve yaml-str runtime-opts)
+  (do-debug-resolve yaml-str runtime-opts selection)
   (println)
-  (do-debug-construct yaml-str runtime-opts))
+  (do-debug-construct yaml-str runtime-opts selection))
 
 (declare pretty-json)
 
@@ -316,26 +327,27 @@ Options:
 (defn convert-input [input opts runtime-opts]
   (let [{:keys [stage value source]}
         (contract/read-contract input (:from opts) runtime-opts)
-        target (output-stage opts)]
+        target (output-stage opts)
+        selection (document-selection opts)]
     (when (= stage :token) (token-follow-up))
     (when (and (not= target :json) (not= stage :yaml))
       (contract/check-forward! stage target))
     (case stage
       :yaml
-      (case target
-        :event (yaml/dump (contract/event-contract
-                           (contract/yaml-events source runtime-opts)))
-        :node (yaml/dump (contract/node-contract
-                          (contract/events-nodes
-                           (contract/yaml-events source runtime-opts))
-                          (:NODE opts)))
-        :yaml (contract/yaml-output source (:YAML opts) (:stream opts)
-                                    runtime-opts)
-        :json (format-json-output
-               (contract/yaml-value source (:stream opts) runtime-opts) opts))
+      (let [events (contract/select-events
+                    (contract/yaml-events source runtime-opts) selection)]
+        (case target
+          :event (yaml/dump (contract/event-contract events))
+          :node (yaml/dump (contract/node-contract
+                            (contract/events-nodes events) (:NODE opts)))
+          :yaml (contract/yaml-output source (:YAML opts) selection
+                                      runtime-opts)
+          :json (format-json-output
+                 (contract/yaml-value source selection runtime-opts) opts)))
 
       :event
-      (let [events (contract/contract-events value)]
+      (let [events (contract/select-events
+                    (contract/contract-events value) selection)]
         (case target
           :event (yaml/dump (contract/event-contract events))
           :node (yaml/dump (contract/node-contract
@@ -344,7 +356,8 @@ Options:
           :json (throw (ex-info "JSON output is only supported for YAML text input" {}))))
 
       :node
-      (let [nodes (contract/contract-nodes value)]
+      (let [nodes (contract/select-documents
+                   (contract/contract-nodes value) selection)]
         (case target
           :node (yaml/dump (contract/node-contract nodes (:NODE opts)))
           :yaml (contract/nodes-yaml nodes runtime-opts)
@@ -381,17 +394,18 @@ Options:
       (try
         (when (contains? opts :library-path)
           (set-library-path! (:library-path opts)))
-        (let [runtime-opts (runtime/runtime-options opts)]
+        (let [runtime-opts (runtime/runtime-options opts)
+              selection (document-selection opts)]
           (cond
             (:debug opts)
-            (do-debug-all (read-input opts) runtime-opts)
+            (do-debug-all (read-input opts) runtime-opts selection)
 
             (:debug-stage opts)
             (case (:debug-stage opts)
-              "parse" (do-debug-parse (read-input opts) runtime-opts)
-              "compose" (do-debug-compose (read-input opts) runtime-opts)
-              "resolve" (do-debug-resolve (read-input opts) runtime-opts)
-              "construct" (do-debug-construct (read-input opts) runtime-opts))
+              "parse" (do-debug-parse (read-input opts) runtime-opts selection)
+              "compose" (do-debug-compose (read-input opts) runtime-opts selection)
+              "resolve" (do-debug-resolve (read-input opts) runtime-opts selection)
+              "construct" (do-debug-construct (read-input opts) runtime-opts selection))
 
             :else
             (run opts runtime-opts)))

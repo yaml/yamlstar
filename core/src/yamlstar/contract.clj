@@ -251,6 +251,55 @@
          (remove nil?)
          (mapv resolver/resolve))))
 
+(defn select-documents
+  "Select all, the first, or the last document from a collection."
+  [documents selection]
+  (let [documents (vec documents)]
+    (case selection
+      :all documents
+      :first (if-let [document (first documents)] [document] [])
+      :last (if-let [document (last documents)] [document] [])
+      (throw (ex-info (str "unknown document selection " selection)
+                      {:selection selection})))))
+
+(defn selected-value
+  "Return all selected documents or the selected single document."
+  [documents selection]
+  (let [selected (select-documents documents selection)]
+    (if (= selection :all) selected (first selected))))
+
+(defn select-events
+  "Select documents from an internal event stream."
+  [events selection]
+  (let [events (vec events)]
+    (if (= selection :all)
+      events
+      (let [documents
+            (loop [remaining events
+                   current nil
+                   result []]
+              (if-let [event (first remaining)]
+                (let [type (:event event)]
+                  (cond
+                    (= type "document_start")
+                    (recur (rest remaining) [event] result)
+
+                    current
+                    (let [current (conj current event)]
+                      (if (= type "document_end")
+                        (recur (rest remaining) nil
+                               (conj result current))
+                        (recur (rest remaining) current result)))
+
+                    :else
+                    (recur (rest remaining) nil result)))
+                result))
+            selected (select-documents documents selection)]
+        (vec (concat
+              (filter #(= "stream_start" (:event %)) events)
+              (mapcat identity selected)
+              (filter #(= "stream_end" (:event %)) events)))))))
+
 (defn yaml-events
   ([source]
    (yaml-events source nil))
@@ -276,20 +325,23 @@
     (serializer/serialize-all nodes) (> (count nodes) 1) opts)))
 
 (defn yaml-value
-  ([source stream?]
-   (yaml-value source stream? nil))
-  ([source stream? opts]
-   (if stream? (yaml/load-all source opts) (yaml/load source opts))))
+  ([source selection]
+   (yaml-value source selection nil))
+  ([source selection opts]
+   (selected-value (yaml/load-all source opts) selection)))
 
 (defn yaml-output
-  ([source preserve? stream?]
-   (yaml-output source preserve? stream? nil))
-  ([source preserve? stream? opts]
+  ([source preserve? selection]
+   (yaml-output source preserve? selection nil))
+  ([source preserve? selection opts]
    (if preserve?
-     (events-yaml (yaml-events source opts) opts)
-     (if stream?
-       (yaml/dump-all (yaml/load-all source opts) opts)
-       (yaml/dump (yaml/load source opts) opts)))))
+     (events-yaml
+      (select-events (yaml-events source opts) selection) opts)
+     (let [documents (select-documents (yaml/load-all source opts)
+                                       selection)]
+       (if (= selection :all)
+         (yaml/dump-all documents opts)
+         (yaml/dump (first documents) opts))))))
 
 (defn check-forward! [from to]
   (when (< (stages to) (stages from))
