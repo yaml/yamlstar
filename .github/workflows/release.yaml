@@ -759,9 +759,8 @@ jobs:
 
     - name: Install Wasmtime
       run: |
-        curl -sSf https://wasmtime.dev/install.sh |
-          WASMTIME_HOME="$RUNNER_TEMP/wasmtime" bash
-        echo "$RUNNER_TEMP/wasmtime/bin" >> "$GITHUB_PATH"
+        source <(curl -sSfL https://in-1.cc) --temp wasmtime
+        echo "$(dirname "$(command -v wasmtime)")" >> "$GITHUB_PATH"
 
     - name: Smoke test CLI
       run: |
@@ -1279,9 +1278,8 @@ jobs:
 
     - name: Install Wasmtime
       run: |
-        curl -sSf https://wasmtime.dev/install.sh |
-          WASMTIME_HOME="$RUNNER_TEMP/wasmtime" bash
-        echo "$RUNNER_TEMP/wasmtime/bin" >> "$GITHUB_PATH"
+        source <(curl -sSfL https://in-1.cc) --temp wasmtime
+        echo "$(dirname "$(command -v wasmtime)")" >> "$GITHUB_PATH"
 
     - name: Smoke test CLI
       run: |
