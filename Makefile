@@ -287,6 +287,9 @@ export NEW_VERSION := $(or $v,$n)
 ifdef d
 export YS_RELEASE_DRYRUN := 1
 endif
+ifdef a
+export YS_RELEASE_ALLOW_BRANCH := 1
+endif
 ifdef v
 export YS_RELEASE_VERSION_NEW := $v
 endif
