@@ -466,12 +466,12 @@ endif
 	@$(MAKE-BASH) $@ "$(v)"
 	$(MAKE) release-build-github v=$(v)
 
-# Rerun the failed jobs of a release workflow run (r=RUN_ID, default:
-# the latest release workflow run on the current branch) and the jobs
-# after them, reusing the build artifacts already attached to the run.
-# The tags are moved to HEAD first so the rerun jobs check out the fix.
-# Use this when only a test or publish job failed; use release-retry
-# when the build itself must be redone. Example:
+# Start a new release workflow using artifacts from a prior run
+# (r=RUN_ID, default: the latest release workflow run on the current
+# branch). The tags are moved to HEAD first so the new workflow uses
+# the test and publish fixes. Use this when only a test or publish job
+# failed; use release-retry when the build itself must be redone.
+# Example:
 #   make release-rerun v=0.1.23 r=12345678
 release-rerun: $(GH)
 ifndef v

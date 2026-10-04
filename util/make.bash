@@ -70,9 +70,16 @@ release-rerun() (
   git push --force-with-lease origin HEAD:"$branch"
   git tag -f "$tag" HEAD
   git push -f origin "$tag"
-  echo "Rerunning failed jobs of run $run_id"
-  gh run rerun "$run_id" --failed --repo yaml/yamlstar
-  gh run watch "$run_id" --repo yaml/yamlstar \
+  echo "Starting release with artifacts from run $run_id"
+  gh workflow run release.yaml \
+    --repo yaml/yamlstar --ref "$branch" -f version="$version" \
+    -f test_artifacts_run_id="$run_id"
+  sleep 5
+  new_run_id=$(gh run list --workflow=release.yaml \
+    --repo yaml/yamlstar --branch "$branch" --limit=1 \
+    --json databaseId --jq '.[0].databaseId')
+  test -n "$new_run_id"
+  gh run watch "$new_run_id" --repo yaml/yamlstar \
     --exit-status --interval=10
 )
 
