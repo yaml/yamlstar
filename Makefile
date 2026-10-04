@@ -87,13 +87,14 @@ BINDING-LANGS ?= \
 # Glojure builds cannot run JVM-based bindings (clojure, java).
 BINDING-SKIP ?= clojure java
 
+BINDING-DIRS := $(BINDING-LANGS)
 BINDING-LANGS := $(filter-out $(BINDING-SKIP),$(BINDING-LANGS))
 
 ALL-DIRS := \
   cli \
   core \
   libyamlstar \
-  $(BINDING-LANGS) \
+  $(BINDING-DIRS) \
 
 ALL-CLEAN := $(ALL-DIRS:%=clean-%)
 ALL-REALCLEAN := $(ALL-DIRS:%=realclean-%)
@@ -202,6 +203,7 @@ $(ALL-TESTS):
 core:
 	$(MAKE) -C core install
 
+.PHONY: cli
 cli:
 	$(MAKE) -C cli build
 
