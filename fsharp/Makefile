@@ -1,4 +1,5 @@
 include ../common/init.mk
+DOTNET-VERSION := 8.0.415
 include $M/clean.mk
 include $M/dotnet.mk
 include $(COMMON)/common.mk
