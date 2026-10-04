@@ -74,7 +74,7 @@ defn download-releases(version):
   each file release-files(version):
     when-not fs/e(file):
       say: "Downloading $file"
-      url =: "$releases-url/download/$version/$file"
+      url =: "$releases-url/download/v$version/$file"
       res =: sh("curl -fsSLO $url")
       when res.exit:N.?:
         die: "Download of '$url' failed:\n$(res.err)"
@@ -122,11 +122,11 @@ defn yamlstar-formula(version class shas):
       on_linux do
         if Hardware::CPU.intel?
           url "https://github.com/yaml/yamlstar/releases/download/" \
-            "#{version}/yamlstar-#{version}-linux-x64.tar.xz"
+            "v#{version}/yamlstar-#{version}-linux-x64.tar.xz"
           sha256 "LINUX_INTEL_SHA"
         elsif Hardware::CPU.arm?
           url "https://github.com/yaml/yamlstar/releases/download/" \
-            "#{version}/yamlstar-#{version}-linux-aarch64.tar.xz"
+            "v#{version}/yamlstar-#{version}-linux-aarch64.tar.xz"
           sha256 "LINUX_ARM_SHA"
         else
           odie "YAMLStar is not available for this Linux architecture"
@@ -136,11 +136,11 @@ defn yamlstar-formula(version class shas):
       on_macos do
         if Hardware::CPU.arm?
           url "https://github.com/yaml/yamlstar/releases/download/" \
-            "#{version}/yamlstar-#{version}-macos-arm64.tar.xz"
+            "v#{version}/yamlstar-#{version}-macos-arm64.tar.xz"
           sha256 "MACOS_ARM_SHA"
         elsif Hardware::CPU.intel?
           url "https://github.com/yaml/yamlstar/releases/download/" \
-            "#{version}/yamlstar-#{version}-macos-x64.tar.xz"
+            "v#{version}/yamlstar-#{version}-macos-x64.tar.xz"
           sha256 "MACOS_INTEL_SHA"
         else
           odie "YAMLStar is not available for this macOS architecture"
@@ -184,11 +184,11 @@ defn libyamlstar-formula(version class shas):
       on_linux do
         if Hardware::CPU.intel?
           url "https://github.com/yaml/yamlstar/releases/download/" \
-            "#{version}/libyamlstar-#{version}-linux-x64.tar.xz"
+            "v#{version}/libyamlstar-#{version}-linux-x64.tar.xz"
           sha256 "LINUX_INTEL_SHA"
         elsif Hardware::CPU.arm?
           url "https://github.com/yaml/yamlstar/releases/download/" \
-            "#{version}/libyamlstar-#{version}-linux-aarch64.tar.xz"
+            "v#{version}/libyamlstar-#{version}-linux-aarch64.tar.xz"
           sha256 "LINUX_ARM_SHA"
         else
           odie "libyamlstar is not available for this Linux architecture"
@@ -198,11 +198,11 @@ defn libyamlstar-formula(version class shas):
       on_macos do
         if Hardware::CPU.arm?
           url "https://github.com/yaml/yamlstar/releases/download/" \
-            "#{version}/libyamlstar-#{version}-macos-arm64.tar.xz"
+            "v#{version}/libyamlstar-#{version}-macos-arm64.tar.xz"
           sha256 "MACOS_ARM_SHA"
         elsif Hardware::CPU.intel?
           url "https://github.com/yaml/yamlstar/releases/download/" \
-            "#{version}/libyamlstar-#{version}-macos-x64.tar.xz"
+            "v#{version}/libyamlstar-#{version}-macos-x64.tar.xz"
           sha256 "MACOS_INTEL_SHA"
         else
           odie "libyamlstar is not available for this macOS architecture"
@@ -260,6 +260,6 @@ defn check-version(version):
     die: "Invalid version '$version'"
 
   try:
-    curl: "$releases-url/tag/$version"
+    curl: "$releases-url/tag/v$version"
     catch:
       die: "No YAMLStar release for version '$version'"
