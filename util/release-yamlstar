@@ -635,13 +635,14 @@ defn github-env():
   =>: env
 
 defn legacy-github-token():
+  runtime =: ENV.YS || die("'YS' env var not defined")
   secrets =:
     if bash("test -f '$(ENV.HOME)/.yamlstar-secrets.yaml'"):ok:
       then: "$(ENV.HOME)/.yamlstar-secrets.yaml"
       else: "$(ENV.HOME)/.yamlscript-secrets.yaml"
   token =:
     if bash("test -f '$secrets'"):ok:
-      sh-out: "ys -l $secrets -e '.github.token:say'"
+      sh-out: "$runtime -l $secrets -e '.github.token:say'"
       =>: ''
 
   =>: token

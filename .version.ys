@@ -21,7 +21,6 @@ vo =: v-old.str/replace(/\./ '\\.')
   - regx:: "()${vp}()"
     file:
     - ada/alire.toml
-    - Makefile
     - Meta
     - cli/src/yamlstar/cli.clj
     - clojure/ReadMe.md
@@ -97,6 +96,10 @@ vo =: v-old.str/replace(/\./ '\\.')
     - www/docs/index.md
     - zig/build.zig.zon
     - zig/src/yamlstar.zig
+
+  - regx:: "()${vo}()"
+    file:
+    - Makefile
 
 #------------------------------------------------------------------------------
 # These changes are very specific to not accidentally bump something wrongly.
