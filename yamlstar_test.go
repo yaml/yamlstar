@@ -328,7 +328,7 @@ func BenchmarkDumpEmitter(b *testing.B) {
 		"name":    "yamlstar",
 		"enabled": true,
 		"plugins": []any{
-			map[string]any{"name": "yaml-parser", "default": "go-yaml"},
+			map[string]any{"name": "parser", "default": "go-yaml"},
 			map[string]any{"name": "yaml-emitter", "default": "go-yaml"},
 		},
 		"metadata": map[string]any{

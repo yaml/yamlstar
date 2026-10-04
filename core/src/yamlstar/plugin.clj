@@ -3,7 +3,8 @@
   (:require [clojure.string :as str]
             [yamlstar.plugin.alias-data :as alias-data]))
 
-(defonce ^:private yaml-parser-registry (atom {}))
+(defonce ^:private parser-registry (atom {}))
+(defonce ^:private parser-loader (atom nil))
 (defonce ^:private yaml-emitter-registry (atom {}))
 (defonce ^:private json-comments-registry (atom {}))
 (defonce ^:private json-comments-loader (atom nil))
@@ -26,7 +27,7 @@
       (throw (ex-info "Plugin version must be a release version"
                       {:version version}))))
 
-(defn register-yaml-parser!
+(defn register-parser!
   "Register a YAML parser plugin map under its :name."
   [{:keys [name parse version] :as plugin}]
   (when-not (and (string? name) (not (str/blank? name)))
@@ -37,37 +38,64 @@
                     {:plugin plugin})))
   (let [plugin (cond-> plugin
                  version (assoc :version (normalize-version version)))]
-    (swap! yaml-parser-registry assoc name plugin)
+    (swap! parser-registry assoc name plugin)
     plugin))
 
-(defn unregister-yaml-parser!
+(defn unregister-parser!
   "Remove the YAML parser plugin registered under name."
   [name]
-  (swap! yaml-parser-registry dissoc name)
+  (swap! parser-registry dissoc name)
   nil)
 
-(defn registered-yaml-parsers
+(defn registered-parsers
   "Return the registered YAML parser names."
   []
-  (sort (keys @yaml-parser-registry)))
+  (sort (keys @parser-registry)))
 
-(defn resolve-yaml-parser
-  "Look up a YAML parser plugin by name."
-  [name]
-  (or (get @yaml-parser-registry name)
-      (try
-        (some-> (requiring-resolve
-                 (symbol (str "yamlstar.plugin.yaml-parser." name)
-                         "plugin"))
-                deref)
-        (catch Exception _ nil))
-      (throw (ex-info (str "Unknown YAML parser plugin: " name
-                           ". Available: "
-                           (if-let [names (seq (registered-yaml-parsers))]
-                             (str/join ", " names)
-                             "none"))
-                      {:yaml-parser name
-                       :available (registered-yaml-parsers)}))))
+(defn set-parser-loader!
+  "Install a lazy parser implementation loader."
+  [loader]
+  (when-not (or (nil? loader) (fn? loader))
+    (throw (ex-info "Parser loader must be a function or nil"
+                    {:loader loader})))
+  (reset! parser-loader loader)
+  loader)
+
+(defn resolve-parser
+  "Look up a YAML parser plugin by name, loading it when needed."
+  ([name]
+   (resolve-parser name nil false))
+  ([name version install?]
+   (let [parser
+         (or (get @parser-registry name)
+             (try
+               (some-> (requiring-resolve
+                        (symbol (str "yamlstar.plugin.parser." name)
+                                "plugin"))
+                       deref)
+               (catch Exception _ nil))
+             (when-let [loader @parser-loader]
+               (when-let [loaded (loader "parser" name version install?)]
+                 (register-parser! loaded)))
+             (throw (ex-info (str "Unknown YAML parser plugin: " name
+                                  ". Available: "
+                                  (if-let [names (seq (registered-parsers))]
+                                    (str/join ", " names)
+                                    "none"))
+                             {:parser name
+                              :available (registered-parsers)})))]
+     (when version
+       (let [requested (normalize-version version)
+             linked (:version parser)]
+         (when (not= requested linked)
+           (throw
+            (ex-info
+             (str "Parser plugin version mismatch: linked "
+                  (or linked "unversioned") ", requested " requested)
+             {:parser name
+              :linked linked
+              :requested requested})))))
+     parser)))
 
 (defn register-yaml-emitter!
   "Register a YAML emitter plugin map under its :name."
@@ -230,10 +258,9 @@
     (when-not (map? config)
       (throw (ex-info "Option :plugin must be a map"
                       {:plugin config})))
-    (when (contains? config :parser)
-      (throw (ex-info (str "Plugin API :parser was renamed to "
-                           ":yaml-parser")
-                      {:plugin :parser})))
+    (when (contains? config :yaml-parser)
+      (throw (ex-info "Unknown YAMLStar plugin API: yaml-parser"
+                      {:api :yaml-parser})))
     config))
 
 (defn- short-config
@@ -265,14 +292,14 @@
     (throw (ex-info "Plugin config must be a map, string, or boolean"
                     {:api api :value value}))))
 
-(defn yaml-parser-opts
+(defn parser-opts
   "Extract [parser-name config] from load options."
   [opts]
   (when-let [plugins (plugin-config opts)]
-    (when (contains? plugins :yaml-parser)
+    (when (contains? plugins :parser)
       (when-let [config
                  (selection-config
-                  :yaml-parser (:yaml-parser plugins))]
+                  :parser (:parser plugins))]
         (let [name (:name config)]
           (when (and name (not (string? name)))
             (throw (ex-info "Parser plugin :name must be a string"
@@ -350,7 +377,7 @@
   [opts]
   (when-let [plugins (plugin-config opts)]
     (doseq [api (keys (dissoc plugins
-                              :yaml-parser
+                              :parser
                               :yaml-emitter
                               :tab-indent
                               :alias-data
@@ -400,20 +427,12 @@
 
 (defn parse-with
   "Resolve the named parser plugin and parse yaml-str with it."
-  [name config yaml-str]
-  (let [{:keys [parse default-config version]} (resolve-yaml-parser name)
-        requested (:version config)]
-    (when requested
-      (let [requested (normalize-version requested)]
-        (when (not= requested version)
-          (throw
-           (ex-info
-            (str "Parser plugin version mismatch: linked "
-                 (or version "unversioned") ", requested " requested)
-            {:yaml-parser name
-             :linked version
-             :requested requested})))))
-    (parse yaml-str (merge default-config (dissoc config :version)))))
+  ([name config yaml-str]
+   (parse-with name config yaml-str false))
+  ([name config yaml-str install?]
+   (let [{:keys [parse default-config]}
+         (resolve-parser name (:version config) install?)]
+     (parse yaml-str (merge default-config (dissoc config :version))))))
 
 (defn emit-with
   "Resolve the named YAML emitter plugin and emit an event stream."

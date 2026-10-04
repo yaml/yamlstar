@@ -158,14 +158,14 @@ CLI-DEFAULT-SRC() (
       '(ns yamlstar.cli-default' \
       "  (:require $requires))" \
       '' \
-      "(def default-yaml-parser \"$parser\")" \
+      "(def default-parser \"$parser\")" \
       "(def default-yaml-emitter \"$emitter\")" \
       > "$output"
   else
     printf '%s\n' \
       '(ns yamlstar.cli-default)' \
       '' \
-      "(def default-yaml-parser \"$parser\")" \
+      "(def default-parser \"$parser\")" \
       "(def default-yaml-emitter \"$emitter\")" \
       > "$output"
   fi

@@ -53,9 +53,9 @@
                   {:plugin {:yaml-emitter {:name "no-such-emitter"}}})))
   (is (thrown-with-msg?
        Exception
-       #"renamed to :yaml-parser"
+       #"Unknown YAMLStar plugin API: yaml-parser"
        (yaml/dump "value"
-                  {:plugin {:parser {:name "reference"}}}))))
+                  {:plugin {:yaml-parser {:name "reference"}}}))))
 
 (deftest go-yaml-emitter-runtime-test
   (is (thrown-with-msg?

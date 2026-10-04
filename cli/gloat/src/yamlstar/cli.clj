@@ -287,7 +287,7 @@ Options:
 (defn token-follow-up []
   (throw (ex-info
           (str "token chaining is not supported by YAMLStar yet; "
-               "yaml-parser token support is the explicit follow-up") {})))
+               "parser token support is the explicit follow-up") {})))
 
 (defn convert-input [input opts runtime-opts]
   (let [{:keys [stage value source]}
@@ -343,11 +343,11 @@ Options:
      :lg nil))
 
 (defn -main [& argv]
-  (parser/register-yaml-parsers!
-   "reference" cli-default/default-yaml-parser)
+  (parser/register-parsers!
+   "reference" cli-default/default-parser)
   (emitter/register-yaml-emitters!
    "reference" cli-default/default-yaml-emitter)
-  (parser/set-default-yaml-parser! cli-default/default-yaml-parser)
+  (parser/set-default-parser! cli-default/default-parser)
   (emitter/set-default-yaml-emitter! cli-default/default-yaml-emitter)
   (shared-host/install!)
   (let [opts (parse-args argv)]

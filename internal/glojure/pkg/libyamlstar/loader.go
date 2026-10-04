@@ -290,12 +290,12 @@ func LoadNS() {
 	sym_parser := lang.NewSymbolUnchecked("parser")
 	sym_path := lang.NewSymbolUnchecked("path")
 	sym_read_DASH_str := lang.NewSymbolUnchecked("read-str")
+	sym_register_DASH_parsers_BANG_ := lang.NewSymbolUnchecked("register-parsers!")
 	sym_register_DASH_yaml_DASH_emitters_BANG_ := lang.NewSymbolUnchecked("register-yaml-emitters!")
-	sym_register_DASH_yaml_DASH_parsers_BANG_ := lang.NewSymbolUnchecked("register-yaml-parsers!")
 	sym_replace := lang.NewSymbolUnchecked("replace")
 	sym_sequential_QMARK_ := lang.NewSymbolUnchecked("sequential?")
+	sym_set_DASH_default_DASH_parser_BANG_ := lang.NewSymbolUnchecked("set-default-parser!")
 	sym_set_DASH_default_DASH_yaml_DASH_emitter_BANG_ := lang.NewSymbolUnchecked("set-default-yaml-emitter!")
-	sym_set_DASH_default_DASH_yaml_DASH_parser_BANG_ := lang.NewSymbolUnchecked("set-default-yaml-parser!")
 	sym_set_DASH_environment_BANG_ := lang.NewSymbolUnchecked("set-environment!")
 	sym_shared_DASH_host := lang.NewSymbolUnchecked("shared-host")
 	sym_str := lang.NewSymbolUnchecked("str")
@@ -413,10 +413,10 @@ func LoadNS() {
 	var_yamlstar_DOT_emitter_register_DASH_yaml_DASH_emitters_BANG_ := lang.InternVarName(sym_yamlstar_DOT_emitter, sym_register_DASH_yaml_DASH_emitters_BANG_)
 	// var yamlstar.emitter/set-default-yaml-emitter!
 	var_yamlstar_DOT_emitter_set_DASH_default_DASH_yaml_DASH_emitter_BANG_ := lang.InternVarName(sym_yamlstar_DOT_emitter, sym_set_DASH_default_DASH_yaml_DASH_emitter_BANG_)
-	// var yamlstar.parser/register-yaml-parsers!
-	var_yamlstar_DOT_parser_register_DASH_yaml_DASH_parsers_BANG_ := lang.InternVarName(sym_yamlstar_DOT_parser, sym_register_DASH_yaml_DASH_parsers_BANG_)
-	// var yamlstar.parser/set-default-yaml-parser!
-	var_yamlstar_DOT_parser_set_DASH_default_DASH_yaml_DASH_parser_BANG_ := lang.InternVarName(sym_yamlstar_DOT_parser, sym_set_DASH_default_DASH_yaml_DASH_parser_BANG_)
+	// var yamlstar.parser/register-parsers!
+	var_yamlstar_DOT_parser_register_DASH_parsers_BANG_ := lang.InternVarName(sym_yamlstar_DOT_parser, sym_register_DASH_parsers_BANG_)
+	// var yamlstar.parser/set-default-parser!
+	var_yamlstar_DOT_parser_set_DASH_default_DASH_parser_BANG_ := lang.InternVarName(sym_yamlstar_DOT_parser, sym_set_DASH_default_DASH_parser_BANG_)
 	// var yamlstar.plugin.shared-host/install!
 	var_yamlstar_DOT_plugin_DOT_shared_DASH_host_install_BANG_ := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host, sym_install_BANG_)
 	aotExternalFn0 := aotLinkFn1(var_clojure_DOT_core_bound_QMARK_)
@@ -429,7 +429,7 @@ func LoadNS() {
 	aotExternalFn17 := aotLinkFn1(var_clojure_DOT_core_name)
 	aotExternalFn18 := aotLinkFn1(var_clojure_DOT_core_keyword)
 	aotExternalFn19 := aotLinkFn3(var_clojure_DOT_string_replace)
-	aotExternalFn2 := aotLinkFn2(var_yamlstar_DOT_parser_register_DASH_yaml_DASH_parsers_BANG_)
+	aotExternalFn2 := aotLinkFn2(var_yamlstar_DOT_parser_register_DASH_parsers_BANG_)
 	aotExternalFn21 := aotLinkFn1(var_clojure_DOT_string_blank_QMARK_)
 	aotExternalFn22 := aotLinkFn1(var_clojure_DOT_core_not_DASH_empty)
 	aotExternalFn23 := aotLinkFn1(var_clojure_DOT_data_DOT_json_read_DASH_str)
@@ -441,7 +441,7 @@ func LoadNS() {
 	aotExternalFn29 := aotLinkFn2(var_yamlstar_DOT_api_load_DASH_all)
 	aotExternalFn3 := aotLinkFn2(var_yamlstar_DOT_emitter_register_DASH_yaml_DASH_emitters_BANG_)
 	aotExternalFn30 := aotLinkFn0(var_yamlstar_DOT_api_version)
-	aotExternalFn4 := aotLinkFn1(var_yamlstar_DOT_parser_set_DASH_default_DASH_yaml_DASH_parser_BANG_)
+	aotExternalFn4 := aotLinkFn1(var_yamlstar_DOT_parser_set_DASH_default_DASH_parser_BANG_)
 	aotExternalFn5 := aotLinkFn1(var_yamlstar_DOT_emitter_set_DASH_default_DASH_yaml_DASH_emitter_BANG_)
 	aotExternalFn7 := aotLinkFn2(var_clojure_DOT_core_apply)
 	aotExternalFn8 := aotLinkFn2(var_clojure_DOT_core_mapcat)
@@ -777,7 +777,7 @@ func LoadNS() {
 						_ = v11
 						var tmp12 any
 						{ // let
-							// let binding "vec__174"
+							// let binding "vec__176"
 							var v13 any = v11
 							_ = v13
 							// let binding "k"
@@ -805,7 +805,7 @@ func LoadNS() {
 						_ = v15
 						var tmp16 any
 						{ // let
-							// let binding "vec__178"
+							// let binding "vec__180"
 							var v17 any = v15
 							_ = v17
 							// let binding "k"
@@ -1242,7 +1242,7 @@ func LoadNS() {
 					_ = v7
 					var tmp8 any
 					{ // let
-						// let binding "vec__170"
+						// let binding "vec__172"
 						var v9 any = v7
 						_ = v9
 						// let binding "k"

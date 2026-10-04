@@ -1,7 +1,8 @@
 - version: 0.1.22
   date:    Fri Sep 25 11:45:07 AM EDT 2026
   changes:
-  - Rename the parser plugin API to yaml-parser
+  - Rename the yaml-parser plugin API to parser
+  - Add shared-library loading for the TOML parser plugin
   - Add the yaml-emitter plugin API
   - Use go-yaml parsing and emitting in native builds
   - Add tab-indented YAML loading and dumping

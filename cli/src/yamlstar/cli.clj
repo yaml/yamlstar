@@ -89,7 +89,7 @@ Examples:
   cat f.yaml | yaml -J       # stdin → pretty JSON
   yaml -D parse config.yaml  # Debug parser stage
   yaml --plugin=parser=reference@v0.2.5,json-comments f.yaml
-  yaml --config '{plugin: {yaml-parser: {name: reference}}}' f.yaml
+  yaml --config '{plugin: {parser: {name: reference}}}' f.yaml
 
 Options:")
 
@@ -239,7 +239,7 @@ Options:")
 (defn token-follow-up []
   (throw (ex-info
           (str "token chaining is not supported by YAMLStar yet; "
-               "yaml-parser token support is the explicit follow-up") {})))
+               "parser token support is the explicit follow-up") {})))
 
 (defn format-contract [value]
   (yaml/dump value))
@@ -299,7 +299,7 @@ Options:")
       1)))
 
 (defn main-status [& args]
-  (parser/set-default-yaml-parser! cli-default/default-yaml-parser)
+  (parser/set-default-parser! cli-default/default-parser)
   (emitter/set-default-yaml-emitter! cli-default/default-yaml-emitter)
   (shared-host/install!)
   (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)]

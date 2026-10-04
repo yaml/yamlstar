@@ -7,7 +7,7 @@
   "Parse a YAML string and return a Clojure data structure.
 
   An optional opts map can select a YAML parser plugin:
-    (load yaml {:plugin {:yaml-parser {:name \"snakeyaml\"}}})"
+    (load yaml {:plugin {:parser {:name \"snakeyaml\"}}})"
   ([yaml-str]
    (api/load yaml-str))
   ([yaml-str opts]
@@ -17,7 +17,7 @@
   "Parse a multi-document YAML string and return a sequence of documents.
 
   An optional opts map can select a YAML parser plugin:
-    (load-all yaml {:plugin {:yaml-parser {:name \"snakeyaml\"}}})"
+    (load-all yaml {:plugin {:parser {:name \"snakeyaml\"}}})"
   ([yaml-str]
    (api/load-all yaml-str))
   ([yaml-str opts]

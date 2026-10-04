@@ -4,10 +4,10 @@
   The default parser is the pure Clojure reference parser, registered
   as the \"reference\" parser plugin. Other parsers can be selected per
   call via the opts map (see yamlstar.plugin), or by generated runtimes with
-  set-default-yaml-parser!."
+  set-default-parser!."
   (:require [yamlstar.plugin :as plugin]))
 
-(defn register-yaml-parsers!
+(defn register-parsers!
   "Register the named parser plugins whose namespaces are already loaded.
 
   Each plugin namespace self-registers with a top-level form, but AOT
@@ -15,29 +15,29 @@
   runtimes call this explicitly after loading their plugin namespaces.
   Returns the registered plugin maps in the given order."
   [& names]
-  (mapv #(plugin/register-yaml-parser!
-          (plugin/resolve-yaml-parser %)) names))
+  (mapv #(plugin/register-parser!
+          (plugin/resolve-parser %)) names))
 
-(defn register-reference-yaml-parser!
+(defn register-reference-parser!
   "Register the built-in reference parser plugin.
 
   Generated runtimes call this after loading their reference parser plugin."
   []
-  (first (register-yaml-parsers! "reference")))
+  (first (register-parsers! "reference")))
 
-(def ^:private fallback-default-yaml-parser (atom "reference"))
+(def ^:private fallback-default-parser (atom "reference"))
 
-(defn set-default-yaml-parser!
+(defn set-default-parser!
   "Set the runtime fallback parser name.
 
   Per-call options have precedence over this fallback."
   [name]
-  (reset! fallback-default-yaml-parser name)
+  (reset! fallback-default-parser name)
   name)
 
-(defn- current-default-yaml-parser
+(defn- current-default-parser
   []
-  (or @fallback-default-yaml-parser
+  (or @fallback-default-parser
       "reference"))
 
 (defn parse
@@ -45,7 +45,7 @@
 
   Args:
     yaml-str: A string containing YAML content
-    opts: (optional) Options map with an optional :yaml-parser plugin
+    opts: (optional) Options map with an optional :parser plugin
 
   Returns:
     A sequence of event maps representing the YAML structure"
@@ -59,12 +59,13 @@
          native-tabs (and tabs
                           (contains? #{"auto" "tabs"} (:load tabs)))
          [pname config]
-         (or (plugin/yaml-parser-opts opts)
-             [(current-default-yaml-parser) {}])]
+         (or (plugin/parser-opts opts)
+             [(current-default-parser) {}])]
      (when (and native-tabs (not= pname "go-yaml"))
        (throw
         (ex-info
          "tab-indent loading requires the native go-yaml parser"
-         {:yaml-parser pname})))
+         {:parser pname})))
      (plugin/parse-with
-      pname (cond-> config tabs (assoc :tab-indent tabs)) yaml-str))))
+      pname (cond-> config tabs (assoc :tab-indent tabs)) yaml-str
+      (true? (:plugin-install opts))))))

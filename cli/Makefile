@@ -31,12 +31,12 @@ YAMLSTAR_ENGINE ?= $(if $(filter graal,$(RT)),graalvm,glojure)
 CLI-NAME ?= yaml-$(RT)-$(PARSER)
 CLI-DEFAULT-REQUIRE := $(strip \
   $(if $(filter graal,$(RT)), \
-    [yamlstar.plugin.yaml-parser.reference] \
-    [yamlstar.plugin.yaml-parser.snakeyaml] \
+    [yamlstar.plugin.parser.reference] \
+    [yamlstar.plugin.parser.snakeyaml] \
     [yamlstar.plugin.yaml-emitter.reference] \
     [yamlstar.plugin.yaml-emitter.snakeyaml], \
     $(if $(filter glj,$(RT)), \
-      [yamlstar.plugin.yaml-parser.go-yaml] \
+      [yamlstar.plugin.parser.go-yaml] \
       [yamlstar.plugin.yaml-emitter.go-yaml])))
 CLI-GRAALVM-NAME := yaml-graalvm
 
@@ -125,11 +125,11 @@ CLI-BIN-GLOAT := bin/$(CLI-GLOAT-NAME)
 GLOAT-CACHE := ../libyamlstar/cache/gloat-srcs
 GLOAT-CORE := ../core/src/yamlstar
 GLOAT-GO-YAML-PARSER-SRC := \
-  $(GLOAT-CACHE)/plugin/yaml_parser/go_yaml.clj
+  $(GLOAT-CACHE)/plugin/parser/go_yaml.clj
 GLOAT-GO-YAML-EMITTER-SRC := \
   $(GLOAT-CACHE)/plugin/yaml_emitter/go_yaml.clj
 GLOAT-REFERENCE-SRC := \
-  $(GLOAT-CACHE)/plugin/yaml_parser/reference.clj
+  $(GLOAT-CACHE)/plugin/parser/reference.clj
 REFERENCE-PARSER-DIR ?= $(if \
   $(wildcard ../../yamlstar-plugin-parser-reference/go.mod), \
   ../../yamlstar-plugin-parser-reference)
@@ -152,8 +152,8 @@ CORE-SRCS := \
   $(wildcard $(GLOAT-CORE)/*.cljc) \
   $(wildcard $(GLOAT-CORE)/plugin/*.clj) \
   $(wildcard $(GLOAT-CORE)/plugin/*.cljc) \
-  $(wildcard $(GLOAT-CORE)/plugin/yaml_parser/*.clj) \
-  $(wildcard $(GLOAT-CORE)/plugin/yaml_parser/*.cljc) \
+  $(wildcard $(GLOAT-CORE)/plugin/parser/*.clj) \
+  $(wildcard $(GLOAT-CORE)/plugin/parser/*.cljc) \
   $(wildcard $(GLOAT-CORE)/plugin/yaml_emitter/*.clj) \
   $(wildcard $(GLOAT-CORE)/plugin/yaml_emitter/*.cljc)
 GLOAT-CLI-SRCS := \
@@ -161,7 +161,7 @@ GLOAT-CLI-SRCS := \
   $(GLOAT-CACHE)/plugin/alias_data.clj \
   $(GLOAT-CORE)/plugin.clj \
   $(GLOAT-CORE)/options.clj \
-  $(GLOAT-CORE)/plugin/yaml_parser.clj \
+  $(GLOAT-CORE)/plugin/parser.clj \
   $(GLOAT-CORE)/plugin/yaml_emitter.clj \
   $(GLOAT-REFERENCE-SRC) \
   $(if $(filter glj,$(RT)),$(GLOAT-GO-YAML-PARSER-SRC)) \
@@ -262,7 +262,7 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
   $(GLOAT-CACHE)/plugin/alias_data.clj \
   $(GLOAT-CORE)/plugin.clj \
   $(GLOAT-CORE)/options.clj \
-  $(GLOAT-CORE)/plugin/yaml_parser.clj \
+  $(GLOAT-CORE)/plugin/parser.clj \
   $(GLOAT-CORE)/plugin/yaml_emitter.clj \
   $(GLOAT-REFERENCE-SRC) \
   $(if $(filter glj,$(RT)),$(GLOAT-GO-YAML-PARSER-SRC)) \

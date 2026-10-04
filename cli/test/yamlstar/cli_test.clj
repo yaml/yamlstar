@@ -9,15 +9,15 @@
 (def sample "a: &x [1, \"two\"]\nb: *x\n")
 
 (deftest bundled-yaml-plugins
-  (is (= #{"reference" cli-default/default-yaml-parser}
-         (set (plugin/registered-yaml-parsers))))
+  (is (= #{"reference" cli-default/default-parser}
+         (set (plugin/registered-parsers))))
   (is (= #{"reference" cli-default/default-yaml-emitter}
          (set (plugin/registered-yaml-emitters)))))
 
 (deftest bundled-json-comments-plugin
   (is (= {"a" true}
          (yaml/load "a: true // comment\n"
-                    {:plugin {:yaml-parser "reference@v0.2.5"
+                    {:plugin {:parser "reference@v0.2.5"
                               :json-comments true}}))))
 
 (deftest combined-plugin-selector
@@ -26,7 +26,7 @@
           (is (zero?
                (cli/main-status
                 "--eval" "a: true // comment\n"
-                (str "--plugin=yaml-parser=reference@0.2.5,"
+                (str "--plugin=parser=reference@0.2.5,"
                      "json-comments")))))]
     (is (= "[{\"a\":true}]\n" output))))
 
@@ -45,7 +45,7 @@
           "--eval=x: 1"
           "--config={plugin: {alias-data: true}}"
           "--plugin=alias-data"
-          "--plugin=yaml-parser=go-yaml"
+          "--plugin=parser=go-yaml"
           "--debug-stage=parse"]
          cli/cli-options)]
     (is (nil? errors))
@@ -57,7 +57,7 @@
     (is (= "input.yaml" (:file options)))
     (is (= "x: 1" (:eval options)))
     (is (= "{plugin: {alias-data: true}}" (:config options)))
-    (is (= ["alias-data" "yaml-parser=go-yaml"] (:plugin options)))
+    (is (= ["alias-data" "parser=go-yaml"] (:plugin options)))
     (is (= "parse" (:debug-stage options)))))
 
 (deftest yaml-event-node-yaml-chain
@@ -83,7 +83,7 @@
   (let [tokens "- token: STREAM-START\n- token: STREAM-END\n"]
     (is (thrown-with-msg?
          clojure.lang.ExceptionInfo
-         #"yaml-parser token support is the explicit follow-up"
+         #"parser token support is the explicit follow-up"
          (cli/convert-input tokens {:YAML true} {})))))
 
 (deftest backward-stage-conversion-is-rejected

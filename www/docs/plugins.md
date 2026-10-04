@@ -6,9 +6,10 @@ The current APIs and implementations are:
 
 | API | Implementation | Availability |
 |---|---|---|
-| `yaml-parser` | `reference` | JVM and native |
-| `yaml-parser` | `go-yaml` | Native runtime |
-| `yaml-parser` | `snakeyaml` | JVM runtime |
+| `parser` | `reference` | JVM and native |
+| `parser` | `go-yaml` | Native runtime |
+| `parser` | `snakeyaml` | JVM runtime |
+| `parser` | `toml` | Native shared library |
 | `yaml-emitter` | `reference` | JVM and native |
 | `yaml-emitter` | `go-yaml` | Native runtime |
 | `yaml-emitter` | `snakeyaml` | JVM runtime |
@@ -26,7 +27,7 @@ Options use a `plugin` mapping keyed by plugin API:
 
 ```yaml
 plugin:
-  yaml-parser: reference@v0.2.5
+  parser: reference@v0.2.5
   yaml-emitter: reference
   json-comments: sanitizer@v0.1.9
   alias-data:
@@ -39,7 +40,7 @@ An implementation can also use a mapping:
 
 ```yaml
 plugin:
-  yaml-parser:
+  parser:
     name: reference
     version: v0.2.5
   yaml-emitter:
@@ -73,17 +74,23 @@ API=IMPLEMENTATION@VERSION
 Several selectors can be comma-separated:
 
 ```bash
-yaml --plugin=yaml-parser=reference@v0.2.5,json-comments file.yaml
+yaml --plugin=parser=reference@v0.2.5,json-comments file.yaml
 ```
 
 The short `json-comments` selector chooses `sanitizer`.
-The short `yaml-parser` and `yaml-emitter` selectors choose the runtime
+The short `parser` and `yaml-emitter` selectors choose the runtime
 defaults.
 Use `--config=FILE` for a YAML options file.
 The former `--parser` flag has been removed.
 
-The old `parser` API name is rejected with a message directing callers to
-`yaml-parser`.
+The old `yaml-parser` API name is rejected.
+
+The TOML implementation parses TOML into the same YAML event stream used by
+the built-in YAML parsers:
+
+```bash
+yaml --plugin=parser=toml settings.toml
+```
 
 ## Alias data
 
@@ -303,10 +310,10 @@ The host releases every returned buffer through the plugin's free function.
 ## Writing a YAML parser implementation
 
 A Clojure parser implementation registers a map with
-`yamlstar.plugin/register-yaml-parser!`:
+`yamlstar.plugin/register-parser!`:
 
 ```clojure
-(plugin/register-yaml-parser!
+(plugin/register-parser!
  {:name "my-parser"
   :version "1.0.0"
   :parse (fn [yaml-str config] ...)

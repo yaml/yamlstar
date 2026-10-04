@@ -4,7 +4,7 @@
             [yamlstar.api :as yaml]))
 
 (def reference-parser-options
-  {:plugin {:yaml-parser {:name "reference"}}})
+  {:plugin {:parser {:name "reference"}}})
 
 (defn normalize-key
   [k]

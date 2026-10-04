@@ -1,4 +1,4 @@
-(ns yamlstar.plugin.yaml-parser.snakeyaml
+(ns yamlstar.plugin.parser.snakeyaml
   "SnakeYAML parser plugin for YAMLStar."
   (:require [yamlstar.plugin :as plugin])
   (:import (java.util Optional)
@@ -100,4 +100,4 @@
    :parse parse
    :default-config {}})
 
-(plugin/register-yaml-parser! plugin)
+(plugin/register-parser! plugin)

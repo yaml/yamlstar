@@ -8,15 +8,15 @@
 
 (deftest config-options-test
   (testing "inline flow YAML config"
-    (is (= {:plugin {:yaml-parser {:name "reference"}}}
+    (is (= {:plugin {:parser {:name "reference"}}}
            (opts/config-options
-            "{plugin: {yaml-parser: {name: reference}}}"))))
+            "{plugin: {parser: {name: reference}}}"))))
 
   (testing "file config"
     (let [file (java.io.File/createTempFile "yamlstar-options" ".yaml")]
       (try
-        (spit file "plugin:\n  yaml-parser:\n    name: reference\n")
-        (is (= {:plugin {:yaml-parser {:name "reference"}}}
+        (spit file "plugin:\n  parser:\n    name: reference\n")
+        (is (= {:plugin {:parser {:name "reference"}}}
                (opts/config-options (.getPath file))))
         (finally
           (.delete file)))))
@@ -46,53 +46,53 @@
 
 (deftest plugin-options-test
   (testing "generic plugin flag options"
-    (is (= {:plugin {:yaml-parser {:name "reference"}}}
-           (opts/plugin-options "yaml-parser=reference")))
+    (is (= {:plugin {:parser {:name "reference"}}}
+           (opts/plugin-options "parser=reference")))
     (is (= {:plugin {:json-comments {}}}
            (opts/plugin-options "json-comments")))
     (is (= {:plugin
-            {:yaml-parser {:name "reference" :version "v0.2.5"}
+            {:parser {:name "reference" :version "v0.2.5"}
              :json-comments {}}}
            (opts/plugin-options
-            "yaml-parser=reference@v0.2.5,json-comments"))))
+            "parser=reference@v0.2.5,json-comments"))))
 
   (testing "malformed plugin option"
     (is (thrown-with-msg?
          Exception #"Plugin selector must be"
-         (opts/plugin-options "yaml-parser=")))))
+         (opts/plugin-options "parser=")))))
 
 (deftest runtime-options-precedence-test
   (testing "CLI plugin beats CLI config and environment config"
     (is (= {:plugin-install true
-            :plugin {:yaml-parser {:name "reference"}}}
+            :plugin {:parser {:name "reference"}}}
            (opts/runtime-options
-            {:config "{plugin: {yaml-parser: {name: snakeyaml}}}"
-             :plugin ["yaml-parser=reference"]}
+            {:config "{plugin: {parser: {name: snakeyaml}}}"
+             :plugin ["parser=reference"]}
             (env {"YAMLSTAR_CONFIG"
-                  "{plugin: {yaml-parser: {name: go-yaml}}}"})))))
+                  "{plugin: {parser: {name: go-yaml}}}"})))))
 
   (testing "CLI config beats environment config"
     (is (= {:plugin-install true
-            :plugin {:yaml-parser {:name "snakeyaml"}}}
+            :plugin {:parser {:name "snakeyaml"}}}
            (opts/runtime-options
-            {:config "{plugin: {yaml-parser: {name: snakeyaml}}}"}
+            {:config "{plugin: {parser: {name: snakeyaml}}}"}
             (env {"YAMLSTAR_CONFIG"
-                  "{plugin: {yaml-parser: {name: go-yaml}}}"})))))
+                  "{plugin: {parser: {name: go-yaml}}}"})))))
 
   (testing "environment config supplies plugin selection"
     (is (= {:plugin-install true
-            :plugin {:yaml-parser {:name "go-yaml"}}}
+            :plugin {:parser {:name "go-yaml"}}}
            (opts/runtime-options
             {}
             (env {"YAMLSTAR_CONFIG"
-                  "{plugin: {yaml-parser: {name: go-yaml}}}"})))))
+                  "{plugin: {parser: {name: go-yaml}}}"})))))
 
   (testing "generic plugin selection is merged"
     (is (= {:plugin-install true
-            :plugin {:yaml-parser {:name "reference"}
+            :plugin {:parser {:name "reference"}
                      :yaml-emitter {:name "reference"}}}
            (opts/runtime-options
-            {:plugin ["yaml-parser=reference"
+            {:plugin ["parser=reference"
                       "yaml-emitter=reference"]}
             (env {})))))
 

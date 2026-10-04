@@ -29,8 +29,8 @@ import (
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/alias_data"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/yaml_emitter/go_yaml"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/yaml_emitter/reference"
-	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/yaml_parser/go_yaml"
-	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/yaml_parser/reference"
+	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/parser/go_yaml"
+	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/parser/reference"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/representer"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/resolver"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/serializer"
@@ -185,7 +185,7 @@ func (o options) json() (string, error) {
 	cfg := map[string]any{}
 	plugins := map[string]any{}
 	if o.yamlParser != "" {
-		plugins["yaml-parser"] = map[string]any{"name": o.yamlParser}
+		plugins["parser"] = map[string]any{"name": o.yamlParser}
 	}
 	if o.yamlEmitter != "" {
 		plugins["yaml-emitter"] = map[string]any{"name": o.yamlEmitter}
@@ -247,8 +247,8 @@ var namespaces = []string{
 	"libyamlstar",
 	"yamlstar.plugin",
 	"yamlstar.plugin.alias-data",
-	"yamlstar.plugin.yaml-parser.reference",
-	"yamlstar.plugin.yaml-parser.go-yaml",
+	"yamlstar.plugin.parser.reference",
+	"yamlstar.plugin.parser.go-yaml",
 	"yamlstar.plugin.yaml-emitter.reference",
 	"yamlstar.plugin.yaml-emitter.go-yaml",
 	"yamlstar.composer",
@@ -271,11 +271,11 @@ func initialize() error {
 		for _, namespace := range namespaces {
 			require.Invoke(lang.NewSymbol(namespace))
 		}
-		glj.Var("yamlstar.parser", "register-yaml-parsers!").Invoke(
+		glj.Var("yamlstar.parser", "register-parsers!").Invoke(
 			"reference", "go-yaml")
 		glj.Var("yamlstar.emitter", "register-yaml-emitters!").Invoke(
 			"reference", "go-yaml")
-		glj.Var("yamlstar.parser", "set-default-yaml-parser!").Invoke("go-yaml")
+		glj.Var("yamlstar.parser", "set-default-parser!").Invoke("go-yaml")
 		glj.Var("yamlstar.emitter", "set-default-yaml-emitter!").Invoke("go-yaml")
 	})
 	return initializeErr

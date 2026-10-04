@@ -342,12 +342,12 @@
        #"tab-indent loading requires the native go-yaml parser"
        (yaml/load
         "root:\n\tvalue: true\n"
-        {:plugin {:yaml-parser {:name "reference"}
+        {:plugin {:parser {:name "reference"}
                   :tab-indent {}}})))
   (is (= {"root" {"value" true}}
          (yaml/load
           "root:\n  value: true\n"
-          {:plugin {:yaml-parser {:name "reference"}
+          {:plugin {:parser {:name "reference"}
                     :tab-indent {:load "spaces"}}})))
   (is (thrown-with-msg?
        Exception

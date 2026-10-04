@@ -211,9 +211,9 @@ class Options:
     return dict(self._options)
 
 
-def yaml_parser(name):
+def parser(name):
   """Return a YAML parser plugin option fragment."""
-  return {'yaml-parser': {'name': name}}
+  return {'parser': {'name': name}}
 
 
 def yaml_emitter(name):

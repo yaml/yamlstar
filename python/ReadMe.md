@@ -56,7 +56,7 @@ print(data)  # {'key': 'value'}
 
 # Select YAML parser and emitter plugins (see https://yamlstar.org/plugins/)
 opts = yamlstar.Options()
-opts.plugin(yamlstar.yaml_parser('go-yaml'))
+opts.plugin(yamlstar.parser('go-yaml'))
 opts.plugin(yamlstar.yaml_emitter('go-yaml'))
 ys = yamlstar.YAMLStar(opts)
 data = ys.load("key: value")

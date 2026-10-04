@@ -1,4 +1,4 @@
-(ns yamlstar.plugin.yaml-parser.go-yaml
+(ns yamlstar.plugin.parser.go-yaml
   "go-yaml parser plugin for YAMLStar."
   (:require [yamlstar.plugin :as plugin]))
 
@@ -16,11 +16,11 @@
      (throw
       (ex-info
        "go-yaml parser plugin requires the Glojure YAMLStar runtime"
-       {:yaml-parser "go-yaml"}))))
+       {:parser "go-yaml"}))))
 
 (def plugin
   {:name "go-yaml"
    :parse parse
    :default-config {}})
 
-(plugin/register-yaml-parser! plugin)
+(plugin/register-parser! plugin)

@@ -33,8 +33,9 @@
      :clj nil))
 
 (defn install!
-  "Install the Glojure shared-library JSON-comments loader."
+  "Install the Glojure shared-library plugin loaders."
   []
   (require-glojure-runtime)
-  (plugin/set-json-comments-loader!
-   (shared/make-loader manifest transform)))
+  (let [loader (shared/make-loader manifest transform)]
+    (plugin/set-json-comments-loader! loader)
+    (plugin/set-parser-loader! loader)))

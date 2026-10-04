@@ -10,21 +10,22 @@ import (
 	atomic "sync/atomic"
 )
 
-var aotDirectFn0 lang.FnFunc2
+var aotDirectFn0 lang.FnFunc6
 var aotDirectFn1 lang.FnFunc2
-var aotDirectFn2 lang.FnFunc3
+var aotDirectFn2 lang.FnFunc2
 var aotDirectFn3 lang.FnFunc3
+var aotDirectFn4 lang.FnFunc4
 
-var aotKeywordMapShape0 = lang.NewKeywordMapShape("api", "name")
+var aotKeywordMapShape0 = lang.NewKeywordMapShape("artifact", "kind", "operation")
 
 type aotKeywordMapStorage0 struct {
 	lang.Map
-	values [2]any
+	values [3]any
 }
 
-func aotKeywordMapNew0(v0 any, v1 any) lang.IPersistentMap {
+func aotKeywordMapNew0(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage0{}
-	storage.values = [2]any{v0, v1}
+	storage.values = [3]any{v0, v1, v2}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape0,
@@ -32,7 +33,6 @@ func aotKeywordMapNew0(v0 any, v1 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite0 lang.KeywordSite
 var aotKeywordMapShape1 = lang.NewKeywordMapShape("api", "name", "kind")
 
 type aotKeywordMapStorage1 struct {
@@ -67,16 +67,17 @@ func aotKeywordMapNew2(v0 any, v1 any, v2 any, v3 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape3 = lang.NewKeywordMapShape("api", "name", "version", "manifest", "default-config", "sanitize")
+var aotKeywordSite0 lang.KeywordSite
+var aotKeywordMapShape3 = lang.NewKeywordMapShape("api", "name", "version", "manifest", "default-config")
 
 type aotKeywordMapStorage3 struct {
 	lang.Map
-	values [6]any
+	values [5]any
 }
 
-func aotKeywordMapNew3(v0 any, v1 any, v2 any, v3 any, v4 any, v5 any) lang.IPersistentMap {
+func aotKeywordMapNew3(v0 any, v1 any, v2 any, v3 any, v4 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage3{}
-	storage.values = [6]any{v0, v1, v2, v3, v4, v5}
+	storage.values = [5]any{v0, v1, v2, v3, v4}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape3,
@@ -277,27 +278,36 @@ func checkArityGTE(args []any, min int) {
 func LoadNS() {
 	sym_abi_DASH_version := lang.NewSymbolUnchecked("abi-version")
 	sym_api := lang.NewSymbolUnchecked("api")
+	sym_artifact := lang.NewSymbolUnchecked("artifact")
+	sym_artifacts := lang.NewSymbolUnchecked("artifacts")
 	sym_clojure_DOT_core := lang.NewSymbolUnchecked("clojure.core")
 	sym_context := lang.NewSymbolUnchecked("context")
 	sym_ex_DASH_info := lang.NewSymbolUnchecked("ex-info")
 	sym_expected := lang.NewSymbolUnchecked("expected")
+	sym_input := lang.NewSymbolUnchecked("input")
+	sym_invoke := lang.NewSymbolUnchecked("invoke")
 	sym_key := lang.NewSymbolUnchecked("key")
+	sym_kind := lang.NewSymbolUnchecked("kind")
 	sym_make_DASH_loader := lang.NewSymbolUnchecked("make-loader")
 	sym_manifest := lang.NewSymbolUnchecked("manifest")
 	sym_manifest_DASH_fn := lang.NewSymbolUnchecked("manifest-fn")
 	sym_name := lang.NewSymbolUnchecked("name")
+	sym_options := lang.NewSymbolUnchecked("options")
 	sym_pr_DASH_str := lang.NewSymbolUnchecked("pr-str")
 	sym_read_DASH_edn := lang.NewSymbolUnchecked("read-edn")
 	sym_read_DASH_string := lang.NewSymbolUnchecked("read-string")
 	sym_require_DASH_value := lang.NewSymbolUnchecked("require-value")
+	sym_seq_QMARK_ := lang.NewSymbolUnchecked("seq?")
 	sym_str := lang.NewSymbolUnchecked("str")
 	sym_text := lang.NewSymbolUnchecked("text")
+	sym_to_DASH_array := lang.NewSymbolUnchecked("to-array")
 	sym_transform_DASH_fn := lang.NewSymbolUnchecked("transform-fn")
 	sym_validate_DASH_manifest := lang.NewSymbolUnchecked("validate-manifest")
 	sym_yamlstar_DOT_plugin_DOT_shared := lang.NewSymbolUnchecked("yamlstar.plugin.shared")
 	kw_abi := lang.NewKeyword("abi")
 	kw_api := lang.NewKeyword("api")
 	kw_arglists := lang.NewKeyword("arglists")
+	kw_artifact := lang.NewKeyword("artifact")
 	kw_column := lang.NewKeyword("column")
 	kw_doc := lang.NewKeyword("doc")
 	kw_end_DASH_column := lang.NewKeyword("end-column")
@@ -307,7 +317,10 @@ func LoadNS() {
 	kw_line := lang.NewKeyword("line")
 	kw_name := lang.NewKeyword("name")
 	kw_ns := lang.NewKeyword("ns")
+	kw_operation := lang.NewKeyword("operation")
+	kw_parse := lang.NewKeyword("parse")
 	kw_private := lang.NewKeyword("private")
+	kw_sanitize := lang.NewKeyword("sanitize")
 	kw_transform := lang.NewKeyword("transform")
 	kw_version := lang.NewKeyword("version")
 	builtin_any := lang.Builtins["any"]
@@ -319,10 +332,18 @@ func LoadNS() {
 	var_clojure_DOT_core_pr_DASH_str := lang.InternVarName(sym_clojure_DOT_core, sym_pr_DASH_str)
 	// var clojure.core/read-string
 	var_clojure_DOT_core_read_DASH_string := lang.InternVarName(sym_clojure_DOT_core, sym_read_DASH_string)
+	// var clojure.core/seq?
+	var_clojure_DOT_core_seq_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_seq_QMARK_)
 	// var clojure.core/str
 	var_clojure_DOT_core_str := lang.InternVarName(sym_clojure_DOT_core, sym_str)
+	// var clojure.core/to-array
+	var_clojure_DOT_core_to_DASH_array := lang.InternVarName(sym_clojure_DOT_core, sym_to_DASH_array)
 	// var yamlstar.plugin.shared/abi-version
 	var_yamlstar_DOT_plugin_DOT_shared_abi_DASH_version := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_shared, sym_abi_DASH_version)
+	// var yamlstar.plugin.shared/artifacts
+	var_yamlstar_DOT_plugin_DOT_shared_artifacts := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_shared, sym_artifacts)
+	// var yamlstar.plugin.shared/invoke
+	var_yamlstar_DOT_plugin_DOT_shared_invoke := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_shared, sym_invoke)
 	// var yamlstar.plugin.shared/make-loader
 	var_yamlstar_DOT_plugin_DOT_shared_make_DASH_loader := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_shared, sym_make_DASH_loader)
 	// var yamlstar.plugin.shared/read-edn
@@ -331,13 +352,15 @@ func LoadNS() {
 	var_yamlstar_DOT_plugin_DOT_shared_require_DASH_value := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_shared, sym_require_DASH_value)
 	// var yamlstar.plugin.shared/validate-manifest
 	var_yamlstar_DOT_plugin_DOT_shared_validate_DASH_manifest := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_shared, sym_validate_DASH_manifest)
-	aotExternalFn1 := aotLinkFn2(var_clojure_DOT_core_ex_DASH_info)
-	aotExternalFn2 := aotLinkFn1(var_clojure_DOT_core_pr_DASH_str)
-	aotExternalFn5 := aotLinkFn3(var_clojure_DOT_core_ex_DASH_info)
-	aotExternalFn6 := aotLinkFn2(var_clojure_DOT_core_str)
-	aotExternalFn7 := aotLinkFn1(var_clojure_DOT_core_read_DASH_string)
-	aotExternalFn8 := aotLinkFn4(var_clojure_DOT_core_str)
-	aotExternalFn9 := aotLinkFn1(var_clojure_DOT_core_name)
+	aotExternalFn0 := aotLinkFn1(var_clojure_DOT_core_pr_DASH_str)
+	aotExternalFn10 := aotLinkFn3(var_clojure_DOT_core_ex_DASH_info)
+	aotExternalFn11 := aotLinkFn1(var_clojure_DOT_core_read_DASH_string)
+	aotExternalFn13 := aotLinkFn4(var_clojure_DOT_core_str)
+	aotExternalFn14 := aotLinkFn1(var_clojure_DOT_core_name)
+	aotExternalFn3 := aotLinkFn2(var_clojure_DOT_core_ex_DASH_info)
+	aotExternalFn4 := aotLinkFn1(var_clojure_DOT_core_seq_QMARK_)
+	aotExternalFn6 := aotLinkFn1(var_clojure_DOT_core_to_DASH_array)
+	aotExternalFn9 := aotLinkFn2(var_clojure_DOT_core_str)
 	// reference fmt to avoid unused import error
 	_ = fmt.Printf
 	// reference reflect to avoid unused import error
@@ -428,6 +451,107 @@ func LoadNS() {
 			return lang.NewMap(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(4), kw_column, int(6), kw_end_DASH_line, int(4), kw_end_DASH_column, int(16), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
 		}, false)
 	}
+	// artifacts
+	{
+		tmp0 := sym_artifacts
+		var_yamlstar_DOT_plugin_DOT_shared_artifacts = ns.InternWithValue(tmp0, lang.NewMap(lang.NewVector("json-comments", "sanitizer"), aotKeywordMapNew0("json-comments", "text-transform", kw_sanitize), lang.NewVector("parser", "toml"), aotKeywordMapNew0("parser-toml", "event-source", kw_parse)), true)
+		var_yamlstar_DOT_plugin_DOT_shared_artifacts.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMap(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(6), kw_column, int(6), kw_end_DASH_line, int(6), kw_end_DASH_column, int(24), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
+		}, false)
+	}
+	// invoke
+	{
+		tmp0 := sym_invoke
+		var tmp1 lang.FnFunc6
+		tmp1 = lang.FnFunc6(func(p0, p1, p2, p3, p4, p5 any) any {
+			v2 := p0
+			_ = v2
+			v3 := p1
+			_ = v3
+			v4 := p2
+			_ = v4
+			v5 := p3
+			_ = v5
+			v6 := p4
+			_ = v6
+			v7 := p5
+			_ = v7
+			var tmp8 any
+			{ // let
+				// let binding "vec__40"
+				var tmp9 any
+				{ // let
+					// let binding "or__0__auto__"
+					var v10 any = v6
+					_ = v10
+					var tmp11 any
+					if lang.IsTruthy(v10) {
+						tmp11 = v10
+					} else {
+						tmp11 = ""
+					}
+					tmp9 = tmp11
+				} // end let
+				tmp10 := aotExternalFn0(v7)
+				tmp11 := lang.Apply4(v2, v3, v4, tmp9, tmp10)
+				var v12 any = tmp11
+				_ = v12
+				// let binding "status"
+				tmp13 := runtime.RT.NthDefault(v12, lang.IntCast(int64(0)), nil)
+				var v14 any = tmp13
+				_ = v14
+				// let binding "output"
+				tmp15 := runtime.RT.NthDefault(v12, lang.IntCast(int64(1)), nil)
+				var v16 any = tmp15
+				_ = v16
+				var tmp17 any
+				{ // let
+					// let binding "G__43"
+					tmp18 := lang.LongCastBoxed(v14)
+					var v19 any = tmp18
+					_ = v19
+					// case
+					var tmp20 any
+					var tmp21 int64
+					switch v := v19.(type) {
+					case int64:
+						tmp21 = v
+					case int:
+						tmp21 = int64(v)
+					case int32:
+						tmp21 = int64(v)
+					case int16:
+						tmp21 = int64(v)
+					case int8:
+						tmp21 = int64(v)
+					default:
+						tmp21 = -1 // won't match any case
+					}
+					// case entry 0 (key=0, collision=false)
+					if tmp21 == 0 {
+						tmp20 = v16
+						// case entry 1 (key=1, collision=false)
+					} else if tmp21 == 1 {
+						tmp22 := aotKeywordMapNew1(v3, v5, kw_transform)
+						tmp23 := aotExternalFn3(v16, tmp22)
+						panic(tmp23)
+					} else {
+						tmp24 := aotKeywordMapNew2(v3, v5, v14, v16)
+						tmp25 := aotExternalFn3("Shared plugin ABI call failed", tmp24)
+						panic(tmp25)
+					}
+					tmp17 = tmp20
+				} // end let
+				tmp8 = tmp17
+			} // end let
+			return tmp8
+		})
+		aotDirectFn0 = tmp1
+		var_yamlstar_DOT_plugin_DOT_shared_invoke = ns.InternWithValue(tmp0, tmp1, true)
+		var_yamlstar_DOT_plugin_DOT_shared_invoke.SetMetaLazyMacro(func() lang.IPersistentMap {
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(46), kw_column, int(8), kw_end_DASH_line, int(46), kw_end_DASH_column, int(13), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_transform_DASH_fn, sym_api, sym_artifact, sym_name, sym_input, sym_options)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
+		}, false)
+	}
 	// make-loader
 	{
 		tmp0 := sym_make_DASH_loader
@@ -448,128 +572,148 @@ func LoadNS() {
 				v8 := p3
 				_ = v8
 				var tmp9 any
-				var tmp10 any
 				{ // let
-					// let binding "and__0__auto__"
-					tmp11 := lang.Equals(v5, "json-comments")
-					var v12 any = tmp11
-					_ = v12
-					var tmp13 any
-					if lang.IsTruthy(v12) {
-						tmp14 := lang.Equals(v6, "sanitizer")
-						tmp13 = tmp14
-					} else {
-						tmp13 = v12
-					}
-					tmp10 = tmp13
-				} // end let
-				if lang.IsTruthy(tmp10) {
-				} else {
-					tmp11 := aotKeywordMapNew0(v5, v6)
-					tmp12 := aotExternalFn1("No shared plugin artifact for implementation", tmp11)
-					panic(tmp12)
-				}
-				_ = tmp9
-				var tmp13 any
-				{ // let
-					// let binding "artifact"
-					var v14 any = "json-comments"
-					_ = v14
-					// let binding "manifest"
-					tmp15 := lang.Apply3(v2, v5, v14, v8)
-					tmp16 := aotDirectFn1(tmp15, "manifest")
-					tmp17 := aotDirectFn3(tmp16, v5, v6)
-					var v18 any = tmp17
-					_ = v18
-					tmp19 := aotKeywordSite0.Get(kw_version, v18, nil)
-					tmp20 := lang.NewMap()
-					var tmp21 lang.FnFunc2
-					tmp21 = lang.FnFunc2(func(p0, p1 any) any {
-						v22 := p0
-						_ = v22
-						v23 := p1
-						_ = v23
-						var tmp24 any
+					// let binding "temp__0__auto__"
+					tmp10 := checkDerefVar(var_yamlstar_DOT_plugin_DOT_shared_artifacts)
+					tmp11 := lang.NewVector(v5, v6)
+					tmp12 := runtime.RT.Get(tmp10, tmp11)
+					var v13 any = tmp12
+					_ = v13
+					var tmp14 any
+					if lang.IsTruthy(v13) {
+						var tmp15 any
 						{ // let
-							// let binding "vec__40"
-							var tmp25 any
-							{ // let
-								// let binding "or__0__auto__"
-								var v26 any = v22
-								_ = v26
-								var tmp27 any
-								if lang.IsTruthy(v26) {
-									tmp27 = v26
+							// let binding "map__44"
+							var v16 any = v13
+							_ = v16
+							// let binding "map__44"
+							var tmp17 any
+							tmp18 := aotExternalFn4(v16)
+							if lang.IsTruthy(tmp18) {
+								var tmp19 any
+								tmp20 := lang.Next(v16)
+								if lang.IsTruthy(tmp20) {
+									tmp21 := aotExternalFn6(v16)
+									tmp22 := lang.Apply1(lang.NewPersistentArrayMapAsIfByAssoc, tmp21)
+									tmp19 = tmp22
 								} else {
-									tmp27 = ""
+									var tmp23 any
+									tmp24 := lang.IsSeqTruthy(v16)
+									if tmp24 {
+										tmp25 := lang.First(v16)
+										tmp23 = tmp25
+									} else {
+										tmp26 := lang.Apply0(lang.NewMap)
+										tmp23 = tmp26
+									}
+									tmp19 = tmp23
 								}
-								tmp25 = tmp27
-							} // end let
-							tmp26 := aotExternalFn2(v23)
-							tmp27 := lang.Apply4(v3, v5, v14, tmp25, tmp26)
-							var v28 any = tmp27
-							_ = v28
-							// let binding "status"
-							tmp29 := runtime.RT.NthDefault(v28, lang.IntCast(int64(0)), nil)
-							var v30 any = tmp29
-							_ = v30
-							// let binding "output"
-							tmp31 := runtime.RT.NthDefault(v28, lang.IntCast(int64(1)), nil)
-							var v32 any = tmp31
-							_ = v32
-							var tmp33 any
+								tmp17 = tmp19
+							} else {
+								tmp17 = v16
+							}
+							var v27 any = tmp17
+							_ = v27
+							// let binding "artifact"
+							tmp28 := runtime.RT.Get(v27, kw_artifact)
+							var v29 any = tmp28
+							_ = v29
+							// let binding "kind"
+							tmp30 := runtime.RT.Get(v27, kw_kind)
+							var v31 any = tmp30
+							_ = v31
+							// let binding "operation"
+							tmp32 := runtime.RT.Get(v27, kw_operation)
+							var v33 any = tmp32
+							_ = v33
+							var tmp34 any
 							{ // let
-								// let binding "G__43"
-								tmp34 := lang.LongCastBoxed(v30)
-								var v35 any = tmp34
-								_ = v35
-								// case
-								var tmp36 any
-								var tmp37 int64
-								switch v := v35.(type) {
-								case int64:
-									tmp37 = v
-								case int:
-									tmp37 = int64(v)
-								case int32:
-									tmp37 = int64(v)
-								case int16:
-									tmp37 = int64(v)
-								case int8:
-									tmp37 = int64(v)
-								default:
-									tmp37 = -1 // won't match any case
-								}
-								// case entry 0 (key=0, collision=false)
-								if tmp37 == 0 {
-									tmp36 = v32
-									// case entry 1 (key=1, collision=false)
-								} else if tmp37 == 1 {
-									tmp38 := aotKeywordMapNew1(v5, v6, kw_transform)
-									tmp39 := aotExternalFn1(v32, tmp38)
-									panic(tmp39)
-								} else {
-									tmp40 := aotKeywordMapNew2(v5, v6, v30, v32)
-									tmp41 := aotExternalFn1("Shared plugin ABI call failed", tmp40)
-									panic(tmp41)
-								}
-								tmp33 = tmp36
+								// let binding "manifest"
+								tmp35 := lang.Apply3(v2, v5, v29, v8)
+								tmp36 := aotDirectFn2(tmp35, "manifest")
+								tmp37 := aotDirectFn4(tmp36, v5, v6, v31)
+								var v38 any = tmp37
+								_ = v38
+								// let binding "base"
+								tmp39 := aotKeywordSite0.Get(kw_version, v38, nil)
+								tmp40 := lang.NewMap()
+								tmp41 := aotKeywordMapNew3(v5, v6, tmp39, v38, tmp40)
+								var v42 any = tmp41
+								_ = v42
+								var tmp43 any
+								{ // let
+									// let binding "G__45"
+									var v44 any = v33
+									_ = v44
+									// case
+									var tmp45 any
+									var tmp46 int64
+									tmp46 = int64(uint32(lang.IdentityHash(v44)>>1) & uint32(1))
+									// case entry 0 (key=0, collision=false)
+									if tmp46 == 0 {
+										if v44 == kw_parse {
+											var tmp47 lang.FnFunc2
+											tmp47 = lang.FnFunc2(func(p0, p1 any) any {
+												v48 := p0
+												_ = v48
+												v49 := p1
+												_ = v49
+												tmp50 := aotDirectFn0(v3, v5, v29, v6, v48, v49)
+												tmp51 := aotDirectFn2(tmp50, "event stream")
+												return tmp51
+											})
+											var tmp48 any = v42
+											tmp48 = lang.Assoc(tmp48, kw_parse, tmp47)
+											tmp45 = tmp48
+										} else {
+											tmp49 := aotExternalFn9("No matching clause: ", v44)
+											tmp50 := lang.Apply1(lang.NewIllegalArgumentError, tmp49)
+											panic(tmp50)
+										}
+										// case entry 1 (key=1, collision=false)
+									} else if tmp46 == 1 {
+										if v44 == kw_sanitize {
+											var tmp51 lang.FnFunc2
+											tmp51 = lang.FnFunc2(func(p0, p1 any) any {
+												v52 := p0
+												_ = v52
+												v53 := p1
+												_ = v53
+												tmp54 := aotDirectFn0(v3, v5, v29, v6, v52, v53)
+												return tmp54
+											})
+											var tmp52 any = v42
+											tmp52 = lang.Assoc(tmp52, kw_sanitize, tmp51)
+											tmp45 = tmp52
+										} else {
+											tmp53 := aotExternalFn9("No matching clause: ", v44)
+											tmp54 := lang.Apply1(lang.NewIllegalArgumentError, tmp53)
+											panic(tmp54)
+										}
+									} else {
+										tmp55 := aotExternalFn9("No matching clause: ", v44)
+										tmp56 := lang.Apply1(lang.NewIllegalArgumentError, tmp55)
+										panic(tmp56)
+									}
+									tmp43 = tmp45
+								} // end let
+								tmp34 = tmp43
 							} // end let
-							tmp24 = tmp33
+							tmp15 = tmp34
 						} // end let
-						return tmp24
-					})
-					tmp22 := aotKeywordMapNew3(v5, v6, tmp19, v18, tmp20, tmp21)
-					tmp13 = tmp22
+						tmp14 = tmp15
+					} else {
+					}
+					tmp9 = tmp14
 				} // end let
-				return tmp13
+				return tmp9
 			})
 			return tmp4
 		})
-		aotDirectFn0 = tmp1
+		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_make_DASH_loader = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_make_DASH_loader.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(35), kw_column, int(7), kw_end_DASH_line, int(35), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_manifest_DASH_fn, sym_transform_DASH_fn)), kw_doc, "Create a JSON-comments loader from native host functions.\n\n  manifest-fn receives api, artifact name, and install? and returns EDN.\n  transform-fn receives api, artifact name, input, and options EDN and\n  returns [status output].", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(59), kw_column, int(7), kw_end_DASH_line, int(59), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_manifest_DASH_fn, sym_transform_DASH_fn)), kw_doc, "Create a native plugin loader from shared host functions.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
 		}, false)
 	}
 	// read-edn
@@ -588,24 +732,24 @@ func LoadNS() {
 						if lang.CatchMatches(r, builtin_any) {
 							v5 := r
 							_ = v5
-							tmp6 := aotExternalFn6("Invalid EDN from shared plugin ", v3)
+							tmp6 := aotExternalFn9("Invalid EDN from shared plugin ", v3)
 							tmp7 := aotKeywordMapNew4(v3, v2)
-							tmp8 := aotExternalFn5(tmp6, tmp7, v5)
+							tmp8 := aotExternalFn10(tmp6, tmp7, v5)
 							panic(tmp8)
 						} else {
 							panic(r)
 						}
 					}
 				}()
-				tmp5 := aotExternalFn7(v2)
+				tmp5 := aotExternalFn11(v2)
 				tmp4 = tmp5
 			}()
 			return tmp4
 		})
-		aotDirectFn1 = tmp1
+		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_read_DASH_edn = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_read_DASH_edn.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(6), kw_column, int(8), kw_end_DASH_line, int(6), kw_end_DASH_column, int(15), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_text, sym_context)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(17), kw_column, int(8), kw_end_DASH_line, int(17), kw_end_DASH_column, int(15), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_text, sym_context)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
 		}, false)
 	}
 	// require-value
@@ -624,57 +768,59 @@ func LoadNS() {
 			tmp7 := lang.Equals(v4, tmp6)
 			if tmp7 {
 			} else {
-				tmp8 := aotExternalFn9(v3)
-				tmp9 := aotExternalFn2(v4)
-				tmp10 := aotExternalFn8("Shared plugin manifest ", tmp8, " must be ", tmp9)
+				tmp8 := aotExternalFn14(v3)
+				tmp9 := aotExternalFn0(v4)
+				tmp10 := aotExternalFn13("Shared plugin manifest ", tmp8, " must be ", tmp9)
 				tmp11 := runtime.RT.Get(v2, v3)
 				tmp12 := aotKeywordMapNew5(v3, v4, tmp11)
-				tmp13 := aotExternalFn1(tmp10, tmp12)
+				tmp13 := aotExternalFn3(tmp10, tmp12)
 				panic(tmp13)
 			}
 			return tmp5
 		})
-		aotDirectFn2 = tmp1
+		aotDirectFn3 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_require_DASH_value = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_require_DASH_value.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(15), kw_column, int(8), kw_end_DASH_line, int(15), kw_end_DASH_column, int(20), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_manifest, sym_key, sym_expected)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(26), kw_column, int(8), kw_end_DASH_line, int(26), kw_end_DASH_column, int(20), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_manifest, sym_key, sym_expected)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
 		}, false)
 	}
 	// validate-manifest
 	{
 		tmp0 := sym_validate_DASH_manifest
-		var tmp1 lang.FnFunc3
-		tmp1 = lang.FnFunc3(func(p0, p1, p2 any) any {
+		var tmp1 lang.FnFunc4
+		tmp1 = lang.FnFunc4(func(p0, p1, p2, p3 any) any {
 			v2 := p0
 			_ = v2
 			v3 := p1
 			_ = v3
 			v4 := p2
 			_ = v4
-			var tmp5 any
-			tmp6 := lang.IsMap(v2)
-			if tmp6 {
+			v5 := p3
+			_ = v5
+			var tmp6 any
+			tmp7 := lang.IsMap(v2)
+			if tmp7 {
 			} else {
-				tmp7 := aotKeywordMapNew6(v2)
-				tmp8 := aotExternalFn1("Shared plugin manifest must be an EDN map", tmp7)
-				panic(tmp8)
+				tmp8 := aotKeywordMapNew6(v2)
+				tmp9 := aotExternalFn3("Shared plugin manifest must be an EDN map", tmp8)
+				panic(tmp9)
 			}
-			_ = tmp5
-			tmp9 := checkDerefVar(var_yamlstar_DOT_plugin_DOT_shared_abi_DASH_version)
-			tmp10 := aotDirectFn2(v2, kw_abi, tmp9)
-			_ = tmp10
-			tmp11 := aotDirectFn2(v2, kw_api, v3)
+			_ = tmp6
+			tmp10 := checkDerefVar(var_yamlstar_DOT_plugin_DOT_shared_abi_DASH_version)
+			tmp11 := aotDirectFn3(v2, kw_abi, tmp10)
 			_ = tmp11
-			tmp12 := aotDirectFn2(v2, kw_name, v4)
+			tmp12 := aotDirectFn3(v2, kw_api, v3)
 			_ = tmp12
-			tmp13 := aotDirectFn2(v2, kw_kind, "text-transform")
+			tmp13 := aotDirectFn3(v2, kw_name, v4)
 			_ = tmp13
+			tmp14 := aotDirectFn3(v2, kw_kind, v5)
+			_ = tmp14
 			return v2
 		})
-		aotDirectFn3 = tmp1
+		aotDirectFn4 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_validate_DASH_manifest = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_validate_DASH_manifest.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(23), kw_column, int(7), kw_end_DASH_line, int(23), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym_manifest, sym_api, sym_name)), kw_doc, "Validate a shared plugin manifest for the requested API and name.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(34), kw_column, int(7), kw_end_DASH_line, int(34), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym_manifest, sym_api, sym_name, sym_kind)), kw_doc, "Validate a shared plugin manifest for the requested implementation.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
 		}, false)
 	}
 }

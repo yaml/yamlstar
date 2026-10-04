@@ -1,4 +1,4 @@
-(ns yamlstar.plugin.yaml-parser.reference
+(ns yamlstar.plugin.parser.reference
   "Reference parser plugin for YAMLStar."
   (:require #?(:clj [yaml-parser.core :as ref-parser])
             [yamlstar.plugin :as plugin]))
@@ -21,4 +21,4 @@
    :parse parse
    :default-config {}})
 
-(plugin/register-yaml-parser! plugin)
+(plugin/register-parser! plugin)

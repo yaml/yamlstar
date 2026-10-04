@@ -72,8 +72,8 @@ CORE-SRCS := \
   $(wildcard $(CORE-YAMLSTAR)/*.clj) \
   $(wildcard $(CORE-YAMLSTAR)/*.cljc) \
   $(wildcard $(CORE-YAMLSTAR)/plugin/*.clj) \
-  $(wildcard $(CORE-YAMLSTAR)/plugin/yaml_parser/*.clj) \
-  $(wildcard $(CORE-YAMLSTAR)/plugin/yaml_parser/*.cljc) \
+  $(wildcard $(CORE-YAMLSTAR)/plugin/parser/*.clj) \
+  $(wildcard $(CORE-YAMLSTAR)/plugin/parser/*.cljc) \
   $(wildcard $(CORE-YAMLSTAR)/plugin/yaml_emitter/*.clj) \
   $(wildcard $(CORE-YAMLSTAR)/plugin/yaml_emitter/*.cljc)
 
@@ -170,13 +170,13 @@ $(GLOAT-LINK-DIR)/plugin/alias_data.clj: \
 	@mkdir -p $(dir $@)
 	ln -sf $(abspath $<) $@
 
-$(GLOAT-LINK-DIR)/plugin/yaml_parser/go_yaml.clj: \
-  $(CORE-YAMLSTAR)/plugin/yaml_parser/go_yaml.cljc
+$(GLOAT-LINK-DIR)/plugin/parser/go_yaml.clj: \
+  $(CORE-YAMLSTAR)/plugin/parser/go_yaml.cljc
 	@mkdir -p $(dir $@)
 	ln -sf $(abspath $<) $@
 
-$(GLOAT-LINK-DIR)/plugin/yaml_parser/reference.clj: \
-  $(CORE-YAMLSTAR)/plugin/yaml_parser/reference.cljc
+$(GLOAT-LINK-DIR)/plugin/parser/reference.clj: \
+  $(CORE-YAMLSTAR)/plugin/parser/reference.cljc
 	@mkdir -p $(dir $@)
 	ln -sf $(abspath $<) $@
 
@@ -230,8 +230,8 @@ GLOAT-LINKS := \
   $(GLOAT-LINK-DIR)/serializer.clj \
   $(GLOAT-LINK-DIR)/emitter.clj \
   $(GLOAT-LINK-DIR)/plugin/alias_data.clj \
-  $(GLOAT-LINK-DIR)/plugin/yaml_parser/go_yaml.clj \
-  $(GLOAT-LINK-DIR)/plugin/yaml_parser/reference.clj \
+  $(GLOAT-LINK-DIR)/plugin/parser/go_yaml.clj \
+  $(GLOAT-LINK-DIR)/plugin/parser/reference.clj \
   $(GLOAT-LINK-DIR)/plugin/yaml_emitter/go_yaml.clj \
   $(GLOAT-LINK-DIR)/plugin/shared.clj \
   $(GLOAT-LINK-DIR)/plugin/shared_host.clj \
@@ -241,10 +241,10 @@ GLOAT-SRCS := \
   $(GLOAT-LINK-DIR)/plugin/alias_data.clj \
   $(CORE-YAMLSTAR)/plugin.clj \
   $(CORE-YAMLSTAR)/options.clj \
-  $(CORE-YAMLSTAR)/plugin/yaml_parser.clj \
+  $(CORE-YAMLSTAR)/plugin/parser.clj \
   $(CORE-YAMLSTAR)/plugin/yaml_emitter.clj \
-  $(GLOAT-LINK-DIR)/plugin/yaml_parser/reference.clj \
-  $(GLOAT-LINK-DIR)/plugin/yaml_parser/go_yaml.clj \
+  $(GLOAT-LINK-DIR)/plugin/parser/reference.clj \
+  $(GLOAT-LINK-DIR)/plugin/parser/go_yaml.clj \
   $(GLOAT-LINK-DIR)/plugin/yaml_emitter/go_yaml.clj \
   $(GLOAT-LINK-DIR)/plugin/shared.clj \
   $(GLOAT-LINK-DIR)/plugin/shared_host.clj \

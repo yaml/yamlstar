@@ -6,14 +6,14 @@
             [yamlstar.emitter :as emitter]
             [yamlstar.parser :as parser]
             [yamlstar.plugin.shared-host :as shared-host]
-            [yamlstar.plugin.yaml-parser.reference]
-            [yamlstar.plugin.yaml-parser.go-yaml]
+            [yamlstar.plugin.parser.reference]
+            [yamlstar.plugin.parser.go-yaml]
             [yamlstar.plugin.yaml-emitter.reference]
             [yamlstar.plugin.yaml-emitter.go-yaml]))
 
-(parser/register-yaml-parsers! "reference" "go-yaml")
+(parser/register-parsers! "reference" "go-yaml")
 (emitter/register-yaml-emitters! "reference" "go-yaml")
-(parser/set-default-yaml-parser! "go-yaml")
+(parser/set-default-parser! "go-yaml")
 (emitter/set-default-yaml-emitter! "go-yaml")
 
 (defn install-shared-host! []
@@ -21,9 +21,9 @@
     (shared-host/install!)))
 
 (defn install-yaml-plugins! []
-  (parser/register-yaml-parsers! "reference" "go-yaml")
+  (parser/register-parsers! "reference" "go-yaml")
   (emitter/register-yaml-emitters! "reference" "go-yaml")
-  (parser/set-default-yaml-parser! "go-yaml")
+  (parser/set-default-parser! "go-yaml")
   (emitter/set-default-yaml-emitter! "go-yaml"))
 
 (install-shared-host!)
