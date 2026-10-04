@@ -37,7 +37,7 @@ import (
 )
 
 // Version is the YAMLStar module version.
-const Version = "0.1.22"
+const Version = "0.1.23"
 
 // ErrNotInitialized is retained for compatibility with the former cgo
 // binding. Initialization failures are returned directly.

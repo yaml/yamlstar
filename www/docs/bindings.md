@@ -66,7 +66,7 @@ Native Clojure library (no FFI required).
 
 **Install:**
 ```clojure
-{:deps {org.yamlstar/yamlstar {:mvn/version "0.1.22"}}}
+{:deps {org.yamlstar/yamlstar {:mvn/version "0.1.23"}}}
 ```
 
 **Quick Example:**
@@ -166,7 +166,7 @@ Java binding using JNI.
 <dependency>
   <groupId>com.yaml</groupId>
   <artifactId>yamlstar</artifactId>
-  <version>0.1.22</version>
+  <version>0.1.23</version>
 </dependency>
 ```
 
@@ -219,7 +219,7 @@ Rust binding using FFI.
 **Install:**
 ```toml
 [dependencies]
-yamlstar = "0.1.22"
+yamlstar = "0.1.23"
 ```
 
 **Quick Example:**
@@ -541,7 +541,7 @@ Scala binding using JNA.
 
 **Install:**
 ```scala
-libraryDependencies += "com.yaml" % "scala-yamlstar" % "0.1.22"
+libraryDependencies += "com.yaml" % "scala-yamlstar" % "0.1.23"
 ```
 
 **Quick Example:**

@@ -1,5 +1,5 @@
 ///|
-pub const VERSION = "0.1.22"
+pub const VERSION = "0.1.23"
 
 ///|
 pub suberror YAMLStarError {

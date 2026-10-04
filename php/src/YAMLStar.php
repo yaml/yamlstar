@@ -7,7 +7,7 @@ use RuntimeException;
 
 class YAMLStar
 {
-    private const VERSION = '0.1.22';
+    private const VERSION = '0.1.23';
 
     private static ?FFI $ffi = null;
     private static ?string $libPath = null;

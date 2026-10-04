@@ -15,7 +15,7 @@
             [yamlstar.resolver :as resolver])
   (:gen-class))
 
-(def version "0.1.22-SNAPSHOT")
+(def version "0.1.23-SNAPSHOT")
 
 (defn display-version
   []
@@ -88,7 +88,7 @@ Examples:
   go-yaml -N file.yaml | yaml -Y # go-yaml nodes → YAML
   cat f.yaml | yaml -J       # stdin → pretty JSON
   yaml -D parse config.yaml  # Debug parser stage
-  yaml --plugin=parser=reference@v0.2.5,json-comments f.yaml
+  yaml --plugin=parser=reference@v0.1.23,json-comments f.yaml
   yaml --config '{plugin: {parser: {name: reference}}}' f.yaml
 
 Options:")
