@@ -1,4 +1,5 @@
 M := .cache/makes
+YAMLSCRIPT-VERSION := 0.2.32
 include common/init.mk
 include $M/gh.mk
 include $M/gloat.mk
@@ -284,6 +285,7 @@ $(ALL-SHELL):
 
 export OLD_VERSION := $o
 export NEW_VERSION := $(or $v,$n)
+export YS
 ifdef d
 export YS_RELEASE_DRYRUN := 1
 endif

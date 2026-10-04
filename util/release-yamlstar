@@ -287,7 +287,7 @@ defn confirm(msg default='y'):
 
 defn do-version-bump():
   o: 'Running util/version-bump to update versions in all files'
-  run: 'ys-0 ./util/version-bump'
+  run: "$(ENV.YS) ./util/version-bump"
   show-version-diff:
   confirm: 'Continue?'
   say: '✓ Version bump complete'
