@@ -83,6 +83,58 @@ release-rerun() (
     --exit-status --interval=10
 )
 
+release-publish-resume() (
+  set -e
+  version=$1
+  run_id=$2
+  artifact_run_id=$3
+  branch=$(git branch --show-current)
+  gh run view "$run_id" --repo yaml/yamlstar \
+    --json databaseId --jq .databaseId > /dev/null || {
+    echo "ERROR: run id '$run_id' not found"; exit 1; }
+
+  if [[ -z $artifact_run_id ]]; then
+    retry_job_id=$(gh run view "$run_id" --repo yaml/yamlstar \
+      --json jobs --jq \
+      '.jobs[] | select(.name == "Test WASI Preview 1 artifact (retry)") | .databaseId')
+    test -n "$retry_job_id"
+    artifact_run_id=$(gh api --allow-escape-sequences \
+      "repos/yaml/yamlstar/actions/jobs/$retry_job_id/logs" |
+      perl -ne \
+      'if (/gh run download "([0-9]+)"/) { print "$1\n"; exit }')
+  fi
+  test -n "$artifact_run_id"
+  gh run view "$artifact_run_id" --repo yaml/yamlstar \
+    --json databaseId --jq .databaseId > /dev/null || {
+    echo "ERROR: artifact run id '$artifact_run_id' not found"; exit 1; }
+
+  echo "Publishing artifacts from run $artifact_run_id"
+  git push origin HEAD:"$branch"
+  previous_run_id=$(gh run list --workflow=release.yaml \
+    --repo yaml/yamlstar --branch "$branch" --limit=1 \
+    --json databaseId --jq '.[0].databaseId')
+  gh workflow run release.yaml \
+    --repo yaml/yamlstar --ref "$branch" -f version="$version" \
+    -f publish_release_only=true \
+    -f test_artifacts_run_id="$artifact_run_id"
+  publish_run_id=
+  for _ in {1..30}; do
+    publish_run_id=$(gh run list --workflow=release.yaml \
+      --repo yaml/yamlstar --branch "$branch" --limit=1 \
+      --json databaseId --jq '.[0].databaseId')
+    if [[ -n $publish_run_id && $publish_run_id != "$previous_run_id" ]]; then
+      break
+    fi
+    sleep 2
+  done
+  if [[ -z $publish_run_id || $publish_run_id == "$previous_run_id" ]]; then
+    echo "ERROR: timed out waiting for publication workflow" >&2
+    exit 1
+  fi
+  gh run watch "$publish_run_id" --repo yaml/yamlstar \
+    --exit-status --interval=10
+)
+
 release-publish-homebrew() (
   set -e
   version=$1

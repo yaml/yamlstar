@@ -25,6 +25,11 @@ on:
         default: false
         required: false
         type: boolean
+      publish_release_only:
+        description: 'Publish an existing tested release without rebuilding'
+        default: false
+        required: false
+        type: boolean
       tests_only:
         description: >-
           Only test these platforms (space-separated subset of:
@@ -62,7 +67,13 @@ env:
 jobs:
   verify-release:
     name: Verify release
-    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        !inputs.publish_homebrew_only &&
+        !inputs.publish_release_only &&
+        !inputs.tests_only
+      }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -778,6 +789,7 @@ jobs:
       ${{
         !inputs.publish_bindings_only &&
         !inputs.publish_homebrew_only &&
+        !inputs.publish_release_only &&
         (
           !inputs.tests_only ||
           contains(format(' {0} ', inputs.tests_only), ' linux-x64 ') ||
@@ -837,6 +849,7 @@ jobs:
       ${{
         !inputs.publish_bindings_only &&
         !inputs.publish_homebrew_only &&
+        !inputs.publish_release_only &&
         (
           !inputs.tests_only ||
           contains(format(' {0} ', inputs.tests_only), ' linux-aarch64 ') ||
@@ -900,6 +913,7 @@ jobs:
       ${{
         !inputs.publish_bindings_only &&
         !inputs.publish_homebrew_only &&
+        !inputs.publish_release_only &&
         (
           !inputs.tests_only ||
           contains(format(' {0} ', inputs.tests_only), ' macos-arm64 ') ||
@@ -962,6 +976,7 @@ jobs:
       ${{
         !inputs.publish_bindings_only &&
         !inputs.publish_homebrew_only &&
+        !inputs.publish_release_only &&
         (
           !inputs.tests_only ||
           contains(format(' {0} ', inputs.tests_only), ' windows-x64 ') ||
@@ -1072,6 +1087,7 @@ jobs:
       ${{
         !inputs.publish_bindings_only &&
         !inputs.publish_homebrew_only &&
+        !inputs.publish_release_only &&
         (
           !inputs.tests_only ||
           contains(format(' {0} ', inputs.tests_only), ' macos-x64 ')
@@ -1144,6 +1160,7 @@ jobs:
       ${{
         !inputs.publish_bindings_only &&
         !inputs.publish_homebrew_only &&
+        !inputs.publish_release_only &&
         contains(format(' {0} ', inputs.tests_only), ' freebsd-x64 ') &&
         inputs.test_artifacts_run_id != ''
       }}
@@ -1211,6 +1228,7 @@ jobs:
       ${{
         !inputs.publish_bindings_only &&
         !inputs.publish_homebrew_only &&
+        !inputs.publish_release_only &&
         (
           !inputs.tests_only ||
           contains(format(' {0} ', inputs.tests_only), ' windows-arm64 ')
@@ -1253,6 +1271,7 @@ jobs:
       ${{
         !inputs.publish_bindings_only &&
         !inputs.publish_homebrew_only &&
+        !inputs.publish_release_only &&
         (
           !inputs.tests_only ||
           contains(format(' {0} ', inputs.tests_only), ' wasm-p1 ')
@@ -1298,6 +1317,7 @@ jobs:
         always() &&
         !inputs.publish_bindings_only &&
         !inputs.publish_homebrew_only &&
+        !inputs.publish_release_only &&
         !inputs.tests_only &&
         needs.verify-release.result == 'success' &&
         (
@@ -1381,7 +1401,17 @@ jobs:
 
   upload-assets:
     name: Upload release assets
-    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
+    if: >-
+      ${{
+        always() &&
+        !inputs.publish_bindings_only &&
+        !inputs.publish_homebrew_only &&
+        !inputs.tests_only &&
+        (
+          inputs.publish_release_only ||
+          needs.create-release.result == 'success'
+        )
+      }}
     needs: create-release
     runs-on: ubuntu-latest
     permissions:
@@ -1573,7 +1603,17 @@ jobs:
 
   publish-website:
     name: Publish website
-    if: ${{ !inputs.publish_bindings_only && !inputs.publish_homebrew_only && !inputs.tests_only }}
+    if: >-
+      ${{
+        always() &&
+        !inputs.publish_bindings_only &&
+        !inputs.publish_homebrew_only &&
+        !inputs.tests_only &&
+        (
+          inputs.publish_release_only ||
+          needs.create-release.result == 'success'
+        )
+      }}
     needs: create-release
     runs-on: ubuntu-latest
     permissions:

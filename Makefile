@@ -479,6 +479,17 @@ ifndef v
 endif
 	@$(MAKE-BASH) $@ "$(v)" "$(r)"
 
+# Continue a successful release run at asset and website publication.
+# The selected jobs reuse the run's existing inputs and artifacts.
+# Set a=RUN_ID only when the artifact run cannot be inferred.
+# Example:
+#   make release-publish-resume r=12345678
+release-publish-resume: $(GH) $(PERL)
+ifndef r
+	$(error 'make release-publish-resume' requires r=RUN_ID)
+endif
+	@$(MAKE-BASH) $@ "$(or $(v),$(VERSION))" "$(r)" "$(a)"
+
 release-bindings: $(YS)
 ifndef v
 	$(error 'make release-bindings' requires v=NEW_VERSION)
