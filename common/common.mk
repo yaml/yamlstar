@@ -6,8 +6,10 @@ LIBYAMLSTAR-SO := $(LIBYS)/lib/libyamlstar.$(SO)
 LIBYAMLSTAR-SO-VERSION := $(LIBYS)/lib/libyamlstar.$(SO).$(LIBYAMLSTAR-VERSION)
 LIBYAMLSTAR-HEADER := $(LIBYS)/lib/libyamlstar.h
 
-export LD_LIBRARY_PATH := $(ROOT)/libyamlstar/lib:$(LD_LIBRARY_PATH)
-export DYLD_LIBRARY_PATH := $(ROOT)/libyamlstar/lib:$(DYLD_LIBRARY_PATH)
+override LD_LIBRARY_PATH := $(ROOT)/libyamlstar/lib:$(LD_LIBRARY_PATH)
+export LD_LIBRARY_PATH
+override DYLD_LIBRARY_PATH := $(ROOT)/libyamlstar/lib:$(DYLD_LIBRARY_PATH)
+export DYLD_LIBRARY_PATH
 
 PUREGO-FREEBSD-GCFLAGS := \
   -gcflags=github.com/ebitengine/purego/internal/fakecgo=-std

@@ -96,8 +96,9 @@ GO-YAML-GENERATED-DIR := ../internal/goyamlparser
 GO-YAML-GENERATED-STAMP := $(GO-YAML-GENERATED-DIR)/.generated
 GO-YAML-PREPARE := gloat/prepare-go-yaml-parser
 GLOAT-GO-YAML-PATCH := gloat/patch-gloat-extra-go-dir
-GLOAT-GO-YAML-PATCH-STAMP := \
-  $(LOCAL-CACHE)/gloat-patch/$(subst /,_,$(abspath $(GLOAT-DIR))).stamp
+GLOAT-PATCH-DIR := $(LOCAL-CACHE)/gloat-patch
+GLOAT-DIR-STAMP := $(subst :,_,$(subst /,_,$(abspath $(GLOAT-DIR))))
+GLOAT-GO-YAML-PATCH-STAMP := $(GLOAT-PATCH-DIR)/$(GLOAT-DIR-STAMP).stamp
 
 ifdef YAML-PARSER-DIR
 YAML-PARSER-SRC-DIR := $(abspath $(YAML-PARSER-DIR))/src
