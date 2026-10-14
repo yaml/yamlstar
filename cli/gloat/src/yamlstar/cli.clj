@@ -36,8 +36,7 @@ Options:
       --config CONF  YAMLStar options file or inline YAML mapping
       --plugin SPEC  Plugin selector list
       --path[=PATH]  Print defaults or set the shared library path
-      --no-plugin-install
-                       Do not install missing shared plugins
+      --no-install   Do not install missing shared plugins
   -d, --debug        Debug all stages
   -D, --debug-stage  Debug specific stage: parse, compose, resolve, construct
   -v, --version      Print version
@@ -82,7 +81,7 @@ Options:
    ["-A" "--first"]
    ["-Z" "--last"]
    [nil "--config CONFIG"]
-   [nil "--no-plugin-install"]
+   [nil "--no-install"]
    ["-d" "--debug"]
    ["-D" "--debug-stage STAGE"]
    ["-v" "--version"]

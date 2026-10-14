@@ -46,6 +46,7 @@
           "--config={plugin: {alias-data: true}}"
           "--plugin=alias-data"
           "--plugin=parser=go-yaml"
+          "--no-install"
           "--debug-stage=parse"]
          cli/cli-options)]
     (is (nil? errors))
@@ -58,6 +59,7 @@
     (is (= "x: 1" (:eval options)))
     (is (= "{plugin: {alias-data: true}}" (:config options)))
     (is (= ["alias-data" "parser=go-yaml"] (:plugin options)))
+    (is (= true (:no-install options)))
     (is (= "parse" (:debug-stage options)))))
 
 (deftest yaml-event-node-yaml-chain

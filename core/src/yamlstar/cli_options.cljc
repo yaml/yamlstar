@@ -93,7 +93,7 @@
   (deep-merge
    (apply deep-merge
           (map plugin-options (:plugin opts)))
-   (when (:no-plugin-install opts)
+   (when (:no-install opts)
      {:plugin-install false})))
 
 (defn env-options

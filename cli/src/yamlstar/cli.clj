@@ -63,7 +63,7 @@
    [nil "--config CONFIG" "YAMLStar options file or inline YAML mapping"]
    [nil "--plugin SPEC" "Plugin selector list"
     :assoc-fn (fn [m k v] (update m k (fnil conj []) v))]
-   [nil "--no-plugin-install" "Do not install missing shared plugins"]
+   [nil "--no-install" "Do not install missing shared plugins"]
    ["-d" "--debug" "Debug all stages"]
    ["-D" "--debug-stage STAGE" "Debug specific stage: parse, compose, resolve, construct"
     :validate [#{"parse" "compose" "resolve" "construct"} "Must be: parse, compose, resolve, construct"]]

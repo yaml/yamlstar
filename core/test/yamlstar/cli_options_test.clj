@@ -105,5 +105,11 @@
   (testing "CLI flag disables automatic plugin installation"
     (is (= {:plugin-install false}
            (opts/runtime-options
-            {:no-plugin-install true}
+            {:no-install true}
+            (env {})))))
+
+  (testing "CLI flag overrides installation enabled in config"
+    (is (= {:plugin-install false}
+           (opts/runtime-options
+            {:no-install true :config "{plugin_install: true}"}
             (env {}))))))

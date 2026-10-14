@@ -248,7 +248,7 @@ YAMLSTAR_LIBRARY_PATH=foo:$(yaml --path) \
 ```
 
 The native CLI can install a missing official plugin automatically.
-Use `--no-plugin-install` to disable that behavior.
+Use `--no-install` to disable that behavior.
 The installer downloads the newest release of
 `yamlstar/yamlstar-plugin-json-comments`, verifies `SHA256SUMS`, and installs
 the library atomically in the first writable search directory.

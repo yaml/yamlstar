@@ -123,6 +123,7 @@ Options:
   -o, --output FILE        Output file
   -A, --first              Select the first YAML document
   -Z, --last               Select the last YAML document
+      --no-install         Do not install missing shared plugins
   -d, --debug              Debug all stages
   -D, --debug-stage STAGE  Debug specific stage: parse, compose, resolve,
                            construct
