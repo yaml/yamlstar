@@ -324,7 +324,7 @@ defn do-changelog(old new):
   o: "Updating 'Changes' file"
 
   when-not dryrun:
-    when-not fs-e(changes-file):
+    when not(fs-e(changes-file)) || str/blank?(read(changes-file)):
       changes =: make-changes-entry(ctx)
       write changes-file: changes
 
@@ -567,10 +567,25 @@ defn file-prepend(file text):
   write file:
     str: text read(file)
 
+defn release-tag(version):
+  check-version: version
+  tag =: "v$version"
+  if sh("git rev-parse --verify --quiet 'refs/tags/$tag^{commit}'"):ok:
+    then: tag
+    else:
+      legacy-ref =: "refs/tags/$version^{commit}"
+      when-not sh("git rev-parse --verify --quiet '$legacy-ref'"):ok:
+        die: "Cannot find release tag '$tag' or '$version'"
+      =>: version
+
 defn make-changes-entry(ctx):
+  tag =: release-tag(ctx.old)
+  history =: sh("git log --oneline refs/tags/$tag..HEAD --")
+  when-not history:ok:
+    die: "Cannot generate changelog from '$tag':\n$(history.err)"
+
   lines =:
-    sh("git log --oneline $(ctx.old)..HEAD")
-      .out:str/split-lines:reverse
+    history.out:str/split-lines:reverse
 
   str/join "\n":
     map \(str/replace _1, /^\w+ /, '  - '): lines

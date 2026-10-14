@@ -23,6 +23,23 @@ main() (
   "do-$1"
 )
 
+release-tag() {
+  local version=$1 tag
+  for tag in "v$version" "$version"; do
+    if git rev-parse --verify --quiet "refs/tags/$tag^{commit}" >/dev/null; then
+      printf '%s\n' "$tag"
+      return
+    fi
+  done
+  die "ERROR: Cannot find release tag 'v$version' or '$version'"
+}
+
+make-changes-entry() {
+  local tag
+  tag=$(release-tag "$1") || return
+  git log --reverse --format='  - %s' "refs/tags/$tag"..HEAD --
+}
+
 detect-platform() {
   local target_os target_arch
 
@@ -95,10 +112,8 @@ do-version-bump() (
   echo
   echo 'Generating changelog entry from git history...'
 
-  git log --oneline "$OLD_VERSION"..HEAD 2>/dev/null |
-    tac |
-    sed 's/^[a-f0-9]* /  - /' > release-changes.txt ||
-    (echo "  - Update to version $NEW_VERSION" > release-changes.txt)
+  make-changes-entry "$OLD_VERSION" > release-changes.txt ||
+    die 'ERROR: Failed to generate changelog from git history'
 
   (
     echo "- version: $NEW_VERSION"
@@ -1082,12 +1097,9 @@ do-changelog() {
   echo "Generating changelog from git history..."
 
   # Generate changes from git log
-  if git log --oneline "$OLD_VERSION"..HEAD 2>/dev/null | tac | sed 's/^[a-f0-9]* /  - /' > "$temp_changes"; then
-    echo "Generated $(wc -l < "$temp_changes") changes from git history"
-  else
-    echo "  - Update to version $NEW_VERSION" > "$temp_changes"
-    echo "No git history found, using default entry"
-  fi
+  make-changes-entry "$OLD_VERSION" > "$temp_changes" ||
+    die 'ERROR: Failed to generate changelog from git history'
+  echo "Generated $(wc -l < "$temp_changes") changes from git history"
 
   # Loop until valid YAML
   while true; do

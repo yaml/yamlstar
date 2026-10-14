@@ -140,7 +140,7 @@ bench-report: $(YS)
 	$(YS) util/bench report \
 	  $(if $(engines),--engines=$(engines))
 
-TEST-UNIT-DEPS := $(PERL) $(BPAN)
+TEST-UNIT-DEPS := $(PERL) $(BPAN) $(YS)
 ifneq ($(OS-NAME),windows)
 TEST-UNIT-DEPS += $(SHELLCHECK)
 endif
