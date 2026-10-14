@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.1.23"
+version       = "0.1.24"
 author        = "Ingy dot Net"
 description   = "Nim binding for YAMLStar, a YAML 1.2 loader backed by libyamlstar"
 license       = "MIT"

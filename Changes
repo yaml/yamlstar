@@ -1,3 +1,12 @@
+- version: 0.1.24
+  date:    Wed Oct 14 02:57:31 PM EDT 2026
+  changes:
+  - Add release publication resume
+  - Fix Homebrew release tag URLs
+  - Fix installer release tag URLs
+  - Emit single documents without stream wrapping
+  - Rename plugin installation opt-out flag
+  - Fix changelog generation for release tags
 - version: 0.1.23
   date:    Sun Oct  4 09:41:31 AM EDT 2026
   changes:

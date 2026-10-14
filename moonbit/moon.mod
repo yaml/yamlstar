@@ -1,6 +1,6 @@
 name = "ingydotnet/yamlstar"
 
-version = "0.1.23"
+version = "0.1.24"
 
 readme = "ReadMe.md"
 
