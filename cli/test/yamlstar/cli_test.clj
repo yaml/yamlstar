@@ -28,7 +28,7 @@
                 "--eval" "a: true // comment\n"
                 (str "--plugin=parser=reference@0.2.5,"
                      "json-comments")))))]
-    (is (= "[{\"a\":true}]\n" output))))
+    (is (= "{\"a\":true}\n" output))))
 
 (deftest version-output
   (is (= (str "yaml v"
@@ -92,6 +92,49 @@
          clojure.lang.ExceptionInfo
          #"cannot convert node input backward to event output"
          (cli/convert-input nodes {:event true} {})))))
+
+(deftest single-document-output
+  (doseq [[source expected]
+          [["a: 1\n" "{\"a\":1}"]
+           ["- one\n- two\n" "[\"one\",\"two\"]"]
+           ["false\n" "false"]
+           ["null\n" "null"]
+           ["42\n" "42"]
+           ["[]\n" "[]"]]]
+    (doseq [options [{} {:json true} {:first true} {:last true}]]
+      (is (= expected (cli/convert-input source options {})))))
+  (is (= "{\n  \"a\": 1\n}"
+         (cli/convert-input "a: 1\n" {:JSON true} {})))
+  (doseq [options [{:yaml true} {:YAML true}]]
+    (let [output (cli/convert-input "a: 1\n" options {})]
+      (is (= {"a" 1} (yaml/load output)))
+      (is (not (clojure.string/starts-with? output "---\n")))))
+  (is (= "[]" (cli/convert-input "" {} {}))))
+
+(deftest document-count-applies-to-output-formats
+  (doseq [options [{:event true} {:EVENT true}]]
+    (doseq [[source expected] [["a: 1\n" 1]
+                               ["a: 1\n---\nb: 2\n" 2]]]
+      (let [events (yaml/load (cli/convert-input source options {}))]
+        (is (= expected
+               (count (filter #(= "DOCUMENT-START" (get % "event"))
+                              events)))))))
+  (doseq [options [{:node true} {:NODE true}]]
+    (is (map? (yaml/load (cli/convert-input "a: 1\n" options {}))))
+    (let [nodes (yaml/load
+                 (cli/convert-input "a: 1\n---\nb: 2\n" options {}))]
+      (is (vector? nodes))
+      (is (= 2 (count nodes)))))
+  (doseq [options [{:yaml true} {:YAML true}]]
+    (let [output (cli/convert-input "a: 1\n---\nb: 2\n" options {})]
+      (is (= [{"a" 1} {"b" 2}] (yaml/load-all output)))))
+  (doseq [debug [cli/do-debug-compose cli/do-debug-resolve
+                 cli/do-debug-construct]]
+    (doseq [[source expected] [["a: 1\n" "{"]
+                               ["a: 1\n---\nb: 2\n" "["]]]
+      (let [output (with-out-str (debug source {} :all))
+            value (second (clojure.string/split output #"\n\n" 2))]
+        (is (clojure.string/starts-with? value expected))))))
 
 (deftest document-selection-applies-to-output-stages
   (let [source "--- first\n--- second\n"]

@@ -257,16 +257,18 @@
   (let [documents (vec documents)]
     (case selection
       :all documents
-      :first (if-let [document (first documents)] [document] [])
-      :last (if-let [document (last documents)] [document] [])
+      :first (if (seq documents) [(first documents)] [])
+      :last (if (seq documents) [(last documents)] [])
       (throw (ex-info (str "unknown document selection " selection)
                       {:selection selection})))))
 
 (defn selected-value
-  "Return all selected documents or the selected single document."
+  "Return one selected document directly, or a collection of documents."
   [documents selection]
   (let [selected (select-documents documents selection)]
-    (if (= selection :all) selected (first selected))))
+    (if (and (= selection :all) (not= 1 (count selected)))
+      selected
+      (first selected))))
 
 (defn select-events
   "Select documents from an internal event stream."
@@ -339,7 +341,7 @@
       (select-events (yaml-events source opts) selection) opts)
      (let [documents (select-documents (yaml/load-all source opts)
                                        selection)]
-       (if (= selection :all)
+       (if (and (= selection :all) (not= 1 (count documents)))
          (yaml/dump-all documents opts)
          (yaml/dump (first documents) opts))))))
 

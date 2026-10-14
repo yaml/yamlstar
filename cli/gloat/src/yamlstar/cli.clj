@@ -34,8 +34,8 @@ Options:
   -A, --first        Select the first YAML document
   -Z, --last         Select the last YAML document
       --config CONF  YAMLStar options file or inline YAML mapping
-      --plugin SPEC   Plugin selector list
-      --path[=PATH]   Print defaults or set the shared library path
+      --plugin SPEC  Plugin selector list
+      --path[=PATH]  Print defaults or set the shared library path
       --no-plugin-install
                        Do not install missing shared plugins
   -d, --debug        Debug all stages
@@ -184,7 +184,7 @@ Options:
         nodes (with-timing "compose"
                 (contract/select-documents
                  (composer/compose-all events) selection))]
-    (prn (if (= selection :all) nodes (first nodes)))))
+    (prn (contract/selected-value nodes selection))))
 
 (defn do-debug-resolve [yaml-str runtime-opts selection]
   (let [events (parser/parse yaml-str runtime-opts)
@@ -192,7 +192,7 @@ Options:
                (composer/compose-all events) selection)
         resolved (with-timing "resolve"
                    (mapv resolver/resolve nodes))]
-    (prn (if (= selection :all) resolved (first resolved)))))
+    (prn (contract/selected-value resolved selection))))
 
 (defn do-debug-construct [yaml-str runtime-opts selection]
   (let [data (with-timing "construct"

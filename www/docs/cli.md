@@ -59,7 +59,13 @@ when it is ambiguous. The short stage names `e`, `n`, and `y` are accepted.
 Token input is deliberately unsupported for now: it remains the explicit
 follow-up for `org.yamlstar/yaml-parser`.
 
-Every document in a YAML stream is loaded by default:
+Every document in a YAML stream is loaded by default.
+A single document is emitted directly.
+Multiple documents produce a JSON array, a sequence of node representations,
+or a YAML stream, depending on the output format.
+Event output always contains the stream's sequence of events.
+
+For example:
 
 ```bash
 yaml stream.yaml
@@ -136,8 +142,8 @@ native value
   -> YAML string
 ```
 
-By default, it emits all input documents as a YAML stream with document
-separators.
+By default, it emits a single document directly and multiple documents as a
+YAML stream with document separators.
 Use `-A` or `-Z` to emit only the first or last document.
 
 ## Debugging

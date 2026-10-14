@@ -129,7 +129,7 @@ Options:")
                   (contract/select-documents
                    (composer/compose-all events) selection))]
       (binding [pp/*print-right-margin* 50]
-        (pp/pprint (if (= selection :all) nodes (first nodes)))))
+        (pp/pprint (contract/selected-value nodes selection))))
     (catch Exception e
       (println "Composer error:" (.getMessage e))
       (when (.getCause e)
@@ -145,7 +145,7 @@ Options:")
       (binding [pp/*print-right-margin* 50]
         (pp/pprint
          (reorder-node-keys
-          (if (= selection :all) resolved (first resolved))))))
+          (contract/selected-value resolved selection)))))
     (catch Exception e
       (println "Resolver error:" (.getMessage e))
       (when (.getCause e)

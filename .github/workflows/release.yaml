@@ -445,7 +445,7 @@ jobs:
     - name: Smoke test CLI
       run: |
         cli/bin/yaml --version
-        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '[{"a":1}]' ]]
+        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
 
     - name: Use GitHub Leiningen mirror
       run: |
@@ -491,7 +491,7 @@ jobs:
     - name: Smoke test CLI
       run: |
         cli/bin/yaml --version
-        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '[{"a":1}]' ]]
+        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
 
     - name: Use GitHub Leiningen mirror
       run: |
@@ -541,7 +541,7 @@ jobs:
     - name: Smoke test CLI
       run: |
         cli/bin/yaml --version
-        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '[{"a":1}]' ]]
+        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
 
     - name: Use GitHub Leiningen mirror
       run: |
@@ -587,7 +587,7 @@ jobs:
     - name: Smoke test CLI
       run: |
         cli/bin/yaml --version
-        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '[{"a":1}]' ]]
+        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
 
     - name: Smoke test Python wheel
       run: |
@@ -688,7 +688,7 @@ jobs:
     - name: Smoke test CLI
       run: |
         cli/bin/yaml.exe --version
-        [[ $(printf 'a: 1\n' | cli/bin/yaml.exe) == '[{"a":1}]' ]]
+        [[ $(printf 'a: 1\n' | cli/bin/yaml.exe) == '{"a":1}' ]]
 
     - name: Smoke test Python wheel
       run: |
@@ -749,7 +749,7 @@ jobs:
     - name: Smoke test CLI
       run: |
         cli/bin/yaml.exe --version
-        [[ $(printf 'a: 1\n' | cli/bin/yaml.exe) == '[{"a":1}]' ]]
+        [[ $(printf 'a: 1\n' | cli/bin/yaml.exe) == '{"a":1}' ]]
 
   test-wasm-p1:
     name: Test WASI Preview 1 artifact
@@ -781,7 +781,7 @@ jobs:
         yaml_wasm="release-wasm/yamlstar-$VERSION-wasm-p1/yaml.wasm"
         wasmtime run "$yaml_wasm" --version
         [[ $(printf 'a: 1\n' |
-          wasmtime run "$yaml_wasm") == '[{"a":1}]' ]]
+          wasmtime run "$yaml_wasm") == '{"a":1}' ]]
 
   test-linux-retry:
     name: Test Linux artifacts (retry)
@@ -820,7 +820,7 @@ jobs:
     - name: Smoke test CLI
       run: |
         cli/bin/yaml --version
-        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '[{"a":1}]' ]]
+        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
 
     - name: Use GitHub Leiningen mirror
       run: |
@@ -880,7 +880,7 @@ jobs:
     - name: Smoke test CLI
       run: |
         cli/bin/yaml --version
-        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '[{"a":1}]' ]]
+        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
 
     - name: Use GitHub Leiningen mirror
       run: |
@@ -944,7 +944,7 @@ jobs:
     - name: Smoke test CLI
       run: |
         cli/bin/yaml --version
-        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '[{"a":1}]' ]]
+        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
 
     - name: Use GitHub Leiningen mirror
       run: |
@@ -1048,7 +1048,7 @@ jobs:
     - name: Smoke test CLI
       run: |
         cli/bin/yaml.exe --version
-        [[ $(printf 'a: 1\n' | cli/bin/yaml.exe) == '[{"a":1}]' ]]
+        [[ $(printf 'a: 1\n' | cli/bin/yaml.exe) == '{"a":1}' ]]
 
     - name: Smoke test Python wheel
       run: |
@@ -1117,7 +1117,7 @@ jobs:
     - name: Smoke test CLI
       run: |
         cli/bin/yaml --version
-        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '[{"a":1}]' ]]
+        [[ $(printf 'a: 1\n' | cli/bin/yaml) == '{"a":1}' ]]
 
     - name: Smoke test Python wheel
       run: |
@@ -1200,7 +1200,7 @@ jobs:
           cli="$work/yamlstar-$VERSION-freebsd-x64/yaml"
           lib="$work/libyamlstar-$VERSION-freebsd-x64"
           "$cli" --version
-          test "$(printf 'a: 1\n' | "$cli")" = '[{"a":1}]'
+          test "$(printf 'a: 1\n' | "$cli")" = '{"a":1}'
           printf '%s\n' \
             '#include <stdio.h>' \
             '#include <string.h>' \
@@ -1263,7 +1263,7 @@ jobs:
     - name: Smoke test CLI
       run: |
         cli/bin/yaml.exe --version
-        [[ $(printf 'a: 1\n' | cli/bin/yaml.exe) == '[{"a":1}]' ]]
+        [[ $(printf 'a: 1\n' | cli/bin/yaml.exe) == '{"a":1}' ]]
 
   test-wasm-p1-retry:
     name: Test WASI Preview 1 artifact (retry)
@@ -1308,7 +1308,7 @@ jobs:
         yaml_wasm="release-wasm/yamlstar-$VERSION-wasm-p1/yaml.wasm"
         wasmtime run "$yaml_wasm" --version
         [[ $(printf 'a: 1\n' |
-          wasmtime run "$yaml_wasm") == '[{"a":1}]' ]]
+          wasmtime run "$yaml_wasm") == '{"a":1}' ]]
 
   create-release:
     name: Create GitHub release

@@ -61,6 +61,24 @@
     (is (= 1 (count nodes)))
     (is (= "value" (yaml/load (contract/nodes-yaml nodes))))))
 
+(deftest single-document-values
+  (doseq [[source expected]
+          [["a: 1\n" {"a" 1}]
+           ["- one\n- two\n" ["one" "two"]]
+           ["false\n" false]
+           ["null\n" nil]
+           ["42\n" 42]
+           ["[]\n" []]]]
+    (doseq [selection [:all :first :last]]
+      (is (= expected (contract/yaml-value source selection))))
+    (doseq [preserve? [false true]]
+      (is (= expected
+             (yaml/load (contract/yaml-output source preserve? :all))))))
+  (is (= [] (contract/yaml-value "" :all)))
+  (is (= [nil false] (contract/yaml-value "--- null\n--- false\n" :all)))
+  (is (= [nil] (contract/select-documents [nil false] :first)))
+  (is (= [false] (contract/select-documents [nil false] :last))))
+
 (deftest document-selection
   (let [source "--- first\n--- second\n"
         events (contract/yaml-events source)]
