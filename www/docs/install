@@ -32,7 +32,7 @@ main() (
 install() (
   name=$1
   file=$name-$vers-$os-$arch.$archive
-  url=$releases_url/$vers/$file
+  url=$releases_url/v$vers/$file
 
   curl -fsS -L -o "$dir/$file" "$url"
 
