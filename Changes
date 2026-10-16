@@ -1,3 +1,7 @@
+- version: 0.1.25
+  date:    Fri Oct 16 12:00:27 PM EDT 2026
+  changes:
+  - Integrate RapidYAML with ABI v2 plugins
 - version: 0.1.24
   date:    Wed Oct 14 02:57:31 PM EDT 2026
   changes:

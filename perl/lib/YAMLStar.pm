@@ -11,7 +11,7 @@ use FFI::CheckLib ();
 use FFI::Platypus;
 use Cpanel::JSON::XS ();
 
-our $VERSION = '0.1.24';
+our $VERSION = '0.1.25';
 
 our $libyamlstar_version = $VERSION;
 

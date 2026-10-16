@@ -447,9 +447,9 @@ comma := ,
 # Rerun tests for the platforms in t= using build artifacts from a
 # prior run (r=RUN_ID, default: the latest release workflow run on
 # the current branch). Example:
-#   make release-tests-retry v=0.1.24 t=macos-x64 r=12345678
+#   make release-tests-retry v=0.1.25 t=macos-x64 r=12345678
 # FreeBSD testing is available only when requested explicitly:
-#   make release-tests-retry v=0.1.24 t=freebsd-x64 r=12345678
+#   make release-tests-retry v=0.1.25 t=freebsd-x64 r=12345678
 release-tests-retry: t ?= \
   linux-x64 \
   linux-aarch64 \
@@ -478,7 +478,7 @@ endif
 # the test and publish fixes. Use this when only a test or publish job
 # failed; use release-retry when the build itself must be redone.
 # Example:
-#   make release-rerun v=0.1.24 r=12345678
+#   make release-rerun v=0.1.25 r=12345678
 release-rerun: $(GH)
 ifndef v
 	$(error 'make release-rerun' requires v=NEW_VERSION)
