@@ -170,6 +170,12 @@ go-generate: $(GLOAT)
 go-generate-check: go-generate
 	git diff --exit-code -- internal/glojure/ internal/goyamlparser/
 
+# Optional RapidYAML checkout remains outside the default build.
+test-rapidyaml: cli
+	$(MAKE) -C repos/yamlstar-plugin-parser-rapidyaml test test-conformance
+	YAMLSTAR_TEST_PLUGIN=$(ROOT)/repos/yamlstar-plugin-parser-rapidyaml/lib \
+	  $(MAKE) test-unit test=test/shared-parser.t
+
 go-test: $(GO)
 	go test ./...
 

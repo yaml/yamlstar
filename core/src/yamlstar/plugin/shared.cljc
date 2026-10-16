@@ -9,6 +9,11 @@
     :kind "text-transform"
     :operation :sanitize}
 
+   ["parser" "rapidyaml"]
+   {:artifact "parser-rapidyaml"
+    :kind "event-source"
+    :operation :parse}
+
    ["parser" "toml"]
    {:artifact "parser-toml"
     :kind "event-source"

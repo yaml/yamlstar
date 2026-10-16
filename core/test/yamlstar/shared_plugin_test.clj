@@ -60,6 +60,33 @@
     (is (= events ((:parse plugin) "answer = 42\n" {})))
     (is (nil? (loader "parser" "unknown" nil false)))))
 
+(deftest shared-rapidyaml-loader-test
+  (let [parser-manifest {:abi 2
+                         :api "parser"
+                         :name "rapidyaml"
+                         :version "0.1.0"
+                         :kind "event-source"
+                         :event-format "yamlstar-events-edn-v1"}
+        events [{:event "stream_start"}
+                {:event "document_start"}
+                {:event "scalar" :value "ok" :tag "!!str"}
+                {:event "document_end"}
+                {:event "stream_end"}]
+        loader (shared/make-loader
+                (fn [api artifact _]
+                  (is (= "parser" api))
+                  (is (= "parser-rapidyaml" artifact))
+                  (pr-str parser-manifest))
+                (fn [_ artifact input options]
+                  (is (= "parser-rapidyaml" artifact))
+                  (is (= "answer: 42\n" input))
+                  (is (= "{}" options))
+                  [0 (pr-str events)]))
+        plugin (loader "parser" "rapidyaml" nil false)]
+    (is (= parser-manifest (:manifest plugin)))
+    (is (= events ((:parse plugin) "answer: 42\n" {})))
+    (is (nil? (loader "parser" "unknown" nil false)))))
+
 (deftest shared-error-test
   (let [loader (shared/make-loader
                 (fn [_ _ _] (pr-str manifest))

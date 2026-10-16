@@ -454,7 +454,7 @@ func LoadNS() {
 	// artifacts
 	{
 		tmp0 := sym_artifacts
-		var_yamlstar_DOT_plugin_DOT_shared_artifacts = ns.InternWithValue(tmp0, lang.NewMap(lang.NewVector("json-comments", "sanitizer"), aotKeywordMapNew0("json-comments", "text-transform", kw_sanitize), lang.NewVector("parser", "toml"), aotKeywordMapNew0("parser-toml", "event-source", kw_parse)), true)
+		var_yamlstar_DOT_plugin_DOT_shared_artifacts = ns.InternWithValue(tmp0, lang.NewMap(lang.NewVector("json-comments", "sanitizer"), aotKeywordMapNew0("json-comments", "text-transform", kw_sanitize), lang.NewVector("parser", "rapidyaml"), aotKeywordMapNew0("parser-rapidyaml", "event-source", kw_parse), lang.NewVector("parser", "toml"), aotKeywordMapNew0("parser-toml", "event-source", kw_parse)), true)
 		var_yamlstar_DOT_plugin_DOT_shared_artifacts.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(6), kw_column, int(6), kw_end_DASH_line, int(6), kw_end_DASH_column, int(24), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
 		}, false)
@@ -549,7 +549,7 @@ func LoadNS() {
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_invoke = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_invoke.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(46), kw_column, int(8), kw_end_DASH_line, int(46), kw_end_DASH_column, int(13), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_transform_DASH_fn, sym_api, sym_artifact, sym_name, sym_input, sym_options)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(51), kw_column, int(8), kw_end_DASH_line, int(51), kw_end_DASH_column, int(13), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_transform_DASH_fn, sym_api, sym_artifact, sym_name, sym_input, sym_options)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
 		}, false)
 	}
 	// make-loader
@@ -713,7 +713,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_make_DASH_loader = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_make_DASH_loader.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(59), kw_column, int(7), kw_end_DASH_line, int(59), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_manifest_DASH_fn, sym_transform_DASH_fn)), kw_doc, "Create a native plugin loader from shared host functions.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(64), kw_column, int(7), kw_end_DASH_line, int(64), kw_end_DASH_column, int(17), kw_arglists, lang.NewList(lang.NewVector(sym_manifest_DASH_fn, sym_transform_DASH_fn)), kw_doc, "Create a native plugin loader from shared host functions.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
 		}, false)
 	}
 	// read-edn
@@ -749,7 +749,7 @@ func LoadNS() {
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_read_DASH_edn = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_read_DASH_edn.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(17), kw_column, int(8), kw_end_DASH_line, int(17), kw_end_DASH_column, int(15), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_text, sym_context)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(22), kw_column, int(8), kw_end_DASH_line, int(22), kw_end_DASH_column, int(15), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_text, sym_context)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
 		}, false)
 	}
 	// require-value
@@ -781,7 +781,7 @@ func LoadNS() {
 		aotDirectFn3 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_require_DASH_value = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_require_DASH_value.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(26), kw_column, int(8), kw_end_DASH_line, int(26), kw_end_DASH_column, int(20), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_manifest, sym_key, sym_expected)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(31), kw_column, int(8), kw_end_DASH_line, int(31), kw_end_DASH_column, int(20), kw_private, true, kw_arglists, lang.NewList(lang.NewVector(sym_manifest, sym_key, sym_expected)), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
 		}, false)
 	}
 	// validate-manifest
@@ -820,7 +820,7 @@ func LoadNS() {
 		aotDirectFn4 = tmp1
 		var_yamlstar_DOT_plugin_DOT_shared_validate_DASH_manifest = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_DOT_shared_validate_DASH_manifest.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(34), kw_column, int(7), kw_end_DASH_line, int(34), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym_manifest, sym_api, sym_name, sym_kind)), kw_doc, "Validate a shared plugin manifest for the requested implementation.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(39), kw_column, int(7), kw_end_DASH_line, int(39), kw_end_DASH_column, int(23), kw_arglists, lang.NewList(lang.NewVector(sym_manifest, sym_api, sym_name, sym_kind)), kw_doc, "Validate a shared plugin manifest for the requested implementation.", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
 		}, false)
 	}
 }

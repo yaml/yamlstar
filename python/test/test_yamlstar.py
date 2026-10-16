@@ -574,3 +574,13 @@ def test_dump_with_unknown_emitter(ys):
     unknown = yamlstar.YAMLStar(opts)
     with pytest.raises(Exception, match="Unknown YAML emitter plugin"):
         unknown.dump({'key': 'value'})
+
+
+def test_installed_parser_discovery(monkeypatch, tmp_path):
+    requested = FakeEntryPoint('parser-rapidyaml', str(tmp_path))
+    monkeypatch.setattr(yamlstar.importlib_metadata, 'entry_points',
+                        lambda: [requested])
+    options = {'plugin': {'parser': {'name': 'rapidyaml'}}}
+    assert yamlstar._requested_plugin_names(options) == ['parser-rapidyaml']
+    assert yamlstar._installed_plugin_dirs(options) == [str(tmp_path)]
+    assert requested.loaded is True

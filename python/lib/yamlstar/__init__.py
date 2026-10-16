@@ -86,12 +86,17 @@ def _requested_plugin_names(options):
     return []
   names = []
   for api, config in plugins.items():
-    if api != 'json-comments':
+    if api not in ('json-comments', 'parser'):
       continue
     if not isinstance(config, dict):
       continue
     name = config.get('name', api)
-    artifact = 'json-comments' if name == 'sanitizer' else name
+    if not isinstance(name, str):
+      continue
+    if api == 'parser' and name in ('reference', 'go-yaml', 'snakeyaml'):
+      continue
+    artifact = ('parser-' + name if api == 'parser' else
+                'json-comments' if name == 'sanitizer' else name)
     if isinstance(artifact, str) and artifact not in names:
       names.append(artifact)
   return names

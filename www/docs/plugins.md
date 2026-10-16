@@ -352,3 +352,13 @@ A Clojure emitter implementation registers a map with
 The emit function receives the standard event stream, a boolean indicating
 multi-document output, and the merged configuration map.
 It returns the emitted YAML string.
+
+## RapidYAML parser
+
+The optional `yamlstar-plugin-parser-rapidyaml` implements the ABI v2
+parser API, using rapidyaml v0.16.0.
+Select it with `yaml --plugin=parser=rapidyaml`.
+Use `--no-install` to disable automatic installation.
+The plugin has documented tab-separation limitations and does not fall back
+to another parser.
+The earlier ABI v1 release 0.1.0 is incompatible with this host.

@@ -132,6 +132,33 @@ like "$output" 'Installing YAMLStar plugin parser=parser-toml' \
 is "$(< "$parser_dir/$parser_library")" 'TOML parser' \
   'Installer writes the TOML parser library'
 
+parser_release=yamlstar-plugin-parser-rapidyaml-$version-$platform
+parser_archive=$temporary/$parser_release.tar.xz
+parser_library=libyamlstar-plugin-parser-rapidyaml.$extension
+mkdir -p "$temporary/parser/$parser_release/lib"
+printf 'RapidYAML parser\n' > \
+  "$temporary/parser/$parser_release/lib/$parser_library"
+tar -C "$temporary/parser" -cJf "$parser_archive" "$parser_release"
+if command -v sha256sum >/dev/null 2>&1; then
+  checksum=$(sha256sum "$parser_archive")
+else
+  checksum=$(shasum -a 256 "$parser_archive")
+fi
+checksum=${checksum%%[[:space:]]*}
+printf '%s  ./%s\n' "$checksum" "${parser_archive##*/}" > \
+  "$temporary/parser-SHA256SUMS"
+
+export FIXTURE_CHECKSUMS=$temporary/parser-SHA256SUMS
+export FIXTURE_ARCHIVE=$parser_archive
+parser_dir=$temporary/parser-lib
+output=$(HOME="$test_home" PATH="$temporary/bin:$PATH" \
+  YAMLSTAR_LIBRARY_PATH=$parser_dir \
+  "$installer" install parser rapidyaml 2>&1)
+like "$output" 'Installing YAMLStar plugin parser=parser-rapidyaml' \
+  'Parser selector maps to the RapidYAML artifact'
+is "$(< "$parser_dir/$parser_library")" 'RapidYAML parser' \
+  'Installer writes the RapidYAML parser library'
+
 printf '#!/usr/bin/env bash\nexit 99\n' > "$temporary/bin/curl"
 chmod +x "$temporary/bin/curl"
 set +e
