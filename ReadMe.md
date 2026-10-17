@@ -325,6 +325,15 @@ YAMLStar is derived from YAMLScript but with a different focus:
 | **Dependencies** | Heavy (Babashka, SCI, etc.) | Minimal (Clojure only) |
 | **Extensibility** | Built-in scripting | Plugin system (Phase 3) |
 
+## Runtime performance comparisons
+
+With the related checkouts in `repos/`, run `make speed-diff` here or in
+`repos/yamlscript` to compare Glojure `HEAD^` and `HEAD` against GraalVM using
+the YAMLScript CLI.
+Use `make speed-diff old=REF new=REF` to select other Glojure commits.
+See the [comparison guide](repos/yamlscript/doc/speed-diff.md) for workloads,
+build isolation, cached binaries, and timing reports.
+
 ## License
 
 MIT License - See LICENSE file

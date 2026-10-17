@@ -26,7 +26,7 @@ RELEASE-SECRETS := \
 RELEASE-AUTH := $(strip $(GH_TOKEN)$(GITHUB_TOKEN)$(RELEASE-SECRETS))
 
 CLI-LOCAL-CACHE := $(ROOT)/.cache/cli-local
-glojure-dir ?= $(ROOT)/repos/glojure
+glojure-dir ?= $(or $(GLOJURE_DIR),$(ROOT)/repos/glojure)
 glojure-commit ?= HEAD
 gloat-dir ?= $(ROOT)/repos/gloat
 gloat-commit ?= HEAD
@@ -264,6 +264,12 @@ cli-local-lgvm:
 
 cli-local-lglvm:
 	$(call CLI-LOCAL-BUILD,lglvm,let-go)
+
+speed-diff speed-diff-test:
+	@test -f $(ROOT)/repos/yamlscript/Makefile || { \
+	  echo 'Missing required checkout: repos/yamlscript' >&2; exit 1; }
+	GLOJURE_DIR='$(glojure-dir)' \
+	  $(MAKE) -C '$(ROOT)/repos/yamlscript' $@ 'gloat-dir=$(gloat-dir)'
 
 serve:
 	$(MAKE) -C www serve
