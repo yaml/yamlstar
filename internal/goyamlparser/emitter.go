@@ -1303,7 +1303,8 @@ func (emitter *Emitter) analyzeAnchor(anchor []byte, alias bool) error {
 		}
 	}
 	for i := 0; i < len(anchor); i += width(anchor[i]) {
-		if !isAnchorChar(anchor, i) {
+		if !isAnchorChar(anchor, i) ||
+			(isColon(anchor, i) && i+1 == len(anchor)) {
 			problem := "anchor value must contain valid characters only"
 			if alias {
 				problem = "alias value must contain valid characters only"
@@ -1464,9 +1465,6 @@ func (emitter *Emitter) analyzeScalar(value []byte) error {
 		emitter.scalar_data.flow_plain_allowed = false
 		emitter.scalar_data.block_plain_allowed = false
 	}
-	if trailing_space {
-		emitter.scalar_data.block_allowed = false
-	}
 	if break_space {
 		emitter.scalar_data.flow_plain_allowed = false
 		emitter.scalar_data.block_plain_allowed = false
@@ -1477,7 +1475,7 @@ func (emitter *Emitter) analyzeScalar(value []byte) error {
 		emitter.scalar_data.block_plain_allowed = false
 		emitter.scalar_data.single_quoted_allowed = false
 	}
-	if space_break || special_characters {
+	if special_characters {
 		emitter.scalar_data.block_allowed = false
 	}
 	if line_breaks {
@@ -2024,11 +2022,42 @@ func (emitter *Emitter) writeDoubleQuotedScalar(value []byte, allow_breaks bool)
 // writeBlockScalarHints writes the indentation and chomping indicators for
 // block scalars.
 func (emitter *Emitter) writeBlockScalarHints(value []byte) error {
-	if isSpace(value, 0) {
-		// https://github.com/yaml/go-yaml/issues/65
-		// isLineBreak(value, 0) removed as the linebreak will only
-		// write the indentation value.
-		indent_hint := []byte{'0' + byte(emitter.BestIndent)}
+	// A parser infers a block scalar's indentation from its first non-empty
+	// line, so an explicit indentation indicator is needed whenever that line
+	// begins with a space or a tab: the scanner accepts a tab in the
+	// indentation only once it is explicit. Leading line breaks only produce
+	// empty lines, which carry no indentation of their own, so skip past them
+	// first: this keeps the #65 behavior (no indicator when the first content
+	// line is not indented) while covering leading-blank-then-indented
+	// scalars.
+	// https://github.com/yaml/go-yaml/issues/65
+	// https://github.com/yaml/go-yaml/issues/76
+	// https://github.com/yaml/go-yaml/issues/383
+	i := 0
+	for i < len(value) && isLineBreak(value, i) {
+		i += width(value[i])
+	}
+	if i < len(value) && isBlank(value, i) {
+		// The indicator is the content's indentation relative to the parent
+		// node, not BestIndent: a block sequence item only adds 2 columns, so
+		// emitting BestIndent produces an unparsable document. It must also be
+		// a single digit 1..9, so clamp it to that range and align the actual
+		// content indentation to the clamped value; that keeps the document
+		// valid and round-trippable even when a caller requests a wider indent
+		// (e.g. SetIndent(10)).
+		// https://github.com/go-yaml/yaml/issues/1071
+		parent_indent := 0
+		if n := len(emitter.indents); n > 0 && emitter.indents[n-1] > 0 {
+			parent_indent = emitter.indents[n-1]
+		}
+		indent := emitter.indent - parent_indent
+		if indent < 1 {
+			indent = 1
+		} else if indent > 9 {
+			indent = 9
+		}
+		emitter.indent = parent_indent + indent
+		indent_hint := []byte{'0' + byte(indent)}
 		if err := emitter.writeIndicator(indent_hint, false, false, false); err != nil {
 			return err
 		}
@@ -2146,8 +2175,9 @@ func (emitter *Emitter) writeFoldedScalar(value []byte) error {
 				}
 				leading_spaces = isBlank(value, i)
 			}
-			if !breaks && isSpace(value, i) &&
-				!isSpace(value, i+1) &&
+			if !breaks && !leading_spaces && isSpace(value, i) &&
+				i+1 < len(value) && !isLineBreak(value, i+1) &&
+				!isBlank(value, i+1) &&
 				emitter.column > emitter.best_width {
 				if err := emitter.writeIndent(); err != nil {
 					return err

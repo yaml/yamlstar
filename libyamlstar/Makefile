@@ -82,7 +82,7 @@ CORE-SRCS := \
 YAML-PARSER-VERSION := 0.2.5
 YAML-PARSER-JAR := cache/yaml-parser-$(YAML-PARSER-VERSION).jar
 YAML-PARSER-URL := https://repo.clojars.org/org/yamlstar/yaml-parser/$(YAML-PARSER-VERSION)/yaml-parser-$(YAML-PARSER-VERSION).jar
-GO-YAML-REF ?= b25eca510069425553bfde10c7e93eb089d91367
+GO-YAML-REF ?= 14f6a7261be3104f473c4ca93e3abf304c29a740
 GO-YAML-LOCAL-REPO ?= $(ROOT)/repos/go-yaml
 GO-YAML-LOCAL-SOURCE := $(shell \
   git -C '$(GO-YAML-LOCAL-REPO)' cat-file -e \

@@ -542,6 +542,25 @@ def test_tab_indent_binding():
     assert instance.load(output) == value
 
 
+@pytest.mark.parametrize('source, expected', [
+    ('{x: :x, "key"::value}', {'x': ':x', 'key': ':value'}),
+    ('{foo\n: 42, bar\n: 43, baz\n, qux:}',
+     {'foo': 42, 'bar': 43, 'baz': None, 'qux': None}),
+    ('a: &foo:bar baz\nb: *foo:bar\n', {'a': 'baz', 'b': 'baz'}),
+    ('"https:\\/\\/yaml.org"', 'https://yaml.org'),
+    ('-\tfoo\n', ['foo']),
+    ('\t[foo]\n', ['foo']),
+    ('a: foo\n\t\nb: bar\n', {'a': 'foo', 'b': 'bar'}),
+    ('foo: |\n  x\n   ', {'foo': 'x\n \n'}),
+    ('foo: |\n  x\n  \t', {'foo': 'x\n\t\n'}),
+    ('foo: >+\n   ', {'foo': '\n'}),
+    ('foo: |+\n  x\n  ', {'foo': 'x\n\n'}),
+])
+def test_go_yaml_parser_updates(ys, source, expected):
+    """Exercise upstream scanner changes through the native library."""
+    assert ys.load(source) == expected
+
+
 def test_plugin_install_constructor_option():
     """Test that the Python convenience option reaches libyamlstar."""
     installed = yamlstar.YAMLStar(install_plugins=True)
