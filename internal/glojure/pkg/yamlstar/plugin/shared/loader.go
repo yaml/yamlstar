@@ -443,6 +443,10 @@ func LoadNS() {
 			"throw-if",
 		})
 	}
+	var closed0 any
+	{
+		closed0 = lang.NewMap()
+	}
 	// abi-version
 	{
 		tmp0 := sym_abi_DASH_version
@@ -636,68 +640,67 @@ func LoadNS() {
 								_ = v38
 								// let binding "base"
 								tmp39 := aotKeywordSite0.Get(kw_version, v38, nil)
-								tmp40 := lang.NewMap()
-								tmp41 := aotKeywordMapNew3(v5, v6, tmp39, v38, tmp40)
-								var v42 any = tmp41
-								_ = v42
-								var tmp43 any
+								tmp40 := aotKeywordMapNew3(v5, v6, tmp39, v38, closed0)
+								var v41 any = tmp40
+								_ = v41
+								var tmp42 any
 								{ // let
 									// let binding "G__45"
-									var v44 any = v33
-									_ = v44
+									var v43 any = v33
+									_ = v43
 									// case
-									var tmp45 any
-									var tmp46 int64
-									tmp46 = int64(uint32(lang.IdentityHash(v44)>>1) & uint32(1))
+									var tmp44 any
+									var tmp45 int64
+									tmp45 = int64(uint32(lang.IdentityHash(v43)>>1) & uint32(1))
 									// case entry 0 (key=0, collision=false)
-									if tmp46 == 0 {
-										if v44 == kw_parse {
-											var tmp47 lang.FnFunc2
-											tmp47 = lang.FnFunc2(func(p0, p1 any) any {
-												v48 := p0
+									if tmp45 == 0 {
+										if v43 == kw_parse {
+											var tmp46 lang.FnFunc2
+											tmp46 = lang.FnFunc2(func(p0, p1 any) any {
+												v47 := p0
+												_ = v47
+												v48 := p1
 												_ = v48
-												v49 := p1
-												_ = v49
-												tmp50 := aotDirectFn0(v3, v5, v29, v6, v48, v49)
-												tmp51 := aotDirectFn2(tmp50, "event stream")
-												return tmp51
+												tmp49 := aotDirectFn0(v3, v5, v29, v6, v47, v48)
+												tmp50 := aotDirectFn2(tmp49, "event stream")
+												return tmp50
 											})
-											var tmp48 any = v42
-											tmp48 = lang.Assoc(tmp48, kw_parse, tmp47)
-											tmp45 = tmp48
+											var tmp47 any = v41
+											tmp47 = lang.Assoc(tmp47, kw_parse, tmp46)
+											tmp44 = tmp47
 										} else {
-											tmp49 := aotExternalFn9("No matching clause: ", v44)
-											tmp50 := lang.Apply1(lang.NewIllegalArgumentError, tmp49)
-											panic(tmp50)
+											tmp48 := aotExternalFn9("No matching clause: ", v43)
+											tmp49 := lang.Apply1(lang.NewIllegalArgumentError, tmp48)
+											panic(tmp49)
 										}
 										// case entry 1 (key=1, collision=false)
-									} else if tmp46 == 1 {
-										if v44 == kw_sanitize {
-											var tmp51 lang.FnFunc2
-											tmp51 = lang.FnFunc2(func(p0, p1 any) any {
-												v52 := p0
+									} else if tmp45 == 1 {
+										if v43 == kw_sanitize {
+											var tmp50 lang.FnFunc2
+											tmp50 = lang.FnFunc2(func(p0, p1 any) any {
+												v51 := p0
+												_ = v51
+												v52 := p1
 												_ = v52
-												v53 := p1
-												_ = v53
-												tmp54 := aotDirectFn0(v3, v5, v29, v6, v52, v53)
-												return tmp54
+												tmp53 := aotDirectFn0(v3, v5, v29, v6, v51, v52)
+												return tmp53
 											})
-											var tmp52 any = v42
-											tmp52 = lang.Assoc(tmp52, kw_sanitize, tmp51)
-											tmp45 = tmp52
+											var tmp51 any = v41
+											tmp51 = lang.Assoc(tmp51, kw_sanitize, tmp50)
+											tmp44 = tmp51
 										} else {
-											tmp53 := aotExternalFn9("No matching clause: ", v44)
-											tmp54 := lang.Apply1(lang.NewIllegalArgumentError, tmp53)
-											panic(tmp54)
+											tmp52 := aotExternalFn9("No matching clause: ", v43)
+											tmp53 := lang.Apply1(lang.NewIllegalArgumentError, tmp52)
+											panic(tmp53)
 										}
 									} else {
-										tmp55 := aotExternalFn9("No matching clause: ", v44)
-										tmp56 := lang.Apply1(lang.NewIllegalArgumentError, tmp55)
-										panic(tmp56)
+										tmp54 := aotExternalFn9("No matching clause: ", v43)
+										tmp55 := lang.Apply1(lang.NewIllegalArgumentError, tmp54)
+										panic(tmp55)
 									}
-									tmp43 = tmp45
+									tmp42 = tmp44
 								} // end let
-								tmp34 = tmp43
+								tmp34 = tmp42
 							} // end let
 							tmp15 = tmp34
 						} // end let

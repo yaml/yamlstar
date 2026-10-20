@@ -6,10 +6,10 @@ import (
 	fmt "fmt"
 	lang "github.com/glojurelang/glojure/pkg/lang"
 	runtime "github.com/glojurelang/glojure/pkg/runtime"
-	math4 "math"
+	math5 "math"
 	reflect "reflect"
-	regexp6 "regexp"
-	strconv5 "strconv"
+	regexp4 "regexp"
+	strconv6 "strconv"
 	atomic "sync/atomic"
 )
 
@@ -24,7 +24,9 @@ var aotDirectFn3 lang.FnFunc2
 var aotDirectFn4 lang.FnFunc1
 var aotDirectFn5 lang.FnFunc1
 
-var aotKeywordMapShape0 = lang.NewKeywordMapShape("explicit", "merges")
+var aotKeywordSite0 lang.KeywordSite
+var aotKeywordSite1 lang.KeywordSite
+var aotKeywordMapShape0 = lang.NewKeywordMapShape("anchor", "node")
 
 type aotKeywordMapStorage0 struct {
 	lang.Map
@@ -41,18 +43,17 @@ func aotKeywordMapNew0(v0 any, v1 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite0 lang.KeywordSite
-var aotKeywordSite1 lang.KeywordSite
-var aotKeywordMapShape1 = lang.NewKeywordMapShape("anchor", "node")
+var aotKeywordSite2 lang.KeywordSite
+var aotKeywordMapShape1 = lang.NewKeywordMapShape("node")
 
 type aotKeywordMapStorage1 struct {
 	lang.Map
-	values [2]any
+	values [1]any
 }
 
-func aotKeywordMapNew1(v0 any, v1 any) lang.IPersistentMap {
+func aotKeywordMapNew1(v0 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage1{}
-	storage.values = [2]any{v0, v1}
+	storage.values = [1]any{v0}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape1,
@@ -60,38 +61,20 @@ func aotKeywordMapNew1(v0 any, v1 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite2 lang.KeywordSite
-var aotKeywordMapShape2 = lang.NewKeywordMapShape("node")
+var aotKeywordSite3 lang.KeywordSite
+var aotKeywordMapShape2 = lang.NewKeywordMapShape("tag", "node")
 
 type aotKeywordMapStorage2 struct {
-	lang.Map
-	values [1]any
-}
-
-func aotKeywordMapNew2(v0 any) lang.IPersistentMap {
-	storage := &aotKeywordMapStorage2{}
-	storage.values = [1]any{v0}
-	return lang.InitStaticKeywordMap(
-		&storage.Map,
-		aotKeywordMapShape2,
-		storage.values[:],
-	)
-}
-
-var aotKeywordSite3 lang.KeywordSite
-var aotKeywordMapShape3 = lang.NewKeywordMapShape("tag", "node")
-
-type aotKeywordMapStorage3 struct {
 	lang.Map
 	values [2]any
 }
 
-func aotKeywordMapNew3(v0 any, v1 any) lang.IPersistentMap {
-	storage := &aotKeywordMapStorage3{}
+func aotKeywordMapNew2(v0 any, v1 any) lang.IPersistentMap {
+	storage := &aotKeywordMapStorage2{}
 	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
-		aotKeywordMapShape3,
+		aotKeywordMapShape2,
 		storage.values[:],
 	)
 }
@@ -116,16 +99,33 @@ var aotKeywordSite20 lang.KeywordSite
 var aotKeywordSite21 lang.KeywordSite
 var aotKeywordSite22 lang.KeywordSite
 var aotKeywordSite23 lang.KeywordSite
-var aotKeywordMapShape4 = lang.NewKeywordMapShape("value")
+var aotKeywordMapShape3 = lang.NewKeywordMapShape("value")
 
-type aotKeywordMapStorage4 struct {
+type aotKeywordMapStorage3 struct {
 	lang.Map
 	values [1]any
 }
 
-func aotKeywordMapNew4(v0 any) lang.IPersistentMap {
-	storage := &aotKeywordMapStorage4{}
+func aotKeywordMapNew3(v0 any) lang.IPersistentMap {
+	storage := &aotKeywordMapStorage3{}
 	storage.values = [1]any{v0}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape3,
+		storage.values[:],
+	)
+}
+
+var aotKeywordMapShape4 = lang.NewKeywordMapShape("explicit", "merges")
+
+type aotKeywordMapStorage4 struct {
+	lang.Map
+	values [2]any
+}
+
+func aotKeywordMapNew4(v0 any, v1 any) lang.IPersistentMap {
+	storage := &aotKeywordMapStorage4{}
+	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape4,
@@ -333,7 +333,6 @@ func LoadNS() {
 	sym_numbers := lang.NewSymbolUnchecked("numbers")
 	sym_pairs := lang.NewSymbolUnchecked("pairs")
 	sym_parse_DASH_safe_DASH_integer := lang.NewSymbolUnchecked("parse-safe-integer")
-	sym_re_DASH_matches := lang.NewSymbolUnchecked("re-matches")
 	sym_reduce := lang.NewSymbolUnchecked("reduce")
 	sym_remove := lang.NewSymbolUnchecked("remove")
 	sym_resolve_DASH_alias := lang.NewSymbolUnchecked("resolve-alias")
@@ -388,8 +387,6 @@ func LoadNS() {
 	var_clojure_DOT_core_mapv := lang.InternVarName(sym_clojure_DOT_core, sym_mapv)
 	// var clojure.core/merge
 	var_clojure_DOT_core_merge := lang.InternVarName(sym_clojure_DOT_core, sym_merge)
-	// var clojure.core/re-matches
-	var_clojure_DOT_core_re_DASH_matches := lang.InternVarName(sym_clojure_DOT_core, sym_re_DASH_matches)
 	// var clojure.core/reduce
 	var_clojure_DOT_core_reduce := lang.InternVarName(sym_clojure_DOT_core, sym_reduce)
 	// var clojure.core/remove
@@ -451,7 +448,6 @@ func LoadNS() {
 	aotExternalFn23 := aotLinkFn2(var_clojure_DOT_core_str)
 	aotExternalFn24 := aotLinkFn3(var_yamlstar_DOT_plugin_DOT_alias_DASH_data_define_DASH_anchor)
 	aotExternalFn25 := aotLinkFn1(var_yamlstar_DOT_numbers_parse_DASH_safe_DASH_integer)
-	aotExternalFn26 := aotLinkFn2(var_clojure_DOT_core_re_DASH_matches)
 	aotExternalFn29 := aotLinkFn1(var_clojure_DOT_core_sequential_QMARK_)
 	aotExternalFn3 := aotLinkFn1(var_yamlstar_DOT_plugin_DOT_alias_DASH_data_begin_DASH_document)
 	aotExternalFn30 := aotLinkFn1(var_clojure_DOT_core_reverse)
@@ -546,11 +542,43 @@ func LoadNS() {
 	ns.AddAlias(sym_alias_DASH_data, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_alias_DASH_data))
 	var closed0 any
 	var closed1 any
+	var closed2 any
+	var closed3 any
+	var closed4 any
+	var closed5 any
+	var closed6 any
+	var closed7 any
+	var closed8 any
+	var closed9 any
 	{
-		closed0 = regexp6.MustCompile("[+-]?\\.inf|\\.Inf|\\.INF")
+		closed0 = aotKeywordMapNew4(lang.NewVector(), lang.NewVector())
 	}
 	{
-		closed1 = regexp6.MustCompile("\\.nan|\\.NaN|\\.NAN")
+		closed1 = lang.NewMap()
+	}
+	{
+		closed2 = regexp4.MustCompile("[+-]?\\.inf|\\.Inf|\\.INF")
+	}
+	{
+		closed3 = regexp4.MustCompile("\\A(?:[+-]?\\.inf|\\.Inf|\\.INF)\\z")
+	}
+	{
+		closed4 = regexp4.MustCompile("\\.nan|\\.NaN|\\.NAN")
+	}
+	{
+		closed5 = regexp4.MustCompile("\\A(?:\\.nan|\\.NaN|\\.NAN)\\z")
+	}
+	{
+		closed6 = lang.NewSet("True", "true", "TRUE")
+	}
+	{
+		closed7 = lang.NewSet("True", "true", "TRUE")
+	}
+	{
+		closed8 = regexp4.MustCompile("\\A(?:[+-]?\\.inf|\\.Inf|\\.INF)\\z")
+	}
+	{
+		closed9 = regexp4.MustCompile("\\A(?:\\.nan|\\.NaN|\\.NAN)\\z")
 	}
 	// construct
 	{
@@ -698,30 +726,32 @@ func LoadNS() {
 				var v7 any = tmp6
 				_ = v7
 				var tmp8 any
-				tmp9 := aotExternalFn26(closed0, v7)
+				_ = closed2
+				tmp9 := runtime.MatchLiteralRegexp(closed3.(*regexp4.Regexp), v7)
 				if lang.IsTruthy(tmp9) {
 					var tmp10 any
 					tmp11 := lang.First(v7)
 					tmp12 := lang.Equals(tmp11, lang.NewChar(45))
 					if tmp12 {
-						tmp13 := lang.Apply1(math4.Inf, int64(-1))
+						tmp13 := lang.Apply1(math5.Inf, int64(-1))
 						tmp10 = tmp13
 					} else {
-						tmp14 := lang.Apply1(math4.Inf, int64(1))
+						tmp14 := lang.Apply1(math5.Inf, int64(1))
 						tmp10 = tmp14
 					}
 					tmp8 = tmp10
 				} else {
 					var tmp15 any
-					tmp16 := aotExternalFn26(closed1, v7)
+					_ = closed4
+					tmp16 := runtime.MatchLiteralRegexp(closed5.(*regexp4.Regexp), v7)
 					if lang.IsTruthy(tmp16) {
-						tmp17 := math4.NaN()
+						tmp17 := math5.NaN()
 						tmp15 = tmp17
 					} else {
 						var tmp18 any
 						{ // let
 							// let binding "vec__17"
-							tmp19 := lang.Apply2(strconv5.ParseFloat, v7, int64(64))
+							tmp19 := lang.Apply2(strconv6.ParseFloat, v7, int64(64))
 							var v20 any = tmp19
 							_ = v20
 							// let binding "f"
@@ -754,10 +784,9 @@ func LoadNS() {
 		tmp5 = lang.FnFunc1(func(p0 any) any {
 			v6 := p0
 			_ = v6
-			tmp7 := lang.NewSet("True", "true", "TRUE")
-			tmp8 := aotKeywordSite15.Get(kw_value, v6, nil)
-			tmp9 := aotExternalFn20(tmp7, tmp8)
-			return tmp9
+			tmp7 := aotKeywordSite15.Get(kw_value, v6, nil)
+			tmp8 := aotExternalFn20(closed6, tmp7)
+			return tmp8
 		})
 		var tmp6 lang.FnFunc1
 		tmp6 = lang.FnFunc1(func(p0 any) any {
@@ -775,10 +804,9 @@ func LoadNS() {
 		tmp8 = lang.FnFunc1(func(p0 any) any {
 			v9 := p0
 			_ = v9
-			tmp10 := lang.NewSet("True", "true", "TRUE")
-			tmp11 := aotKeywordSite16.Get(kw_value, v9, nil)
-			tmp12 := aotExternalFn20(tmp10, tmp11)
-			return tmp12
+			tmp10 := aotKeywordSite16.Get(kw_value, v9, nil)
+			tmp11 := aotExternalFn20(closed7, tmp10)
+			return tmp11
 		})
 		var tmp9 lang.FnFunc1
 		tmp9 = lang.FnFunc1(func(p0 any) any {
@@ -798,30 +826,32 @@ func LoadNS() {
 				var v14 any = tmp13
 				_ = v14
 				var tmp15 any
-				tmp16 := aotExternalFn26(closed0, v14)
+				_ = closed2
+				tmp16 := runtime.MatchLiteralRegexp(closed8.(*regexp4.Regexp), v14)
 				if lang.IsTruthy(tmp16) {
 					var tmp17 any
 					tmp18 := lang.First(v14)
 					tmp19 := lang.Equals(tmp18, lang.NewChar(45))
 					if tmp19 {
-						tmp20 := lang.Apply1(math4.Inf, int64(-1))
+						tmp20 := lang.Apply1(math5.Inf, int64(-1))
 						tmp17 = tmp20
 					} else {
-						tmp21 := lang.Apply1(math4.Inf, int64(1))
+						tmp21 := lang.Apply1(math5.Inf, int64(1))
 						tmp17 = tmp21
 					}
 					tmp15 = tmp17
 				} else {
 					var tmp22 any
-					tmp23 := aotExternalFn26(closed1, v14)
+					_ = closed4
+					tmp23 := runtime.MatchLiteralRegexp(closed9.(*regexp4.Regexp), v14)
 					if lang.IsTruthy(tmp23) {
-						tmp24 := math4.NaN()
+						tmp24 := math5.NaN()
 						tmp22 = tmp24
 					} else {
 						var tmp25 any
 						{ // let
 							// let binding "vec__17"
-							tmp26 := lang.Apply2(strconv5.ParseFloat, v14, int64(64))
+							tmp26 := lang.Apply2(strconv6.ParseFloat, v14, int64(64))
 							var v27 any = tmp26
 							_ = v27
 							// let binding "f"
@@ -949,7 +979,7 @@ func LoadNS() {
 						tmp11 := lang.IsMap(v9)
 						if tmp11 {
 						} else {
-							tmp12 := aotKeywordMapNew4(v2)
+							tmp12 := aotKeywordMapNew3(v2)
 							tmp13 := aotExternalFn22("Map merge requires a map or sequence of maps", tmp12)
 							panic(tmp13)
 						}
@@ -957,14 +987,13 @@ func LoadNS() {
 						tmp14 := aotExternalFn14(v8, v9)
 						return tmp14
 					})
-					tmp8 := lang.NewMap()
-					tmp9 := aotExternalFn30(v2)
-					tmp10 := aotExternalFn6(tmp7, tmp8, tmp9)
-					tmp5 = tmp10
+					tmp8 := aotExternalFn30(v2)
+					tmp9 := aotExternalFn6(tmp7, closed1, tmp8)
+					tmp5 = tmp9
 				} else {
-					tmp11 := aotKeywordMapNew4(v2)
-					tmp12 := aotExternalFn22("Map merge requires a map or sequence of maps", tmp11)
-					panic(tmp12)
+					tmp10 := aotKeywordMapNew3(v2)
+					tmp11 := aotExternalFn22("Map merge requires a map or sequence of maps", tmp10)
+					panic(tmp11)
 				}
 				tmp3 = tmp5
 			}
@@ -1026,7 +1055,7 @@ func LoadNS() {
 										tmp20 = v19
 									} else {
 										tmp21 := aotExternalFn23("Unknown anchor: ", v13)
-										tmp22 := aotKeywordMapNew1(v13, v2)
+										tmp22 := aotKeywordMapNew0(v13, v2)
 										tmp23 := aotExternalFn22(tmp21, tmp22)
 										panic(tmp23)
 									}
@@ -1036,7 +1065,7 @@ func LoadNS() {
 							} else {
 								tmp12 := aotKeywordSite2.Get(kw_kind, v2, nil)
 								tmp13 := aotExternalFn23("Unknown node kind: ", tmp12)
-								tmp14 := aotKeywordMapNew2(v2)
+								tmp14 := aotKeywordMapNew1(v2)
 								tmp15 := aotExternalFn22(tmp13, tmp14)
 								panic(tmp15)
 							}
@@ -1060,7 +1089,7 @@ func LoadNS() {
 										tmp22 = tmp23
 									} else {
 										tmp24 := aotExternalFn23("Unknown tag: ", v18)
-										tmp25 := aotKeywordMapNew3(v18, v2)
+										tmp25 := aotKeywordMapNew2(v18, v2)
 										tmp26 := aotExternalFn22(tmp24, tmp25)
 										panic(tmp26)
 									}
@@ -1070,7 +1099,7 @@ func LoadNS() {
 							} else {
 								tmp17 := aotKeywordSite4.Get(kw_kind, v2, nil)
 								tmp18 := aotExternalFn23("Unknown node kind: ", tmp17)
-								tmp19 := aotKeywordMapNew2(v2)
+								tmp19 := aotKeywordMapNew1(v2)
 								tmp20 := aotExternalFn22(tmp18, tmp19)
 								panic(tmp20)
 							}
@@ -1083,7 +1112,7 @@ func LoadNS() {
 							} else {
 								tmp23 := aotKeywordSite6.Get(kw_kind, v2, nil)
 								tmp24 := aotExternalFn23("Unknown node kind: ", tmp23)
-								tmp25 := aotKeywordMapNew2(v2)
+								tmp25 := aotKeywordMapNew1(v2)
 								tmp26 := aotExternalFn22(tmp24, tmp25)
 								panic(tmp26)
 							}
@@ -1110,14 +1139,14 @@ func LoadNS() {
 							} else {
 								tmp28 := aotKeywordSite8.Get(kw_kind, v2, nil)
 								tmp29 := aotExternalFn23("Unknown node kind: ", tmp28)
-								tmp30 := aotKeywordMapNew2(v2)
+								tmp30 := aotKeywordMapNew1(v2)
 								tmp31 := aotExternalFn22(tmp29, tmp30)
 								panic(tmp31)
 							}
 						} else {
 							tmp32 := aotKeywordSite9.Get(kw_kind, v2, nil)
 							tmp33 := aotExternalFn23("Unknown node kind: ", tmp32)
-							tmp34 := aotKeywordMapNew2(v2)
+							tmp34 := aotKeywordMapNew1(v2)
 							tmp35 := aotExternalFn22(tmp33, tmp34)
 							panic(tmp35)
 						}
@@ -1210,106 +1239,102 @@ func LoadNS() {
 					} // end let
 					return tmp8
 				})
-				tmp6 := lang.NewVector()
-				tmp7 := lang.NewVector()
-				tmp8 := aotKeywordMapNew0(tmp6, tmp7)
-				tmp9 := aotExternalFn6(tmp5, tmp8, v2)
-				var v10 any = tmp9
-				_ = v10
+				tmp6 := aotExternalFn6(tmp5, closed0, v2)
+				var v7 any = tmp6
+				_ = v7
 				// let binding "map__20"
-				var tmp11 any
-				tmp12 := aotExternalFn9(v10)
-				if lang.IsTruthy(tmp12) {
-					var tmp13 any
-					tmp14 := lang.Next(v10)
-					if lang.IsTruthy(tmp14) {
-						tmp15 := aotExternalFn11(v10)
-						tmp16 := lang.Apply1(lang.NewPersistentArrayMapAsIfByAssoc, tmp15)
-						tmp13 = tmp16
+				var tmp8 any
+				tmp9 := aotExternalFn9(v7)
+				if lang.IsTruthy(tmp9) {
+					var tmp10 any
+					tmp11 := lang.Next(v7)
+					if lang.IsTruthy(tmp11) {
+						tmp12 := aotExternalFn11(v7)
+						tmp13 := lang.Apply1(lang.NewPersistentArrayMapAsIfByAssoc, tmp12)
+						tmp10 = tmp13
 					} else {
-						var tmp17 any
-						tmp18 := lang.IsSeqTruthy(v10)
-						if tmp18 {
-							tmp19 := lang.First(v10)
-							tmp17 = tmp19
+						var tmp14 any
+						tmp15 := lang.IsSeqTruthy(v7)
+						if tmp15 {
+							tmp16 := lang.First(v7)
+							tmp14 = tmp16
 						} else {
-							tmp20 := lang.Apply0(lang.NewMap)
-							tmp17 = tmp20
+							tmp17 := lang.Apply0(lang.NewMap)
+							tmp14 = tmp17
 						}
-						tmp13 = tmp17
+						tmp10 = tmp14
 					}
-					tmp11 = tmp13
+					tmp8 = tmp10
 				} else {
-					tmp11 = v10
+					tmp8 = v7
 				}
-				var v21 any = tmp11
-				_ = v21
+				var v18 any = tmp8
+				_ = v18
 				// let binding "explicit"
-				tmp22 := runtime.RT.Get(v21, kw_explicit)
-				var v23 any = tmp22
-				_ = v23
+				tmp19 := runtime.RT.Get(v18, kw_explicit)
+				var v20 any = tmp19
+				_ = v20
 				// let binding "merges"
-				tmp24 := runtime.RT.Get(v21, kw_merges)
+				tmp21 := runtime.RT.Get(v18, kw_merges)
+				var v22 any = tmp21
+				_ = v22
+				// let binding "merged"
+				var tmp23 lang.FnFunc2
+				tmp23 = lang.FnFunc2(func(p0, p1 any) any {
+					v24 := p0
+					_ = v24
+					v25 := p1
+					_ = v25
+					tmp26 := aotDirectFn5(v25)
+					tmp27 := aotExternalFn14(v24, tmp26)
+					return tmp27
+				})
+				tmp24 := aotExternalFn6(tmp23, closed1, v22)
 				var v25 any = tmp24
 				_ = v25
-				// let binding "merged"
-				var tmp26 lang.FnFunc2
-				tmp26 = lang.FnFunc2(func(p0, p1 any) any {
-					v27 := p0
-					_ = v27
-					v28 := p1
-					_ = v28
-					tmp29 := aotDirectFn5(v28)
-					tmp30 := aotExternalFn14(v27, tmp29)
-					return tmp30
-				})
-				tmp27 := lang.NewMap()
-				tmp28 := aotExternalFn6(tmp26, tmp27, v25)
-				var v29 any = tmp28
-				_ = v29
 				// let binding "explicit-map"
-				tmp30 := checkDerefVar(var_clojure_DOT_core_array_DASH_map)
-				tmp31 := checkDerefVar(var_clojure_DOT_core_identity)
-				tmp32 := aotExternalFn16(tmp31, v23)
-				tmp33 := aotExternalFn15(tmp30, tmp32)
-				var v34 any = tmp33
-				_ = v34
-				var tmp35 any
-				tmp36 := lang.IsEmpty(v25)
-				if tmp36 {
-					tmp35 = v34
+				tmp26 := checkDerefVar(var_clojure_DOT_core_array_DASH_map)
+				tmp27 := checkDerefVar(var_clojure_DOT_core_identity)
+				tmp28 := aotExternalFn16(tmp27, v20)
+				tmp29 := aotExternalFn15(tmp26, tmp28)
+				var v30 any = tmp29
+				_ = v30
+				var tmp31 any
+				tmp32 := lang.IsEmpty(v22)
+				if tmp32 {
+					tmp31 = v30
 				} else {
-					tmp37 := checkDerefVar(var_clojure_DOT_core_array_DASH_map)
-					tmp38 := checkDerefVar(var_clojure_DOT_core_identity)
-					var tmp39 lang.FnFunc1
-					tmp39 = lang.FnFunc1(func(p0 any) any {
-						v40 := p0
-						_ = v40
-						var tmp41 any
+					tmp33 := checkDerefVar(var_clojure_DOT_core_array_DASH_map)
+					tmp34 := checkDerefVar(var_clojure_DOT_core_identity)
+					var tmp35 lang.FnFunc1
+					tmp35 = lang.FnFunc1(func(p0 any) any {
+						v36 := p0
+						_ = v36
+						var tmp37 any
 						{ // let
 							// let binding "vec__26"
-							var v42 any = v40
-							_ = v42
+							var v38 any = v36
+							_ = v38
 							// let binding "key"
-							tmp43 := runtime.RT.NthDefault(v42, lang.IntCast(int64(0)), nil)
-							var v44 any = tmp43
-							_ = v44
+							tmp39 := runtime.RT.NthDefault(v38, lang.IntCast(int64(0)), nil)
+							var v40 any = tmp39
+							_ = v40
 							// let binding "_"
-							tmp45 := runtime.RT.NthDefault(v42, lang.IntCast(int64(1)), nil)
-							var v46 any = tmp45
-							_ = v46
-							tmp47 := aotExternalFn20(v34, v44)
-							tmp41 = tmp47
+							tmp41 := runtime.RT.NthDefault(v38, lang.IntCast(int64(1)), nil)
+							var v42 any = tmp41
+							_ = v42
+							tmp43 := aotExternalFn20(v30, v40)
+							tmp37 = tmp43
 						} // end let
-						return tmp41
+						return tmp37
 					})
-					tmp40 := aotExternalFn19(tmp39, v29)
-					tmp41 := aotExternalFn18(tmp40, v23)
-					tmp42 := aotExternalFn16(tmp38, tmp41)
-					tmp43 := aotExternalFn15(tmp37, tmp42)
-					tmp35 = tmp43
+					tmp36 := aotExternalFn19(tmp35, v25)
+					tmp37 := aotExternalFn18(tmp36, v20)
+					tmp38 := aotExternalFn16(tmp34, tmp37)
+					tmp39 := aotExternalFn15(tmp33, tmp38)
+					tmp31 = tmp39
 				}
-				tmp4 = tmp35
+				tmp4 = tmp31
 			} // end let
 			return tmp4
 		})

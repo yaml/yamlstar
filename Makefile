@@ -1,5 +1,5 @@
 M := .cache/makes
-YAMLSCRIPT-VERSION := 0.2.32
+YAMLSCRIPT-VERSION := 0.3.6
 include common/init.mk
 include $M/gh.mk
 include $M/gloat.mk

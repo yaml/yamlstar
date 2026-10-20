@@ -50,36 +50,19 @@ var aotKeywordSite0 lang.KeywordSite
 var aotKeywordSite1 lang.KeywordSite
 var aotKeywordSite2 lang.KeywordSite
 var aotKeywordSite3 lang.KeywordSite
-var aotKeywordMapShape0 = lang.NewKeywordMapShape("stream")
+var aotKeywordMapShape0 = lang.NewKeywordMapShape("api", "name", "linked", "requested")
 
 type aotKeywordMapStorage0 struct {
-	lang.Map
-	values [1]any
-}
-
-func aotKeywordMapNew0(v0 any) lang.IPersistentMap {
-	storage := &aotKeywordMapStorage0{}
-	storage.values = [1]any{v0}
-	return lang.InitStaticKeywordMap(
-		&storage.Map,
-		aotKeywordMapShape0,
-		storage.values[:],
-	)
-}
-
-var aotKeywordMapShape1 = lang.NewKeywordMapShape("api", "name", "linked", "requested")
-
-type aotKeywordMapStorage1 struct {
 	lang.Map
 	values [4]any
 }
 
-func aotKeywordMapNew1(v0 any, v1 any, v2 any, v3 any) lang.IPersistentMap {
-	storage := &aotKeywordMapStorage1{}
+func aotKeywordMapNew0(v0 any, v1 any, v2 any, v3 any) lang.IPersistentMap {
+	storage := &aotKeywordMapStorage0{}
 	storage.values = [4]any{v0, v1, v2, v3}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
-		aotKeywordMapShape1,
+		aotKeywordMapShape0,
 		storage.values[:],
 	)
 }
@@ -89,16 +72,33 @@ var aotKeywordSite5 lang.KeywordSite
 var aotKeywordSite6 lang.KeywordSite
 var aotKeywordSite7 lang.KeywordSite
 var aotKeywordSite8 lang.KeywordSite
-var aotKeywordMapShape2 = lang.NewKeywordMapShape("begin-stream", "begin-document", "define-anchor", "resolve-alias", "end-document", "end-stream")
+var aotKeywordMapShape1 = lang.NewKeywordMapShape("begin-stream", "begin-document", "define-anchor", "resolve-alias", "end-document", "end-stream")
 
-type aotKeywordMapStorage2 struct {
+type aotKeywordMapStorage1 struct {
 	lang.Map
 	values [6]any
 }
 
-func aotKeywordMapNew2(v0 any, v1 any, v2 any, v3 any, v4 any, v5 any) lang.IPersistentMap {
-	storage := &aotKeywordMapStorage2{}
+func aotKeywordMapNew1(v0 any, v1 any, v2 any, v3 any, v4 any, v5 any) lang.IPersistentMap {
+	storage := &aotKeywordMapStorage1{}
 	storage.values = [6]any{v0, v1, v2, v3, v4, v5}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape1,
+		storage.values[:],
+	)
+}
+
+var aotKeywordMapShape2 = lang.NewKeywordMapShape("api", "name", "new-context")
+
+type aotKeywordMapStorage2 struct {
+	lang.Map
+	values [3]any
+}
+
+func aotKeywordMapNew2(v0 any, v1 any, v2 any) lang.IPersistentMap {
+	storage := &aotKeywordMapStorage2{}
+	storage.values = [3]any{v0, v1, v2}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape2,
@@ -106,16 +106,16 @@ func aotKeywordMapNew2(v0 any, v1 any, v2 any, v3 any, v4 any, v5 any) lang.IPer
 	)
 }
 
-var aotKeywordMapShape3 = lang.NewKeywordMapShape("api", "name", "new-context")
+var aotKeywordMapShape3 = lang.NewKeywordMapShape("api", "name", "version", "sanitize", "default-config")
 
 type aotKeywordMapStorage3 struct {
 	lang.Map
-	values [3]any
+	values [5]any
 }
 
-func aotKeywordMapNew3(v0 any, v1 any, v2 any) lang.IPersistentMap {
+func aotKeywordMapNew3(v0 any, v1 any, v2 any, v3 any, v4 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage3{}
-	storage.values = [3]any{v0, v1, v2}
+	storage.values = [5]any{v0, v1, v2, v3, v4}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape3,
@@ -123,16 +123,17 @@ func aotKeywordMapNew3(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape4 = lang.NewKeywordMapShape("api", "name", "version", "sanitize", "default-config")
+var aotKeywordSite9 lang.KeywordSite
+var aotKeywordMapShape4 = lang.NewKeywordMapShape("yaml-emitter", "linked", "requested")
 
 type aotKeywordMapStorage4 struct {
 	lang.Map
-	values [5]any
+	values [3]any
 }
 
-func aotKeywordMapNew4(v0 any, v1 any, v2 any, v3 any, v4 any) lang.IPersistentMap {
+func aotKeywordMapNew4(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage4{}
-	storage.values = [5]any{v0, v1, v2, v3, v4}
+	storage.values = [3]any{v0, v1, v2}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape4,
@@ -140,17 +141,16 @@ func aotKeywordMapNew4(v0 any, v1 any, v2 any, v3 any, v4 any) lang.IPersistentM
 	)
 }
 
-var aotKeywordSite9 lang.KeywordSite
-var aotKeywordMapShape5 = lang.NewKeywordMapShape("yaml-emitter", "linked", "requested")
+var aotKeywordMapShape5 = lang.NewKeywordMapShape("api")
 
 type aotKeywordMapStorage5 struct {
 	lang.Map
-	values [3]any
+	values [1]any
 }
 
-func aotKeywordMapNew5(v0 any, v1 any, v2 any) lang.IPersistentMap {
+func aotKeywordMapNew5(v0 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage5{}
-	storage.values = [3]any{v0, v1, v2}
+	storage.values = [1]any{v0}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape5,
@@ -158,7 +158,11 @@ func aotKeywordMapNew5(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape6 = lang.NewKeywordMapShape("api")
+var aotKeywordSite10 lang.KeywordSite
+var aotKeywordSite11 lang.KeywordSite
+var aotKeywordSite12 lang.KeywordSite
+var aotKeywordSite13 lang.KeywordSite
+var aotKeywordMapShape6 = lang.NewKeywordMapShape("version")
 
 type aotKeywordMapStorage6 struct {
 	lang.Map
@@ -175,11 +179,10 @@ func aotKeywordMapNew6(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite10 lang.KeywordSite
-var aotKeywordSite11 lang.KeywordSite
-var aotKeywordSite12 lang.KeywordSite
-var aotKeywordSite13 lang.KeywordSite
-var aotKeywordMapShape7 = lang.NewKeywordMapShape("version")
+var aotKeywordSite14 lang.KeywordSite
+var aotKeywordSite15 lang.KeywordSite
+var aotKeywordSite16 lang.KeywordSite
+var aotKeywordMapShape7 = lang.NewKeywordMapShape("name")
 
 type aotKeywordMapStorage7 struct {
 	lang.Map
@@ -196,10 +199,8 @@ func aotKeywordMapNew7(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite14 lang.KeywordSite
-var aotKeywordSite15 lang.KeywordSite
-var aotKeywordSite16 lang.KeywordSite
-var aotKeywordMapShape8 = lang.NewKeywordMapShape("name")
+var aotKeywordSite17 lang.KeywordSite
+var aotKeywordMapShape8 = lang.NewKeywordMapShape("plugin")
 
 type aotKeywordMapStorage8 struct {
 	lang.Map
@@ -216,17 +217,16 @@ func aotKeywordMapNew8(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite17 lang.KeywordSite
-var aotKeywordMapShape9 = lang.NewKeywordMapShape("plugin")
+var aotKeywordMapShape9 = lang.NewKeywordMapShape("api", "name", "available")
 
 type aotKeywordMapStorage9 struct {
 	lang.Map
-	values [1]any
+	values [3]any
 }
 
-func aotKeywordMapNew9(v0 any) lang.IPersistentMap {
+func aotKeywordMapNew9(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage9{}
-	storage.values = [1]any{v0}
+	storage.values = [3]any{v0, v1, v2}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape9,
@@ -234,16 +234,16 @@ func aotKeywordMapNew9(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape10 = lang.NewKeywordMapShape("api", "name", "available")
+var aotKeywordMapShape10 = lang.NewKeywordMapShape("api", "name")
 
 type aotKeywordMapStorage10 struct {
 	lang.Map
-	values [3]any
+	values [2]any
 }
 
-func aotKeywordMapNew10(v0 any, v1 any, v2 any) lang.IPersistentMap {
+func aotKeywordMapNew10(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage10{}
-	storage.values = [3]any{v0, v1, v2}
+	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape10,
@@ -251,7 +251,8 @@ func aotKeywordMapNew10(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape11 = lang.NewKeywordMapShape("api", "name")
+var aotKeywordSite18 lang.KeywordSite
+var aotKeywordMapShape11 = lang.NewKeywordMapShape("parser", "available")
 
 type aotKeywordMapStorage11 struct {
 	lang.Map
@@ -268,17 +269,17 @@ func aotKeywordMapNew11(v0 any, v1 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite18 lang.KeywordSite
-var aotKeywordMapShape12 = lang.NewKeywordMapShape("parser", "available")
+var aotKeywordSite19 lang.KeywordSite
+var aotKeywordMapShape12 = lang.NewKeywordMapShape("parser", "linked", "requested")
 
 type aotKeywordMapStorage12 struct {
 	lang.Map
-	values [2]any
+	values [3]any
 }
 
-func aotKeywordMapNew12(v0 any, v1 any) lang.IPersistentMap {
+func aotKeywordMapNew12(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage12{}
-	storage.values = [2]any{v0, v1}
+	storage.values = [3]any{v0, v1, v2}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape12,
@@ -286,17 +287,16 @@ func aotKeywordMapNew12(v0 any, v1 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite19 lang.KeywordSite
-var aotKeywordMapShape13 = lang.NewKeywordMapShape("parser", "linked", "requested")
+var aotKeywordMapShape13 = lang.NewKeywordMapShape("yaml-emitter", "available")
 
 type aotKeywordMapStorage13 struct {
 	lang.Map
-	values [3]any
+	values [2]any
 }
 
-func aotKeywordMapNew13(v0 any, v1 any, v2 any) lang.IPersistentMap {
+func aotKeywordMapNew13(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage13{}
-	storage.values = [3]any{v0, v1, v2}
+	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape13,
@@ -304,7 +304,8 @@ func aotKeywordMapNew13(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape14 = lang.NewKeywordMapShape("yaml-emitter", "available")
+var aotKeywordSite20 lang.KeywordSite
+var aotKeywordMapShape14 = lang.NewKeywordMapShape("api", "value")
 
 type aotKeywordMapStorage14 struct {
 	lang.Map
@@ -321,17 +322,17 @@ func aotKeywordMapNew14(v0 any, v1 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite20 lang.KeywordSite
-var aotKeywordMapShape15 = lang.NewKeywordMapShape("api", "value")
+var aotKeywordSite21 lang.KeywordSite
+var aotKeywordMapShape15 = lang.NewKeywordMapShape("loader")
 
 type aotKeywordMapStorage15 struct {
 	lang.Map
-	values [2]any
+	values [1]any
 }
 
-func aotKeywordMapNew15(v0 any, v1 any) lang.IPersistentMap {
+func aotKeywordMapNew15(v0 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage15{}
-	storage.values = [2]any{v0, v1}
+	storage.values = [1]any{v0}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape15,
@@ -339,8 +340,8 @@ func aotKeywordMapNew15(v0 any, v1 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite21 lang.KeywordSite
-var aotKeywordMapShape16 = lang.NewKeywordMapShape("loader")
+var aotKeywordSite22 lang.KeywordSite
+var aotKeywordMapShape16 = lang.NewKeywordMapShape("tab-indent")
 
 type aotKeywordMapStorage16 struct {
 	lang.Map
@@ -357,8 +358,9 @@ func aotKeywordMapNew16(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite22 lang.KeywordSite
-var aotKeywordMapShape17 = lang.NewKeywordMapShape("tab-indent")
+var aotKeywordSite23 lang.KeywordSite
+var aotKeywordSite24 lang.KeywordSite
+var aotKeywordMapShape17 = lang.NewKeywordMapShape("disable")
 
 type aotKeywordMapStorage17 struct {
 	lang.Map
@@ -375,9 +377,7 @@ func aotKeywordMapNew17(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite23 lang.KeywordSite
-var aotKeywordSite24 lang.KeywordSite
-var aotKeywordMapShape18 = lang.NewKeywordMapShape("disable")
+var aotKeywordMapShape18 = lang.NewKeywordMapShape("keys")
 
 type aotKeywordMapStorage18 struct {
 	lang.Map
@@ -394,7 +394,11 @@ func aotKeywordMapNew18(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape19 = lang.NewKeywordMapShape("keys")
+var aotKeywordSite25 lang.KeywordSite
+var aotKeywordSite26 lang.KeywordSite
+var aotKeywordSite27 lang.KeywordSite
+var aotKeywordSite28 lang.KeywordSite
+var aotKeywordMapShape19 = lang.NewKeywordMapShape("mode")
 
 type aotKeywordMapStorage19 struct {
 	lang.Map
@@ -411,11 +415,7 @@ func aotKeywordMapNew19(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite25 lang.KeywordSite
-var aotKeywordSite26 lang.KeywordSite
-var aotKeywordSite27 lang.KeywordSite
-var aotKeywordSite28 lang.KeywordSite
-var aotKeywordMapShape20 = lang.NewKeywordMapShape("mode")
+var aotKeywordMapShape20 = lang.NewKeywordMapShape("load")
 
 type aotKeywordMapStorage20 struct {
 	lang.Map
@@ -432,7 +432,7 @@ func aotKeywordMapNew20(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape21 = lang.NewKeywordMapShape("load")
+var aotKeywordMapShape21 = lang.NewKeywordMapShape("dump")
 
 type aotKeywordMapStorage21 struct {
 	lang.Map
@@ -449,7 +449,7 @@ func aotKeywordMapNew21(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape22 = lang.NewKeywordMapShape("dump")
+var aotKeywordMapShape22 = lang.NewKeywordMapShape("auto")
 
 type aotKeywordMapStorage22 struct {
 	lang.Map
@@ -466,16 +466,16 @@ func aotKeywordMapNew22(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape23 = lang.NewKeywordMapShape("auto")
+var aotKeywordMapShape23 = lang.NewKeywordMapShape("mode", "load", "dump", "auto")
 
 type aotKeywordMapStorage23 struct {
 	lang.Map
-	values [1]any
+	values [4]any
 }
 
-func aotKeywordMapNew23(v0 any) lang.IPersistentMap {
+func aotKeywordMapNew23(v0 any, v1 any, v2 any, v3 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage23{}
-	storage.values = [1]any{v0}
+	storage.values = [4]any{v0, v1, v2, v3}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape23,
@@ -483,26 +483,24 @@ func aotKeywordMapNew23(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape24 = lang.NewKeywordMapShape("mode", "load", "dump", "auto")
+var aotKeywordSite29 lang.KeywordSite
+var aotKeywordSite30 lang.KeywordSite
+var aotKeywordMapShape24 = lang.NewKeywordMapShape("stream")
 
 type aotKeywordMapStorage24 struct {
 	lang.Map
-	values [4]any
+	values [1]any
 }
 
-func aotKeywordMapNew24(v0 any, v1 any, v2 any, v3 any) lang.IPersistentMap {
+func aotKeywordMapNew24(v0 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage24{}
-	storage.values = [4]any{v0, v1, v2, v3}
+	storage.values = [1]any{v0}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape24,
 		storage.values[:],
 	)
 }
-
-var aotKeywordSite29 lang.KeywordSite
-var aotKeywordSite30 lang.KeywordSite
-
 func aotLinkFn0(vr *lang.Var) lang.FnFunc0 {
 	if vr.IsBound() {
 		return aotLinkBoundFn0(vr)
@@ -961,12 +959,10 @@ func LoadNS() {
 	aotExternalFn21 := aotLinkFn3(var_clojure_DOT_core_swap_BANG_)
 	aotExternalFn23 := aotLinkFn1(var_clojure_DOT_core_requiring_DASH_resolve)
 	aotExternalFn24 := aotLinkFn2(var_clojure_DOT_core_merge)
-	aotExternalFn25 := aotLinkFn2(var_clojure_DOT_core_dissoc)
 	aotExternalFn26 := aotLinkFn1(var_clojure_DOT_core_keys)
 	aotExternalFn27 := aotLinkFn2(var_clojure_DOT_core_str)
 	aotExternalFn28 := aotLinkFn1(var_clojure_DOT_core_name)
 	aotExternalFn29 := aotLinkFn1(var_clojure_DOT_core_chunked_DASH_seq_QMARK_)
-	aotExternalFn3 := aotLinkFn3(var_clojure_DOT_core_dissoc)
 	aotExternalFn30 := aotLinkFn1(var_clojure_DOT_core_chunk_DASH_first)
 	aotExternalFn31 := aotLinkFn1(var_clojure_DOT_core_chunk_DASH_rest)
 	aotExternalFn34 := aotLinkFn1(var_clojure_DOT_core_second)
@@ -1068,8 +1064,44 @@ func LoadNS() {
 	ns.AddAlias(sym_str, lang.FindOrCreateNamespace(sym_clojure_DOT_string))
 	ns.AddAlias(sym_alias_DASH_data, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_alias_DASH_data))
 	var closed0 any
+	var closed1 any
+	var closed2 any
+	var closed3 any
+	var closed4 any
+	var closed5 any
+	var closed6 any
+	var closed7 any
+	var closed8 any
+	var closed9 any
 	{
-		closed0 = regexp4.MustCompile("@")
+		closed0 = aotKeywordMapNew24(true)
+	}
+	{
+		closed1 = lang.NewMap()
+	}
+	{
+		closed2 = lang.NewVector(false, nil)
+	}
+	{
+		closed3 = aotKeywordMapNew5(kw_yaml_DASH_parser)
+	}
+	{
+		closed4 = regexp4.MustCompile("@")
+	}
+	{
+		closed5 = lang.NewSet(kw_mode, kw_auto, kw_dump, kw_load)
+	}
+	{
+		closed6 = lang.NewSet("tabs", "auto")
+	}
+	{
+		closed7 = lang.NewSet("tabs", "auto", "spaces")
+	}
+	{
+		closed8 = lang.NewSet("tabs", "spaces")
+	}
+	{
+		closed9 = lang.NewSet("stream", "document")
 	}
 	// alias-data-context
 	{
@@ -1152,59 +1184,58 @@ func LoadNS() {
 									var v26 any = tmp25
 									_ = v26
 									// let binding "config"
-									tmp27 := aotExternalFn3(v17, kw_name, kw_version)
+									tmp27 := lang.DissocKeyword(lang.DissocKeyword(v17, kw_name), kw_version)
 									var v28 any = tmp27
 									_ = v28
 									// let binding "config"
 									var tmp29 any
 									tmp30 := lang.IsEmpty(v28)
 									if tmp30 {
-										tmp31 := aotKeywordMapNew0(true)
-										tmp29 = tmp31
+										tmp29 = closed0
 									} else {
 										tmp29 = v28
 									}
-									var v32 any = tmp29
-									_ = v32
-									var tmp33 any
+									var v31 any = tmp29
+									_ = v31
+									var tmp32 any
 									if lang.IsTruthy(v22) {
-										var tmp34 any
+										var tmp33 any
 										{ // let
 											// let binding "requested"
-											tmp35 := aotDirectFn4(v22)
-											var v36 any = tmp35
-											_ = v36
-											var tmp37 any
-											tmp38 := aotExternalFn5(v36, v26)
-											if lang.IsTruthy(tmp38) {
-												var tmp39 any
+											tmp34 := aotDirectFn4(v22)
+											var v35 any = tmp34
+											_ = v35
+											var tmp36 any
+											tmp37 := aotExternalFn5(v35, v26)
+											if lang.IsTruthy(tmp37) {
+												var tmp38 any
 												{ // let
 													// let binding "or__0__auto__"
-													var v40 any = v26
-													_ = v40
-													var tmp41 any
-													if lang.IsTruthy(v40) {
-														tmp41 = v40
+													var v39 any = v26
+													_ = v39
+													var tmp40 any
+													if lang.IsTruthy(v39) {
+														tmp40 = v39
 													} else {
-														tmp41 = "unversioned"
+														tmp40 = "unversioned"
 													}
-													tmp39 = tmp41
+													tmp38 = tmp40
 												} // end let
-												tmp40 := aotExternalFn7("Alias-Data plugin version mismatch: linked ", tmp39, ", requested ", v36)
-												tmp41 := aotKeywordMapNew1("alias-data", v20, v26, v36)
-												tmp42 := aotExternalFn6(tmp40, tmp41)
-												panic(tmp42)
+												tmp39 := aotExternalFn7("Alias-Data plugin version mismatch: linked ", tmp38, ", requested ", v35)
+												tmp40 := aotKeywordMapNew0("alias-data", v20, v26, v35)
+												tmp41 := aotExternalFn6(tmp39, tmp40)
+												panic(tmp41)
 											} else {
 											}
-											tmp34 = tmp37
+											tmp33 = tmp36
 										} // end let
-										tmp33 = tmp34
+										tmp32 = tmp33
 									} else {
 									}
-									_ = tmp33
-									tmp35 := aotKeywordSite4.Get(kw_new_DASH_context, v24, nil)
-									tmp36 := lang.Apply2(tmp35, v32, v3)
-									tmp18 = tmp36
+									_ = tmp32
+									tmp34 := aotKeywordSite4.Get(kw_new_DASH_context, v24, nil)
+									tmp35 := lang.Apply2(tmp34, v31, v3)
+									tmp18 = tmp35
 								} // end let
 								tmp16 = tmp18
 							} // end let
@@ -1278,9 +1309,8 @@ func LoadNS() {
 								tmp19 := lang.Apply1(v10, v17)
 								return tmp19
 							})
-							tmp17 := lang.NewMap()
-							tmp18 := aotKeywordMapNew4("json-comments", "sanitizer", tmp14, tmp16, tmp17)
-							tmp13 = tmp18
+							tmp17 := aotKeywordMapNew3("json-comments", "sanitizer", tmp14, tmp16, closed1)
+							tmp13 = tmp17
 						} else {
 						}
 						tmp8 = tmp13
@@ -1386,7 +1416,7 @@ func LoadNS() {
 								tmp34 = tmp36
 							} // end let
 							tmp35 := aotExternalFn7("Emitter plugin version mismatch: linked ", tmp34, ", requested ", v31)
-							tmp36 := aotKeywordMapNew5(v2, v25, v31)
+							tmp36 := aotKeywordMapNew4(v2, v25, v31)
 							tmp37 := aotExternalFn6(tmp35, tmp36)
 							panic(tmp37)
 						} else {
@@ -1397,7 +1427,7 @@ func LoadNS() {
 				} else {
 				}
 				_ = tmp28
-				tmp30 := aotExternalFn25(v3, kw_version)
+				tmp30 := lang.DissocKeyword(v3, kw_version)
 				tmp31 := aotExternalFn24(v23, tmp30)
 				tmp32 := lang.Apply3(v21, v4, v5, tmp31)
 				tmp6 = tmp32
@@ -1494,7 +1524,7 @@ func LoadNS() {
 				tmp23 := runtime.RT.Get(v20, kw_default_DASH_config)
 				var v24 any = tmp23
 				_ = v24
-				tmp25 := aotExternalFn25(v3, kw_version)
+				tmp25 := lang.DissocKeyword(v3, kw_version)
 				tmp26 := aotExternalFn24(v24, tmp25)
 				tmp27 := lang.Apply2(v22, v4, tmp26)
 				tmp6 = tmp27
@@ -1585,13 +1615,13 @@ func LoadNS() {
 												tmp22 = tmp24
 											} // end let
 											if lang.IsTruthy(tmp22) {
-												tmp23 := aotKeywordMapNew8(v20)
+												tmp23 := aotKeywordMapNew7(v20)
 												tmp24 := aotExternalFn6("Parser plugin :name must be a string", tmp23)
 												panic(tmp24)
 											} else {
 											}
 											_ = tmp21
-											tmp25 := aotExternalFn25(v17, kw_name)
+											tmp25 := lang.DissocKeyword(v17, kw_name)
 											tmp26 := lang.NewVector(v20, tmp25)
 											tmp18 = tmp26
 										} // end let
@@ -1653,7 +1683,7 @@ func LoadNS() {
 						tmp10 := lang.IsMap(v8)
 						if tmp10 {
 						} else {
-							tmp11 := aotKeywordMapNew9(v8)
+							tmp11 := aotKeywordMapNew8(v8)
 							tmp12 := aotExternalFn6("Option :plugin must be a map", tmp11)
 							panic(tmp12)
 						}
@@ -1661,9 +1691,8 @@ func LoadNS() {
 						var tmp13 any
 						tmp14 := aotExternalFn1(v8, kw_yaml_DASH_parser)
 						if lang.IsTruthy(tmp14) {
-							tmp15 := aotKeywordMapNew6(kw_yaml_DASH_parser)
-							tmp16 := aotExternalFn6("Unknown YAMLStar plugin API: yaml-parser", tmp15)
-							panic(tmp16)
+							tmp15 := aotExternalFn6("Unknown YAMLStar plugin API: yaml-parser", closed3)
+							panic(tmp15)
 						} else {
 						}
 						_ = tmp13
@@ -1815,7 +1844,7 @@ func LoadNS() {
 										tmp19 = v18
 									} else {
 										tmp20 := aotExternalFn27("Unknown YAMLStar json-comments implementation: ", v2)
-										tmp21 := aotKeywordMapNew11("json-comments", v2)
+										tmp21 := aotKeywordMapNew10("json-comments", v2)
 										tmp22 := aotExternalFn6(tmp20, tmp21)
 										panic(tmp22)
 									}
@@ -1860,7 +1889,7 @@ func LoadNS() {
 								tmp16 = tmp18
 							} // end let
 							tmp17 := aotExternalFn7("JSON-comments plugin version mismatch: linked ", tmp16, ", requested ", v11)
-							tmp18 := aotKeywordMapNew1("json-comments", v2, v13, v11)
+							tmp18 := aotKeywordMapNew0("json-comments", v2, v13, v11)
 							tmp19 := aotExternalFn6(tmp17, tmp18)
 							panic(tmp19)
 						} else {
@@ -2031,7 +2060,7 @@ func LoadNS() {
 										} // end let
 										tmp24 := aotExternalFn7("Unknown YAML parser plugin: ", v2, ". Available: ", tmp23)
 										tmp25 := aotDirectFn13()
-										tmp26 := aotKeywordMapNew12(v2, tmp25)
+										tmp26 := aotKeywordMapNew11(v2, tmp25)
 										tmp27 := aotExternalFn6(tmp24, tmp26)
 										panic(tmp27)
 									}
@@ -2076,7 +2105,7 @@ func LoadNS() {
 								tmp16 = tmp18
 							} // end let
 							tmp17 := aotExternalFn7("Parser plugin version mismatch: linked ", tmp16, ", requested ", v11)
-							tmp18 := aotKeywordMapNew13(v2, v13, v11)
+							tmp18 := aotKeywordMapNew12(v2, v13, v11)
 							tmp19 := aotExternalFn6(tmp17, tmp18)
 							panic(tmp19)
 						} else {
@@ -2201,65 +2230,64 @@ func LoadNS() {
 			var tmp4 any
 			tmp5 := aotExternalFn17(v3)
 			if lang.IsTruthy(tmp5) {
-				tmp6 := lang.NewMap()
-				tmp4 = tmp6
+				tmp4 = closed1
 			} else {
-				var tmp7 any
-				tmp8 := aotExternalFn43(v3)
-				if lang.IsTruthy(tmp8) {
+				var tmp6 any
+				tmp7 := aotExternalFn43(v3)
+				if lang.IsTruthy(tmp7) {
 				} else {
-					var tmp9 any
-					tmp10 := lang.IsString(v3)
-					if tmp10 {
-						tmp11 := aotDirectFn23(v2, v3)
-						tmp9 = tmp11
+					var tmp8 any
+					tmp9 := lang.IsString(v3)
+					if tmp9 {
+						tmp10 := aotDirectFn23(v2, v3)
+						tmp8 = tmp10
 					} else {
-						var tmp12 any
-						tmp13 := lang.IsMap(v3)
-						if tmp13 {
+						var tmp11 any
+						tmp12 := lang.IsMap(v3)
+						if tmp12 {
+							var tmp13 any
 							var tmp14 any
-							var tmp15 any
 							{ // let
 								// let binding "and__0__auto__"
-								tmp16 := aotExternalFn1(v3, kw_disable)
-								var v17 any = tmp16
-								_ = v17
-								var tmp18 any
-								if lang.IsTruthy(v17) {
-									tmp19 := aotKeywordSite20.Get(kw_disable, v3, nil)
-									tmp20 := aotExternalFn44(tmp19)
-									tmp21 := !lang.IsTruthy(tmp20)
-									tmp18 = tmp21
+								tmp15 := aotExternalFn1(v3, kw_disable)
+								var v16 any = tmp15
+								_ = v16
+								var tmp17 any
+								if lang.IsTruthy(v16) {
+									tmp18 := aotKeywordSite20.Get(kw_disable, v3, nil)
+									tmp19 := aotExternalFn44(tmp18)
+									tmp20 := !lang.IsTruthy(tmp19)
+									tmp17 = tmp20
 								} else {
-									tmp18 = v17
+									tmp17 = v16
 								}
-								tmp15 = tmp18
+								tmp14 = tmp17
 							} // end let
-							if lang.IsTruthy(tmp15) {
-								tmp16 := aotKeywordMapNew15(v2, v3)
-								tmp17 := aotExternalFn6("Plugin :disable must be a boolean", tmp16)
-								panic(tmp17)
+							if lang.IsTruthy(tmp14) {
+								tmp15 := aotKeywordMapNew14(v2, v3)
+								tmp16 := aotExternalFn6("Plugin :disable must be a boolean", tmp15)
+								panic(tmp16)
 							} else {
 							}
-							_ = tmp14
-							var tmp18 any
-							tmp19 := aotKeywordSite21.Get(kw_disable, v3, nil)
-							if lang.IsTruthy(tmp19) {
+							_ = tmp13
+							var tmp17 any
+							tmp18 := aotKeywordSite21.Get(kw_disable, v3, nil)
+							if lang.IsTruthy(tmp18) {
 							} else {
-								tmp20 := aotExternalFn25(v3, kw_disable)
-								tmp18 = tmp20
+								tmp19 := lang.DissocKeyword(v3, kw_disable)
+								tmp17 = tmp19
 							}
-							tmp12 = tmp18
+							tmp11 = tmp17
 						} else {
-							tmp21 := aotKeywordMapNew15(v2, v3)
-							tmp22 := aotExternalFn6("Plugin config must be a map, string, or boolean", tmp21)
-							panic(tmp22)
+							tmp20 := aotKeywordMapNew14(v2, v3)
+							tmp21 := aotExternalFn6("Plugin config must be a map, string, or boolean", tmp20)
+							panic(tmp21)
 						}
-						tmp9 = tmp12
+						tmp8 = tmp11
 					}
-					tmp7 = tmp9
+					tmp6 = tmp8
 				}
-				tmp4 = tmp7
+				tmp4 = tmp6
 			}
 			return tmp4
 		})
@@ -2294,7 +2322,7 @@ func LoadNS() {
 			} // end let
 			if lang.IsTruthy(tmp4) {
 			} else {
-				tmp5 := aotKeywordMapNew16(v2)
+				tmp5 := aotKeywordMapNew15(v2)
 				tmp6 := aotExternalFn6("JSON-comments loader must be a function or nil", tmp5)
 				panic(tmp6)
 			}
@@ -2335,7 +2363,7 @@ func LoadNS() {
 			} // end let
 			if lang.IsTruthy(tmp4) {
 			} else {
-				tmp5 := aotKeywordMapNew16(v2)
+				tmp5 := aotKeywordMapNew15(v2)
 				tmp6 := aotExternalFn6("Parser loader must be a function or nil", tmp5)
 				panic(tmp6)
 			}
@@ -2363,7 +2391,7 @@ func LoadNS() {
 			var tmp4 any
 			{ // let
 				// let binding "parts"
-				tmp5 := aotExternalFn45(v3, closed0, int64(-1))
+				tmp5 := aotExternalFn45(v3, closed4, int64(-1))
 				var v6 any = tmp5
 				_ = v6
 				var tmp7 any
@@ -2415,7 +2443,7 @@ func LoadNS() {
 					tmp8 = tmp12
 				} // end let
 				if lang.IsTruthy(tmp8) {
-					tmp9 := aotKeywordMapNew15(v2, v3)
+					tmp9 := aotKeywordMapNew14(v2, v3)
 					tmp10 := aotExternalFn6("Invalid plugin short form", tmp9)
 					panic(tmp10)
 				} else {
@@ -2425,7 +2453,7 @@ func LoadNS() {
 				{ // let
 					// let binding "G__28"
 					tmp12 := lang.First(v6)
-					tmp13 := aotKeywordMapNew8(tmp12)
+					tmp13 := aotKeywordMapNew7(tmp12)
 					var v14 any = tmp13
 					_ = v14
 					var tmp15 any
@@ -2502,220 +2530,214 @@ func LoadNS() {
 									var tmp15 any
 									tmp16 := aotExternalFn17(v11)
 									if lang.IsTruthy(tmp16) {
-										tmp17 := lang.NewMap()
-										tmp15 = tmp17
+										tmp15 = closed1
 									} else {
-										var tmp18 any
-										tmp19 := lang.IsMap(v11)
-										if tmp19 {
-											tmp18 = v11
+										var tmp17 any
+										tmp18 := lang.IsMap(v11)
+										if tmp18 {
+											tmp17 = v11
 										} else {
-											tmp20 := aotKeywordMapNew17(v11)
-											tmp21 := aotExternalFn6("Plugin config :tab-indent must be a map or boolean", tmp20)
-											panic(tmp21)
+											tmp19 := aotKeywordMapNew16(v11)
+											tmp20 := aotExternalFn6("Plugin config :tab-indent must be a map or boolean", tmp19)
+											panic(tmp20)
 										}
-										tmp15 = tmp18
+										tmp15 = tmp17
 									}
-									var v22 any = tmp15
-									_ = v22
+									var v21 any = tmp15
+									_ = v21
 									// let binding "name"
-									tmp23 := aotKeywordSite23.Get(kw_name, v22, nil)
-									var v24 any = tmp23
-									_ = v24
+									tmp22 := aotKeywordSite23.Get(kw_name, v21, nil)
+									var v23 any = tmp22
+									_ = v23
 									// let binding "disabled"
-									tmp25 := aotKeywordSite24.Get(kw_disable, v22, nil)
-									var v26 any = tmp25
-									_ = v26
+									tmp24 := aotKeywordSite24.Get(kw_disable, v21, nil)
+									var v25 any = tmp24
+									_ = v25
 									// let binding "config"
-									tmp27 := aotExternalFn3(v22, kw_name, kw_disable)
-									var v28 any = tmp27
-									_ = v28
+									tmp26 := lang.DissocKeyword(lang.DissocKeyword(v21, kw_name), kw_disable)
+									var v27 any = tmp26
+									_ = v27
 									// let binding "unknown"
-									tmp29 := lang.NewSet(kw_mode, kw_auto, kw_dump, kw_load)
-									tmp30 := aotExternalFn26(v28)
-									tmp31 := aotExternalFn46(tmp29, tmp30)
-									tmp32 := lang.Seq(tmp31)
-									var v33 any = tmp32
-									_ = v33
-									var tmp34 any
-									var tmp35 any
+									tmp28 := aotExternalFn26(v27)
+									tmp29 := aotExternalFn46(closed5, tmp28)
+									tmp30 := lang.Seq(tmp29)
+									var v31 any = tmp30
+									_ = v31
+									var tmp32 any
+									var tmp33 any
 									{ // let
 										// let binding "and__0__auto__"
-										var v36 any = v24
-										_ = v36
-										var tmp37 any
-										if lang.IsTruthy(v36) {
-											tmp38 := aotExternalFn5(v24, "tab-indent")
-											tmp37 = tmp38
+										var v34 any = v23
+										_ = v34
+										var tmp35 any
+										if lang.IsTruthy(v34) {
+											tmp36 := aotExternalFn5(v23, "tab-indent")
+											tmp35 = tmp36
 										} else {
-											tmp37 = v36
+											tmp35 = v34
 										}
-										tmp35 = tmp37
+										tmp33 = tmp35
 									} // end let
-									if lang.IsTruthy(tmp35) {
-										tmp36 := aotKeywordMapNew8(v24)
-										tmp37 := aotExternalFn6("Built-in tab-indent plugin name must be tab-indent", tmp36)
-										panic(tmp37)
+									if lang.IsTruthy(tmp33) {
+										tmp34 := aotKeywordMapNew7(v23)
+										tmp35 := aotExternalFn6("Built-in tab-indent plugin name must be tab-indent", tmp34)
+										panic(tmp35)
 									} else {
 									}
-									_ = tmp34
-									var tmp38 any
-									var tmp39 any
+									_ = tmp32
+									var tmp36 any
+									var tmp37 any
 									{ // let
 										// let binding "or__0__auto__"
-										tmp40 := lang.Identical(v26, nil)
-										var v41 any = tmp40
-										_ = v41
-										var tmp42 any
-										if lang.IsTruthy(v41) {
-											tmp42 = v41
+										tmp38 := lang.Identical(v25, nil)
+										var v39 any = tmp38
+										_ = v39
+										var tmp40 any
+										if lang.IsTruthy(v39) {
+											tmp40 = v39
 										} else {
-											tmp43 := aotExternalFn44(v26)
-											tmp42 = tmp43
+											tmp41 := aotExternalFn44(v25)
+											tmp40 = tmp41
 										}
-										tmp39 = tmp42
+										tmp37 = tmp40
 									} // end let
-									if lang.IsTruthy(tmp39) {
+									if lang.IsTruthy(tmp37) {
 									} else {
-										tmp40 := aotKeywordMapNew18(v26)
-										tmp41 := aotExternalFn6("tab-indent :disable must be boolean", tmp40)
-										panic(tmp41)
+										tmp38 := aotKeywordMapNew17(v25)
+										tmp39 := aotExternalFn6("tab-indent :disable must be boolean", tmp38)
+										panic(tmp39)
 									}
-									_ = tmp38
-									var tmp42 any
-									if lang.IsTruthy(v33) {
-										tmp43 := aotKeywordMapNew19(v33)
-										tmp44 := aotExternalFn6("Unknown tab-indent configuration key", tmp43)
-										panic(tmp44)
+									_ = tmp36
+									var tmp40 any
+									if lang.IsTruthy(v31) {
+										tmp41 := aotKeywordMapNew18(v31)
+										tmp42 := aotExternalFn6("Unknown tab-indent configuration key", tmp41)
+										panic(tmp42)
 									} else {
 									}
-									_ = tmp42
-									var tmp45 any
-									if lang.IsTruthy(v26) {
+									_ = tmp40
+									var tmp43 any
+									if lang.IsTruthy(v25) {
 									} else {
-										var tmp46 any
+										var tmp44 any
 										{ // let
 											// let binding "mode"
+											var tmp45 any
+											{ // let
+												// let binding "or__0__auto__"
+												tmp46 := aotKeywordSite25.Get(kw_mode, v27, nil)
+												var v47 any = tmp46
+												_ = v47
+												var tmp48 any
+												if lang.IsTruthy(v47) {
+													tmp48 = v47
+												} else {
+													tmp48 = "auto"
+												}
+												tmp45 = tmp48
+											} // end let
+											var v46 any = tmp45
+											_ = v46
+											// let binding "load"
 											var tmp47 any
 											{ // let
 												// let binding "or__0__auto__"
-												tmp48 := aotKeywordSite25.Get(kw_mode, v28, nil)
+												tmp48 := aotKeywordSite26.Get(kw_load, v27, nil)
 												var v49 any = tmp48
 												_ = v49
 												var tmp50 any
 												if lang.IsTruthy(v49) {
 													tmp50 = v49
 												} else {
-													tmp50 = "auto"
+													var tmp51 any
+													tmp52 := lang.Equals(v46, "tabs")
+													if tmp52 {
+														tmp51 = "tabs"
+													} else {
+														tmp51 = "auto"
+													}
+													tmp50 = tmp51
 												}
 												tmp47 = tmp50
 											} // end let
 											var v48 any = tmp47
 											_ = v48
-											// let binding "load"
+											// let binding "dump"
 											var tmp49 any
 											{ // let
 												// let binding "or__0__auto__"
-												tmp50 := aotKeywordSite26.Get(kw_load, v28, nil)
+												tmp50 := aotKeywordSite27.Get(kw_dump, v27, nil)
 												var v51 any = tmp50
 												_ = v51
 												var tmp52 any
 												if lang.IsTruthy(v51) {
 													tmp52 = v51
 												} else {
-													var tmp53 any
-													tmp54 := lang.Equals(v48, "tabs")
-													if tmp54 {
-														tmp53 = "tabs"
-													} else {
-														tmp53 = "auto"
-													}
-													tmp52 = tmp53
+													tmp52 = "tabs"
 												}
 												tmp49 = tmp52
 											} // end let
 											var v50 any = tmp49
 											_ = v50
-											// let binding "dump"
+											// let binding "auto"
 											var tmp51 any
 											{ // let
 												// let binding "or__0__auto__"
-												tmp52 := aotKeywordSite27.Get(kw_dump, v28, nil)
+												tmp52 := aotKeywordSite28.Get(kw_auto, v27, nil)
 												var v53 any = tmp52
 												_ = v53
 												var tmp54 any
 												if lang.IsTruthy(v53) {
 													tmp54 = v53
 												} else {
-													tmp54 = "tabs"
+													tmp54 = "document"
 												}
 												tmp51 = tmp54
 											} // end let
 											var v52 any = tmp51
 											_ = v52
-											// let binding "auto"
 											var tmp53 any
-											{ // let
-												// let binding "or__0__auto__"
-												tmp54 := aotKeywordSite28.Get(kw_auto, v28, nil)
-												var v55 any = tmp54
-												_ = v55
-												var tmp56 any
-												if lang.IsTruthy(v55) {
-													tmp56 = v55
-												} else {
-													tmp56 = "document"
-												}
-												tmp53 = tmp56
-											} // end let
-											var v54 any = tmp53
-											_ = v54
-											var tmp55 any
-											tmp56 := lang.NewSet("tabs", "auto")
-											tmp57 := aotExternalFn1(tmp56, v48)
-											if lang.IsTruthy(tmp57) {
+											tmp54 := aotExternalFn1(closed6, v46)
+											if lang.IsTruthy(tmp54) {
 											} else {
-												tmp58 := aotKeywordMapNew20(v48)
-												tmp59 := aotExternalFn6("tab-indent mode must be auto or tabs", tmp58)
-												panic(tmp59)
+												tmp55 := aotKeywordMapNew19(v46)
+												tmp56 := aotExternalFn6("tab-indent mode must be auto or tabs", tmp55)
+												panic(tmp56)
 											}
-											_ = tmp55
-											var tmp60 any
-											tmp61 := lang.NewSet("tabs", "auto", "spaces")
-											tmp62 := aotExternalFn1(tmp61, v50)
+											_ = tmp53
+											var tmp57 any
+											tmp58 := aotExternalFn1(closed7, v48)
+											if lang.IsTruthy(tmp58) {
+											} else {
+												tmp59 := aotKeywordMapNew20(v48)
+												tmp60 := aotExternalFn6("tab-indent load must be auto, spaces, or tabs", tmp59)
+												panic(tmp60)
+											}
+											_ = tmp57
+											var tmp61 any
+											tmp62 := aotExternalFn1(closed8, v50)
 											if lang.IsTruthy(tmp62) {
 											} else {
 												tmp63 := aotKeywordMapNew21(v50)
-												tmp64 := aotExternalFn6("tab-indent load must be auto, spaces, or tabs", tmp63)
+												tmp64 := aotExternalFn6("tab-indent dump must be spaces or tabs", tmp63)
 												panic(tmp64)
 											}
-											_ = tmp60
+											_ = tmp61
 											var tmp65 any
-											tmp66 := lang.NewSet("tabs", "spaces")
-											tmp67 := aotExternalFn1(tmp66, v52)
-											if lang.IsTruthy(tmp67) {
+											tmp66 := aotExternalFn1(closed9, v52)
+											if lang.IsTruthy(tmp66) {
 											} else {
-												tmp68 := aotKeywordMapNew22(v52)
-												tmp69 := aotExternalFn6("tab-indent dump must be spaces or tabs", tmp68)
-												panic(tmp69)
+												tmp67 := aotKeywordMapNew22(v52)
+												tmp68 := aotExternalFn6("tab-indent auto must be document or stream", tmp67)
+												panic(tmp68)
 											}
 											_ = tmp65
-											var tmp70 any
-											tmp71 := lang.NewSet("stream", "document")
-											tmp72 := aotExternalFn1(tmp71, v54)
-											if lang.IsTruthy(tmp72) {
-											} else {
-												tmp73 := aotKeywordMapNew23(v54)
-												tmp74 := aotExternalFn6("tab-indent auto must be document or stream", tmp73)
-												panic(tmp74)
-											}
-											_ = tmp70
-											tmp75 := aotKeywordMapNew24(v48, v50, v52, v54)
-											tmp46 = tmp75
+											tmp69 := aotKeywordMapNew23(v46, v48, v50, v52)
+											tmp44 = tmp69
 										} // end let
-										tmp45 = tmp46
+										tmp43 = tmp44
 									}
-									tmp14 = tmp45
+									tmp14 = tmp43
 								} // end let
 								tmp12 = tmp14
 							}
@@ -2796,13 +2818,13 @@ func LoadNS() {
 												tmp22 = tmp24
 											} // end let
 											if lang.IsTruthy(tmp22) {
-												tmp23 := aotKeywordMapNew8(v20)
+												tmp23 := aotKeywordMapNew7(v20)
 												tmp24 := aotExternalFn6("Emitter plugin :name must be a string", tmp23)
 												panic(tmp24)
 											} else {
 											}
 											_ = tmp21
-											tmp25 := aotExternalFn25(v17, kw_name)
+											tmp25 := lang.DissocKeyword(v17, kw_name)
 											tmp26 := lang.NewVector(v20, tmp25)
 											tmp18 = tmp26
 										} // end let
@@ -2851,7 +2873,7 @@ func LoadNS() {
 			tmp4 := lang.IsString(v2)
 			if tmp4 {
 			} else {
-				tmp5 := aotKeywordMapNew7(v2)
+				tmp5 := aotKeywordMapNew6(v2)
 				tmp6 := aotExternalFn6("Plugin version must be a release version", tmp5)
 				panic(tmp6)
 			}
@@ -2868,7 +2890,7 @@ func LoadNS() {
 				if lang.IsTruthy(v11) {
 					tmp12 = v11
 				} else {
-					tmp13 := aotKeywordMapNew7(v2)
+					tmp13 := aotKeywordMapNew6(v2)
 					tmp14 := aotExternalFn6("Plugin version must be a release version", tmp13)
 					panic(tmp14)
 				}
@@ -2985,7 +3007,7 @@ func LoadNS() {
 							} // end let
 							tmp17 := aotExternalFn7("Unknown YAML emitter plugin: ", v2, ". Available: ", tmp16)
 							tmp18 := aotDirectFn14()
-							tmp19 := aotKeywordMapNew14(v2, tmp18)
+							tmp19 := aotKeywordMapNew13(v2, tmp18)
 							tmp20 := aotExternalFn6(tmp17, tmp19)
 							panic(tmp20)
 						}
@@ -3070,8 +3092,7 @@ func LoadNS() {
 						if lang.IsTruthy(v27) {
 							tmp28 = v27
 						} else {
-							tmp29 := lang.NewMap()
-							tmp28 = tmp29
+							tmp28 = closed1
 						}
 						tmp25 = tmp28
 					} // end let
@@ -3098,8 +3119,7 @@ func LoadNS() {
 							} // end let
 							tmp31 = tmp32
 						} else {
-							tmp33 := lang.NewMap()
-							tmp31 = tmp33
+							tmp31 = closed1
 						}
 						tmp28 = tmp31
 					} // end let
@@ -3128,129 +3148,123 @@ func LoadNS() {
 						tmp35 := aotExternalFn15(tmp32, tmp34)
 						tmp30 = tmp35
 					} else {
-						tmp36 := lang.NewMap()
-						tmp30 = tmp36
+						tmp30 = closed1
 					}
-					var v37 any = tmp30
-					_ = v37
+					var v36 any = tmp30
+					_ = v36
 					// let binding "current"
-					tmp38 := lang.NewMap()
-					tmp39 := aotExternalFn16(tmp38)
+					tmp37 := aotExternalFn16(closed1)
+					var v38 any = tmp37
+					_ = v38
+					// let binding "prior"
+					tmp39 := aotExternalFn16(closed1)
 					var v40 any = tmp39
 					_ = v40
-					// let binding "prior"
-					tmp41 := lang.NewMap()
-					tmp42 := aotExternalFn16(tmp41)
+					// let binding "stream?"
+					tmp41 := aotKeywordSite8.Get(kw_stream, v24, nil)
+					tmp42 := aotExternalFn17(tmp41)
 					var v43 any = tmp42
 					_ = v43
-					// let binding "stream?"
-					tmp44 := aotKeywordSite8.Get(kw_stream, v24, nil)
-					tmp45 := aotExternalFn17(tmp44)
-					var v46 any = tmp45
-					_ = v46
-					var tmp47 lang.FnFunc0
-					tmp47 = lang.FnFunc0(func() any {
-						tmp48 := lang.NewMap()
-						tmp49 := aotExternalFn18(v43, tmp48)
-						_ = tmp49
+					var tmp44 lang.FnFunc0
+					tmp44 = lang.FnFunc0(func() any {
+						tmp45 := aotExternalFn18(v40, closed1)
+						_ = tmp45
 						return nil
 					})
-					var tmp48 lang.FnFunc0
-					tmp48 = lang.FnFunc0(func() any {
-						tmp49 := lang.NewMap()
-						tmp50 := aotExternalFn18(v40, tmp49)
+					var tmp45 lang.FnFunc0
+					tmp45 = lang.FnFunc0(func() any {
+						tmp46 := aotExternalFn18(v38, closed1)
+						_ = tmp46
+						return nil
+					})
+					var tmp46 lang.FnFunc2
+					tmp46 = lang.FnFunc2(func(p0, p1 any) any {
+						v47 := p0
+						_ = v47
+						v48 := p1
+						_ = v48
+						tmp49 := checkDerefVar(var_clojure_DOT_core_assoc)
+						tmp50 := aotExternalFn19(v38, tmp49, v47, v48)
 						_ = tmp50
 						return nil
 					})
-					var tmp49 lang.FnFunc2
-					tmp49 = lang.FnFunc2(func(p0, p1 any) any {
-						v50 := p0
-						_ = v50
-						v51 := p1
-						_ = v51
-						tmp52 := checkDerefVar(var_clojure_DOT_core_assoc)
-						tmp53 := aotExternalFn19(v40, tmp52, v50, v51)
-						_ = tmp53
-						return nil
-					})
-					var tmp50 lang.FnFunc1
-					tmp50 = lang.FnFunc1(func(p0 any) any {
-						v51 := p0
-						_ = v51
-						var tmp52 any
+					var tmp47 lang.FnFunc1
+					tmp47 = lang.FnFunc1(func(p0 any) any {
+						v48 := p0
+						_ = v48
+						var tmp49 any
 						{ // let
 							// let binding "sources"
-							tmp53 := lang.DerefValue(v40)
-							tmp54 := lang.DerefValue(v43)
-							tmp55 := lang.NewVector(tmp53, v27, v29, v37, tmp54)
-							var v56 any = tmp55
-							_ = v56
+							tmp50 := lang.DerefValue(v38)
+							tmp51 := lang.DerefValue(v40)
+							tmp52 := lang.NewVector(tmp50, v27, v29, v36, tmp51)
+							var v53 any = tmp52
+							_ = v53
 							for {
-								var tmp57 any
+								var tmp54 any
 								{ // let
 									// let binding "temp__0__auto__"
-									tmp58 := lang.First(v56)
-									var v59 any = tmp58
-									_ = v59
-									var tmp60 any
-									if lang.IsTruthy(v59) {
-										var tmp61 any
+									tmp55 := lang.First(v53)
+									var v56 any = tmp55
+									_ = v56
+									var tmp57 any
+									if lang.IsTruthy(v56) {
+										var tmp58 any
 										{ // let
 											// let binding "source"
-											var v62 any = v59
-											_ = v62
-											var tmp63 any
-											tmp64 := aotExternalFn1(v62, v51)
-											if lang.IsTruthy(tmp64) {
-												tmp65 := runtime.RT.Get(v62, v51)
-												tmp66 := lang.NewVector(true, tmp65)
-												tmp63 = tmp66
+											var v59 any = v56
+											_ = v59
+											var tmp60 any
+											tmp61 := aotExternalFn1(v59, v48)
+											if lang.IsTruthy(tmp61) {
+												tmp62 := runtime.RT.Get(v59, v48)
+												tmp63 := lang.NewVector(true, tmp62)
+												tmp60 = tmp63
 											} else {
-												tmp68 := lang.Next(v56)
-												var tmp67 any = tmp68
-												v56 = tmp67
+												tmp65 := lang.Next(v53)
+												var tmp64 any = tmp65
+												v53 = tmp64
 												continue
 											}
-											tmp61 = tmp63
+											tmp58 = tmp60
 										} // end let
-										tmp60 = tmp61
+										tmp57 = tmp58
 									} else {
-										tmp62 := lang.NewVector(false, nil)
-										tmp60 = tmp62
+										tmp57 = closed2
 									}
-									tmp57 = tmp60
+									tmp54 = tmp57
 								} // end let
-								tmp52 = tmp57
+								tmp49 = tmp54
 								break
 							}
 						} // end let
-						return tmp52
+						return tmp49
 					})
-					var tmp51 lang.FnFunc0
-					tmp51 = lang.FnFunc0(func() any {
-						var tmp52 any
-						if lang.IsTruthy(v46) {
-							tmp53 := checkDerefVar(var_clojure_DOT_core_merge)
-							tmp54 := lang.DerefValue(v40)
-							tmp55 := aotExternalFn21(v43, tmp53, tmp54)
-							tmp52 = tmp55
+					var tmp48 lang.FnFunc0
+					tmp48 = lang.FnFunc0(func() any {
+						var tmp49 any
+						if lang.IsTruthy(v43) {
+							tmp50 := checkDerefVar(var_clojure_DOT_core_merge)
+							tmp51 := lang.DerefValue(v38)
+							tmp52 := aotExternalFn21(v40, tmp50, tmp51)
+							tmp49 = tmp52
 						} else {
 						}
-						_ = tmp52
+						_ = tmp49
 						return nil
 					})
-					var tmp52 lang.FnFunc0
-					tmp52 = lang.FnFunc0(func() any {
+					var tmp49 lang.FnFunc0
+					tmp49 = lang.FnFunc0(func() any {
 						return nil
 					})
-					tmp53 := aotKeywordMapNew2(tmp47, tmp48, tmp49, tmp50, tmp51, tmp52)
-					tmp22 = tmp53
+					tmp50 := aotKeywordMapNew1(tmp44, tmp45, tmp46, tmp47, tmp48, tmp49)
+					tmp22 = tmp50
 				} // end let
 				tmp5 = tmp22
 			} // end let
 			return tmp5
 		})
-		tmp1 := lang.NewAtom(lang.NewMap("alias-data", aotKeywordMapNew3("alias-data", "alias-data", tmp2)))
+		tmp1 := lang.NewAtom(lang.NewMap("alias-data", aotKeywordMapNew2("alias-data", "alias-data", tmp2)))
 		var_yamlstar_DOT_plugin_alias_DASH_data_DASH_registry = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_plugin_alias_DASH_data_DASH_registry.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yamlstar/plugin.clj", kw_line, int(11), kw_column, int(10), kw_end_DASH_line, int(11), kw_end_DASH_column, int(38), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
@@ -3294,7 +3308,7 @@ func LoadNS() {
 				} else {
 					tmp9 := aotExternalFn27("Unknown YAMLStar alias-data implementation: ", v2)
 					tmp10 := aotDirectFn12()
-					tmp11 := aotKeywordMapNew10("alias-data", v2, tmp10)
+					tmp11 := aotKeywordMapNew9("alias-data", v2, tmp10)
 					tmp12 := aotExternalFn6(tmp9, tmp11)
 					panic(tmp12)
 				}
@@ -3358,7 +3372,7 @@ func LoadNS() {
 										_ = v22
 										tmp23 := aotExternalFn28(v22)
 										tmp24 := aotExternalFn27("Unknown YAMLStar plugin API: ", tmp23)
-										tmp25 := aotKeywordMapNew6(v22)
+										tmp25 := aotKeywordMapNew5(v22)
 										tmp26 := aotExternalFn6(tmp24, tmp25)
 										panic(tmp26)
 										var tmp27 any = v14
@@ -3420,7 +3434,7 @@ func LoadNS() {
 														_ = v32
 														tmp33 := aotExternalFn28(v32)
 														tmp34 := aotExternalFn27("Unknown YAMLStar plugin API: ", tmp33)
-														tmp35 := aotKeywordMapNew6(v32)
+														tmp35 := aotKeywordMapNew5(v32)
 														tmp36 := aotExternalFn6(tmp34, tmp35)
 														panic(tmp36)
 														tmp38 := lang.Next(v26)
@@ -3496,7 +3510,7 @@ func LoadNS() {
 											tmp26 := aotDirectFn16(v21, v23, tmp25)
 											var v27 any = tmp26
 											_ = v27
-											tmp28 := aotExternalFn3(v18, kw_name, kw_version)
+											tmp28 := lang.DissocKeyword(lang.DissocKeyword(v18, kw_name), kw_version)
 											tmp29 := lang.NewVector(v27, tmp28)
 											tmp19 = tmp29
 										} // end let
@@ -3588,7 +3602,7 @@ func LoadNS() {
 				tmp26 := lang.Equals(v18, "alias-data")
 				if tmp26 {
 				} else {
-					tmp27 := aotKeywordMapNew9(v16)
+					tmp27 := aotKeywordMapNew8(v16)
 					tmp28 := aotExternalFn6("Alias-Data plugin :api must be alias-data", tmp27)
 					panic(tmp28)
 				}
@@ -3612,7 +3626,7 @@ func LoadNS() {
 				} // end let
 				if lang.IsTruthy(tmp30) {
 				} else {
-					tmp31 := aotKeywordMapNew9(v16)
+					tmp31 := aotKeywordMapNew8(v16)
 					tmp32 := aotExternalFn6("Alias-Data plugin :name must be a string", tmp31)
 					panic(tmp32)
 				}
@@ -3621,7 +3635,7 @@ func LoadNS() {
 				tmp34 := lang.IsFn(v22)
 				if tmp34 {
 				} else {
-					tmp35 := aotKeywordMapNew9(v16)
+					tmp35 := aotKeywordMapNew8(v16)
 					tmp36 := aotExternalFn6("Alias-Data plugin :new-context must be a function", tmp35)
 					panic(tmp36)
 				}
@@ -3726,7 +3740,7 @@ func LoadNS() {
 				tmp26 := lang.Equals(v18, "json-comments")
 				if tmp26 {
 				} else {
-					tmp27 := aotKeywordMapNew9(v16)
+					tmp27 := aotKeywordMapNew8(v16)
 					tmp28 := aotExternalFn6("JSON-comments plugin :api must be json-comments", tmp27)
 					panic(tmp28)
 				}
@@ -3750,7 +3764,7 @@ func LoadNS() {
 				} // end let
 				if lang.IsTruthy(tmp30) {
 				} else {
-					tmp31 := aotKeywordMapNew9(v16)
+					tmp31 := aotKeywordMapNew8(v16)
 					tmp32 := aotExternalFn6("JSON-comments plugin :name must be a string", tmp31)
 					panic(tmp32)
 				}
@@ -3759,7 +3773,7 @@ func LoadNS() {
 				tmp34 := lang.IsFn(v22)
 				if tmp34 {
 				} else {
-					tmp35 := aotKeywordMapNew9(v16)
+					tmp35 := aotKeywordMapNew8(v16)
 					tmp36 := aotExternalFn6("JSON-comments plugin :sanitize must be a function", tmp35)
 					panic(tmp36)
 				}
@@ -3875,7 +3889,7 @@ func LoadNS() {
 				} // end let
 				if lang.IsTruthy(tmp24) {
 				} else {
-					tmp25 := aotKeywordMapNew9(v16)
+					tmp25 := aotKeywordMapNew8(v16)
 					tmp26 := aotExternalFn6("Parser plugin :name must be a string", tmp25)
 					panic(tmp26)
 				}
@@ -3884,7 +3898,7 @@ func LoadNS() {
 				tmp28 := lang.IsFn(v20)
 				if tmp28 {
 				} else {
-					tmp29 := aotKeywordMapNew9(v16)
+					tmp29 := aotKeywordMapNew8(v16)
 					tmp30 := aotExternalFn6("Parser plugin :parse must be a function", tmp29)
 					panic(tmp30)
 				}
@@ -4000,7 +4014,7 @@ func LoadNS() {
 				} // end let
 				if lang.IsTruthy(tmp24) {
 				} else {
-					tmp25 := aotKeywordMapNew9(v16)
+					tmp25 := aotKeywordMapNew8(v16)
 					tmp26 := aotExternalFn6("Emitter plugin :name must be a string", tmp25)
 					panic(tmp26)
 				}
@@ -4009,7 +4023,7 @@ func LoadNS() {
 				tmp28 := lang.IsFn(v20)
 				if tmp28 {
 				} else {
-					tmp29 := aotKeywordMapNew9(v16)
+					tmp29 := aotKeywordMapNew8(v16)
 					tmp30 := aotExternalFn6("Emitter plugin :emit must be a function", tmp29)
 					panic(tmp30)
 				}

@@ -353,6 +353,14 @@ func LoadNS() {
 		})
 	}
 	ns.AddAlias(sym_plugin, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
+	var closed0 any
+	var closed1 any
+	{
+		closed0 = lang.NewSet("tabs", "auto")
+	}
+	{
+		closed1 = lang.NewMap()
+	}
 	// fallback-default-parser
 	{
 		tmp0 := sym_fallback_DASH_default_DASH_parser
@@ -416,10 +424,9 @@ func LoadNS() {
 					_ = v10
 					var tmp11 any
 					if lang.IsTruthy(v10) {
-						tmp12 := lang.NewSet("tabs", "auto")
-						tmp13 := aotKeywordSite0.Get(kw_load, v8, nil)
-						tmp14 := aotExternalFn4(tmp12, tmp13)
-						tmp11 = tmp14
+						tmp12 := aotKeywordSite0.Get(kw_load, v8, nil)
+						tmp13 := aotExternalFn4(closed0, tmp12)
+						tmp11 = tmp13
 					} else {
 						tmp11 = v10
 					}
@@ -439,9 +446,8 @@ func LoadNS() {
 						tmp14 = v13
 					} else {
 						tmp15 := aotDirectFn0()
-						tmp16 := lang.NewMap()
-						tmp17 := lang.NewVector(tmp15, tmp16)
-						tmp14 = tmp17
+						tmp16 := lang.NewVector(tmp15, closed1)
+						tmp14 = tmp16
 					}
 					tmp11 = tmp14
 				} // end let

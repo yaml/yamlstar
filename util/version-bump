@@ -1,5 +1,7 @@
 #!/usr/bin/env ys-0
 
+use: str
+
 ROOT =: ENV.ROOT ||
   die("'ROOT' env var not defined")
 
@@ -14,10 +16,10 @@ defn main():
       each f file:
         f =: "$ROOT/$f"
         text =: f:read
-        m =: re-matcher(regx text)
-        if re-find(m):
+        m =: re-find(regx text)
+        if m:
           do:
-            x m1 m2 =: re-groups(m)
+            x m1 m2 =: m
             replace =:
               if all:
                 str/replace

@@ -1,5 +1,8 @@
 #!/usr/bin/env ys-0
 
+use: fs str yaml
+use ipc: :all
+
 # This script automates the YAMLStar release process.
 #
 # Usage:
@@ -272,7 +275,7 @@ defn confirm(msg default='y'):
       else: "$msg [y/N]: "
 
   print: prompt-text
-  answer =: read-line():trim
+  answer =: readline():trim
 
   if answer.?:
     if answer =~ /^[Yy]/:
@@ -324,7 +327,7 @@ defn do-changelog(old new):
   o: "Updating 'Changes' file"
 
   when-not dryrun:
-    when not(fs-e(changes-file)) || str/blank?(read(changes-file)):
+    when not(fs/e(changes-file)) || str/blank?(read(changes-file)):
       changes =: make-changes-entry(ctx)
       write changes-file: changes
 
@@ -561,7 +564,7 @@ defn o(msg): say("\n$msg")
 
 defn prompt(msg):
   print: "$msg "
-  trim: read-line()
+  trim: readline()
 
 defn file-prepend(file text):
   write file:
@@ -585,7 +588,7 @@ defn make-changes-entry(ctx):
     die: "Cannot generate changelog from '$tag':\n$(history.err)"
 
   lines =:
-    history.out:str/split-lines:reverse
+    history.out:chomp:str/split-lines:reverse
 
   str/join "\n":
     map \(str/replace _1, /^\w+ /, '  - '): lines

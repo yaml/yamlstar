@@ -307,7 +307,6 @@ func LoadNS() {
 	sym_quote_DASH_double := lang.NewSymbolUnchecked("quote-double")
 	sym_quote_DASH_single := lang.NewSymbolUnchecked("quote-single")
 	sym_re_DASH_find := lang.NewSymbolUnchecked("re-find")
-	sym_re_DASH_matches := lang.NewSymbolUnchecked("re-matches")
 	sym_register_DASH_yaml_DASH_emitter_BANG_ := lang.NewSymbolUnchecked("register-yaml-emitter!")
 	sym_register_DASH_yaml_DASH_emitters_BANG_ := lang.NewSymbolUnchecked("register-yaml-emitters!")
 	sym_remove := lang.NewSymbolUnchecked("remove")
@@ -381,8 +380,6 @@ func LoadNS() {
 	var_clojure_DOT_core_not_EQ_ := lang.InternVarName(sym_clojure_DOT_core, sym_not_EQ_)
 	// var clojure.core/re-find
 	var_clojure_DOT_core_re_DASH_find := lang.InternVarName(sym_clojure_DOT_core, sym_re_DASH_find)
-	// var clojure.core/re-matches
-	var_clojure_DOT_core_re_DASH_matches := lang.InternVarName(sym_clojure_DOT_core, sym_re_DASH_matches)
 	// var clojure.core/remove
 	var_clojure_DOT_core_remove := lang.InternVarName(sym_clojure_DOT_core, sym_remove)
 	// var clojure.core/repeat
@@ -524,7 +521,6 @@ func LoadNS() {
 	aotExternalFn33 := aotLinkFn2(var_clojure_DOT_string_starts_DASH_with_QMARK_)
 	aotExternalFn34 := aotLinkFn2(var_clojure_DOT_core_subs)
 	aotExternalFn35 := aotLinkFn2(var_clojure_DOT_core_re_DASH_find)
-	aotExternalFn36 := aotLinkFn2(var_clojure_DOT_core_re_DASH_matches)
 	aotExternalFn37 := aotLinkFn2(var_clojure_DOT_core_repeat)
 	aotExternalFn38 := aotLinkFn1(var_clojure_DOT_core_second)
 	aotExternalFn39 := aotLinkFn2(var_clojure_DOT_string_includes_QMARK_)
@@ -629,7 +625,24 @@ func LoadNS() {
 	var closed10 any
 	var closed11 any
 	var closed12 any
+	var closed13 any
+	var closed14 any
+	var closed15 any
+	var closed16 any
+	var closed17 any
+	var closed18 any
+	var closed19 any
 	var closed2 any
+	var closed20 any
+	var closed21 any
+	var closed22 any
+	var closed23 any
+	var closed24 any
+	var closed25 any
+	var closed26 any
+	var closed27 any
+	var closed28 any
+	var closed29 any
 	var closed3 any
 	var closed4 any
 	var closed5 any
@@ -638,43 +651,94 @@ func LoadNS() {
 	var closed8 any
 	var closed9 any
 	{
-		closed0 = regexp4.MustCompile("\\n")
+		closed0 = lang.NewSet("folded", "literal")
 	}
 	{
-		closed1 = regexp4.MustCompile(":")
+		closed1 = regexp4.MustCompile("\\n")
 	}
 	{
-		closed10 = regexp4.MustCompile("^\\s|\\s$")
+		closed10 = regexp4.MustCompile("null|Null|NULL|~")
 	}
 	{
-		closed11 = regexp4.MustCompile("\\r|\\n|\\t")
+		closed11 = regexp4.MustCompile("\\A(?:null|Null|NULL|~)\\z")
 	}
 	{
-		closed12 = regexp4.MustCompile("^[-?](\\s|$)")
+		closed12 = regexp4.MustCompile("true|True|TRUE|false|False|FALSE")
 	}
 	{
-		closed2 = regexp4.MustCompile("null|Null|NULL|~")
+		closed13 = regexp4.MustCompile("\\A(?:true|True|TRUE|false|False|FALSE)\\z")
 	}
 	{
-		closed3 = regexp4.MustCompile("true|True|TRUE|false|False|FALSE")
+		closed14 = regexp4.MustCompile("[-+]?[0-9]+")
 	}
 	{
-		closed4 = regexp4.MustCompile("[-+]?[0-9]+")
+		closed15 = regexp4.MustCompile("\\A(?:[-+]?[0-9]+)\\z")
 	}
 	{
-		closed5 = regexp4.MustCompile("[-+]?(\\.[0-9]+|[0-9]+(\\.[0-9]*)?)([eE][-+]?[0-9]+)?")
+		closed16 = regexp4.MustCompile("[-+]?(\\.[0-9]+|[0-9]+(\\.[0-9]*)?)([eE][-+]?[0-9]+)?")
 	}
 	{
-		closed6 = regexp4.MustCompile("[+-]?(\\.inf|\\.Inf|\\.INF)")
+		closed17 = regexp4.MustCompile("\\A(?:[-+]?(\\.[0-9]+|[0-9]+(\\.[0-9]*)?)([eE][-+]?[0-9]+)?)\\z")
 	}
 	{
-		closed7 = regexp4.MustCompile("\\.nan|\\.NaN|\\.NAN")
+		closed18 = regexp4.MustCompile("[+-]?(\\.inf|\\.Inf|\\.INF)")
 	}
 	{
-		closed8 = regexp4.MustCompile("\\r|\\n|\\t")
+		closed19 = regexp4.MustCompile("\\A(?:[+-]?(\\.inf|\\.Inf|\\.INF))\\z")
 	}
 	{
-		closed9 = regexp4.MustCompile("[!#\\[\\]\\{\\},&*?:|>'\\\"%@`]")
+		closed2 = lang.NewSet("alias", "scalar")
+	}
+	{
+		closed20 = regexp4.MustCompile("\\.nan|\\.NaN|\\.NAN")
+	}
+	{
+		closed21 = regexp4.MustCompile("\\A(?:\\.nan|\\.NaN|\\.NAN)\\z")
+	}
+	{
+		closed22 = lang.NewSet("sequence_start", "mapping_start")
+	}
+	{
+		closed23 = regexp4.MustCompile("\\r|\\n|\\t")
+	}
+	{
+		closed24 = regexp4.MustCompile("[!#\\[\\]\\{\\},&*?:|>'\\\"%@`]")
+	}
+	{
+		closed25 = regexp4.MustCompile("^\\s|\\s$")
+	}
+	{
+		closed26 = regexp4.MustCompile("\\r|\\n|\\t")
+	}
+	{
+		closed27 = regexp4.MustCompile("^[-?](\\s|$)")
+	}
+	{
+		closed28 = lang.NewMap(lang.NewChar(92), "\\\\", lang.NewChar(34), "\\\"", lang.NewChar(10), "\\n", lang.NewChar(13), "\\r", lang.NewChar(9), "\\t")
+	}
+	{
+		closed29 = lang.NewSet(lang.NewChar(10))
+	}
+	{
+		closed3 = lang.NewVector("mapping_start", "mapping_end")
+	}
+	{
+		closed4 = lang.NewVector("sequence_start", "sequence_end")
+	}
+	{
+		closed5 = lang.NewVector()
+	}
+	{
+		closed6 = lang.NewSet("tag:yaml.org,2002:int", "tag:yaml.org,2002:str", "tag:yaml.org,2002:float", "tag:yaml.org,2002:seq", "!!int", "tag:yaml.org,2002:bool", "!!null", "!!seq", "tag:yaml.org,2002:null", "!!bool", "!!str", "!!float", "tag:yaml.org,2002:map", "!!map")
+	}
+	{
+		closed7 = lang.NewSet("sequence_start", "mapping_start")
+	}
+	{
+		closed8 = lang.NewMap()
+	}
+	{
+		closed9 = regexp4.MustCompile(":")
 	}
 	// block-scalar?
 	{
@@ -683,10 +747,9 @@ func LoadNS() {
 		tmp1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := lang.NewSet("folded", "literal")
-			tmp4 := aotDirectFn30(v2)
-			tmp5 := aotExternalFn3(tmp3, tmp4)
-			return tmp5
+			tmp3 := aotDirectFn30(v2)
+			tmp4 := aotExternalFn3(closed0, tmp3)
+			return tmp4
 		})
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_emitter_block_DASH_scalar_QMARK_ = ns.InternWithValue(tmp0, tmp1, true)
@@ -711,7 +774,7 @@ func LoadNS() {
 			} else {
 				tmp3 = v2
 			}
-			tmp8 := aotExternalFn4(tmp3, closed0, int64(-1))
+			tmp8 := aotExternalFn4(tmp3, closed1, int64(-1))
 			return tmp8
 		})
 		aotDirectFn2 = tmp1
@@ -735,146 +798,142 @@ func LoadNS() {
 				var v6 any = tmp5
 				_ = v6
 				var tmp7 any
-				tmp8 := lang.NewSet("alias", "scalar")
-				tmp9 := aotExternalFn3(tmp8, v6)
-				if lang.IsTruthy(tmp9) {
-					tmp10 := aotExternalFn9(int64(1), v2)
-					tmp11 := aotExternalFn10(int64(1), v2)
-					tmp12 := lang.NewVector(tmp10, tmp11)
-					tmp7 = tmp12
+				tmp8 := aotExternalFn3(closed2, v6)
+				if lang.IsTruthy(tmp8) {
+					tmp9 := aotExternalFn9(int64(1), v2)
+					tmp10 := aotExternalFn10(int64(1), v2)
+					tmp11 := lang.NewVector(tmp9, tmp10)
+					tmp7 = tmp11
 				} else {
-					var tmp13 any
+					var tmp12 any
 					{ // let
 						// let binding "vec__42"
-						var tmp14 any
+						var tmp13 any
 						{ // let
 							// let binding "G__48"
-							var v15 any = v6
-							_ = v15
+							var v14 any = v6
+							_ = v14
 							// case
-							var tmp16 any
-							var tmp17 int64
-							tmp17 = int64(uint32(lang.Hash(v15)>>0) & uint32(1))
+							var tmp15 any
+							var tmp16 int64
+							tmp16 = int64(uint32(lang.Hash(v14)>>0) & uint32(1))
 							// case entry 0 (key=0, collision=false)
-							if tmp17 == 0 {
-								if lang.Equals(v15, "mapping_start") {
-									tmp18 := lang.NewVector("mapping_start", "mapping_end")
-									tmp16 = tmp18
+							if tmp16 == 0 {
+								if lang.Equals(v14, "mapping_start") {
+									tmp15 = closed3
 								} else {
-									tmp19 := aotExternalFn11("No matching clause: ", v15)
+									tmp17 := aotExternalFn11("No matching clause: ", v14)
+									tmp18 := lang.Apply1(lang.NewIllegalArgumentError, tmp17)
+									panic(tmp18)
+								}
+								// case entry 1 (key=1, collision=false)
+							} else if tmp16 == 1 {
+								if lang.Equals(v14, "sequence_start") {
+									tmp15 = closed4
+								} else {
+									tmp19 := aotExternalFn11("No matching clause: ", v14)
 									tmp20 := lang.Apply1(lang.NewIllegalArgumentError, tmp19)
 									panic(tmp20)
 								}
-								// case entry 1 (key=1, collision=false)
-							} else if tmp17 == 1 {
-								if lang.Equals(v15, "sequence_start") {
-									tmp21 := lang.NewVector("sequence_start", "sequence_end")
-									tmp16 = tmp21
-								} else {
-									tmp22 := aotExternalFn11("No matching clause: ", v15)
-									tmp23 := lang.Apply1(lang.NewIllegalArgumentError, tmp22)
-									panic(tmp23)
-								}
 							} else {
-								tmp24 := aotExternalFn11("No matching clause: ", v15)
-								tmp25 := lang.Apply1(lang.NewIllegalArgumentError, tmp24)
-								panic(tmp25)
+								tmp21 := aotExternalFn11("No matching clause: ", v14)
+								tmp22 := lang.Apply1(lang.NewIllegalArgumentError, tmp21)
+								panic(tmp22)
 							}
-							tmp14 = tmp16
+							tmp13 = tmp15
 						} // end let
-						var v15 any = tmp14
-						_ = v15
+						var v14 any = tmp13
+						_ = v14
 						// let binding "start-event"
-						tmp16 := runtime.RT.NthDefault(v15, lang.IntCast(int64(0)), nil)
-						var v17 any = tmp16
-						_ = v17
+						tmp15 := runtime.RT.NthDefault(v14, lang.IntCast(int64(0)), nil)
+						var v16 any = tmp15
+						_ = v16
 						// let binding "end-event"
-						tmp18 := runtime.RT.NthDefault(v15, lang.IntCast(int64(1)), nil)
-						var v19 any = tmp18
-						_ = v19
+						tmp17 := runtime.RT.NthDefault(v14, lang.IntCast(int64(1)), nil)
+						var v18 any = tmp17
+						_ = v18
 						// let binding "vec__45"
-						var tmp20 any
+						var tmp19 any
 						{ // let
 							// let binding "remaining"
-							var v21 any = v2
-							_ = v21
+							var v20 any = v2
+							_ = v20
 							// let binding "depth"
-							var v22 any = int64(0)
-							_ = v22
+							var v21 any = int64(0)
+							_ = v21
 							// let binding "current"
-							tmp23 := lang.NewVector()
-							var v24 any = tmp23
-							_ = v24
+							var v22 any = closed5
+							_ = v22
 							for {
-								var tmp25 any
+								var tmp23 any
 								{ // let
 									// let binding "event"
-									tmp26 := lang.First(v21)
+									tmp24 := lang.First(v20)
+									var v25 any = tmp24
+									_ = v25
+									// let binding "event-type"
+									tmp26 := aotKeywordSite1.Get(kw_event, v25, nil)
 									var v27 any = tmp26
 									_ = v27
-									// let binding "event-type"
-									tmp28 := aotKeywordSite1.Get(kw_event, v27, nil)
-									var v29 any = tmp28
-									_ = v29
 									// let binding "depth'"
-									var tmp30 any
-									tmp31 := lang.Equals(v29, v17)
-									if tmp31 {
-										tmp32 := lang.Numbers.Inc(v22)
-										tmp30 = tmp32
+									var tmp28 any
+									tmp29 := lang.Equals(v27, v16)
+									if tmp29 {
+										tmp30 := lang.Numbers.Inc(v21)
+										tmp28 = tmp30
 									} else {
-										var tmp33 any
-										tmp34 := lang.Equals(v29, v19)
-										if tmp34 {
-											tmp35 := lang.Numbers.Dec(v22)
-											tmp33 = tmp35
+										var tmp31 any
+										tmp32 := lang.Equals(v27, v18)
+										if tmp32 {
+											tmp33 := lang.Numbers.Dec(v21)
+											tmp31 = tmp33
 										} else {
-											tmp33 = v22
+											tmp31 = v21
 										}
-										tmp30 = tmp33
+										tmp28 = tmp31
 									}
-									var v36 any = tmp30
-									_ = v36
+									var v34 any = tmp28
+									_ = v34
 									// let binding "current'"
-									tmp37 := lang.ConjAny(v24, v27)
-									var v38 any = tmp37
-									_ = v38
-									var tmp39 any
-									tmp40 := lang.Numbers.IsZero(v36)
-									if lang.IsTruthy(tmp40) {
-										tmp41 := aotExternalFn15(v21)
-										tmp42 := lang.NewVector(v38, tmp41)
-										tmp39 = tmp42
+									tmp35 := lang.ConjAny(v22, v25)
+									var v36 any = tmp35
+									_ = v36
+									var tmp37 any
+									tmp38 := lang.Numbers.IsZero(v34)
+									if lang.IsTruthy(tmp38) {
+										tmp39 := aotExternalFn15(v20)
+										tmp40 := lang.NewVector(v36, tmp39)
+										tmp37 = tmp40
 									} else {
-										tmp44 := aotExternalFn15(v21)
-										var tmp43 any = tmp44
-										var tmp45 any = v36
-										var tmp46 any = v38
+										tmp42 := aotExternalFn15(v20)
+										var tmp41 any = tmp42
+										var tmp43 any = v34
+										var tmp44 any = v36
+										v20 = tmp41
 										v21 = tmp43
-										v22 = tmp45
-										v24 = tmp46
+										v22 = tmp44
 										continue
 									}
-									tmp25 = tmp39
+									tmp23 = tmp37
 								} // end let
-								tmp20 = tmp25
+								tmp19 = tmp23
 								break
 							}
 						} // end let
-						var v21 any = tmp20
-						_ = v21
+						var v20 any = tmp19
+						_ = v20
 						// let binding "node-events"
-						tmp22 := runtime.RT.NthDefault(v21, lang.IntCast(int64(0)), nil)
-						var v23 any = tmp22
-						_ = v23
+						tmp21 := runtime.RT.NthDefault(v20, lang.IntCast(int64(0)), nil)
+						var v22 any = tmp21
+						_ = v22
 						// let binding "remaining"
-						tmp24 := runtime.RT.NthDefault(v21, lang.IntCast(int64(1)), nil)
-						var v25 any = tmp24
-						_ = v25
-						tmp26 := lang.NewVector(v23, v25)
-						tmp13 = tmp26
+						tmp23 := runtime.RT.NthDefault(v20, lang.IntCast(int64(1)), nil)
+						var v24 any = tmp23
+						_ = v24
+						tmp25 := lang.NewVector(v22, v24)
+						tmp12 = tmp25
 					} // end let
-					tmp7 = tmp13
+					tmp7 = tmp12
 				}
 				tmp3 = tmp7
 			} // end let
@@ -893,9 +952,8 @@ func LoadNS() {
 		tmp1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := lang.NewSet("tag:yaml.org,2002:int", "tag:yaml.org,2002:str", "tag:yaml.org,2002:float", "tag:yaml.org,2002:seq", "!!int", "tag:yaml.org,2002:bool", "!!null", "!!seq", "tag:yaml.org,2002:null", "!!bool", "!!str", "!!float", "tag:yaml.org,2002:map", "!!map")
-			tmp4 := aotExternalFn3(tmp3, v2)
-			return tmp4
+			tmp3 := aotExternalFn3(closed6, v2)
+			return tmp3
 		})
 		aotDirectFn4 = tmp1
 		var_yamlstar_DOT_emitter_core_DASH_tag_QMARK_ = ns.InternWithValue(tmp0, tmp1, true)
@@ -916,116 +974,115 @@ func LoadNS() {
 				var v4 any = v2
 				_ = v4
 				// let binding "groups"
-				tmp5 := lang.NewVector()
-				var v6 any = tmp5
-				_ = v6
+				var v5 any = closed5
+				_ = v5
 				for {
-					var tmp7 any
-					tmp8 := lang.IsEmpty(v4)
-					if tmp8 {
-						tmp7 = v6
+					var tmp6 any
+					tmp7 := lang.IsEmpty(v4)
+					if tmp7 {
+						tmp6 = v5
 					} else {
-						var tmp9 any
+						var tmp8 any
 						{ // let
 							// let binding "event"
-							tmp10 := lang.First(v4)
-							var v11 any = tmp10
-							_ = v11
-							var tmp12 any
+							tmp9 := lang.First(v4)
+							var v10 any = tmp9
+							_ = v10
+							var tmp11 any
 							{ // let
 								// let binding "G__70"
-								tmp13 := aotKeywordSite2.Get(kw_event, v11, nil)
-								var v14 any = tmp13
-								_ = v14
+								tmp12 := aotKeywordSite2.Get(kw_event, v10, nil)
+								var v13 any = tmp12
+								_ = v13
 								// case
-								var tmp15 any
-								var tmp16 int64
-								tmp16 = int64(uint32(lang.Hash(v14)>>2) & uint32(3))
+								var tmp14 any
+								var tmp15 int64
+								tmp15 = int64(uint32(lang.Hash(v13)>>2) & uint32(3))
 								// case entry 0 (key=0, collision=false)
-								if tmp16 == 0 {
-									if lang.Equals(v14, "document_start") {
-										var tmp17 any
+								if tmp15 == 0 {
+									if lang.Equals(v13, "document_start") {
+										var tmp16 any
 										{ // let
 											// let binding "doc-events"
-											var tmp18 lang.FnFunc1
-											tmp18 = lang.FnFunc1(func(p0 any) any {
-												v19 := p0
-												_ = v19
-												tmp20 := aotKeywordSite3.Get(kw_event, v19, nil)
-												tmp21 := aotExternalFn19("document_end", tmp20)
-												return tmp21
+											var tmp17 lang.FnFunc1
+											tmp17 = lang.FnFunc1(func(p0 any) any {
+												v18 := p0
+												_ = v18
+												tmp19 := aotKeywordSite3.Get(kw_event, v18, nil)
+												tmp20 := aotExternalFn19("document_end", tmp19)
+												return tmp20
 											})
-											tmp19 := aotExternalFn15(v4)
-											tmp20 := aotExternalFn18(tmp18, tmp19)
-											var v21 any = tmp20
-											_ = v21
+											tmp18 := aotExternalFn15(v4)
+											tmp19 := aotExternalFn18(tmp17, tmp18)
+											var v20 any = tmp19
+											_ = v20
 											// let binding "remaining"
-											tmp22 := lang.Count(v21)
-											tmp23 := lang.Numbers.Add(int64(2), tmp22)
-											tmp24 := aotExternalFn10(tmp23, v4)
-											var v25 any = tmp24
-											_ = v25
-											var tmp26 any = v25
-											tmp28 := aotExternalFn20(v21)
-											tmp29 := lang.ConjAny(v6, tmp28)
-											var tmp27 any = tmp29
-											v4 = tmp26
-											v6 = tmp27
+											tmp21 := lang.Count(v20)
+											tmp22 := lang.Numbers.Add(int64(2), tmp21)
+											tmp23 := aotExternalFn10(tmp22, v4)
+											var v24 any = tmp23
+											_ = v24
+											var tmp25 any = v24
+											tmp27 := aotExternalFn20(v20)
+											tmp28 := lang.ConjAny(v5, tmp27)
+											var tmp26 any = tmp28
+											v4 = tmp25
+											v5 = tmp26
 											continue
 										} // end let
-										tmp15 = tmp17
+										tmp14 = tmp16
 									} else {
-										tmp19 := aotExternalFn15(v4)
-										var tmp18 any = tmp19
-										var tmp20 any = v6
-										v4 = tmp18
-										v6 = tmp20
+										tmp18 := aotExternalFn15(v4)
+										var tmp17 any = tmp18
+										var tmp19 any = v5
+										v4 = tmp17
+										v5 = tmp19
 										continue
 									}
 									// case entry 1 (key=2, collision=false)
-								} else if tmp16 == 2 {
-									if lang.Equals(v14, "stream_end") {
-										tmp15 = v6
+								} else if tmp15 == 2 {
+									if lang.Equals(v13, "stream_end") {
+										tmp14 = v5
 									} else {
-										tmp22 := aotExternalFn15(v4)
-										var tmp21 any = tmp22
-										var tmp23 any = v6
-										v4 = tmp21
-										v6 = tmp23
+										tmp21 := aotExternalFn15(v4)
+										var tmp20 any = tmp21
+										var tmp22 any = v5
+										v4 = tmp20
+										v5 = tmp22
 										continue
 									}
 									// case entry 2 (key=3, collision=false)
-								} else if tmp16 == 3 {
-									if lang.Equals(v14, "stream_start") {
-										tmp25 := aotExternalFn15(v4)
-										var tmp24 any = tmp25
-										var tmp26 any = v6
-										v4 = tmp24
-										v6 = tmp26
+								} else if tmp15 == 3 {
+									if lang.Equals(v13, "stream_start") {
+										tmp24 := aotExternalFn15(v4)
+										var tmp23 any = tmp24
+										var tmp25 any = v5
+										v4 = tmp23
+										v5 = tmp25
 										continue
 									} else {
-										tmp28 := aotExternalFn15(v4)
-										var tmp27 any = tmp28
-										var tmp29 any = v6
-										v4 = tmp27
-										v6 = tmp29
+										tmp27 := aotExternalFn15(v4)
+										var tmp26 any = tmp27
+										var tmp28 any = v5
+										v4 = tmp26
+										v5 = tmp28
 										continue
 									}
 								} else {
-									tmp31 := aotExternalFn15(v4)
-									var tmp30 any = tmp31
-									var tmp32 any = v6
-									v4 = tmp30
-									v6 = tmp32
+									tmp30 := aotExternalFn15(v4)
+									var tmp29 any = tmp30
+									var tmp31 any = v5
+									v4 = tmp29
+									v5 = tmp31
 									continue
 								}
-								tmp12 = tmp15
+								tmp11 = tmp14
 							} // end let
-							tmp9 = tmp12
+							tmp8 = tmp11
 						} // end let
-						tmp7 = tmp9
+						tmp6 = tmp8
 					}
-					tmp3 = tmp7
+					tmp3 = tmp6
 					break
 				}
 			} // end let
@@ -1211,11 +1268,10 @@ func LoadNS() {
 				_ = v9
 				var tmp10 any
 				if lang.IsTruthy(v9) {
-					tmp11 := lang.NewSet("sequence_start", "mapping_start")
-					tmp12 := lang.First(v2)
-					tmp13 := aotKeywordSite11.Get(kw_event, tmp12, nil)
-					tmp14 := aotExternalFn3(tmp11, tmp13)
-					tmp10 = tmp14
+					tmp11 := lang.First(v2)
+					tmp12 := aotKeywordSite11.Get(kw_event, tmp11, nil)
+					tmp13 := aotExternalFn3(closed7, tmp12)
+					tmp10 = tmp13
 				} else {
 					tmp10 = v9
 				}
@@ -1410,9 +1466,8 @@ func LoadNS() {
 						tmp11 = v10
 					} else {
 						tmp12 := aotDirectFn5()
-						tmp13 := lang.NewMap()
-						tmp14 := lang.NewVector(tmp12, tmp13)
-						tmp11 = tmp14
+						tmp13 := lang.NewVector(tmp12, closed8)
+						tmp11 = tmp13
 					}
 					tmp8 = tmp11
 				} // end let
@@ -1661,7 +1716,7 @@ func LoadNS() {
 								tmp11 = tmp15
 							} else {
 								var tmp16 any
-								tmp17 := aotExternalFn35(closed1, v2)
+								tmp17 := aotExternalFn35(closed9, v2)
 								if lang.IsTruthy(tmp17) {
 									tmp18 := aotExternalFn2("!<", v2, ">")
 									tmp16 = tmp18
@@ -1707,7 +1762,8 @@ func LoadNS() {
 					var tmp7 any
 					{ // let
 						// let binding "or__0__auto__"
-						tmp8 := aotExternalFn36(closed2, v2)
+						_ = closed10
+						tmp8 := runtime.MatchLiteralRegexp(closed11.(*regexp4.Regexp), v2)
 						var v9 any = tmp8
 						_ = v9
 						var tmp10 any
@@ -1717,7 +1773,8 @@ func LoadNS() {
 							var tmp11 any
 							{ // let
 								// let binding "or__0__auto__"
-								tmp12 := aotExternalFn36(closed3, v2)
+								_ = closed12
+								tmp12 := runtime.MatchLiteralRegexp(closed13.(*regexp4.Regexp), v2)
 								var v13 any = tmp12
 								_ = v13
 								var tmp14 any
@@ -1727,7 +1784,8 @@ func LoadNS() {
 									var tmp15 any
 									{ // let
 										// let binding "or__0__auto__"
-										tmp16 := aotExternalFn36(closed4, v2)
+										_ = closed14
+										tmp16 := runtime.MatchLiteralRegexp(closed15.(*regexp4.Regexp), v2)
 										var v17 any = tmp16
 										_ = v17
 										var tmp18 any
@@ -1737,7 +1795,8 @@ func LoadNS() {
 											var tmp19 any
 											{ // let
 												// let binding "or__0__auto__"
-												tmp20 := aotExternalFn36(closed5, v2)
+												_ = closed16
+												tmp20 := runtime.MatchLiteralRegexp(closed17.(*regexp4.Regexp), v2)
 												var v21 any = tmp20
 												_ = v21
 												var tmp22 any
@@ -1747,14 +1806,16 @@ func LoadNS() {
 													var tmp23 any
 													{ // let
 														// let binding "or__0__auto__"
-														tmp24 := aotExternalFn36(closed6, v2)
+														_ = closed18
+														tmp24 := runtime.MatchLiteralRegexp(closed19.(*regexp4.Regexp), v2)
 														var v25 any = tmp24
 														_ = v25
 														var tmp26 any
 														if lang.IsTruthy(v25) {
 															tmp26 = v25
 														} else {
-															tmp27 := aotExternalFn36(closed7, v2)
+															_ = closed20
+															tmp27 := runtime.MatchLiteralRegexp(closed21.(*regexp4.Regexp), v2)
 															tmp26 = tmp27
 														}
 														tmp23 = tmp26
@@ -1854,10 +1915,9 @@ func LoadNS() {
 							_ = v16
 							var tmp17 any
 							if lang.IsTruthy(v16) {
-								tmp18 := lang.NewSet("sequence_start", "mapping_start")
-								tmp19 := aotKeywordSite22.Get(kw_event, v5, nil)
-								tmp20 := aotExternalFn3(tmp18, tmp19)
-								tmp17 = tmp20
+								tmp18 := aotKeywordSite22.Get(kw_event, v5, nil)
+								tmp19 := aotExternalFn3(closed22, tmp18)
+								tmp17 = tmp19
 							} else {
 								tmp17 = v16
 							}
@@ -1994,7 +2054,7 @@ func LoadNS() {
 					// case entry 1 (key=1, collision=false)
 				} else if tmp8 == 1 {
 					if lang.Equals(v6, "single") {
-						tmp9 := aotExternalFn35(closed8, v3)
+						tmp9 := aotExternalFn35(closed23, v3)
 						tmp10 := !lang.IsTruthy(tmp9)
 						tmp7 = tmp10
 					} else {
@@ -2050,52 +2110,51 @@ func LoadNS() {
 				var v4 any = v2
 				_ = v4
 				// let binding "pairs"
-				tmp5 := lang.NewVector()
-				var v6 any = tmp5
-				_ = v6
+				var v5 any = closed5
+				_ = v5
 				for {
-					var tmp7 any
-					tmp8 := lang.IsEmpty(v4)
-					if tmp8 {
-						tmp7 = v6
+					var tmp6 any
+					tmp7 := lang.IsEmpty(v4)
+					if tmp7 {
+						tmp6 = v5
 					} else {
-						var tmp9 any
+						var tmp8 any
 						{ // let
 							// let binding "vec__52"
-							tmp10 := aotDirectFn3(v4)
-							var v11 any = tmp10
-							_ = v11
+							tmp9 := aotDirectFn3(v4)
+							var v10 any = tmp9
+							_ = v10
 							// let binding "key-events"
-							tmp12 := runtime.RT.NthDefault(v11, lang.IntCast(int64(0)), nil)
-							var v13 any = tmp12
-							_ = v13
+							tmp11 := runtime.RT.NthDefault(v10, lang.IntCast(int64(0)), nil)
+							var v12 any = tmp11
+							_ = v12
 							// let binding "remaining"
-							tmp14 := runtime.RT.NthDefault(v11, lang.IntCast(int64(1)), nil)
-							var v15 any = tmp14
-							_ = v15
+							tmp13 := runtime.RT.NthDefault(v10, lang.IntCast(int64(1)), nil)
+							var v14 any = tmp13
+							_ = v14
 							// let binding "vec__55"
-							tmp16 := aotDirectFn3(v15)
-							var v17 any = tmp16
-							_ = v17
+							tmp15 := aotDirectFn3(v14)
+							var v16 any = tmp15
+							_ = v16
 							// let binding "val-events"
-							tmp18 := runtime.RT.NthDefault(v17, lang.IntCast(int64(0)), nil)
-							var v19 any = tmp18
-							_ = v19
+							tmp17 := runtime.RT.NthDefault(v16, lang.IntCast(int64(0)), nil)
+							var v18 any = tmp17
+							_ = v18
 							// let binding "remaining"
-							tmp20 := runtime.RT.NthDefault(v17, lang.IntCast(int64(1)), nil)
-							var v21 any = tmp20
-							_ = v21
-							var tmp22 any = v21
-							tmp24 := lang.NewVector(v13, v19)
-							tmp25 := lang.ConjAny(v6, tmp24)
-							var tmp23 any = tmp25
-							v4 = tmp22
-							v6 = tmp23
+							tmp19 := runtime.RT.NthDefault(v16, lang.IntCast(int64(1)), nil)
+							var v20 any = tmp19
+							_ = v20
+							var tmp21 any = v20
+							tmp23 := lang.NewVector(v12, v18)
+							tmp24 := lang.ConjAny(v5, tmp23)
+							var tmp22 any = tmp24
+							v4 = tmp21
+							v5 = tmp22
 							continue
 						} // end let
-						tmp7 = tmp9
+						tmp6 = tmp8
 					}
-					tmp3 = tmp7
+					tmp3 = tmp6
 					break
 				}
 			} // end let
@@ -2134,7 +2193,7 @@ func LoadNS() {
 					var tmp9 any
 					{ // let
 						// let binding "and__0__auto__"
-						tmp10 := aotExternalFn35(closed9, v2)
+						tmp10 := aotExternalFn35(closed24, v2)
 						tmp11 := !lang.IsTruthy(tmp10)
 						var v12 any = tmp11
 						_ = v12
@@ -2143,7 +2202,7 @@ func LoadNS() {
 							var tmp14 any
 							{ // let
 								// let binding "and__0__auto__"
-								tmp15 := aotExternalFn35(closed10, v2)
+								tmp15 := aotExternalFn35(closed25, v2)
 								tmp16 := !lang.IsTruthy(tmp15)
 								var v17 any = tmp16
 								_ = v17
@@ -2152,13 +2211,13 @@ func LoadNS() {
 									var tmp19 any
 									{ // let
 										// let binding "and__0__auto__"
-										tmp20 := aotExternalFn35(closed11, v2)
+										tmp20 := aotExternalFn35(closed26, v2)
 										tmp21 := !lang.IsTruthy(tmp20)
 										var v22 any = tmp21
 										_ = v22
 										var tmp23 any
 										if lang.IsTruthy(v22) {
-											tmp24 := aotExternalFn35(closed12, v2)
+											tmp24 := aotExternalFn35(closed27, v2)
 											tmp25 := !lang.IsTruthy(tmp24)
 											tmp23 = tmp25
 										} else {
@@ -2208,10 +2267,9 @@ func LoadNS() {
 		tmp1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := lang.NewMap(lang.NewChar(92), "\\\\", lang.NewChar(34), "\\\"", lang.NewChar(10), "\\n", lang.NewChar(13), "\\r", lang.NewChar(9), "\\t")
-			tmp4 := aotExternalFn41(v2, tmp3)
-			tmp5 := aotExternalFn2("\"", tmp4, "\"")
-			return tmp5
+			tmp3 := aotExternalFn41(v2, closed28)
+			tmp4 := aotExternalFn2("\"", tmp3, "\"")
+			return tmp4
 		})
 		aotDirectFn25 = tmp1
 		var_yamlstar_DOT_emitter_quote_DASH_double = ns.InternWithValue(tmp0, tmp1, true)
@@ -2490,40 +2548,39 @@ func LoadNS() {
 				var v4 any = v2
 				_ = v4
 				// let binding "groups"
-				tmp5 := lang.NewVector()
-				var v6 any = tmp5
-				_ = v6
+				var v5 any = closed5
+				_ = v5
 				for {
-					var tmp7 any
-					tmp8 := lang.IsEmpty(v4)
-					if tmp8 {
-						tmp7 = v6
+					var tmp6 any
+					tmp7 := lang.IsEmpty(v4)
+					if tmp7 {
+						tmp6 = v5
 					} else {
-						var tmp9 any
+						var tmp8 any
 						{ // let
 							// let binding "vec__49"
-							tmp10 := aotDirectFn3(v4)
-							var v11 any = tmp10
-							_ = v11
+							tmp9 := aotDirectFn3(v4)
+							var v10 any = tmp9
+							_ = v10
 							// let binding "node"
-							tmp12 := runtime.RT.NthDefault(v11, lang.IntCast(int64(0)), nil)
-							var v13 any = tmp12
-							_ = v13
+							tmp11 := runtime.RT.NthDefault(v10, lang.IntCast(int64(0)), nil)
+							var v12 any = tmp11
+							_ = v12
 							// let binding "remaining"
-							tmp14 := runtime.RT.NthDefault(v11, lang.IntCast(int64(1)), nil)
-							var v15 any = tmp14
-							_ = v15
-							var tmp16 any = v15
-							tmp18 := aotExternalFn20(v13)
-							tmp19 := lang.ConjAny(v6, tmp18)
-							var tmp17 any = tmp19
-							v4 = tmp16
-							v6 = tmp17
+							tmp13 := runtime.RT.NthDefault(v10, lang.IntCast(int64(1)), nil)
+							var v14 any = tmp13
+							_ = v14
+							var tmp15 any = v14
+							tmp17 := aotExternalFn20(v12)
+							tmp18 := lang.ConjAny(v5, tmp17)
+							var tmp16 any = tmp18
+							v4 = tmp15
+							v5 = tmp16
 							continue
 						} // end let
-						tmp7 = tmp9
+						tmp6 = tmp8
 					}
-					tmp3 = tmp7
+					tmp3 = tmp6
 					break
 				}
 			} // end let
@@ -2550,11 +2607,10 @@ func LoadNS() {
 				_ = v5
 				var tmp6 any
 				if lang.IsTruthy(v5) {
-					tmp7 := lang.NewSet(lang.NewChar(10))
-					tmp8 := aotExternalFn47(tmp7, v2)
-					tmp9 := lang.Count(tmp8)
-					tmp10 := lang.Equals(int64(1), tmp9)
-					tmp6 = tmp10
+					tmp7 := aotExternalFn47(closed29, v2)
+					tmp8 := lang.Count(tmp7)
+					tmp9 := lang.Equals(int64(1), tmp8)
+					tmp6 = tmp9
 				} else {
 					tmp6 = v5
 				}
@@ -2816,156 +2872,155 @@ func LoadNS() {
 							var v30 any = true
 							_ = v30
 							// let binding "out"
-							tmp31 := lang.NewVector()
-							var v32 any = tmp31
-							_ = v32
+							var v31 any = closed5
+							_ = v31
 							for {
-								var tmp33 any
-								tmp34 := lang.IsEmpty(v29)
-								if tmp34 {
-									tmp35 := checkDerefVar(var_clojure_DOT_core_str)
-									tmp36 := aotExternalFn0(tmp35, v32)
-									tmp33 = tmp36
+								var tmp32 any
+								tmp33 := lang.IsEmpty(v29)
+								if tmp33 {
+									tmp34 := checkDerefVar(var_clojure_DOT_core_str)
+									tmp35 := aotExternalFn0(tmp34, v31)
+									tmp32 = tmp35
 								} else {
-									var tmp37 any
+									var tmp36 any
 									{ // let
 										// let binding "vec__63"
-										var v38 any = v29
-										_ = v38
+										var v37 any = v29
+										_ = v37
 										// let binding "seq__64"
-										tmp39 := lang.Seq(v38)
-										var v40 any = tmp39
-										_ = v40
+										tmp38 := lang.Seq(v37)
+										var v39 any = tmp38
+										_ = v39
 										// let binding "first__65"
-										tmp41 := lang.First(v40)
-										var v42 any = tmp41
-										_ = v42
+										tmp40 := lang.First(v39)
+										var v41 any = tmp40
+										_ = v41
 										// let binding "seq__64"
-										tmp43 := lang.Next(v40)
-										var v44 any = tmp43
-										_ = v44
+										tmp42 := lang.Next(v39)
+										var v43 any = tmp42
+										_ = v43
 										// let binding "vec__66"
-										var v45 any = v42
-										_ = v45
+										var v44 any = v41
+										_ = v44
 										// let binding "key-events"
-										tmp46 := runtime.RT.NthDefault(v45, lang.IntCast(int64(0)), nil)
-										var v47 any = tmp46
-										_ = v47
+										tmp45 := runtime.RT.NthDefault(v44, lang.IntCast(int64(0)), nil)
+										var v46 any = tmp45
+										_ = v46
 										// let binding "val-events"
-										tmp48 := runtime.RT.NthDefault(v45, lang.IntCast(int64(1)), nil)
-										var v49 any = tmp48
-										_ = v49
+										tmp47 := runtime.RT.NthDefault(v44, lang.IntCast(int64(1)), nil)
+										var v48 any = tmp47
+										_ = v48
 										// let binding "more"
-										var v50 any = v44
-										_ = v50
+										var v49 any = v43
+										_ = v49
 										// let binding "key-line-prefix"
+										var tmp50 any
 										var tmp51 any
-										var tmp52 any
 										{ // let
 											// let binding "and__0__auto__"
-											var v53 any = v30
-											_ = v53
-											var tmp54 any
-											if lang.IsTruthy(v53) {
-												tmp54 = v21
+											var v52 any = v30
+											_ = v52
+											var tmp53 any
+											if lang.IsTruthy(v52) {
+												tmp53 = v21
 											} else {
-												tmp54 = v53
+												tmp53 = v52
 											}
-											tmp52 = tmp54
-										} // end let
-										if lang.IsTruthy(tmp52) {
-											tmp51 = v21
-										} else {
-											tmp53 := aotDirectFn19(v26)
 											tmp51 = tmp53
-										}
-										var v54 any = tmp51
-										_ = v54
-										// let binding "key-prefix"
-										tmp55 := aotDirectFn10(v47)
-										tmp56 := aotExternalFn2(v54, tmp55, ": ")
-										var v57 any = tmp56
-										_ = v57
-										// let binding "rendered"
-										var tmp58 any
-										tmp59 := aotDirectFn20(v49)
-										if lang.IsTruthy(tmp59) {
-											tmp60 := aotDirectFn20(v49)
-											tmp61 := aotExternalFn2(v57, tmp60, "\n")
-											tmp58 = tmp61
+										} // end let
+										if lang.IsTruthy(tmp51) {
+											tmp50 = v21
 										} else {
-											var tmp62 any
-											tmp63 := lang.First(v49)
-											tmp64 := aotKeywordSite7.Get(kw_event, tmp63, nil)
-											tmp65 := lang.Equals("scalar", tmp64)
-											if tmp65 {
-												tmp66 := aotDirectFn12Arity3(v49, v26, v57)
-												tmp62 = tmp66
-											} else {
-												var tmp67 any
-												tmp68 := lang.First(v49)
-												tmp69 := aotKeywordSite8.Get(kw_event, tmp68, nil)
-												tmp70 := lang.Equals("alias", tmp69)
-												if tmp70 {
-													tmp71 := aotDirectFn12Arity3(v49, v26, v57)
-													tmp67 = tmp71
-												} else {
-													var tmp72 any
-													tmp73 := lang.First(v49)
-													tmp74 := aotKeywordSite9.Get(kw_event, tmp73, nil)
-													tmp75 := lang.Equals("sequence_start", tmp74)
-													if tmp75 {
-														var tmp76 any
-														tmp77 := lang.First(v49)
-														tmp78 := aotDirectFn23(tmp77)
-														tmp79 := aotExternalFn23(tmp78)
-														if lang.IsTruthy(tmp79) {
-															tmp80 := aotDirectFn10(v47)
-															tmp81 := aotDirectFn12Arity3(v49, v26, nil)
-															tmp82 := aotExternalFn22(v54, tmp80, ":\n", tmp81)
-															tmp76 = tmp82
-														} else {
-															tmp83 := aotDirectFn12Arity3(v49, v26, v57)
-															tmp76 = tmp83
-														}
-														tmp72 = tmp76
-													} else {
-														var tmp84 any
-														tmp85 := lang.First(v49)
-														tmp86 := aotDirectFn23(tmp85)
-														tmp87 := aotExternalFn23(tmp86)
-														if lang.IsTruthy(tmp87) {
-															tmp88 := aotDirectFn10(v47)
-															tmp89 := lang.Numbers.Add(v26, int64(2))
-															tmp90 := aotDirectFn12Arity3(v49, tmp89, nil)
-															tmp91 := aotExternalFn22(v54, tmp88, ":\n", tmp90)
-															tmp84 = tmp91
-														} else {
-															tmp92 := aotDirectFn12Arity3(v49, v26, v57)
-															tmp84 = tmp92
-														}
-														tmp72 = tmp84
-													}
-													tmp67 = tmp72
-												}
-												tmp62 = tmp67
-											}
-											tmp58 = tmp62
+											tmp52 := aotDirectFn19(v26)
+											tmp50 = tmp52
 										}
-										var v93 any = tmp58
-										_ = v93
-										var tmp94 any = v50
-										var tmp95 any = false
-										tmp97 := lang.ConjAny(v32, v93)
-										var tmp96 any = tmp97
-										v29 = tmp94
-										v30 = tmp95
-										v32 = tmp96
+										var v53 any = tmp50
+										_ = v53
+										// let binding "key-prefix"
+										tmp54 := aotDirectFn10(v46)
+										tmp55 := aotExternalFn2(v53, tmp54, ": ")
+										var v56 any = tmp55
+										_ = v56
+										// let binding "rendered"
+										var tmp57 any
+										tmp58 := aotDirectFn20(v48)
+										if lang.IsTruthy(tmp58) {
+											tmp59 := aotDirectFn20(v48)
+											tmp60 := aotExternalFn2(v56, tmp59, "\n")
+											tmp57 = tmp60
+										} else {
+											var tmp61 any
+											tmp62 := lang.First(v48)
+											tmp63 := aotKeywordSite7.Get(kw_event, tmp62, nil)
+											tmp64 := lang.Equals("scalar", tmp63)
+											if tmp64 {
+												tmp65 := aotDirectFn12Arity3(v48, v26, v56)
+												tmp61 = tmp65
+											} else {
+												var tmp66 any
+												tmp67 := lang.First(v48)
+												tmp68 := aotKeywordSite8.Get(kw_event, tmp67, nil)
+												tmp69 := lang.Equals("alias", tmp68)
+												if tmp69 {
+													tmp70 := aotDirectFn12Arity3(v48, v26, v56)
+													tmp66 = tmp70
+												} else {
+													var tmp71 any
+													tmp72 := lang.First(v48)
+													tmp73 := aotKeywordSite9.Get(kw_event, tmp72, nil)
+													tmp74 := lang.Equals("sequence_start", tmp73)
+													if tmp74 {
+														var tmp75 any
+														tmp76 := lang.First(v48)
+														tmp77 := aotDirectFn23(tmp76)
+														tmp78 := aotExternalFn23(tmp77)
+														if lang.IsTruthy(tmp78) {
+															tmp79 := aotDirectFn10(v46)
+															tmp80 := aotDirectFn12Arity3(v48, v26, nil)
+															tmp81 := aotExternalFn22(v53, tmp79, ":\n", tmp80)
+															tmp75 = tmp81
+														} else {
+															tmp82 := aotDirectFn12Arity3(v48, v26, v56)
+															tmp75 = tmp82
+														}
+														tmp71 = tmp75
+													} else {
+														var tmp83 any
+														tmp84 := lang.First(v48)
+														tmp85 := aotDirectFn23(tmp84)
+														tmp86 := aotExternalFn23(tmp85)
+														if lang.IsTruthy(tmp86) {
+															tmp87 := aotDirectFn10(v46)
+															tmp88 := lang.Numbers.Add(v26, int64(2))
+															tmp89 := aotDirectFn12Arity3(v48, tmp88, nil)
+															tmp90 := aotExternalFn22(v53, tmp87, ":\n", tmp89)
+															tmp83 = tmp90
+														} else {
+															tmp91 := aotDirectFn12Arity3(v48, v26, v56)
+															tmp83 = tmp91
+														}
+														tmp71 = tmp83
+													}
+													tmp66 = tmp71
+												}
+												tmp61 = tmp66
+											}
+											tmp57 = tmp61
+										}
+										var v92 any = tmp57
+										_ = v92
+										var tmp93 any = v49
+										var tmp94 any = false
+										tmp96 := lang.ConjAny(v31, v92)
+										var tmp95 any = tmp96
+										v29 = tmp93
+										v30 = tmp94
+										v31 = tmp95
 										continue
 									} // end let
-									tmp33 = tmp37
+									tmp32 = tmp36
 								}
-								tmp27 = tmp33
+								tmp27 = tmp32
 								break
 							}
 						} // end let
@@ -3068,112 +3123,111 @@ func LoadNS() {
 							var v29 any = true
 							_ = v29
 							// let binding "out"
-							tmp30 := lang.NewVector()
-							var v31 any = tmp30
-							_ = v31
+							var v30 any = closed5
+							_ = v30
 							for {
-								var tmp32 any
-								tmp33 := lang.IsEmpty(v28)
-								if tmp33 {
-									tmp34 := checkDerefVar(var_clojure_DOT_core_str)
-									tmp35 := lang.NewCons(v19, v31)
-									tmp36 := aotExternalFn0(tmp34, tmp35)
-									tmp32 = tmp36
+								var tmp31 any
+								tmp32 := lang.IsEmpty(v28)
+								if tmp32 {
+									tmp33 := checkDerefVar(var_clojure_DOT_core_str)
+									tmp34 := lang.NewCons(v19, v30)
+									tmp35 := aotExternalFn0(tmp33, tmp34)
+									tmp31 = tmp35
 								} else {
-									var tmp37 any
+									var tmp36 any
 									{ // let
 										// let binding "item-events"
-										tmp38 := lang.First(v28)
-										var v39 any = tmp38
-										_ = v39
+										tmp37 := lang.First(v28)
+										var v38 any = tmp37
+										_ = v38
 										// let binding "item-prefix"
+										var tmp39 any
 										var tmp40 any
-										var tmp41 any
 										{ // let
 											// let binding "and__0__auto__"
-											var v42 any = v29
-											_ = v42
-											var tmp43 any
-											if lang.IsTruthy(v42) {
-												tmp43 = v26
+											var v41 any = v29
+											_ = v41
+											var tmp42 any
+											if lang.IsTruthy(v41) {
+												tmp42 = v26
 											} else {
-												tmp43 = v42
+												tmp42 = v41
 											}
-											tmp41 = tmp43
-										} // end let
-										if lang.IsTruthy(tmp41) {
-											tmp42 := aotExternalFn11(v26, "- ")
 											tmp40 = tmp42
+										} // end let
+										if lang.IsTruthy(tmp40) {
+											tmp41 := aotExternalFn11(v26, "- ")
+											tmp39 = tmp41
 										} else {
-											tmp43 := aotDirectFn19(v24)
-											tmp44 := aotExternalFn11(tmp43, "- ")
-											tmp40 = tmp44
+											tmp42 := aotDirectFn19(v24)
+											tmp43 := aotExternalFn11(tmp42, "- ")
+											tmp39 = tmp43
 										}
-										var v45 any = tmp40
-										_ = v45
+										var v44 any = tmp39
+										_ = v44
 										// let binding "next-level"
+										var tmp45 any
 										var tmp46 any
-										var tmp47 any
 										{ // let
 											// let binding "and__0__auto__"
-											var v48 any = v29
-											_ = v48
-											var tmp49 any
-											if lang.IsTruthy(v48) {
-												tmp49 = v26
+											var v47 any = v29
+											_ = v47
+											var tmp48 any
+											if lang.IsTruthy(v47) {
+												tmp48 = v26
 											} else {
-												tmp49 = v48
+												tmp48 = v47
 											}
-											tmp47 = tmp49
+											tmp46 = tmp48
 										} // end let
-										if lang.IsTruthy(tmp47) {
-											tmp48 := lang.Count(v26)
-											tmp49 := lang.Numbers.Add(v3, tmp48)
-											tmp46 = tmp49
+										if lang.IsTruthy(tmp46) {
+											tmp47 := lang.Count(v26)
+											tmp48 := lang.Numbers.Add(v3, tmp47)
+											tmp45 = tmp48
 										} else {
-											tmp46 = v24
+											tmp45 = v24
 										}
-										var v50 any = tmp46
-										_ = v50
+										var v49 any = tmp45
+										_ = v49
 										// let binding "rendered"
-										var tmp51 any
+										var tmp50 any
 										{ // let
 											// let binding "temp__0__auto__"
-											tmp52 := aotDirectFn20(v39)
-											var v53 any = tmp52
-											_ = v53
-											var tmp54 any
-											if lang.IsTruthy(v53) {
-												var tmp55 any
+											tmp51 := aotDirectFn20(v38)
+											var v52 any = tmp51
+											_ = v52
+											var tmp53 any
+											if lang.IsTruthy(v52) {
+												var tmp54 any
 												{ // let
 													// let binding "value"
-													var v56 any = v53
-													_ = v56
-													tmp57 := aotExternalFn2(v45, v56, "\n")
-													tmp55 = tmp57
+													var v55 any = v52
+													_ = v55
+													tmp56 := aotExternalFn2(v44, v55, "\n")
+													tmp54 = tmp56
 												} // end let
-												tmp54 = tmp55
+												tmp53 = tmp54
 											} else {
-												tmp56 := aotDirectFn12Arity3(v39, v50, v45)
-												tmp54 = tmp56
+												tmp55 := aotDirectFn12Arity3(v38, v49, v44)
+												tmp53 = tmp55
 											}
-											tmp51 = tmp54
+											tmp50 = tmp53
 										} // end let
-										var v52 any = tmp51
-										_ = v52
-										tmp54 := aotExternalFn15(v28)
-										var tmp53 any = tmp54
-										var tmp55 any = false
-										tmp57 := lang.ConjAny(v31, v52)
-										var tmp56 any = tmp57
-										v28 = tmp53
-										v29 = tmp55
-										v31 = tmp56
+										var v51 any = tmp50
+										_ = v51
+										tmp53 := aotExternalFn15(v28)
+										var tmp52 any = tmp53
+										var tmp54 any = false
+										tmp56 := lang.ConjAny(v30, v51)
+										var tmp55 any = tmp56
+										v28 = tmp52
+										v29 = tmp54
+										v30 = tmp55
 										continue
 									} // end let
-									tmp32 = tmp37
+									tmp31 = tmp36
 								}
-								tmp27 = tmp32
+								tmp27 = tmp31
 								break
 							}
 						} // end let

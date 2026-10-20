@@ -14,16 +14,18 @@ var aotDirectFn0 lang.FnFunc1
 var aotDirectFn1 lang.FnFunc1
 var aotDirectFn2 lang.FnFunc1
 
-var aotKeywordMapShape0 = lang.NewKeywordMapShape("event")
+var aotKeywordSite0 lang.KeywordSite
+var aotKeywordSite1 lang.KeywordSite
+var aotKeywordMapShape0 = lang.NewKeywordMapShape("event", "name")
 
 type aotKeywordMapStorage0 struct {
 	lang.Map
-	values [1]any
+	values [2]any
 }
 
-func aotKeywordMapNew0(v0 any) lang.IPersistentMap {
+func aotKeywordMapNew0(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage0{}
-	storage.values = [1]any{v0}
+	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape0,
@@ -31,9 +33,8 @@ func aotKeywordMapNew0(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite0 lang.KeywordSite
-var aotKeywordSite1 lang.KeywordSite
-var aotKeywordMapShape1 = lang.NewKeywordMapShape("event", "name")
+var aotKeywordSite2 lang.KeywordSite
+var aotKeywordMapShape1 = lang.NewKeywordMapShape("event", "value")
 
 type aotKeywordMapStorage1 struct {
 	lang.Map
@@ -46,24 +47,6 @@ func aotKeywordMapNew1(v0 any, v1 any) lang.IPersistentMap {
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape1,
-		storage.values[:],
-	)
-}
-
-var aotKeywordSite2 lang.KeywordSite
-var aotKeywordMapShape2 = lang.NewKeywordMapShape("event", "value")
-
-type aotKeywordMapStorage2 struct {
-	lang.Map
-	values [2]any
-}
-
-func aotKeywordMapNew2(v0 any, v1 any) lang.IPersistentMap {
-	storage := &aotKeywordMapStorage2{}
-	storage.values = [2]any{v0, v1}
-	return lang.InitStaticKeywordMap(
-		&storage.Map,
-		aotKeywordMapShape2,
 		storage.values[:],
 	)
 }
@@ -88,7 +71,22 @@ var aotKeywordSite19 lang.KeywordSite
 var aotKeywordSite20 lang.KeywordSite
 var aotKeywordSite21 lang.KeywordSite
 var aotKeywordSite22 lang.KeywordSite
+var aotKeywordMapShape2 = lang.NewKeywordMapShape("event")
 
+type aotKeywordMapStorage2 struct {
+	lang.Map
+	values [1]any
+}
+
+func aotKeywordMapNew2(v0 any) lang.IPersistentMap {
+	storage := &aotKeywordMapStorage2{}
+	storage.values = [1]any{v0}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape2,
+		storage.values[:],
+	)
+}
 func aotLinkFn1(vr *lang.Var) lang.FnFunc1 {
 	if vr.IsBound() {
 		return aotLinkBoundFn1(vr)
@@ -333,6 +331,46 @@ func LoadNS() {
 			"throw-if",
 		})
 	}
+	var closed0 any
+	var closed1 any
+	var closed2 any
+	var closed3 any
+	var closed4 any
+	var closed5 any
+	var closed6 any
+	var closed7 any
+	var closed8 any
+	var closed9 any
+	{
+		closed0 = lang.NewVector(aotKeywordMapNew2("stream_start"), aotKeywordMapNew2("document_start"))
+	}
+	{
+		closed1 = lang.NewVector(aotKeywordMapNew2("document_end"), aotKeywordMapNew2("stream_end"))
+	}
+	{
+		closed2 = lang.NewVector(aotKeywordMapNew2("stream_start"))
+	}
+	{
+		closed3 = lang.NewVector(aotKeywordMapNew2("document_start"))
+	}
+	{
+		closed4 = lang.NewVector(aotKeywordMapNew2("document_end"))
+	}
+	{
+		closed5 = lang.NewVector(aotKeywordMapNew2("stream_end"))
+	}
+	{
+		closed6 = aotKeywordMapNew2("mapping_start")
+	}
+	{
+		closed7 = lang.NewVector(aotKeywordMapNew2("mapping_end"))
+	}
+	{
+		closed8 = aotKeywordMapNew2("sequence_start")
+	}
+	{
+		closed9 = lang.NewVector(aotKeywordMapNew2("sequence_end"))
+	}
 	// serialize
 	{
 		tmp0 := sym_serialize
@@ -340,21 +378,15 @@ func LoadNS() {
 		tmp1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := aotKeywordMapNew0("stream_start")
-			tmp4 := aotKeywordMapNew0("document_start")
-			tmp5 := lang.NewVector(tmp3, tmp4)
-			var tmp6 any
+			var tmp3 any
 			if lang.IsTruthy(v2) {
-				tmp7 := aotDirectFn2(v2)
-				tmp6 = tmp7
+				tmp4 := aotDirectFn2(v2)
+				tmp3 = tmp4
 			} else {
 			}
-			tmp8 := aotKeywordMapNew0("document_end")
-			tmp9 := aotKeywordMapNew0("stream_end")
-			tmp10 := lang.NewVector(tmp8, tmp9)
-			tmp11 := aotExternalFn1(tmp5, tmp6, tmp10)
-			tmp12 := aotExternalFn0(tmp11)
-			return tmp12
+			tmp5 := aotExternalFn1(closed0, tmp3, closed1)
+			tmp6 := aotExternalFn0(tmp5)
+			return tmp6
 		})
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_serializer_serialize = ns.InternWithValue(tmp0, tmp1, true)
@@ -369,31 +401,23 @@ func LoadNS() {
 		tmp1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := aotKeywordMapNew0("stream_start")
-			tmp4 := lang.NewVector(tmp3)
-			var tmp5 lang.FnFunc1
-			tmp5 = lang.FnFunc1(func(p0 any) any {
-				v6 := p0
-				_ = v6
-				tmp7 := aotKeywordMapNew0("document_start")
-				tmp8 := lang.NewVector(tmp7)
-				var tmp9 any
-				if lang.IsTruthy(v6) {
-					tmp10 := aotDirectFn2(v6)
-					tmp9 = tmp10
+			var tmp3 lang.FnFunc1
+			tmp3 = lang.FnFunc1(func(p0 any) any {
+				v4 := p0
+				_ = v4
+				var tmp5 any
+				if lang.IsTruthy(v4) {
+					tmp6 := aotDirectFn2(v4)
+					tmp5 = tmp6
 				} else {
 				}
-				tmp11 := aotKeywordMapNew0("document_end")
-				tmp12 := lang.NewVector(tmp11)
-				tmp13 := aotExternalFn1(tmp8, tmp9, tmp12)
-				return tmp13
+				tmp7 := aotExternalFn1(closed3, tmp5, closed4)
+				return tmp7
 			})
-			tmp6 := aotExternalFn2(tmp5, v2)
-			tmp7 := aotKeywordMapNew0("stream_end")
-			tmp8 := lang.NewVector(tmp7)
-			tmp9 := aotExternalFn1(tmp4, tmp6, tmp8)
-			tmp10 := aotExternalFn0(tmp9)
-			return tmp10
+			tmp4 := aotExternalFn2(tmp3, v2)
+			tmp5 := aotExternalFn1(closed2, tmp4, closed5)
+			tmp6 := aotExternalFn0(tmp5)
+			return tmp6
 		})
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_serializer_serialize_DASH_all = ns.InternWithValue(tmp0, tmp1, true)
@@ -422,7 +446,7 @@ func LoadNS() {
 				if tmp7 == 0 {
 					if v5 == kw_alias {
 						tmp8 := aotKeywordSite1.Get(kw_name, v2, nil)
-						tmp9 := aotKeywordMapNew1("alias", tmp8)
+						tmp9 := aotKeywordMapNew0("alias", tmp8)
 						tmp10 := lang.NewVector(tmp9)
 						tmp6 = tmp10
 					} else {
@@ -437,7 +461,7 @@ func LoadNS() {
 						{ // let
 							// let binding "G__2"
 							tmp14 := aotKeywordSite2.Get(kw_value, v2, nil)
-							tmp15 := aotKeywordMapNew2("scalar", tmp14)
+							tmp15 := aotKeywordMapNew1("scalar", tmp14)
 							var v16 any = tmp15
 							_ = v16
 							// let binding "G__2"
@@ -491,46 +515,45 @@ func LoadNS() {
 						var tmp17 any
 						{ // let
 							// let binding "G__3"
-							tmp18 := aotKeywordMapNew0("mapping_start")
-							var v19 any = tmp18
-							_ = v19
+							var v18 any = closed6
+							_ = v18
 							// let binding "G__3"
-							var tmp20 any
-							tmp21 := aotKeywordSite9.Get(kw_anchor, v2, nil)
-							if lang.IsTruthy(tmp21) {
-								tmp22 := aotKeywordSite10.Get(kw_anchor, v2, nil)
-								var tmp23 any = v19
-								tmp23 = lang.Assoc(tmp23, kw_anchor, tmp22)
-								tmp20 = tmp23
+							var tmp19 any
+							tmp20 := aotKeywordSite9.Get(kw_anchor, v2, nil)
+							if lang.IsTruthy(tmp20) {
+								tmp21 := aotKeywordSite10.Get(kw_anchor, v2, nil)
+								var tmp22 any = v18
+								tmp22 = lang.Assoc(tmp22, kw_anchor, tmp21)
+								tmp19 = tmp22
 							} else {
-								tmp20 = v19
+								tmp19 = v18
 							}
-							var v24 any = tmp20
-							_ = v24
+							var v23 any = tmp19
+							_ = v23
 							// let binding "G__3"
-							var tmp25 any
-							tmp26 := aotKeywordSite11.Get(kw_tag, v2, nil)
-							if lang.IsTruthy(tmp26) {
-								tmp27 := aotKeywordSite12.Get(kw_tag, v2, nil)
-								var tmp28 any = v24
-								tmp28 = lang.Assoc(tmp28, kw_tag, tmp27)
-								tmp25 = tmp28
+							var tmp24 any
+							tmp25 := aotKeywordSite11.Get(kw_tag, v2, nil)
+							if lang.IsTruthy(tmp25) {
+								tmp26 := aotKeywordSite12.Get(kw_tag, v2, nil)
+								var tmp27 any = v23
+								tmp27 = lang.Assoc(tmp27, kw_tag, tmp26)
+								tmp24 = tmp27
 							} else {
-								tmp25 = v24
+								tmp24 = v23
 							}
-							var v29 any = tmp25
-							_ = v29
-							var tmp30 any
-							tmp31 := aotKeywordSite13.Get(kw_flow, v2, nil)
-							if lang.IsTruthy(tmp31) {
-								tmp32 := aotKeywordSite14.Get(kw_flow, v2, nil)
-								var tmp33 any = v29
-								tmp33 = lang.Assoc(tmp33, kw_flow, tmp32)
-								tmp30 = tmp33
+							var v28 any = tmp24
+							_ = v28
+							var tmp29 any
+							tmp30 := aotKeywordSite13.Get(kw_flow, v2, nil)
+							if lang.IsTruthy(tmp30) {
+								tmp31 := aotKeywordSite14.Get(kw_flow, v2, nil)
+								var tmp32 any = v28
+								tmp32 = lang.Assoc(tmp32, kw_flow, tmp31)
+								tmp29 = tmp32
 							} else {
-								tmp30 = v29
+								tmp29 = v28
 							}
-							tmp17 = tmp30
+							tmp17 = tmp29
 						} // end let
 						tmp18 := lang.NewVector(tmp17)
 						var tmp19 lang.FnFunc1
@@ -559,81 +582,76 @@ func LoadNS() {
 						})
 						tmp20 := aotKeywordSite15.Get(kw_value, v2, nil)
 						tmp21 := aotExternalFn2(tmp19, tmp20)
-						tmp22 := aotKeywordMapNew0("mapping_end")
-						tmp23 := lang.NewVector(tmp22)
-						tmp24 := aotExternalFn1(tmp18, tmp21, tmp23)
-						tmp25 := aotExternalFn0(tmp24)
-						tmp6 = tmp25
+						tmp22 := aotExternalFn1(tmp18, tmp21, closed7)
+						tmp23 := aotExternalFn0(tmp22)
+						tmp6 = tmp23
 					} else {
-						tmp26 := aotExternalFn3("No matching clause: ", v5)
-						tmp27 := lang.Apply1(lang.NewIllegalArgumentError, tmp26)
-						panic(tmp27)
+						tmp24 := aotExternalFn3("No matching clause: ", v5)
+						tmp25 := lang.Apply1(lang.NewIllegalArgumentError, tmp24)
+						panic(tmp25)
 					}
 					// case entry 3 (key=3, collision=false)
 				} else if tmp7 == 3 {
 					if v5 == kw_sequence {
-						var tmp28 any
+						var tmp26 any
 						{ // let
 							// let binding "G__8"
-							tmp29 := aotKeywordMapNew0("sequence_start")
-							var v30 any = tmp29
-							_ = v30
+							var v27 any = closed8
+							_ = v27
 							// let binding "G__8"
-							var tmp31 any
-							tmp32 := aotKeywordSite16.Get(kw_anchor, v2, nil)
-							if lang.IsTruthy(tmp32) {
-								tmp33 := aotKeywordSite17.Get(kw_anchor, v2, nil)
-								var tmp34 any = v30
-								tmp34 = lang.Assoc(tmp34, kw_anchor, tmp33)
-								tmp31 = tmp34
+							var tmp28 any
+							tmp29 := aotKeywordSite16.Get(kw_anchor, v2, nil)
+							if lang.IsTruthy(tmp29) {
+								tmp30 := aotKeywordSite17.Get(kw_anchor, v2, nil)
+								var tmp31 any = v27
+								tmp31 = lang.Assoc(tmp31, kw_anchor, tmp30)
+								tmp28 = tmp31
 							} else {
-								tmp31 = v30
+								tmp28 = v27
 							}
-							var v35 any = tmp31
-							_ = v35
+							var v32 any = tmp28
+							_ = v32
 							// let binding "G__8"
-							var tmp36 any
-							tmp37 := aotKeywordSite18.Get(kw_tag, v2, nil)
-							if lang.IsTruthy(tmp37) {
-								tmp38 := aotKeywordSite19.Get(kw_tag, v2, nil)
-								var tmp39 any = v35
-								tmp39 = lang.Assoc(tmp39, kw_tag, tmp38)
-								tmp36 = tmp39
+							var tmp33 any
+							tmp34 := aotKeywordSite18.Get(kw_tag, v2, nil)
+							if lang.IsTruthy(tmp34) {
+								tmp35 := aotKeywordSite19.Get(kw_tag, v2, nil)
+								var tmp36 any = v32
+								tmp36 = lang.Assoc(tmp36, kw_tag, tmp35)
+								tmp33 = tmp36
 							} else {
-								tmp36 = v35
+								tmp33 = v32
 							}
-							var v40 any = tmp36
-							_ = v40
-							var tmp41 any
-							tmp42 := aotKeywordSite20.Get(kw_flow, v2, nil)
-							if lang.IsTruthy(tmp42) {
-								tmp43 := aotKeywordSite21.Get(kw_flow, v2, nil)
-								var tmp44 any = v40
-								tmp44 = lang.Assoc(tmp44, kw_flow, tmp43)
-								tmp41 = tmp44
+							var v37 any = tmp33
+							_ = v37
+							var tmp38 any
+							tmp39 := aotKeywordSite20.Get(kw_flow, v2, nil)
+							if lang.IsTruthy(tmp39) {
+								tmp40 := aotKeywordSite21.Get(kw_flow, v2, nil)
+								var tmp41 any = v37
+								tmp41 = lang.Assoc(tmp41, kw_flow, tmp40)
+								tmp38 = tmp41
 							} else {
-								tmp41 = v40
+								tmp38 = v37
 							}
-							tmp28 = tmp41
+							tmp26 = tmp38
 						} // end let
-						tmp29 := lang.NewVector(tmp28)
-						tmp30 := checkDerefVar(var_yamlstar_DOT_serializer_serialize_DASH_node)
-						tmp31 := aotKeywordSite22.Get(kw_value, v2, nil)
-						tmp32 := aotExternalFn2(tmp30, tmp31)
-						tmp33 := aotKeywordMapNew0("sequence_end")
-						tmp34 := lang.NewVector(tmp33)
-						tmp35 := aotExternalFn1(tmp29, tmp32, tmp34)
-						tmp36 := aotExternalFn0(tmp35)
-						tmp6 = tmp36
+						tmp27 := lang.NewVector(tmp26)
+						tmp28 := checkDerefVar(var_yamlstar_DOT_serializer_serialize_DASH_node)
+						tmp29 := aotKeywordSite22.Get(kw_value, v2, nil)
+						tmp30 := aotExternalFn2(tmp28, tmp29)
+						tmp31 := aotExternalFn1(tmp27, tmp30, closed9)
+						tmp32 := aotExternalFn0(tmp31)
+						tmp6 = tmp32
 					} else {
-						tmp37 := aotExternalFn3("No matching clause: ", v5)
-						tmp38 := lang.Apply1(lang.NewIllegalArgumentError, tmp37)
-						panic(tmp38)
+						tmp33 := aotExternalFn3("No matching clause: ", v5)
+						tmp34 := lang.Apply1(lang.NewIllegalArgumentError, tmp33)
+						panic(tmp34)
 					}
 				} else {
-					tmp39 := aotExternalFn3("No matching clause: ", v5)
-					tmp40 := lang.Apply1(lang.NewIllegalArgumentError, tmp39)
-					panic(tmp40)
+					tmp35 := aotExternalFn3("No matching clause: ", v5)
+					tmp36 := lang.Apply1(lang.NewIllegalArgumentError, tmp35)
+					panic(tmp36)
 				}
 				tmp3 = tmp6
 			} // end let

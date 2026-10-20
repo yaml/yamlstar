@@ -292,6 +292,18 @@ func LoadNS() {
 			"throw-if",
 		})
 	}
+	var closed0 any
+	var closed1 any
+	var closed2 any
+	{
+		closed0 = aotKeywordMapNew0(kw_scalar, "!!null", "null")
+	}
+	{
+		closed1 = aotKeywordMapNew0(kw_scalar, "!!bool", "true")
+	}
+	{
+		closed2 = aotKeywordMapNew0(kw_scalar, "!!bool", "false")
+	}
 	// represent
 	{
 		tmp0 := sym_represent
@@ -302,106 +314,103 @@ func LoadNS() {
 			var tmp3 any
 			tmp4 := lang.Identical(v2, nil)
 			if lang.IsTruthy(tmp4) {
-				tmp5 := aotKeywordMapNew0(kw_scalar, "!!null", "null")
-				tmp3 = tmp5
+				tmp3 = closed0
 			} else {
-				var tmp6 any
-				tmp7 := aotExternalFn0(v2)
-				if lang.IsTruthy(tmp7) {
-					tmp8 := aotKeywordMapNew0(kw_scalar, "!!bool", "true")
-					tmp6 = tmp8
+				var tmp5 any
+				tmp6 := aotExternalFn0(v2)
+				if lang.IsTruthy(tmp6) {
+					tmp5 = closed1
 				} else {
-					var tmp9 any
-					tmp10 := aotExternalFn1(v2)
-					if lang.IsTruthy(tmp10) {
-						tmp11 := aotKeywordMapNew0(kw_scalar, "!!bool", "false")
-						tmp9 = tmp11
+					var tmp7 any
+					tmp8 := aotExternalFn1(v2)
+					if lang.IsTruthy(tmp8) {
+						tmp7 = closed2
 					} else {
-						var tmp12 any
-						tmp13 := lang.IsNumber(v2)
-						if tmp13 {
-							var tmp14 any
-							tmp15 := aotExternalFn3(v2)
-							if lang.IsTruthy(tmp15) {
-								tmp14 = "!!int"
+						var tmp9 any
+						tmp10 := lang.IsNumber(v2)
+						if tmp10 {
+							var tmp11 any
+							tmp12 := aotExternalFn3(v2)
+							if lang.IsTruthy(tmp12) {
+								tmp11 = "!!int"
 							} else {
-								tmp14 = "!!float"
+								tmp11 = "!!float"
 							}
-							tmp16 := aotExternalFn4(v2)
-							tmp17 := aotKeywordMapNew0(kw_scalar, tmp14, tmp16)
-							tmp12 = tmp17
+							tmp13 := aotExternalFn4(v2)
+							tmp14 := aotKeywordMapNew0(kw_scalar, tmp11, tmp13)
+							tmp9 = tmp14
 						} else {
-							var tmp18 any
-							tmp19 := lang.IsKeyword(v2)
-							if tmp19 {
-								tmp20 := aotExternalFn4(v2)
-								tmp21 := aotExternalFn6(tmp20, int64(1))
-								tmp22 := aotKeywordMapNew0(kw_scalar, "!!str", tmp21)
-								tmp18 = tmp22
+							var tmp15 any
+							tmp16 := lang.IsKeyword(v2)
+							if tmp16 {
+								tmp17 := aotExternalFn4(v2)
+								tmp18 := aotExternalFn6(tmp17, int64(1))
+								tmp19 := aotKeywordMapNew0(kw_scalar, "!!str", tmp18)
+								tmp15 = tmp19
 							} else {
-								var tmp23 any
-								tmp24 := lang.IsString(v2)
-								if tmp24 {
-									tmp25 := aotKeywordMapNew0(kw_scalar, "!!str", v2)
-									tmp23 = tmp25
+								var tmp20 any
+								tmp21 := lang.IsString(v2)
+								if tmp21 {
+									tmp22 := aotKeywordMapNew0(kw_scalar, "!!str", v2)
+									tmp20 = tmp22
 								} else {
-									var tmp26 any
-									tmp27 := lang.IsMap(v2)
-									if tmp27 {
-										var tmp28 lang.FnFunc1
-										tmp28 = lang.FnFunc1(func(p0 any) any {
-											v29 := p0
-											_ = v29
-											var tmp30 any
+									var tmp23 any
+									tmp24 := lang.IsMap(v2)
+									if tmp24 {
+										var tmp25 lang.FnFunc1
+										tmp25 = lang.FnFunc1(func(p0 any) any {
+											v26 := p0
+											_ = v26
+											var tmp27 any
 											{ // let
 												// let binding "vec__2"
-												var v31 any = v29
-												_ = v31
+												var v28 any = v26
+												_ = v28
 												// let binding "k"
-												tmp32 := runtime.RT.NthDefault(v31, lang.IntCast(int64(0)), nil)
-												var v33 any = tmp32
-												_ = v33
+												tmp29 := runtime.RT.NthDefault(v28, lang.IntCast(int64(0)), nil)
+												var v30 any = tmp29
+												_ = v30
 												// let binding "v"
-												tmp34 := runtime.RT.NthDefault(v31, lang.IntCast(int64(1)), nil)
-												var v35 any = tmp34
-												_ = v35
-												tmp36 := aotDirectFn0(v33)
-												tmp37 := aotDirectFn0(v35)
-												tmp38 := lang.NewVector(tmp36, tmp37)
-												tmp30 = tmp38
+												tmp31 := runtime.RT.NthDefault(v28, lang.IntCast(int64(1)), nil)
+												var v32 any = tmp31
+												_ = v32
+												tmp33 := aotDirectFn0(v30)
+												tmp34 := aotDirectFn0(v32)
+												tmp35 := lang.NewVector(tmp33, tmp34)
+												tmp27 = tmp35
 											} // end let
-											return tmp30
+											return tmp27
 										})
-										tmp29 := aotExternalFn9(tmp28, v2)
-										tmp30 := aotKeywordMapNew0(kw_mapping, "!!map", tmp29)
-										tmp26 = tmp30
+										tmp26 := aotExternalFn9(tmp25, v2)
+										tmp27 := aotKeywordMapNew0(kw_mapping, "!!map", tmp26)
+										tmp23 = tmp27
 									} else {
-										var tmp31 any
-										tmp32 := aotExternalFn11(v2)
-										if lang.IsTruthy(tmp32) {
-											tmp33 := checkDerefVar(var_yamlstar_DOT_representer_represent)
-											tmp34 := aotExternalFn9(tmp33, v2)
-											tmp35 := aotKeywordMapNew0(kw_sequence, "!!seq", tmp34)
-											tmp31 = tmp35
+										var tmp28 any
+										tmp29 := aotExternalFn11(v2)
+										if lang.IsTruthy(tmp29) {
+											tmp30 := checkDerefVar(var_yamlstar_DOT_representer_represent)
+											tmp31 := aotExternalFn9(tmp30, v2)
+											tmp32 := aotKeywordMapNew0(kw_sequence, "!!seq", tmp31)
+											tmp28 = tmp32
 										} else {
-											tmp36 := aotExternalFn13(v2)
-											tmp37 := aotKeywordMapNew1(v2, tmp36)
-											tmp38 := aotExternalFn12("YAMLStar dump does not support this value", tmp37)
-											panic(tmp38)
+											tmp33 := aotExternalFn13(v2)
+											tmp34 := aotKeywordMapNew1(v2, tmp33)
+											tmp35 := aotExternalFn12("YAMLStar dump does not support this value", tmp34)
+											panic(tmp35)
 										}
-										tmp26 = tmp31
+										tmp23 = tmp28
 									}
-									tmp23 = tmp26
+									tmp20 = tmp23
 								}
-								tmp18 = tmp23
+								tmp15 = tmp20
 							}
-							tmp12 = tmp18
+							tmp9 = tmp15
 						}
-						tmp9 = tmp12
+						tmp7 = tmp9
 					}
-					tmp6 = tmp9
+					tmp5 = tmp7
 				}
-				tmp3 = tmp6
+				tmp3 = tmp5
 			}
 			return tmp3
 		})

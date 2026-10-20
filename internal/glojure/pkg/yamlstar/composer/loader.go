@@ -47,16 +47,16 @@ func aotKeywordMapNew0(v0 any, v1 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape1 = lang.NewKeywordMapShape("kind")
+var aotKeywordMapShape1 = lang.NewKeywordMapShape("kind", "value")
 
 type aotKeywordMapStorage1 struct {
 	lang.Map
-	values [1]any
+	values [2]any
 }
 
-func aotKeywordMapNew1(v0 any) lang.IPersistentMap {
+func aotKeywordMapNew1(v0 any, v1 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage1{}
-	storage.values = [1]any{v0}
+	storage.values = [2]any{v0, v1}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape1,
@@ -64,16 +64,16 @@ func aotKeywordMapNew1(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape2 = lang.NewKeywordMapShape("kind", "value")
+var aotKeywordMapShape2 = lang.NewKeywordMapShape("kind")
 
 type aotKeywordMapStorage2 struct {
 	lang.Map
-	values [2]any
+	values [1]any
 }
 
-func aotKeywordMapNew2(v0 any, v1 any) lang.IPersistentMap {
+func aotKeywordMapNew2(v0 any) lang.IPersistentMap {
 	storage := &aotKeywordMapStorage2{}
-	storage.values = [2]any{v0, v1}
+	storage.values = [1]any{v0}
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape2,
@@ -344,6 +344,22 @@ func LoadNS() {
 			"throw-if",
 		})
 	}
+	var closed0 any
+	var closed1 any
+	var closed2 any
+	var closed3 any
+	{
+		closed0 = lang.NewVector()
+	}
+	{
+		closed1 = aotKeywordMapNew2(kw_mapping)
+	}
+	{
+		closed2 = aotKeywordMapNew2(kw_scalar)
+	}
+	{
+		closed3 = aotKeywordMapNew2(kw_sequence)
+	}
 	// compose
 	{
 		tmp0 := sym_compose
@@ -407,457 +423,453 @@ func LoadNS() {
 					var v11 any = int64(0)
 					_ = v11
 					// let binding "stack"
-					tmp12 := lang.NewVector()
-					tmp13 := aotExternalFn4(tmp12)
-					var v14 any = tmp13
-					_ = v14
+					tmp12 := aotExternalFn4(closed0)
+					var v13 any = tmp12
+					_ = v13
 					// let binding "marks"
-					tmp15 := lang.NewVector()
-					var v16 any = tmp15
-					_ = v16
+					var v14 any = closed0
+					_ = v14
 					// let binding "documents"
-					tmp17 := lang.NewVector()
-					var v18 any = tmp17
-					_ = v18
+					var v15 any = closed0
+					_ = v15
 					// let binding "in-document"
-					var v19 any = false
-					_ = v19
+					var v16 any = false
+					_ = v16
 					for {
-						var tmp20 any
-						tmp21 := lang.Equals(v11, v9)
-						if tmp21 {
-							var tmp22 any
+						var tmp17 any
+						tmp18 := lang.Equals(v11, v9)
+						if tmp18 {
+							var tmp19 any
 							{ // let
 								// let binding "temp__0__auto__"
-								var tmp23 any
+								var tmp20 any
 								{ // let
 									// let binding "and__0__auto__"
-									var v24 any = v19
-									_ = v24
-									var tmp25 any
-									if lang.IsTruthy(v24) {
-										tmp26 := aotDirectFn10(v14)
-										tmp25 = tmp26
+									var v21 any = v16
+									_ = v21
+									var tmp22 any
+									if lang.IsTruthy(v21) {
+										tmp23 := aotDirectFn10(v13)
+										tmp22 = tmp23
 									} else {
-										tmp25 = v24
+										tmp22 = v21
 									}
-									tmp23 = tmp25
+									tmp20 = tmp22
 								} // end let
+								var v21 any = tmp20
+								_ = v21
+								var tmp22 any
+								if lang.IsTruthy(v21) {
+									var tmp23 any
+									{ // let
+										// let binding "node"
+										var v24 any = v21
+										_ = v24
+										tmp25 := lang.ConjAny(v15, v24)
+										tmp23 = tmp25
+									} // end let
+									tmp22 = tmp23
+								} else {
+									tmp22 = v15
+								}
+								tmp19 = tmp22
+							} // end let
+							tmp17 = tmp19
+						} else {
+							var tmp20 any
+							{ // let
+								// let binding "event"
+								tmp21 := runtime.RT.Nth(v7, lang.IntCast(v11))
+								var v22 any = tmp21
+								_ = v22
+								// let binding "i"
+								tmp23 := lang.Numbers.Inc(v11)
 								var v24 any = tmp23
 								_ = v24
 								var tmp25 any
-								if lang.IsTruthy(v24) {
-									var tmp26 any
-									{ // let
-										// let binding "node"
-										var v27 any = v24
-										_ = v27
-										tmp28 := lang.ConjAny(v18, v27)
-										tmp26 = tmp28
-									} // end let
-									tmp25 = tmp26
-								} else {
-									tmp25 = v18
-								}
-								tmp22 = tmp25
-							} // end let
-							tmp20 = tmp22
-						} else {
-							var tmp23 any
-							{ // let
-								// let binding "event"
-								tmp24 := runtime.RT.Nth(v7, lang.IntCast(v11))
-								var v25 any = tmp24
-								_ = v25
-								// let binding "i"
-								tmp26 := lang.Numbers.Inc(v11)
-								var v27 any = tmp26
-								_ = v27
-								var tmp28 any
 								{ // let
 									// let binding "G__6"
-									tmp29 := aotKeywordSite0.Get(kw_event, v25, nil)
-									var v30 any = tmp29
-									_ = v30
+									tmp26 := aotKeywordSite0.Get(kw_event, v22, nil)
+									var v27 any = tmp26
+									_ = v27
 									// case
-									var tmp31 any
-									var tmp32 int64
-									tmp32 = int64(uint32(lang.Hash(v30)>>2) & uint32(31))
+									var tmp28 any
+									var tmp29 int64
+									tmp29 = int64(uint32(lang.Hash(v27)>>2) & uint32(31))
 									// case entry 0 (key=5, collision=false)
-									if tmp32 == 5 {
-										if lang.Equals(v30, "document_end") {
-											var tmp33 any
+									if tmp29 == 5 {
+										if lang.Equals(v27, "document_end") {
+											var tmp30 any
 											{ // let
 												// let binding "node"
-												tmp34 := aotDirectFn10(v14)
-												var v35 any = tmp34
-												_ = v35
-												var tmp36 any = v27
-												tmp38 := aotExternalFn7(v14)
+												tmp31 := aotDirectFn10(v13)
+												var v32 any = tmp31
+												_ = v32
+												var tmp33 any = v24
+												tmp35 := aotExternalFn7(v13)
+												var tmp34 any = tmp35
+												var tmp36 any = v14
+												tmp38 := lang.ConjAny(v15, v32)
 												var tmp37 any = tmp38
-												var tmp39 any = v16
-												tmp41 := lang.ConjAny(v18, v35)
-												var tmp40 any = tmp41
-												var tmp42 any = false
-												v11 = tmp36
-												v14 = tmp37
+												var tmp39 any = false
+												v11 = tmp33
+												v13 = tmp34
+												v14 = tmp36
+												v15 = tmp37
 												v16 = tmp39
-												v18 = tmp40
-												v19 = tmp42
 												continue
 											} // end let
-											tmp31 = tmp33
+											tmp28 = tmp30
 										} else {
-											var tmp34 any = v27
-											var tmp35 any = v14
-											var tmp36 any = v16
-											var tmp37 any = v18
-											var tmp38 any = v19
-											v11 = tmp34
-											v14 = tmp35
-											v16 = tmp36
-											v18 = tmp37
-											v19 = tmp38
+											var tmp31 any = v24
+											var tmp32 any = v13
+											var tmp33 any = v14
+											var tmp34 any = v15
+											var tmp35 any = v16
+											v11 = tmp31
+											v13 = tmp32
+											v14 = tmp33
+											v15 = tmp34
+											v16 = tmp35
 											continue
 										}
 										// case entry 1 (key=7, collision=false)
-									} else if tmp32 == 7 {
-										if lang.Equals(v30, "mapping_start") {
-											var tmp39 any
+									} else if tmp29 == 7 {
+										if lang.Equals(v27, "mapping_start") {
+											var tmp36 any
 											{ // let
 												// let binding "mark"
-												tmp40 := lang.Count(v14)
-												var v41 any = tmp40
-												_ = v41
-												var tmp42 any = v27
-												tmp44 := aotExternalFn8(v14, v25)
-												var tmp43 any = tmp44
-												tmp46 := lang.ConjAny(v16, v41)
-												var tmp45 any = tmp46
-												var tmp47 any = v18
-												var tmp48 any = v19
-												v11 = tmp42
-												v14 = tmp43
+												tmp37 := lang.Count(v13)
+												var v38 any = tmp37
+												_ = v38
+												var tmp39 any = v24
+												tmp41 := aotExternalFn8(v13, v22)
+												var tmp40 any = tmp41
+												tmp43 := lang.ConjAny(v14, v38)
+												var tmp42 any = tmp43
+												var tmp44 any = v15
+												var tmp45 any = v16
+												v11 = tmp39
+												v13 = tmp40
+												v14 = tmp42
+												v15 = tmp44
 												v16 = tmp45
-												v18 = tmp47
-												v19 = tmp48
 												continue
 											} // end let
-											tmp31 = tmp39
+											tmp28 = tmp36
 										} else {
-											var tmp40 any = v27
-											var tmp41 any = v14
-											var tmp42 any = v16
-											var tmp43 any = v18
-											var tmp44 any = v19
-											v11 = tmp40
-											v14 = tmp41
-											v16 = tmp42
-											v18 = tmp43
-											v19 = tmp44
+											var tmp37 any = v24
+											var tmp38 any = v13
+											var tmp39 any = v14
+											var tmp40 any = v15
+											var tmp41 any = v16
+											v11 = tmp37
+											v13 = tmp38
+											v14 = tmp39
+											v15 = tmp40
+											v16 = tmp41
 											continue
 										}
 										// case entry 2 (key=8, collision=false)
-									} else if tmp32 == 8 {
-										if lang.Equals(v30, "document_start") {
-											var tmp45 any = v27
-											var tmp46 any = v14
-											var tmp47 any = v16
-											var tmp48 any = v18
-											var tmp49 any = true
-											v11 = tmp45
-											v14 = tmp46
-											v16 = tmp47
-											v18 = tmp48
-											v19 = tmp49
+									} else if tmp29 == 8 {
+										if lang.Equals(v27, "document_start") {
+											var tmp42 any = v24
+											var tmp43 any = v13
+											var tmp44 any = v14
+											var tmp45 any = v15
+											var tmp46 any = true
+											v11 = tmp42
+											v13 = tmp43
+											v14 = tmp44
+											v15 = tmp45
+											v16 = tmp46
 											continue
 										} else {
-											var tmp50 any = v27
-											var tmp51 any = v14
-											var tmp52 any = v16
-											var tmp53 any = v18
-											var tmp54 any = v19
-											v11 = tmp50
-											v14 = tmp51
-											v16 = tmp52
-											v18 = tmp53
-											v19 = tmp54
+											var tmp47 any = v24
+											var tmp48 any = v13
+											var tmp49 any = v14
+											var tmp50 any = v15
+											var tmp51 any = v16
+											v11 = tmp47
+											v13 = tmp48
+											v14 = tmp49
+											v15 = tmp50
+											v16 = tmp51
 											continue
 										}
 										// case entry 3 (key=10, collision=false)
-									} else if tmp32 == 10 {
-										if lang.Equals(v30, "mapping_end") {
-											var tmp55 any = v27
-											tmp57 := runtime.RT.Peek(v16)
-											tmp58 := aotDirectFn3(v14, tmp57)
-											var tmp56 any = tmp58
-											tmp60 := runtime.RT.Pop(v16)
-											var tmp59 any = tmp60
-											var tmp61 any = v18
-											var tmp62 any = v19
-											v11 = tmp55
+									} else if tmp29 == 10 {
+										if lang.Equals(v27, "mapping_end") {
+											var tmp52 any = v24
+											tmp54 := runtime.RT.Peek(v14)
+											tmp55 := aotDirectFn3(v13, tmp54)
+											var tmp53 any = tmp55
+											tmp57 := runtime.RT.Pop(v14)
+											var tmp56 any = tmp57
+											var tmp58 any = v15
+											var tmp59 any = v16
+											v11 = tmp52
+											v13 = tmp53
 											v14 = tmp56
+											v15 = tmp58
 											v16 = tmp59
-											v18 = tmp61
-											v19 = tmp62
 											continue
 										} else {
-											var tmp63 any = v27
-											var tmp64 any = v14
-											var tmp65 any = v16
-											var tmp66 any = v18
-											var tmp67 any = v19
-											v11 = tmp63
-											v14 = tmp64
-											v16 = tmp65
-											v18 = tmp66
-											v19 = tmp67
+											var tmp60 any = v24
+											var tmp61 any = v13
+											var tmp62 any = v14
+											var tmp63 any = v15
+											var tmp64 any = v16
+											v11 = tmp60
+											v13 = tmp61
+											v14 = tmp62
+											v15 = tmp63
+											v16 = tmp64
 											continue
 										}
 										// case entry 4 (key=15, collision=false)
-									} else if tmp32 == 15 {
-										if lang.Equals(v30, "stream_start") {
-											var tmp68 any = v27
-											var tmp69 any = v14
-											var tmp70 any = v16
-											var tmp71 any = v18
-											var tmp72 any = v19
-											v11 = tmp68
-											v14 = tmp69
-											v16 = tmp70
-											v18 = tmp71
-											v19 = tmp72
+									} else if tmp29 == 15 {
+										if lang.Equals(v27, "stream_start") {
+											var tmp65 any = v24
+											var tmp66 any = v13
+											var tmp67 any = v14
+											var tmp68 any = v15
+											var tmp69 any = v16
+											v11 = tmp65
+											v13 = tmp66
+											v14 = tmp67
+											v15 = tmp68
+											v16 = tmp69
 											continue
 										} else {
-											var tmp73 any = v27
-											var tmp74 any = v14
-											var tmp75 any = v16
-											var tmp76 any = v18
-											var tmp77 any = v19
-											v11 = tmp73
-											v14 = tmp74
-											v16 = tmp75
-											v18 = tmp76
-											v19 = tmp77
+											var tmp70 any = v24
+											var tmp71 any = v13
+											var tmp72 any = v14
+											var tmp73 any = v15
+											var tmp74 any = v16
+											v11 = tmp70
+											v13 = tmp71
+											v14 = tmp72
+											v15 = tmp73
+											v16 = tmp74
 											continue
 										}
 										// case entry 5 (key=18, collision=false)
-									} else if tmp32 == 18 {
-										if lang.Equals(v30, "stream_end") {
-											var tmp78 any
+									} else if tmp29 == 18 {
+										if lang.Equals(v27, "stream_end") {
+											var tmp75 any
 											{ // let
 												// let binding "documents"
-												var tmp79 any
+												var tmp76 any
 												{ // let
 													// let binding "temp__0__auto__"
-													var tmp80 any
+													var tmp77 any
 													{ // let
 														// let binding "and__0__auto__"
-														var v81 any = v19
-														_ = v81
-														var tmp82 any
-														if lang.IsTruthy(v81) {
-															tmp83 := aotDirectFn10(v14)
-															tmp82 = tmp83
+														var v78 any = v16
+														_ = v78
+														var tmp79 any
+														if lang.IsTruthy(v78) {
+															tmp80 := aotDirectFn10(v13)
+															tmp79 = tmp80
 														} else {
-															tmp82 = v81
+															tmp79 = v78
 														}
-														tmp80 = tmp82
+														tmp77 = tmp79
 													} // end let
-													var v81 any = tmp80
-													_ = v81
-													var tmp82 any
-													if lang.IsTruthy(v81) {
-														var tmp83 any
+													var v78 any = tmp77
+													_ = v78
+													var tmp79 any
+													if lang.IsTruthy(v78) {
+														var tmp80 any
 														{ // let
 															// let binding "node"
-															var v84 any = v81
-															_ = v84
-															tmp85 := lang.ConjAny(v18, v84)
-															tmp83 = tmp85
+															var v81 any = v78
+															_ = v81
+															tmp82 := lang.ConjAny(v15, v81)
+															tmp80 = tmp82
 														} // end let
-														tmp82 = tmp83
+														tmp79 = tmp80
 													} else {
-														tmp82 = v18
+														tmp79 = v15
 													}
-													tmp79 = tmp82
+													tmp76 = tmp79
 												} // end let
-												var v80 any = tmp79
-												_ = v80
-												var tmp81 any = v27
-												tmp83 := lang.NewVector()
-												tmp84 := aotExternalFn4(tmp83)
-												var tmp82 any = tmp84
-												var tmp85 any = v16
-												var tmp86 any = v80
-												var tmp87 any = false
-												v11 = tmp81
-												v14 = tmp82
-												v16 = tmp85
-												v18 = tmp86
-												v19 = tmp87
+												var v77 any = tmp76
+												_ = v77
+												var tmp78 any = v24
+												tmp80 := aotExternalFn4(closed0)
+												var tmp79 any = tmp80
+												var tmp81 any = v14
+												var tmp82 any = v77
+												var tmp83 any = false
+												v11 = tmp78
+												v13 = tmp79
+												v14 = tmp81
+												v15 = tmp82
+												v16 = tmp83
 												continue
 											} // end let
-											tmp31 = tmp78
+											tmp28 = tmp75
 										} else {
-											var tmp79 any = v27
-											var tmp80 any = v14
-											var tmp81 any = v16
-											var tmp82 any = v18
-											var tmp83 any = v19
-											v11 = tmp79
-											v14 = tmp80
-											v16 = tmp81
-											v18 = tmp82
-											v19 = tmp83
+											var tmp76 any = v24
+											var tmp77 any = v13
+											var tmp78 any = v14
+											var tmp79 any = v15
+											var tmp80 any = v16
+											v11 = tmp76
+											v13 = tmp77
+											v14 = tmp78
+											v15 = tmp79
+											v16 = tmp80
 											continue
 										}
 										// case entry 6 (key=19, collision=false)
-									} else if tmp32 == 19 {
-										if lang.Equals(v30, "sequence_start") {
-											var tmp84 any
+									} else if tmp29 == 19 {
+										if lang.Equals(v27, "sequence_start") {
+											var tmp81 any
 											{ // let
 												// let binding "mark"
-												tmp85 := lang.Count(v14)
-												var v86 any = tmp85
-												_ = v86
-												var tmp87 any = v27
-												tmp89 := aotExternalFn8(v14, v25)
-												var tmp88 any = tmp89
-												tmp91 := lang.ConjAny(v16, v86)
-												var tmp90 any = tmp91
-												var tmp92 any = v18
-												var tmp93 any = v19
-												v11 = tmp87
-												v14 = tmp88
+												tmp82 := lang.Count(v13)
+												var v83 any = tmp82
+												_ = v83
+												var tmp84 any = v24
+												tmp86 := aotExternalFn8(v13, v22)
+												var tmp85 any = tmp86
+												tmp88 := lang.ConjAny(v14, v83)
+												var tmp87 any = tmp88
+												var tmp89 any = v15
+												var tmp90 any = v16
+												v11 = tmp84
+												v13 = tmp85
+												v14 = tmp87
+												v15 = tmp89
 												v16 = tmp90
-												v18 = tmp92
-												v19 = tmp93
 												continue
 											} // end let
-											tmp31 = tmp84
+											tmp28 = tmp81
 										} else {
-											var tmp85 any = v27
-											var tmp86 any = v14
-											var tmp87 any = v16
-											var tmp88 any = v18
-											var tmp89 any = v19
-											v11 = tmp85
-											v14 = tmp86
-											v16 = tmp87
-											v18 = tmp88
-											v19 = tmp89
+											var tmp82 any = v24
+											var tmp83 any = v13
+											var tmp84 any = v14
+											var tmp85 any = v15
+											var tmp86 any = v16
+											v11 = tmp82
+											v13 = tmp83
+											v14 = tmp84
+											v15 = tmp85
+											v16 = tmp86
 											continue
 										}
 										// case entry 7 (key=21, collision=false)
-									} else if tmp32 == 21 {
-										if lang.Equals(v30, "alias") {
-											var tmp90 any = v27
-											tmp92 := aotKeywordSite1.Get(kw_name, v25, nil)
-											tmp93 := aotDirectFn5(tmp92)
-											tmp94 := aotExternalFn8(v14, tmp93)
-											var tmp91 any = tmp94
-											var tmp95 any = v16
-											var tmp96 any = v18
-											var tmp97 any = v19
-											v11 = tmp90
-											v14 = tmp91
-											v16 = tmp95
-											v18 = tmp96
-											v19 = tmp97
+									} else if tmp29 == 21 {
+										if lang.Equals(v27, "alias") {
+											var tmp87 any = v24
+											tmp89 := aotKeywordSite1.Get(kw_name, v22, nil)
+											tmp90 := aotDirectFn5(tmp89)
+											tmp91 := aotExternalFn8(v13, tmp90)
+											var tmp88 any = tmp91
+											var tmp92 any = v14
+											var tmp93 any = v15
+											var tmp94 any = v16
+											v11 = tmp87
+											v13 = tmp88
+											v14 = tmp92
+											v15 = tmp93
+											v16 = tmp94
 											continue
 										} else {
-											var tmp98 any = v27
-											var tmp99 any = v14
-											var tmp100 any = v16
-											var tmp101 any = v18
-											var tmp102 any = v19
-											v11 = tmp98
-											v14 = tmp99
-											v16 = tmp100
-											v18 = tmp101
-											v19 = tmp102
+											var tmp95 any = v24
+											var tmp96 any = v13
+											var tmp97 any = v14
+											var tmp98 any = v15
+											var tmp99 any = v16
+											v11 = tmp95
+											v13 = tmp96
+											v14 = tmp97
+											v15 = tmp98
+											v16 = tmp99
 											continue
 										}
 										// case entry 8 (key=22, collision=false)
-									} else if tmp32 == 22 {
-										if lang.Equals(v30, "sequence_end") {
-											var tmp103 any = v27
-											tmp105 := runtime.RT.Peek(v16)
-											tmp106 := aotDirectFn4(v14, tmp105)
-											var tmp104 any = tmp106
-											tmp108 := runtime.RT.Pop(v16)
-											var tmp107 any = tmp108
-											var tmp109 any = v18
-											var tmp110 any = v19
-											v11 = tmp103
+									} else if tmp29 == 22 {
+										if lang.Equals(v27, "sequence_end") {
+											var tmp100 any = v24
+											tmp102 := runtime.RT.Peek(v14)
+											tmp103 := aotDirectFn4(v13, tmp102)
+											var tmp101 any = tmp103
+											tmp105 := runtime.RT.Pop(v14)
+											var tmp104 any = tmp105
+											var tmp106 any = v15
+											var tmp107 any = v16
+											v11 = tmp100
+											v13 = tmp101
 											v14 = tmp104
+											v15 = tmp106
 											v16 = tmp107
-											v18 = tmp109
-											v19 = tmp110
 											continue
 										} else {
-											var tmp111 any = v27
-											var tmp112 any = v14
-											var tmp113 any = v16
-											var tmp114 any = v18
-											var tmp115 any = v19
-											v11 = tmp111
-											v14 = tmp112
-											v16 = tmp113
-											v18 = tmp114
-											v19 = tmp115
+											var tmp108 any = v24
+											var tmp109 any = v13
+											var tmp110 any = v14
+											var tmp111 any = v15
+											var tmp112 any = v16
+											v11 = tmp108
+											v13 = tmp109
+											v14 = tmp110
+											v15 = tmp111
+											v16 = tmp112
 											continue
 										}
 										// case entry 9 (key=23, collision=false)
-									} else if tmp32 == 23 {
-										if lang.Equals(v30, "scalar") {
-											var tmp116 any = v27
-											tmp118 := aotDirectFn7(v25)
-											tmp119 := aotExternalFn8(v14, tmp118)
-											var tmp117 any = tmp119
-											var tmp120 any = v16
-											var tmp121 any = v18
-											var tmp122 any = v19
-											v11 = tmp116
+									} else if tmp29 == 23 {
+										if lang.Equals(v27, "scalar") {
+											var tmp113 any = v24
+											tmp115 := aotDirectFn7(v22)
+											tmp116 := aotExternalFn8(v13, tmp115)
+											var tmp114 any = tmp116
+											var tmp117 any = v14
+											var tmp118 any = v15
+											var tmp119 any = v16
+											v11 = tmp113
+											v13 = tmp114
 											v14 = tmp117
-											v16 = tmp120
-											v18 = tmp121
-											v19 = tmp122
+											v15 = tmp118
+											v16 = tmp119
 											continue
 										} else {
-											var tmp123 any = v27
-											var tmp124 any = v14
-											var tmp125 any = v16
-											var tmp126 any = v18
-											var tmp127 any = v19
-											v11 = tmp123
-											v14 = tmp124
-											v16 = tmp125
-											v18 = tmp126
-											v19 = tmp127
+											var tmp120 any = v24
+											var tmp121 any = v13
+											var tmp122 any = v14
+											var tmp123 any = v15
+											var tmp124 any = v16
+											v11 = tmp120
+											v13 = tmp121
+											v14 = tmp122
+											v15 = tmp123
+											v16 = tmp124
 											continue
 										}
 									} else {
-										var tmp128 any = v27
-										var tmp129 any = v14
-										var tmp130 any = v16
-										var tmp131 any = v18
-										var tmp132 any = v19
-										v11 = tmp128
-										v14 = tmp129
-										v16 = tmp130
-										v18 = tmp131
-										v19 = tmp132
+										var tmp125 any = v24
+										var tmp126 any = v13
+										var tmp127 any = v14
+										var tmp128 any = v15
+										var tmp129 any = v16
+										v11 = tmp125
+										v13 = tmp126
+										v14 = tmp127
+										v15 = tmp128
+										v16 = tmp129
 										continue
 									}
-									tmp28 = tmp31
+									tmp25 = tmp28
 								} // end let
-								tmp23 = tmp28
+								tmp20 = tmp25
 							} // end let
-							tmp20 = tmp23
+							tmp17 = tmp20
 						}
-						tmp10 = tmp20
+						tmp10 = tmp17
 						break
 					}
 				} // end let
@@ -898,30 +910,29 @@ func LoadNS() {
 					var v11 any = tmp10
 					_ = v11
 					// let binding "pairs"
-					tmp12 := lang.NewVector()
-					tmp13 := aotExternalFn4(tmp12)
-					var v14 any = tmp13
-					_ = v14
+					tmp12 := aotExternalFn4(closed0)
+					var v13 any = tmp12
+					_ = v13
 					for {
-						var tmp15 any
-						tmp16 := lang.Numbers.Lt(v11, v8)
-						if lang.IsTruthy(tmp16) {
-							tmp18 := lang.Numbers.Add(v11, int64(2))
-							var tmp17 any = tmp18
-							tmp20 := runtime.RT.Nth(v2, lang.IntCast(v11))
-							tmp21 := lang.Numbers.Inc(v11)
-							tmp22 := runtime.RT.Nth(v2, lang.IntCast(tmp21))
-							tmp23 := lang.NewVector(tmp20, tmp22)
-							tmp24 := aotExternalFn8(v14, tmp23)
-							var tmp19 any = tmp24
-							v11 = tmp17
-							v14 = tmp19
+						var tmp14 any
+						tmp15 := lang.Numbers.Lt(v11, v8)
+						if lang.IsTruthy(tmp15) {
+							tmp17 := lang.Numbers.Add(v11, int64(2))
+							var tmp16 any = tmp17
+							tmp19 := runtime.RT.Nth(v2, lang.IntCast(v11))
+							tmp20 := lang.Numbers.Inc(v11)
+							tmp21 := runtime.RT.Nth(v2, lang.IntCast(tmp20))
+							tmp22 := lang.NewVector(tmp19, tmp21)
+							tmp23 := aotExternalFn8(v13, tmp22)
+							var tmp18 any = tmp23
+							v11 = tmp16
+							v13 = tmp18
 							continue
 						} else {
-							tmp25 := aotExternalFn11(v14)
-							tmp15 = tmp25
+							tmp24 := aotExternalFn11(v13)
+							tmp14 = tmp24
 						}
-						tmp9 = tmp15
+						tmp9 = tmp14
 						break
 					}
 				} // end let
@@ -973,27 +984,26 @@ func LoadNS() {
 					var v11 any = tmp10
 					_ = v11
 					// let binding "items"
-					tmp12 := lang.NewVector()
-					tmp13 := aotExternalFn4(tmp12)
-					var v14 any = tmp13
-					_ = v14
+					tmp12 := aotExternalFn4(closed0)
+					var v13 any = tmp12
+					_ = v13
 					for {
-						var tmp15 any
-						tmp16 := lang.Numbers.Lt(v11, v8)
-						if lang.IsTruthy(tmp16) {
-							tmp18 := lang.Numbers.Inc(v11)
-							var tmp17 any = tmp18
-							tmp20 := runtime.RT.Nth(v2, lang.IntCast(v11))
-							tmp21 := aotExternalFn8(v14, tmp20)
-							var tmp19 any = tmp21
-							v11 = tmp17
-							v14 = tmp19
+						var tmp14 any
+						tmp15 := lang.Numbers.Lt(v11, v8)
+						if lang.IsTruthy(tmp15) {
+							tmp17 := lang.Numbers.Inc(v11)
+							var tmp16 any = tmp17
+							tmp19 := runtime.RT.Nth(v2, lang.IntCast(v11))
+							tmp20 := aotExternalFn8(v13, tmp19)
+							var tmp18 any = tmp20
+							v11 = tmp16
+							v13 = tmp18
 							continue
 						} else {
-							tmp22 := aotExternalFn11(v14)
-							tmp15 = tmp22
+							tmp21 := aotExternalFn11(v13)
+							tmp14 = tmp21
 						}
-						tmp9 = tmp15
+						tmp9 = tmp14
 						break
 					}
 				} // end let
@@ -1078,49 +1088,48 @@ func LoadNS() {
 				var tmp8 any
 				{ // let
 					// let binding "G__4"
-					tmp9 := aotKeywordMapNew1(kw_mapping)
-					var v10 any = tmp9
-					_ = v10
+					var v9 any = closed1
+					_ = v9
 					// let binding "G__4"
-					var tmp11 any
+					var tmp10 any
 					if lang.IsTruthy(v3) {
-						var tmp12 any = v10
-						tmp12 = lang.Assoc(tmp12, kw_anchor, v3)
-						tmp11 = tmp12
+						var tmp11 any = v9
+						tmp11 = lang.Assoc(tmp11, kw_anchor, v3)
+						tmp10 = tmp11
 					} else {
-						tmp11 = v10
+						tmp10 = v9
 					}
-					var v13 any = tmp11
-					_ = v13
+					var v12 any = tmp10
+					_ = v12
 					// let binding "G__4"
-					var tmp14 any
+					var tmp13 any
 					if lang.IsTruthy(v4) {
-						var tmp15 any = v13
-						tmp15 = lang.Assoc(tmp15, kw_tag, v4)
-						tmp14 = tmp15
+						var tmp14 any = v12
+						tmp14 = lang.Assoc(tmp14, kw_tag, v4)
+						tmp13 = tmp14
 					} else {
-						tmp14 = v13
+						tmp13 = v12
 					}
-					var v16 any = tmp14
-					_ = v16
+					var v15 any = tmp13
+					_ = v15
 					// let binding "G__4"
-					var tmp17 any
+					var tmp16 any
 					if lang.IsTruthy(v5) {
-						var tmp18 any = v16
-						tmp18 = lang.Assoc(tmp18, kw_flow, v5)
-						tmp17 = tmp18
+						var tmp17 any = v15
+						tmp17 = lang.Assoc(tmp17, kw_flow, v5)
+						tmp16 = tmp17
 					} else {
-						tmp17 = v16
+						tmp16 = v15
 					}
-					var v19 any = tmp17
-					_ = v19
-					var tmp20 any = v19
-					tmp20 = lang.Assoc(tmp20, kw_value, v2)
-					tmp8 = tmp20
+					var v18 any = tmp16
+					_ = v18
+					var tmp19 any = v18
+					tmp19 = lang.Assoc(tmp19, kw_value, v2)
+					tmp8 = tmp19
 				} // end let
 				tmp6 = tmp8
 			} else {
-				tmp9 := aotKeywordMapNew2(kw_mapping, v2)
+				tmp9 := aotKeywordMapNew1(kw_mapping, v2)
 				tmp6 = tmp9
 			}
 			return tmp6
@@ -1218,63 +1227,62 @@ func LoadNS() {
 					var tmp26 any
 					{ // let
 						// let binding "G__3"
-						tmp27 := aotKeywordMapNew1(kw_scalar)
-						var v28 any = tmp27
-						_ = v28
+						var v27 any = closed2
+						_ = v27
 						// let binding "G__3"
+						var tmp28 any
 						var tmp29 any
-						var tmp30 any
 						{ // let
 							// let binding "and__0__auto__"
-							var v31 any = v19
-							_ = v31
-							var tmp32 any
-							if lang.IsTruthy(v31) {
-								tmp33 := aotExternalFn16(v19, "plain")
-								tmp32 = tmp33
+							var v30 any = v19
+							_ = v30
+							var tmp31 any
+							if lang.IsTruthy(v30) {
+								tmp32 := aotExternalFn16(v19, "plain")
+								tmp31 = tmp32
 							} else {
-								tmp32 = v31
+								tmp31 = v30
 							}
-							tmp30 = tmp32
-						} // end let
-						if lang.IsTruthy(tmp30) {
-							var tmp31 any = v28
-							tmp31 = lang.Assoc(tmp31, kw_style, v19)
 							tmp29 = tmp31
+						} // end let
+						if lang.IsTruthy(tmp29) {
+							var tmp30 any = v27
+							tmp30 = lang.Assoc(tmp30, kw_style, v19)
+							tmp28 = tmp30
 						} else {
-							tmp29 = v28
+							tmp28 = v27
 						}
-						var v32 any = tmp29
-						_ = v32
+						var v31 any = tmp28
+						_ = v31
 						// let binding "G__3"
-						var tmp33 any
+						var tmp32 any
 						if lang.IsTruthy(v21) {
-							var tmp34 any = v32
-							tmp34 = lang.Assoc(tmp34, kw_anchor, v21)
-							tmp33 = tmp34
+							var tmp33 any = v31
+							tmp33 = lang.Assoc(tmp33, kw_anchor, v21)
+							tmp32 = tmp33
 						} else {
-							tmp33 = v32
+							tmp32 = v31
 						}
-						var v35 any = tmp33
-						_ = v35
+						var v34 any = tmp32
+						_ = v34
 						// let binding "G__3"
-						var tmp36 any
+						var tmp35 any
 						if lang.IsTruthy(v23) {
-							var tmp37 any = v35
-							tmp37 = lang.Assoc(tmp37, kw_tag, v23)
-							tmp36 = tmp37
+							var tmp36 any = v34
+							tmp36 = lang.Assoc(tmp36, kw_tag, v23)
+							tmp35 = tmp36
 						} else {
-							tmp36 = v35
+							tmp35 = v34
 						}
-						var v38 any = tmp36
-						_ = v38
-						var tmp39 any = v38
-						tmp39 = lang.Assoc(tmp39, kw_value, v17)
-						tmp26 = tmp39
+						var v37 any = tmp35
+						_ = v37
+						var tmp38 any = v37
+						tmp38 = lang.Assoc(tmp38, kw_value, v17)
+						tmp26 = tmp38
 					} // end let
 					tmp24 = tmp26
 				} else {
-					tmp27 := aotKeywordMapNew2(kw_scalar, v17)
+					tmp27 := aotKeywordMapNew1(kw_scalar, v17)
 					tmp24 = tmp27
 				}
 				tmp3 = tmp24
@@ -1331,49 +1339,48 @@ func LoadNS() {
 				var tmp8 any
 				{ // let
 					// let binding "G__5"
-					tmp9 := aotKeywordMapNew1(kw_sequence)
-					var v10 any = tmp9
-					_ = v10
+					var v9 any = closed3
+					_ = v9
 					// let binding "G__5"
-					var tmp11 any
+					var tmp10 any
 					if lang.IsTruthy(v3) {
-						var tmp12 any = v10
-						tmp12 = lang.Assoc(tmp12, kw_anchor, v3)
-						tmp11 = tmp12
+						var tmp11 any = v9
+						tmp11 = lang.Assoc(tmp11, kw_anchor, v3)
+						tmp10 = tmp11
 					} else {
-						tmp11 = v10
+						tmp10 = v9
 					}
-					var v13 any = tmp11
-					_ = v13
+					var v12 any = tmp10
+					_ = v12
 					// let binding "G__5"
-					var tmp14 any
+					var tmp13 any
 					if lang.IsTruthy(v4) {
-						var tmp15 any = v13
-						tmp15 = lang.Assoc(tmp15, kw_tag, v4)
-						tmp14 = tmp15
+						var tmp14 any = v12
+						tmp14 = lang.Assoc(tmp14, kw_tag, v4)
+						tmp13 = tmp14
 					} else {
-						tmp14 = v13
+						tmp13 = v12
 					}
-					var v16 any = tmp14
-					_ = v16
+					var v15 any = tmp13
+					_ = v15
 					// let binding "G__5"
-					var tmp17 any
+					var tmp16 any
 					if lang.IsTruthy(v5) {
-						var tmp18 any = v16
-						tmp18 = lang.Assoc(tmp18, kw_flow, v5)
-						tmp17 = tmp18
+						var tmp17 any = v15
+						tmp17 = lang.Assoc(tmp17, kw_flow, v5)
+						tmp16 = tmp17
 					} else {
-						tmp17 = v16
+						tmp16 = v15
 					}
-					var v19 any = tmp17
-					_ = v19
-					var tmp20 any = v19
-					tmp20 = lang.Assoc(tmp20, kw_value, v2)
-					tmp8 = tmp20
+					var v18 any = tmp16
+					_ = v18
+					var tmp19 any = v18
+					tmp19 = lang.Assoc(tmp19, kw_value, v2)
+					tmp8 = tmp19
 				} // end let
 				tmp6 = tmp8
 			} else {
-				tmp9 := aotKeywordMapNew2(kw_sequence, v2)
+				tmp9 := aotKeywordMapNew1(kw_sequence, v2)
 				tmp6 = tmp9
 			}
 			return tmp6

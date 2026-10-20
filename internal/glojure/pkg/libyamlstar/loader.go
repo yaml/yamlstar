@@ -533,6 +533,18 @@ func LoadNS() {
 	ns.AddAlias(sym_emitter, lang.FindOrCreateNamespace(sym_yamlstar_DOT_emitter))
 	ns.AddAlias(sym_parser, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
 	ns.AddAlias(sym_shared_DASH_host, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host))
+	var closed0 any
+	var closed1 any
+	var closed2 any
+	{
+		closed0 = lang.NewVector()
+	}
+	{
+		closed1 = lang.NewVector(kw_plugin, kw_alias_DASH_data, kw_data)
+	}
+	{
+		closed2 = lang.NewMap()
+	}
 	// EXPORT
 	{
 		tmp0 := sym_EXPORT
@@ -754,9 +766,8 @@ func LoadNS() {
 		aotDirectFn9Arity1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := lang.NewVector()
-			tmp4 := aotDirectFn9Arity2(v2, tmp3)
-			return tmp4
+			tmp3 := aotDirectFn9Arity2(v2, closed0)
+			return tmp3
 		})
 		aotDirectFn9Arity2 = lang.FnFunc2(func(p0, p1 any) any {
 			v2 := p0
@@ -767,94 +778,91 @@ func LoadNS() {
 			tmp5 := lang.IsMap(v2)
 			if tmp5 {
 				var tmp6 any
-				tmp7 := lang.NewVector(kw_plugin, kw_alias_DASH_data, kw_data)
-				tmp8 := lang.Equals(v3, tmp7)
-				if tmp8 {
-					tmp9 := lang.NewMap()
-					var tmp10 lang.FnFunc1
-					tmp10 = lang.FnFunc1(func(p0 any) any {
-						v11 := p0
-						_ = v11
-						var tmp12 any
+				tmp7 := lang.Equals(v3, closed1)
+				if tmp7 {
+					var tmp8 lang.FnFunc1
+					tmp8 = lang.FnFunc1(func(p0 any) any {
+						v9 := p0
+						_ = v9
+						var tmp10 any
 						{ // let
 							// let binding "vec__176"
-							var v13 any = v11
-							_ = v13
+							var v11 any = v9
+							_ = v11
 							// let binding "k"
-							tmp14 := runtime.RT.NthDefault(v13, lang.IntCast(int64(0)), nil)
+							tmp12 := runtime.RT.NthDefault(v11, lang.IntCast(int64(0)), nil)
+							var v13 any = tmp12
+							_ = v13
+							// let binding "v"
+							tmp14 := runtime.RT.NthDefault(v11, lang.IntCast(int64(1)), nil)
 							var v15 any = tmp14
 							_ = v15
-							// let binding "v"
-							tmp16 := runtime.RT.NthDefault(v13, lang.IntCast(int64(1)), nil)
-							var v17 any = tmp16
-							_ = v17
-							tmp18 := aotExternalFn17(v15)
-							tmp19 := lang.NewVector(tmp18, v17)
-							tmp12 = tmp19
+							tmp16 := aotExternalFn17(v13)
+							tmp17 := lang.NewVector(tmp16, v15)
+							tmp10 = tmp17
 						} // end let
-						return tmp12
+						return tmp10
 					})
-					tmp11 := aotExternalFn16(tmp10)
-					tmp12 := aotExternalFn15(tmp9, tmp11, v2)
-					tmp6 = tmp12
+					tmp9 := aotExternalFn16(tmp8)
+					tmp10 := aotExternalFn15(closed2, tmp9, v2)
+					tmp6 = tmp10
 				} else {
-					tmp13 := lang.NewMap()
-					var tmp14 lang.FnFunc1
-					tmp14 = lang.FnFunc1(func(p0 any) any {
-						v15 := p0
-						_ = v15
-						var tmp16 any
+					var tmp11 lang.FnFunc1
+					tmp11 = lang.FnFunc1(func(p0 any) any {
+						v12 := p0
+						_ = v12
+						var tmp13 any
 						{ // let
 							// let binding "vec__180"
-							var v17 any = v15
-							_ = v17
+							var v14 any = v12
+							_ = v14
 							// let binding "k"
-							tmp18 := runtime.RT.NthDefault(v17, lang.IntCast(int64(0)), nil)
-							var v19 any = tmp18
-							_ = v19
+							tmp15 := runtime.RT.NthDefault(v14, lang.IntCast(int64(0)), nil)
+							var v16 any = tmp15
+							_ = v16
 							// let binding "v"
-							tmp20 := runtime.RT.NthDefault(v17, lang.IntCast(int64(1)), nil)
-							var v21 any = tmp20
-							_ = v21
-							var tmp22 any
+							tmp17 := runtime.RT.NthDefault(v14, lang.IntCast(int64(1)), nil)
+							var v18 any = tmp17
+							_ = v18
+							var tmp19 any
 							{ // let
 								// let binding "key"
-								tmp23 := aotExternalFn17(v19)
-								tmp24 := aotExternalFn19(tmp23, "_", "-")
-								tmp25 := aotExternalFn18(tmp24)
-								var v26 any = tmp25
-								_ = v26
-								tmp27 := lang.ConjAny(v3, v26)
-								tmp28 := aotDirectFn9Arity2(v21, tmp27)
-								tmp29 := lang.NewVector(v26, tmp28)
-								tmp22 = tmp29
+								tmp20 := aotExternalFn17(v16)
+								tmp21 := aotExternalFn19(tmp20, "_", "-")
+								tmp22 := aotExternalFn18(tmp21)
+								var v23 any = tmp22
+								_ = v23
+								tmp24 := lang.ConjAny(v3, v23)
+								tmp25 := aotDirectFn9Arity2(v18, tmp24)
+								tmp26 := lang.NewVector(v23, tmp25)
+								tmp19 = tmp26
 							} // end let
-							tmp16 = tmp22
+							tmp13 = tmp19
 						} // end let
-						return tmp16
+						return tmp13
 					})
-					tmp15 := aotExternalFn16(tmp14)
-					tmp16 := aotExternalFn15(tmp13, tmp15, v2)
-					tmp6 = tmp16
+					tmp12 := aotExternalFn16(tmp11)
+					tmp13 := aotExternalFn15(closed2, tmp12, v2)
+					tmp6 = tmp13
 				}
 				tmp4 = tmp6
 			} else {
-				var tmp17 any
-				tmp18 := lang.IsVector(v2)
-				if tmp18 {
-					var tmp19 lang.FnFunc1
-					tmp19 = lang.FnFunc1(func(p0 any) any {
-						v20 := p0
-						_ = v20
-						tmp21 := aotDirectFn9Arity2(v20, v3)
-						return tmp21
+				var tmp14 any
+				tmp15 := lang.IsVector(v2)
+				if tmp15 {
+					var tmp16 lang.FnFunc1
+					tmp16 = lang.FnFunc1(func(p0 any) any {
+						v17 := p0
+						_ = v17
+						tmp18 := aotDirectFn9Arity2(v17, v3)
+						return tmp18
 					})
-					tmp20 := aotExternalFn11(tmp19, v2)
-					tmp17 = tmp20
+					tmp17 := aotExternalFn11(tmp16, v2)
+					tmp14 = tmp17
 				} else {
-					tmp17 = v2
+					tmp14 = v2
 				}
-				tmp4 = tmp17
+				tmp4 = tmp14
 			}
 			return tmp4
 		})

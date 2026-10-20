@@ -636,11 +636,23 @@ func LoadNS() {
 	ns.AddAlias(sym_str, lang.FindOrCreateNamespace(sym_clojure_DOT_string))
 	var closed0 any
 	var closed1 any
+	var closed2 any
+	var closed3 any
+	var closed4 any
 	{
-		closed0 = regexp4.MustCompile("=")
+		closed0 = lang.NewMap()
 	}
 	{
-		closed1 = regexp4.MustCompile("\\*")
+		closed1 = regexp4.MustCompile("=")
+	}
+	{
+		closed2 = lang.NewVector(false, nil)
+	}
+	{
+		closed3 = regexp4.MustCompile("\\*")
+	}
+	{
+		closed4 = lang.NewSet(kw_env, kw_file, kw_data, kw_stream)
 	}
 	// anchor-name-pattern
 	{
@@ -689,12 +701,10 @@ func LoadNS() {
 		tmp0 := sym_default_DASH_context
 		var tmp1 lang.FnFunc0
 		tmp1 = lang.FnFunc0(func() any {
-			tmp2 := lang.NewMap()
-			tmp3 := lang.NewMap()
-			tmp4 := aotExternalFn0(tmp3)
-			tmp5 := aotKeywordMapNew0(tmp4)
-			tmp6 := aotDirectFn7(tmp2, tmp5)
-			return tmp6
+			tmp2 := aotExternalFn0(closed0)
+			tmp3 := aotKeywordMapNew0(tmp2)
+			tmp4 := aotDirectFn7(closed0, tmp3)
+			return tmp4
 		})
 		aotDirectFn2 = tmp1
 		var_yamlstar_DOT_plugin_DOT_alias_DASH_data_default_DASH_context = ns.InternWithValue(tmp0, tmp1, true)
@@ -762,35 +772,34 @@ func LoadNS() {
 		tmp0 := sym_environment
 		var tmp1 lang.FnFunc0
 		tmp1 = lang.FnFunc0(func() any {
-			tmp2 := lang.NewMap()
-			var tmp3 lang.FnFunc1
-			tmp3 = lang.FnFunc1(func(p0 any) any {
-				v4 := p0
-				_ = v4
-				var tmp5 any
+			var tmp2 lang.FnFunc1
+			tmp2 = lang.FnFunc1(func(p0 any) any {
+				v3 := p0
+				_ = v3
+				var tmp4 any
 				{ // let
 					// let binding "vec__4"
-					tmp6 := aotExternalFn3(v4, closed0, int64(2))
-					var v7 any = tmp6
-					_ = v7
+					tmp5 := aotExternalFn3(v3, closed1, int64(2))
+					var v6 any = tmp5
+					_ = v6
 					// let binding "name"
-					tmp8 := runtime.RT.NthDefault(v7, lang.IntCast(int64(0)), nil)
-					var v9 any = tmp8
-					_ = v9
+					tmp7 := runtime.RT.NthDefault(v6, lang.IntCast(int64(0)), nil)
+					var v8 any = tmp7
+					_ = v8
 					// let binding "value"
-					tmp10 := runtime.RT.NthDefault(v7, lang.IntCast(int64(1)), nil)
-					var v11 any = tmp10
-					_ = v11
-					tmp12 := lang.NewVector(v9, v11)
-					tmp5 = tmp12
+					tmp9 := runtime.RT.NthDefault(v6, lang.IntCast(int64(1)), nil)
+					var v10 any = tmp9
+					_ = v10
+					tmp11 := lang.NewVector(v8, v10)
+					tmp4 = tmp11
 				} // end let
-				return tmp5
+				return tmp4
 			})
-			tmp4 := aotExternalFn2(tmp3)
-			tmp5 := os5.Environ()
-			tmp6 := lang.Seq(tmp5)
-			tmp7 := aotExternalFn1(tmp2, tmp4, tmp6)
-			return tmp7
+			tmp3 := aotExternalFn2(tmp2)
+			tmp4 := os5.Environ()
+			tmp5 := lang.Seq(tmp4)
+			tmp6 := aotExternalFn1(closed0, tmp3, tmp5)
+			return tmp6
 		})
 		aotDirectFn6 = tmp1
 		var_yamlstar_DOT_plugin_DOT_alias_DASH_data_environment = ns.InternWithValue(tmp0, tmp1, true)
@@ -861,9 +870,8 @@ func LoadNS() {
 				} // end let
 				return tmp12
 			})
-			tmp10 := lang.NewMap()
-			tmp11 := aotExternalFn20(tmp9, tmp10, v2)
-			return tmp11
+			tmp10 := aotExternalFn20(tmp9, closed0, v2)
+			return tmp10
 		})
 		aotDirectFn8 = tmp1
 		var_yamlstar_DOT_plugin_DOT_alias_DASH_data_normalize_DASH_data = ns.InternWithValue(tmp0, tmp1, true)
@@ -919,115 +927,112 @@ func LoadNS() {
 					tmp6 = tmp9
 				} // end let
 				if lang.IsTruthy(tmp6) {
-					tmp7 := lang.NewMap()
-					tmp5 = tmp7
+					tmp5 = closed0
 				} else {
-					var tmp8 any
-					tmp9 := aotExternalFn12(v2)
-					if lang.IsTruthy(tmp9) {
-						tmp8 = v3
+					var tmp7 any
+					tmp8 := aotExternalFn12(v2)
+					if lang.IsTruthy(tmp8) {
+						tmp7 = v3
 					} else {
-						var tmp10 any
-						tmp11 := lang.IsString(v2)
-						if tmp11 {
-							var tmp12 any
-							tmp13 := aotExternalFn25(v2, "*")
-							if lang.IsTruthy(tmp13) {
-								tmp14 := lang.NewMap()
-								var tmp15 lang.FnFunc1
-								tmp15 = lang.FnFunc1(func(p0 any) any {
-									v16 := p0
-									_ = v16
-									var tmp17 any
+						var tmp9 any
+						tmp10 := lang.IsString(v2)
+						if tmp10 {
+							var tmp11 any
+							tmp12 := aotExternalFn25(v2, "*")
+							if lang.IsTruthy(tmp12) {
+								var tmp13 lang.FnFunc1
+								tmp13 = lang.FnFunc1(func(p0 any) any {
+									v14 := p0
+									_ = v14
+									var tmp15 any
 									{ // let
 										// let binding "vec__12"
-										var v18 any = v16
-										_ = v18
+										var v16 any = v14
+										_ = v16
 										// let binding "name"
-										tmp19 := runtime.RT.NthDefault(v18, lang.IntCast(int64(0)), nil)
+										tmp17 := runtime.RT.NthDefault(v16, lang.IntCast(int64(0)), nil)
+										var v18 any = tmp17
+										_ = v18
+										// let binding "_"
+										tmp19 := runtime.RT.NthDefault(v16, lang.IntCast(int64(1)), nil)
 										var v20 any = tmp19
 										_ = v20
-										// let binding "_"
-										tmp21 := runtime.RT.NthDefault(v18, lang.IntCast(int64(1)), nil)
-										var v22 any = tmp21
-										_ = v22
-										tmp23 := aotDirectFn11(v2, v20)
-										tmp17 = tmp23
+										tmp21 := aotDirectFn11(v2, v18)
+										tmp15 = tmp21
 									} // end let
-									return tmp17
+									return tmp15
 								})
-								tmp16 := aotExternalFn26(tmp15)
-								tmp17 := aotExternalFn1(tmp14, tmp16, v3)
-								tmp12 = tmp17
+								tmp14 := aotExternalFn26(tmp13)
+								tmp15 := aotExternalFn1(closed0, tmp14, v3)
+								tmp11 = tmp15
 							} else {
-								var tmp18 any
-								tmp19 := aotExternalFn10(v3, v2)
-								if lang.IsTruthy(tmp19) {
-									tmp20 := runtime.RT.Get(v3, v2)
-									tmp21 := lang.NewMap(v2, tmp20)
-									tmp18 = tmp21
+								var tmp16 any
+								tmp17 := aotExternalFn10(v3, v2)
+								if lang.IsTruthy(tmp17) {
+									tmp18 := runtime.RT.Get(v3, v2)
+									tmp19 := lang.NewMap(v2, tmp18)
+									tmp16 = tmp19
 								} else {
-									tmp22 := aotExternalFn22(v2)
-									tmp23 := aotExternalFn19("Alias-Data environment variable ", tmp22, " is not set")
-									tmp24 := aotKeywordMapNew4(v2)
-									tmp25 := aotExternalFn18(tmp23, tmp24)
-									panic(tmp25)
+									tmp20 := aotExternalFn22(v2)
+									tmp21 := aotExternalFn19("Alias-Data environment variable ", tmp20, " is not set")
+									tmp22 := aotKeywordMapNew4(v2)
+									tmp23 := aotExternalFn18(tmp21, tmp22)
+									panic(tmp23)
 								}
-								tmp12 = tmp18
+								tmp11 = tmp16
 							}
-							tmp10 = tmp12
+							tmp9 = tmp11
 						} else {
-							var tmp26 any
-							tmp27 := aotExternalFn27(v2)
-							if lang.IsTruthy(tmp27) {
-								var tmp28 lang.FnFunc2
-								tmp28 = lang.FnFunc2(func(p0, p1 any) any {
-									v29 := p0
-									_ = v29
-									v30 := p1
-									_ = v30
-									var tmp31 any
+							var tmp24 any
+							tmp25 := aotExternalFn27(v2)
+							if lang.IsTruthy(tmp25) {
+								var tmp26 lang.FnFunc2
+								tmp26 = lang.FnFunc2(func(p0, p1 any) any {
+									v27 := p0
+									_ = v27
+									v28 := p1
+									_ = v28
+									var tmp29 any
 									{ // let
 										// let binding "name"
-										tmp32 := aotDirectFn12(v30)
-										var v33 any = tmp32
-										_ = v33
-										var tmp34 any
-										tmp35 := aotExternalFn10(v3, v33)
-										if lang.IsTruthy(tmp35) {
-											tmp36 := runtime.RT.Get(v3, v33)
-											var tmp37 any = v29
-											tmp37 = lang.Assoc(tmp37, v33, tmp36)
-											tmp34 = tmp37
+										tmp30 := aotDirectFn12(v28)
+										var v31 any = tmp30
+										_ = v31
+										var tmp32 any
+										tmp33 := aotExternalFn10(v3, v31)
+										if lang.IsTruthy(tmp33) {
+											tmp34 := runtime.RT.Get(v3, v31)
+											var tmp35 any = v27
+											tmp35 = lang.Assoc(tmp35, v31, tmp34)
+											tmp32 = tmp35
 										} else {
-											tmp38 := aotExternalFn22(v33)
-											tmp39 := aotExternalFn19("Alias-Data environment variable ", tmp38, " is not set")
-											tmp40 := aotKeywordMapNew4(v33)
-											tmp41 := aotExternalFn18(tmp39, tmp40)
-											panic(tmp41)
+											tmp36 := aotExternalFn22(v31)
+											tmp37 := aotExternalFn19("Alias-Data environment variable ", tmp36, " is not set")
+											tmp38 := aotKeywordMapNew4(v31)
+											tmp39 := aotExternalFn18(tmp37, tmp38)
+											panic(tmp39)
 										}
-										tmp31 = tmp34
+										tmp29 = tmp32
 									} // end let
-									return tmp31
+									return tmp29
 								})
-								tmp29 := lang.NewMap()
-								tmp30 := aotExternalFn20(tmp28, tmp29, v2)
-								tmp26 = tmp30
+								tmp27 := aotExternalFn20(tmp26, closed0, v2)
+								tmp24 = tmp27
 							} else {
-								tmp31 := aotKeywordMapNew5(v2)
-								tmp32 := aotExternalFn18("Alias-Data env must be a boolean, string, or sequence", tmp31)
-								panic(tmp32)
+								tmp28 := aotKeywordMapNew5(v2)
+								tmp29 := aotExternalFn18("Alias-Data env must be a boolean, string, or sequence", tmp28)
+								panic(tmp29)
 							}
-							tmp10 = tmp26
+							tmp9 = tmp24
 						}
-						tmp8 = tmp10
+						tmp7 = tmp9
 					}
-					tmp5 = tmp8
+					tmp5 = tmp7
 				}
-				var v33 any = tmp5
-				_ = v33
-				tmp34 := aotDirectFn8(v33, "environment")
-				tmp4 = tmp34
+				var v30 any = tmp5
+				_ = v30
+				tmp31 := aotDirectFn8(v30, "environment")
+				tmp4 = tmp31
 			} // end let
 			return tmp4
 		})
@@ -1049,7 +1054,7 @@ func LoadNS() {
 			var tmp4 any
 			{ // let
 				// let binding "parts"
-				tmp5 := aotExternalFn3(v2, closed1, int64(-1))
+				tmp5 := aotExternalFn3(v2, closed3, int64(-1))
 				var v6 any = tmp5
 				_ = v6
 				// let binding "count-parts"
@@ -1264,88 +1269,87 @@ func LoadNS() {
 			var tmp3 any
 			{ // let
 				// let binding "unknown"
-				tmp4 := lang.NewSet(kw_env, kw_file, kw_data, kw_stream)
-				tmp5 := aotExternalFn40(v2)
-				tmp6 := aotExternalFn39(tmp4, tmp5)
-				tmp7 := lang.Seq(tmp6)
-				var v8 any = tmp7
-				_ = v8
-				var tmp9 any
-				if lang.IsTruthy(v8) {
-					tmp10 := aotKeywordMapNew7(v8)
-					tmp11 := aotExternalFn18("Unknown Alias-Data configuration key", tmp10)
-					panic(tmp11)
+				tmp4 := aotExternalFn40(v2)
+				tmp5 := aotExternalFn39(closed4, tmp4)
+				tmp6 := lang.Seq(tmp5)
+				var v7 any = tmp6
+				_ = v7
+				var tmp8 any
+				if lang.IsTruthy(v7) {
+					tmp9 := aotKeywordMapNew7(v7)
+					tmp10 := aotExternalFn18("Unknown Alias-Data configuration key", tmp9)
+					panic(tmp10)
 				} else {
 				}
-				_ = tmp9
+				_ = tmp8
+				var tmp11 any
 				var tmp12 any
-				var tmp13 any
 				{ // let
 					// let binding "and__0__auto__"
-					tmp14 := aotExternalFn10(v2, kw_file)
-					var v15 any = tmp14
-					_ = v15
-					var tmp16 any
-					if lang.IsTruthy(v15) {
-						var tmp17 any
+					tmp13 := aotExternalFn10(v2, kw_file)
+					var v14 any = tmp13
+					_ = v14
+					var tmp15 any
+					if lang.IsTruthy(v14) {
+						var tmp16 any
 						{ // let
 							// let binding "and__0__auto__"
-							tmp18 := aotKeywordSite10.Get(kw_file, v2, nil)
-							tmp19 := lang.IsString(tmp18)
-							var v20 any = tmp19
-							_ = v20
-							var tmp21 any
-							if lang.IsTruthy(v20) {
-								tmp22 := aotKeywordSite11.Get(kw_file, v2, nil)
-								tmp23 := aotExternalFn32(tmp22)
-								tmp24 := !lang.IsTruthy(tmp23)
-								tmp21 = tmp24
+							tmp17 := aotKeywordSite10.Get(kw_file, v2, nil)
+							tmp18 := lang.IsString(tmp17)
+							var v19 any = tmp18
+							_ = v19
+							var tmp20 any
+							if lang.IsTruthy(v19) {
+								tmp21 := aotKeywordSite11.Get(kw_file, v2, nil)
+								tmp22 := aotExternalFn32(tmp21)
+								tmp23 := !lang.IsTruthy(tmp22)
+								tmp20 = tmp23
 							} else {
-								tmp21 = v20
+								tmp20 = v19
 							}
-							tmp17 = tmp21
+							tmp16 = tmp20
 						} // end let
-						tmp18 := !lang.IsTruthy(tmp17)
-						tmp16 = tmp18
+						tmp17 := !lang.IsTruthy(tmp16)
+						tmp15 = tmp17
 					} else {
-						tmp16 = v15
+						tmp15 = v14
 					}
-					tmp13 = tmp16
+					tmp12 = tmp15
 				} // end let
-				if lang.IsTruthy(tmp13) {
-					tmp14 := aotKeywordSite12.Get(kw_file, v2, nil)
-					tmp15 := aotKeywordMapNew8(tmp14)
-					tmp16 := aotExternalFn18("Alias-Data file must be a non-empty string", tmp15)
-					panic(tmp16)
+				if lang.IsTruthy(tmp12) {
+					tmp13 := aotKeywordSite12.Get(kw_file, v2, nil)
+					tmp14 := aotKeywordMapNew8(tmp13)
+					tmp15 := aotExternalFn18("Alias-Data file must be a non-empty string", tmp14)
+					panic(tmp15)
 				} else {
 				}
-				_ = tmp12
+				_ = tmp11
+				var tmp16 any
 				var tmp17 any
-				var tmp18 any
 				{ // let
 					// let binding "and__0__auto__"
-					tmp19 := aotExternalFn10(v2, kw_stream)
-					var v20 any = tmp19
-					_ = v20
-					var tmp21 any
-					if lang.IsTruthy(v20) {
-						tmp22 := aotKeywordSite13.Get(kw_stream, v2, nil)
-						tmp23 := aotExternalFn42(tmp22)
-						tmp24 := !lang.IsTruthy(tmp23)
-						tmp21 = tmp24
+					tmp18 := aotExternalFn10(v2, kw_stream)
+					var v19 any = tmp18
+					_ = v19
+					var tmp20 any
+					if lang.IsTruthy(v19) {
+						tmp21 := aotKeywordSite13.Get(kw_stream, v2, nil)
+						tmp22 := aotExternalFn42(tmp21)
+						tmp23 := !lang.IsTruthy(tmp22)
+						tmp20 = tmp23
 					} else {
-						tmp21 = v20
+						tmp20 = v19
 					}
-					tmp18 = tmp21
+					tmp17 = tmp20
 				} // end let
-				if lang.IsTruthy(tmp18) {
-					tmp19 := aotKeywordSite14.Get(kw_stream, v2, nil)
-					tmp20 := aotKeywordMapNew9(tmp19)
-					tmp21 := aotExternalFn18("Alias-Data stream must be a boolean", tmp20)
-					panic(tmp21)
+				if lang.IsTruthy(tmp17) {
+					tmp18 := aotKeywordSite14.Get(kw_stream, v2, nil)
+					tmp19 := aotKeywordMapNew9(tmp18)
+					tmp20 := aotExternalFn18("Alias-Data stream must be a boolean", tmp19)
+					panic(tmp20)
 				} else {
 				}
-				_ = tmp17
+				_ = tmp16
 				tmp3 = v2
 			} // end let
 			return tmp3
@@ -1423,8 +1427,7 @@ func LoadNS() {
 						if lang.IsTruthy(v26) {
 							tmp27 = v26
 						} else {
-							tmp28 := lang.NewMap()
-							tmp27 = tmp28
+							tmp27 = closed0
 						}
 						tmp24 = tmp27
 					} // end let
@@ -1451,8 +1454,7 @@ func LoadNS() {
 							} // end let
 							tmp30 = tmp31
 						} else {
-							tmp32 := lang.NewMap()
-							tmp30 = tmp32
+							tmp30 = closed0
 						}
 						tmp27 = tmp30
 					} // end let
@@ -1481,123 +1483,117 @@ func LoadNS() {
 						tmp34 := aotDirectFn10(tmp31, tmp33)
 						tmp29 = tmp34
 					} else {
-						tmp35 := lang.NewMap()
-						tmp29 = tmp35
+						tmp29 = closed0
 					}
-					var v36 any = tmp29
-					_ = v36
+					var v35 any = tmp29
+					_ = v35
 					// let binding "current"
-					tmp37 := lang.NewMap()
-					tmp38 := aotExternalFn11(tmp37)
+					tmp36 := aotExternalFn11(closed0)
+					var v37 any = tmp36
+					_ = v37
+					// let binding "prior"
+					tmp38 := aotExternalFn11(closed0)
 					var v39 any = tmp38
 					_ = v39
-					// let binding "prior"
-					tmp40 := lang.NewMap()
-					tmp41 := aotExternalFn11(tmp40)
+					// let binding "stream?"
+					tmp40 := aotKeywordSite8.Get(kw_stream, v23, nil)
+					tmp41 := aotExternalFn12(tmp40)
 					var v42 any = tmp41
 					_ = v42
-					// let binding "stream?"
-					tmp43 := aotKeywordSite8.Get(kw_stream, v23, nil)
-					tmp44 := aotExternalFn12(tmp43)
-					var v45 any = tmp44
-					_ = v45
-					var tmp46 lang.FnFunc0
-					tmp46 = lang.FnFunc0(func() any {
-						tmp47 := lang.NewMap()
-						tmp48 := aotExternalFn13(v42, tmp47)
-						_ = tmp48
+					var tmp43 lang.FnFunc0
+					tmp43 = lang.FnFunc0(func() any {
+						tmp44 := aotExternalFn13(v39, closed0)
+						_ = tmp44
 						return nil
 					})
-					var tmp47 lang.FnFunc0
-					tmp47 = lang.FnFunc0(func() any {
-						tmp48 := lang.NewMap()
-						tmp49 := aotExternalFn13(v39, tmp48)
+					var tmp44 lang.FnFunc0
+					tmp44 = lang.FnFunc0(func() any {
+						tmp45 := aotExternalFn13(v37, closed0)
+						_ = tmp45
+						return nil
+					})
+					var tmp45 lang.FnFunc2
+					tmp45 = lang.FnFunc2(func(p0, p1 any) any {
+						v46 := p0
+						_ = v46
+						v47 := p1
+						_ = v47
+						tmp48 := checkDerefVar(var_clojure_DOT_core_assoc)
+						tmp49 := aotExternalFn14(v37, tmp48, v46, v47)
 						_ = tmp49
 						return nil
 					})
-					var tmp48 lang.FnFunc2
-					tmp48 = lang.FnFunc2(func(p0, p1 any) any {
-						v49 := p0
-						_ = v49
-						v50 := p1
-						_ = v50
-						tmp51 := checkDerefVar(var_clojure_DOT_core_assoc)
-						tmp52 := aotExternalFn14(v39, tmp51, v49, v50)
-						_ = tmp52
-						return nil
-					})
-					var tmp49 lang.FnFunc1
-					tmp49 = lang.FnFunc1(func(p0 any) any {
-						v50 := p0
-						_ = v50
-						var tmp51 any
+					var tmp46 lang.FnFunc1
+					tmp46 = lang.FnFunc1(func(p0 any) any {
+						v47 := p0
+						_ = v47
+						var tmp48 any
 						{ // let
 							// let binding "sources"
-							tmp52 := lang.DerefValue(v39)
-							tmp53 := lang.DerefValue(v42)
-							tmp54 := lang.NewVector(tmp52, v26, v28, v36, tmp53)
-							var v55 any = tmp54
-							_ = v55
+							tmp49 := lang.DerefValue(v37)
+							tmp50 := lang.DerefValue(v39)
+							tmp51 := lang.NewVector(tmp49, v26, v28, v35, tmp50)
+							var v52 any = tmp51
+							_ = v52
 							for {
-								var tmp56 any
+								var tmp53 any
 								{ // let
 									// let binding "temp__0__auto__"
-									tmp57 := lang.First(v55)
-									var v58 any = tmp57
-									_ = v58
-									var tmp59 any
-									if lang.IsTruthy(v58) {
-										var tmp60 any
+									tmp54 := lang.First(v52)
+									var v55 any = tmp54
+									_ = v55
+									var tmp56 any
+									if lang.IsTruthy(v55) {
+										var tmp57 any
 										{ // let
 											// let binding "source"
-											var v61 any = v58
-											_ = v61
-											var tmp62 any
-											tmp63 := aotExternalFn10(v61, v50)
-											if lang.IsTruthy(tmp63) {
-												tmp64 := runtime.RT.Get(v61, v50)
-												tmp65 := lang.NewVector(true, tmp64)
-												tmp62 = tmp65
+											var v58 any = v55
+											_ = v58
+											var tmp59 any
+											tmp60 := aotExternalFn10(v58, v47)
+											if lang.IsTruthy(tmp60) {
+												tmp61 := runtime.RT.Get(v58, v47)
+												tmp62 := lang.NewVector(true, tmp61)
+												tmp59 = tmp62
 											} else {
-												tmp67 := lang.Next(v55)
-												var tmp66 any = tmp67
-												v55 = tmp66
+												tmp64 := lang.Next(v52)
+												var tmp63 any = tmp64
+												v52 = tmp63
 												continue
 											}
-											tmp60 = tmp62
+											tmp57 = tmp59
 										} // end let
-										tmp59 = tmp60
+										tmp56 = tmp57
 									} else {
-										tmp61 := lang.NewVector(false, nil)
-										tmp59 = tmp61
+										tmp56 = closed2
 									}
-									tmp56 = tmp59
+									tmp53 = tmp56
 								} // end let
-								tmp51 = tmp56
+								tmp48 = tmp53
 								break
 							}
 						} // end let
-						return tmp51
+						return tmp48
 					})
-					var tmp50 lang.FnFunc0
-					tmp50 = lang.FnFunc0(func() any {
-						var tmp51 any
-						if lang.IsTruthy(v45) {
-							tmp52 := checkDerefVar(var_clojure_DOT_core_merge)
-							tmp53 := lang.DerefValue(v39)
-							tmp54 := aotExternalFn16(v42, tmp52, tmp53)
-							tmp51 = tmp54
+					var tmp47 lang.FnFunc0
+					tmp47 = lang.FnFunc0(func() any {
+						var tmp48 any
+						if lang.IsTruthy(v42) {
+							tmp49 := checkDerefVar(var_clojure_DOT_core_merge)
+							tmp50 := lang.DerefValue(v37)
+							tmp51 := aotExternalFn16(v39, tmp49, tmp50)
+							tmp48 = tmp51
 						} else {
 						}
-						_ = tmp51
+						_ = tmp48
 						return nil
 					})
-					var tmp51 lang.FnFunc0
-					tmp51 = lang.FnFunc0(func() any {
+					var tmp48 lang.FnFunc0
+					tmp48 = lang.FnFunc0(func() any {
 						return nil
 					})
-					tmp52 := aotKeywordMapNew1(tmp46, tmp47, tmp48, tmp49, tmp50, tmp51)
-					tmp21 = tmp52
+					tmp49 := aotKeywordMapNew1(tmp43, tmp44, tmp45, tmp46, tmp47, tmp48)
+					tmp21 = tmp49
 				} // end let
 				tmp4 = tmp21
 			} // end let

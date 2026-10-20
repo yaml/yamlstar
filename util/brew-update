@@ -1,5 +1,8 @@
 #!/usr/bin/env ys-0
 
+use: fs
+use ipc: :all
+
 releases-url =: 'https://github.com/yaml/yamlstar/releases'
 brew-url =: ENV.YAMLSTAR_HOMEBREW_URL ||
   'git@github.com:yaml/homebrew-yamlstar'

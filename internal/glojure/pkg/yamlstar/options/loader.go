@@ -209,6 +209,10 @@ func LoadNS() {
 			"throw-if",
 		})
 	}
+	var closed0 any
+	{
+		closed0 = lang.NewMap()
+	}
 	// add
 	{
 		tmp0 := sym_add
@@ -232,8 +236,7 @@ func LoadNS() {
 		tmp0 := sym_options
 		var tmp1 lang.FnFunc0
 		tmp1 = lang.FnFunc0(func() any {
-			tmp2 := lang.NewMap()
-			return tmp2
+			return closed0
 		})
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_options_options = ns.InternWithValue(tmp0, tmp1, true)

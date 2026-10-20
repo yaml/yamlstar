@@ -184,7 +184,6 @@ func LoadNS() {
 	sym_nodes := lang.NewSymbolUnchecked("nodes")
 	sym_plain_DASH_safe_QMARK_ := lang.NewSymbolUnchecked("plain-safe?")
 	sym_re_DASH_find := lang.NewSymbolUnchecked("re-find")
-	sym_re_DASH_matches := lang.NewSymbolUnchecked("re-matches")
 	sym_scalar_DASH_style := lang.NewSymbolUnchecked("scalar-style")
 	sym_str := lang.NewSymbolUnchecked("str")
 	sym_string_DASH_tag_QMARK_ := lang.NewSymbolUnchecked("string-tag?")
@@ -217,8 +216,6 @@ func LoadNS() {
 	var_clojure_DOT_core_mapv := lang.InternVarName(sym_clojure_DOT_core, sym_mapv)
 	// var clojure.core/re-find
 	var_clojure_DOT_core_re_DASH_find := lang.InternVarName(sym_clojure_DOT_core, sym_re_DASH_find)
-	// var clojure.core/re-matches
-	var_clojure_DOT_core_re_DASH_matches := lang.InternVarName(sym_clojure_DOT_core, sym_re_DASH_matches)
 	// var clojure.string/ends-with?
 	var_clojure_DOT_string_ends_DASH_with_QMARK_ := lang.InternVarName(sym_clojure_DOT_string, sym_ends_DASH_with_QMARK_)
 	// var yamlstar.desolver/core-tag?
@@ -239,7 +236,6 @@ func LoadNS() {
 	var_yamlstar_DOT_desolver_string_DASH_tag_QMARK_ := lang.InternVarName(sym_yamlstar_DOT_desolver, sym_string_DASH_tag_QMARK_)
 	aotExternalFn0 := aotLinkFn2(var_clojure_DOT_core_contains_QMARK_)
 	aotExternalFn1 := aotLinkFn2(var_clojure_DOT_core_mapv)
-	aotExternalFn5 := aotLinkFn2(var_clojure_DOT_core_re_DASH_matches)
 	aotExternalFn6 := aotLinkFn2(var_clojure_DOT_core_re_DASH_find)
 	aotExternalFn8 := aotLinkFn2(var_clojure_DOT_core_filter)
 	aotExternalFn9 := aotLinkFn2(var_clojure_DOT_string_ends_DASH_with_QMARK_)
@@ -329,6 +325,16 @@ func LoadNS() {
 	ns.AddAlias(sym_str, lang.FindOrCreateNamespace(sym_clojure_DOT_string))
 	var closed0 any
 	var closed1 any
+	var closed10 any
+	var closed11 any
+	var closed12 any
+	var closed13 any
+	var closed14 any
+	var closed15 any
+	var closed16 any
+	var closed17 any
+	var closed18 any
+	var closed19 any
 	var closed2 any
 	var closed3 any
 	var closed4 any
@@ -338,34 +344,64 @@ func LoadNS() {
 	var closed8 any
 	var closed9 any
 	{
-		closed0 = regexp4.MustCompile("null|Null|NULL|~")
+		closed0 = lang.NewSet("tag:yaml.org,2002:int", "tag:yaml.org,2002:str", "tag:yaml.org,2002:float", "tag:yaml.org,2002:seq", "!!int", "tag:yaml.org,2002:bool", "!!null", "!!seq", "tag:yaml.org,2002:null", "!!bool", "!!str", "!!float", "tag:yaml.org,2002:map", "!!map")
 	}
 	{
-		closed1 = regexp4.MustCompile("true|True|TRUE|false|False|FALSE")
+		closed1 = regexp4.MustCompile("null|Null|NULL|~")
 	}
 	{
-		closed2 = regexp4.MustCompile("[-+]?[0-9]+")
+		closed10 = regexp4.MustCompile("\\A(?:[+-]?(\\.inf|\\.Inf|\\.INF))\\z")
 	}
 	{
-		closed3 = regexp4.MustCompile("[-+]?(\\.[0-9]+|[0-9]+(\\.[0-9]*)?)([eE][-+]?[0-9]+)?")
+		closed11 = regexp4.MustCompile("\\.nan|\\.NaN|\\.NAN")
 	}
 	{
-		closed4 = regexp4.MustCompile("[+-]?(\\.inf|\\.Inf|\\.INF)")
+		closed12 = regexp4.MustCompile("\\A(?:\\.nan|\\.NaN|\\.NAN)\\z")
 	}
 	{
-		closed5 = regexp4.MustCompile("\\.nan|\\.NaN|\\.NAN")
+		closed13 = regexp4.MustCompile("[!#\\[\\]\\{\\},&*?:|>'\\\"%@`]")
 	}
 	{
-		closed6 = regexp4.MustCompile("[!#\\[\\]\\{\\},&*?:|>'\\\"%@`]")
+		closed14 = regexp4.MustCompile("^\\s|\\s$")
 	}
 	{
-		closed7 = regexp4.MustCompile("^\\s|\\s$")
+		closed15 = regexp4.MustCompile("\\r|\\n|\\t")
 	}
 	{
-		closed8 = regexp4.MustCompile("\\r|\\n|\\t")
+		closed16 = regexp4.MustCompile("^[-?](\\s|$)")
 	}
 	{
-		closed9 = regexp4.MustCompile("^[-?](\\s|$)")
+		closed17 = lang.NewSet("tag:yaml.org,2002:str", "!!str")
+	}
+	{
+		closed18 = lang.NewSet(lang.NewChar(10))
+	}
+	{
+		closed19 = lang.NewSet("tag:yaml.org,2002:str", "!!str")
+	}
+	{
+		closed2 = regexp4.MustCompile("\\A(?:null|Null|NULL|~)\\z")
+	}
+	{
+		closed3 = regexp4.MustCompile("true|True|TRUE|false|False|FALSE")
+	}
+	{
+		closed4 = regexp4.MustCompile("\\A(?:true|True|TRUE|false|False|FALSE)\\z")
+	}
+	{
+		closed5 = regexp4.MustCompile("[-+]?[0-9]+")
+	}
+	{
+		closed6 = regexp4.MustCompile("\\A(?:[-+]?[0-9]+)\\z")
+	}
+	{
+		closed7 = regexp4.MustCompile("[-+]?(\\.[0-9]+|[0-9]+(\\.[0-9]*)?)([eE][-+]?[0-9]+)?")
+	}
+	{
+		closed8 = regexp4.MustCompile("\\A(?:[-+]?(\\.[0-9]+|[0-9]+(\\.[0-9]*)?)([eE][-+]?[0-9]+)?)\\z")
+	}
+	{
+		closed9 = regexp4.MustCompile("[+-]?(\\.inf|\\.Inf|\\.INF)")
 	}
 	// core-tag?
 	{
@@ -374,9 +410,8 @@ func LoadNS() {
 		tmp1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := lang.NewSet("tag:yaml.org,2002:int", "tag:yaml.org,2002:str", "tag:yaml.org,2002:float", "tag:yaml.org,2002:seq", "!!int", "tag:yaml.org,2002:bool", "!!null", "!!seq", "tag:yaml.org,2002:null", "!!bool", "!!str", "!!float", "tag:yaml.org,2002:map", "!!map")
-			tmp4 := aotExternalFn0(tmp3, v2)
-			return tmp4
+			tmp3 := aotExternalFn0(closed0, v2)
+			return tmp3
 		})
 		aotDirectFn0 = tmp1
 		var_yamlstar_DOT_desolver_core_DASH_tag_QMARK_ = ns.InternWithValue(tmp0, tmp1, true)
@@ -681,7 +716,8 @@ func LoadNS() {
 					var tmp7 any
 					{ // let
 						// let binding "or__0__auto__"
-						tmp8 := aotExternalFn5(closed0, v2)
+						_ = closed1
+						tmp8 := runtime.MatchLiteralRegexp(closed2.(*regexp4.Regexp), v2)
 						var v9 any = tmp8
 						_ = v9
 						var tmp10 any
@@ -691,7 +727,8 @@ func LoadNS() {
 							var tmp11 any
 							{ // let
 								// let binding "or__0__auto__"
-								tmp12 := aotExternalFn5(closed1, v2)
+								_ = closed3
+								tmp12 := runtime.MatchLiteralRegexp(closed4.(*regexp4.Regexp), v2)
 								var v13 any = tmp12
 								_ = v13
 								var tmp14 any
@@ -701,7 +738,8 @@ func LoadNS() {
 									var tmp15 any
 									{ // let
 										// let binding "or__0__auto__"
-										tmp16 := aotExternalFn5(closed2, v2)
+										_ = closed5
+										tmp16 := runtime.MatchLiteralRegexp(closed6.(*regexp4.Regexp), v2)
 										var v17 any = tmp16
 										_ = v17
 										var tmp18 any
@@ -711,7 +749,8 @@ func LoadNS() {
 											var tmp19 any
 											{ // let
 												// let binding "or__0__auto__"
-												tmp20 := aotExternalFn5(closed3, v2)
+												_ = closed7
+												tmp20 := runtime.MatchLiteralRegexp(closed8.(*regexp4.Regexp), v2)
 												var v21 any = tmp20
 												_ = v21
 												var tmp22 any
@@ -721,14 +760,16 @@ func LoadNS() {
 													var tmp23 any
 													{ // let
 														// let binding "or__0__auto__"
-														tmp24 := aotExternalFn5(closed4, v2)
+														_ = closed9
+														tmp24 := runtime.MatchLiteralRegexp(closed10.(*regexp4.Regexp), v2)
 														var v25 any = tmp24
 														_ = v25
 														var tmp26 any
 														if lang.IsTruthy(v25) {
 															tmp26 = v25
 														} else {
-															tmp27 := aotExternalFn5(closed5, v2)
+															_ = closed11
+															tmp27 := runtime.MatchLiteralRegexp(closed12.(*regexp4.Regexp), v2)
 															tmp26 = tmp27
 														}
 														tmp23 = tmp26
@@ -780,7 +821,7 @@ func LoadNS() {
 					var tmp8 any
 					{ // let
 						// let binding "and__0__auto__"
-						tmp9 := aotExternalFn6(closed6, v2)
+						tmp9 := aotExternalFn6(closed13, v2)
 						tmp10 := !lang.IsTruthy(tmp9)
 						var v11 any = tmp10
 						_ = v11
@@ -789,7 +830,7 @@ func LoadNS() {
 							var tmp13 any
 							{ // let
 								// let binding "and__0__auto__"
-								tmp14 := aotExternalFn6(closed7, v2)
+								tmp14 := aotExternalFn6(closed14, v2)
 								tmp15 := !lang.IsTruthy(tmp14)
 								var v16 any = tmp15
 								_ = v16
@@ -798,13 +839,13 @@ func LoadNS() {
 									var tmp18 any
 									{ // let
 										// let binding "and__0__auto__"
-										tmp19 := aotExternalFn6(closed8, v2)
+										tmp19 := aotExternalFn6(closed15, v2)
 										tmp20 := !lang.IsTruthy(tmp19)
 										var v21 any = tmp20
 										_ = v21
 										var tmp22 any
 										if lang.IsTruthy(v21) {
-											tmp23 := aotExternalFn6(closed9, v2)
+											tmp23 := aotExternalFn6(closed16, v2)
 											tmp24 := !lang.IsTruthy(tmp23)
 											tmp22 = tmp24
 										} else {
@@ -848,54 +889,52 @@ func LoadNS() {
 			v3 := p1
 			_ = v3
 			var tmp4 any
-			tmp5 := lang.NewSet("tag:yaml.org,2002:str", "!!str")
-			tmp6 := aotExternalFn0(tmp5, v3)
-			if lang.IsTruthy(tmp6) {
-				var tmp7 any
+			tmp5 := aotExternalFn0(closed17, v3)
+			if lang.IsTruthy(tmp5) {
+				var tmp6 any
 				{ // let
 					// let binding "newline-count"
-					tmp8 := lang.NewSet(lang.NewChar(10))
-					tmp9 := aotExternalFn8(tmp8, v2)
-					tmp10 := lang.Count(tmp9)
-					var v11 any = tmp10
-					_ = v11
-					var tmp12 any
-					tmp13 := aotDirectFn5(v2)
-					if lang.IsTruthy(tmp13) {
+					tmp7 := aotExternalFn8(closed18, v2)
+					tmp8 := lang.Count(tmp7)
+					var v9 any = tmp8
+					_ = v9
+					var tmp10 any
+					tmp11 := aotDirectFn5(v2)
+					if lang.IsTruthy(tmp11) {
 					} else {
-						var tmp14 any
-						var tmp15 any
+						var tmp12 any
+						var tmp13 any
 						{ // let
 							// let binding "and__0__auto__"
-							tmp16 := lang.Equals(int64(1), v11)
-							var v17 any = tmp16
-							_ = v17
-							var tmp18 any
-							if lang.IsTruthy(v17) {
-								tmp19 := aotExternalFn9(v2, "\n")
-								tmp18 = tmp19
-							} else {
-								tmp18 = v17
-							}
-							tmp15 = tmp18
-						} // end let
-						if lang.IsTruthy(tmp15) {
-							tmp14 = "double"
-						} else {
+							tmp14 := lang.Equals(int64(1), v9)
+							var v15 any = tmp14
+							_ = v15
 							var tmp16 any
-							tmp17 := lang.Numbers.IsPos(v11)
-							if lang.IsTruthy(tmp17) {
-								tmp16 = "literal"
+							if lang.IsTruthy(v15) {
+								tmp17 := aotExternalFn9(v2, "\n")
+								tmp16 = tmp17
 							} else {
-								tmp16 = "single"
+								tmp16 = v15
 							}
-							tmp14 = tmp16
+							tmp13 = tmp16
+						} // end let
+						if lang.IsTruthy(tmp13) {
+							tmp12 = "double"
+						} else {
+							var tmp14 any
+							tmp15 := lang.Numbers.IsPos(v9)
+							if lang.IsTruthy(tmp15) {
+								tmp14 = "literal"
+							} else {
+								tmp14 = "single"
+							}
+							tmp12 = tmp14
 						}
-						tmp12 = tmp14
+						tmp10 = tmp12
 					}
-					tmp7 = tmp12
+					tmp6 = tmp10
 				} // end let
-				tmp4 = tmp7
+				tmp4 = tmp6
 			} else {
 			}
 			return tmp4
@@ -913,9 +952,8 @@ func LoadNS() {
 		tmp1 = lang.FnFunc1(func(p0 any) any {
 			v2 := p0
 			_ = v2
-			tmp3 := lang.NewSet("tag:yaml.org,2002:str", "!!str")
-			tmp4 := aotExternalFn0(tmp3, v2)
-			return tmp4
+			tmp3 := aotExternalFn0(closed19, v2)
+			return tmp3
 		})
 		aotDirectFn7 = tmp1
 		var_yamlstar_DOT_desolver_string_DASH_tag_QMARK_ = ns.InternWithValue(tmp0, tmp1, true)

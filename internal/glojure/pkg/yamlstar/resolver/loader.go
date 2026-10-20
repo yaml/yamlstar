@@ -118,7 +118,6 @@ func LoadNS() {
 	sym_mapv := lang.NewSymbolUnchecked("mapv")
 	sym_node := lang.NewSymbolUnchecked("node")
 	sym_nodes := lang.NewSymbolUnchecked("nodes")
-	sym_re_DASH_matches := lang.NewSymbolUnchecked("re-matches")
 	sym_resolve := lang.NewSymbolUnchecked("resolve")
 	sym_resolve_DASH_all := lang.NewSymbolUnchecked("resolve-all")
 	sym_resolve_DASH_node := lang.NewSymbolUnchecked("resolve-node")
@@ -145,8 +144,6 @@ func LoadNS() {
 	var_clojure_DOT_core_map := lang.InternVarName(sym_clojure_DOT_core, sym_map)
 	// var clojure.core/mapv
 	var_clojure_DOT_core_mapv := lang.InternVarName(sym_clojure_DOT_core, sym_mapv)
-	// var clojure.core/re-matches
-	var_clojure_DOT_core_re_DASH_matches := lang.InternVarName(sym_clojure_DOT_core, sym_re_DASH_matches)
 	// var yamlstar.resolver/infer-number-tag
 	var_yamlstar_DOT_resolver_infer_DASH_number_DASH_tag := lang.InternVarName(sym_yamlstar_DOT_resolver, sym_infer_DASH_number_DASH_tag)
 	// var yamlstar.resolver/infer-scalar-tag
@@ -157,7 +154,6 @@ func LoadNS() {
 	var_yamlstar_DOT_resolver_resolve_DASH_all := lang.InternVarName(sym_yamlstar_DOT_resolver, sym_resolve_DASH_all)
 	// var yamlstar.resolver/resolve-node
 	var_yamlstar_DOT_resolver_resolve_DASH_node := lang.InternVarName(sym_yamlstar_DOT_resolver, sym_resolve_DASH_node)
-	aotExternalFn0 := aotLinkFn2(var_clojure_DOT_core_re_DASH_matches)
 	aotExternalFn2 := aotLinkFn2(var_clojure_DOT_core_map)
 	aotExternalFn3 := aotLinkFn2(var_clojure_DOT_core_mapv)
 	// reference fmt to avoid unused import error
@@ -245,27 +241,71 @@ func LoadNS() {
 	}
 	var closed0 any
 	var closed1 any
+	var closed10 any
+	var closed11 any
+	var closed12 any
+	var closed13 any
+	var closed14 any
+	var closed15 any
+	var closed16 any
 	var closed2 any
 	var closed3 any
 	var closed4 any
 	var closed5 any
+	var closed6 any
+	var closed7 any
+	var closed8 any
+	var closed9 any
 	{
 		closed0 = regexp4.MustCompile("[-+]?[0-9]+")
 	}
 	{
-		closed1 = regexp4.MustCompile("[-+]?(\\.[0-9]+|[0-9]+(\\.[0-9]*)?)([eE][-+]?[0-9]+)?")
+		closed1 = regexp4.MustCompile("\\A(?:[-+]?[0-9]+)\\z")
 	}
 	{
-		closed2 = regexp4.MustCompile("[+-]?(\\.inf|\\.Inf|\\.INF)")
+		closed10 = regexp4.MustCompile("null|Null|NULL|~")
 	}
 	{
-		closed3 = regexp4.MustCompile("\\.nan|\\.NaN|\\.NAN")
+		closed11 = regexp4.MustCompile("\\A(?:null|Null|NULL|~)\\z")
 	}
 	{
-		closed4 = regexp4.MustCompile("true|True|TRUE|false|False|FALSE")
+		closed12 = regexp4.MustCompile("\\A(?:true|True|TRUE|false|False|FALSE)\\z")
 	}
 	{
-		closed5 = regexp4.MustCompile("null|Null|NULL|~")
+		closed13 = regexp4.MustCompile("\\A(?:true|True|TRUE|false|False|FALSE)\\z")
+	}
+	{
+		closed14 = regexp4.MustCompile("\\A(?:null|Null|NULL|~)\\z")
+	}
+	{
+		closed15 = regexp4.MustCompile("\\A(?:true|True|TRUE|false|False|FALSE)\\z")
+	}
+	{
+		closed16 = regexp4.MustCompile("\\A(?:null|Null|NULL|~)\\z")
+	}
+	{
+		closed2 = regexp4.MustCompile("[-+]?(\\.[0-9]+|[0-9]+(\\.[0-9]*)?)([eE][-+]?[0-9]+)?")
+	}
+	{
+		closed3 = regexp4.MustCompile("\\A(?:[-+]?(\\.[0-9]+|[0-9]+(\\.[0-9]*)?)([eE][-+]?[0-9]+)?)\\z")
+	}
+	{
+		closed4 = regexp4.MustCompile("[+-]?(\\.inf|\\.Inf|\\.INF)")
+	}
+	{
+		closed5 = regexp4.MustCompile("\\A(?:[+-]?(\\.inf|\\.Inf|\\.INF))\\z")
+	}
+	{
+		closed6 = regexp4.MustCompile("\\.nan|\\.NaN|\\.NAN")
+	}
+	{
+		closed7 = regexp4.MustCompile("\\A(?:\\.nan|\\.NaN|\\.NAN)\\z")
+	}
+	{
+		closed8 = regexp4.MustCompile("true|True|TRUE|false|False|FALSE")
+	}
+	{
+		closed9 = regexp4.MustCompile("\\A(?:true|True|TRUE|false|False|FALSE)\\z")
 	}
 	// infer-number-tag
 	{
@@ -275,7 +315,8 @@ func LoadNS() {
 			v2 := p0
 			_ = v2
 			var tmp3 any
-			tmp4 := aotExternalFn0(closed0, v2)
+			_ = closed0
+			tmp4 := runtime.MatchLiteralRegexp(closed1.(*regexp4.Regexp), v2)
 			if lang.IsTruthy(tmp4) {
 				tmp3 = "!!int"
 			} else {
@@ -283,7 +324,8 @@ func LoadNS() {
 				var tmp6 any
 				{ // let
 					// let binding "or__0__auto__"
-					tmp7 := aotExternalFn0(closed1, v2)
+					_ = closed2
+					tmp7 := runtime.MatchLiteralRegexp(closed3.(*regexp4.Regexp), v2)
 					var v8 any = tmp7
 					_ = v8
 					var tmp9 any
@@ -293,14 +335,16 @@ func LoadNS() {
 						var tmp10 any
 						{ // let
 							// let binding "or__0__auto__"
-							tmp11 := aotExternalFn0(closed2, v2)
+							_ = closed4
+							tmp11 := runtime.MatchLiteralRegexp(closed5.(*regexp4.Regexp), v2)
 							var v12 any = tmp11
 							_ = v12
 							var tmp13 any
 							if lang.IsTruthy(v12) {
 								tmp13 = v12
 							} else {
-								tmp14 := aotExternalFn0(closed3, v2)
+								_ = closed6
+								tmp14 := runtime.MatchLiteralRegexp(closed7.(*regexp4.Regexp), v2)
 								tmp13 = tmp14
 							}
 							tmp10 = tmp13
@@ -454,7 +498,8 @@ func LoadNS() {
 					} else if tmp9 == 70 {
 						if lang.Equals(v7, lang.NewChar(70)) {
 							var tmp23 any
-							tmp24 := aotExternalFn0(closed4, v2)
+							_ = closed8
+							tmp24 := runtime.MatchLiteralRegexp(closed9.(*regexp4.Regexp), v2)
 							if lang.IsTruthy(tmp24) {
 								tmp23 = "!!bool"
 							} else {
@@ -468,7 +513,8 @@ func LoadNS() {
 					} else if tmp9 == 78 {
 						if lang.Equals(v7, lang.NewChar(78)) {
 							var tmp25 any
-							tmp26 := aotExternalFn0(closed5, v2)
+							_ = closed10
+							tmp26 := runtime.MatchLiteralRegexp(closed11.(*regexp4.Regexp), v2)
 							if lang.IsTruthy(tmp26) {
 								tmp25 = "!!null"
 							} else {
@@ -482,7 +528,8 @@ func LoadNS() {
 					} else if tmp9 == 84 {
 						if lang.Equals(v7, lang.NewChar(84)) {
 							var tmp27 any
-							tmp28 := aotExternalFn0(closed4, v2)
+							_ = closed8
+							tmp28 := runtime.MatchLiteralRegexp(closed12.(*regexp4.Regexp), v2)
 							if lang.IsTruthy(tmp28) {
 								tmp27 = "!!bool"
 							} else {
@@ -496,7 +543,8 @@ func LoadNS() {
 					} else if tmp9 == 102 {
 						if lang.Equals(v7, lang.NewChar(102)) {
 							var tmp29 any
-							tmp30 := aotExternalFn0(closed4, v2)
+							_ = closed8
+							tmp30 := runtime.MatchLiteralRegexp(closed13.(*regexp4.Regexp), v2)
 							if lang.IsTruthy(tmp30) {
 								tmp29 = "!!bool"
 							} else {
@@ -510,7 +558,8 @@ func LoadNS() {
 					} else if tmp9 == 110 {
 						if lang.Equals(v7, lang.NewChar(110)) {
 							var tmp31 any
-							tmp32 := aotExternalFn0(closed5, v2)
+							_ = closed10
+							tmp32 := runtime.MatchLiteralRegexp(closed14.(*regexp4.Regexp), v2)
 							if lang.IsTruthy(tmp32) {
 								tmp31 = "!!null"
 							} else {
@@ -524,7 +573,8 @@ func LoadNS() {
 					} else if tmp9 == 116 {
 						if lang.Equals(v7, lang.NewChar(116)) {
 							var tmp33 any
-							tmp34 := aotExternalFn0(closed4, v2)
+							_ = closed8
+							tmp34 := runtime.MatchLiteralRegexp(closed15.(*regexp4.Regexp), v2)
 							if lang.IsTruthy(tmp34) {
 								tmp33 = "!!bool"
 							} else {
@@ -538,7 +588,8 @@ func LoadNS() {
 					} else if tmp9 == 126 {
 						if lang.Equals(v7, lang.NewChar(126)) {
 							var tmp35 any
-							tmp36 := aotExternalFn0(closed5, v2)
+							_ = closed10
+							tmp36 := runtime.MatchLiteralRegexp(closed16.(*regexp4.Regexp), v2)
 							if lang.IsTruthy(tmp36) {
 								tmp35 = "!!null"
 							} else {

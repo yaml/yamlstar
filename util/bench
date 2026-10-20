@@ -1,5 +1,8 @@
 #!/usr/bin/env ys-0
 
+use: fs json yaml
+use ipc: :all
+
 defn main(*args):
   opts =: parse-args(args)
   root =: repo-root()
@@ -299,7 +302,7 @@ defn command-output(*args):
           +[{:out :string :err :string :continue true}] + args
       value =: (result.out || '') + (result.err || '')
       if result.exit == 0: trim(value) ''
-    catch Exception _:
+    catch Exception e:
       =>: ''
 
 
