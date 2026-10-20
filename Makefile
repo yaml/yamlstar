@@ -335,7 +335,7 @@ release-tag-legacy:
 
 RELEASE-BINDINGS := $(BINDING-LANGS:%=release-%)
 
-RELEASE-CHECK-BINDINGS := $(BINDING-LANGS)
+RELEASE-CHECK-BINDINGS := $(BINDING-DIRS)
 
 release-binding-version-check:
 ifndef v
