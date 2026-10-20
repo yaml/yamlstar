@@ -227,7 +227,7 @@ defn do-release(old new):
 defn do-sanity-check(old new):
   # Get current version from common/vars.mk
   current-version =:
-    bash('grep "^version:" Meta | cut -d" " -f2').out:trim
+    sh('bash' '-c' 'grep "^version:" Meta | cut -d" " -f2').out:trim
 
   when current-version != old:
     die: |
@@ -406,13 +406,13 @@ defn do-build-github(new):
     ENV.GH_TOKEN || ENV.GITHUB_TOKEN || legacy-github-token()
 
   current-branch =: sh-out('git branch --show-current'):trim
-  gh-available =: bash('command -v gh'):ok
+  gh-available =: sh('bash' '-c' 'command -v gh'):ok
 
   if gh-available:
     then:
       say: 'Triggering release workflow...'
       trigger-result =:
-        shell {:extra-env {"GH_TOKEN" token}}:
+        shell {:env ENV.put('GH_TOKEN' token)}:
           str: +"gh workflow run release.yaml --repo yaml/yamlstar "
             "--ref $current-branch -f version=$new"
 
@@ -422,7 +422,7 @@ defn do-build-github(new):
           sleep: 5
           run-id =:
             trim:
-              sh-out {:extra-env {"GH_TOKEN" token}}:
+              sh-out {:env ENV.put('GH_TOKEN' token)}:
                 str: +"gh run list --workflow=release.yaml --limit=1 "
                   "--repo yaml/yamlstar --json databaseId "
                   "--jq '.[0].databaseId'"
@@ -430,7 +430,7 @@ defn do-build-github(new):
           # 3. Watch build workflow
           say: "\nWatching release workflow (run $run-id)..."
           watch-result =:
-            shell {:extra-env {"GH_TOKEN" token}}:
+            shell {:env ENV.put('GH_TOKEN' token)}:
               str: +"gh run watch $run-id --repo yaml/yamlstar "
                 "--exit-status --interval=10"
 
@@ -541,12 +541,10 @@ defn binding-published?(dir new):
   if ENV.YS_RELEASE_FORCE_BINDINGS == '1':
     then: false
     else:
-      try:
-        shell {:extra-env {"YS_RELEASE_PUBLISHED_QUIET" "1"}}:
+      result =:
+        sh {:env ENV.put('YS_RELEASE_PUBLISHED_QUIET' '1')}:
           "util/release-binding-published $dir $new"
-        =>: true
-        catch Exception e:
-          =>: false
+      ok: result
 
 
 defn do-website():
@@ -605,7 +603,11 @@ defn run(cmd):
   say: "+ $cmd"
 
   when-not dryrun:
-    shell {:extra-env run-env()}: cmd
+    result =: shell({:env merge(ENV run-env())} cmd)
+    out: result.out
+    err: result.err
+    when-not result:ok:
+      throw: ex-info("Command failed ($(result.exit)) - $cmd" {})
 
 defn run-env():
   github-env().assoc('ROOT' ENV.PWD)
@@ -624,7 +626,7 @@ defn check-args(old new):
 defn make-context():
   # Create context with current version info
   current-version =:
-    bash('grep "^version:" Meta | cut -d" " -f2').out:trim
+    sh('bash' '-c' 'grep "^version:" Meta | cut -d" " -f2').out:trim
 
   =>::
     old:: current-version
@@ -653,14 +655,13 @@ defn github-env():
   =>: env
 
 defn legacy-github-token():
-  runtime =: ENV.YS || die("'YS' env var not defined")
   secrets =:
-    if bash("test -f '$(ENV.HOME)/.yamlstar-secrets.yaml'"):ok:
+    if fs/f("$(ENV.HOME)/.yamlstar-secrets.yaml"):
       then: "$(ENV.HOME)/.yamlstar-secrets.yaml"
       else: "$(ENV.HOME)/.yamlscript-secrets.yaml"
   token =:
-    if bash("test -f '$secrets'"):ok:
-      sh-out: "$runtime -l $secrets -e '.github.token:say'"
-      =>: ''
+    if fs/f(secrets):
+      then: yaml/load(read(secrets)).github.token || ''
+      else: ''
 
   =>: token

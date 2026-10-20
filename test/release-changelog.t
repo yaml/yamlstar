@@ -4,12 +4,15 @@
 source test/init
 
 runtime=${YS:?Test requires the project YAMLScript runtime}
+release_script=$ROOT/util/release-yamlstar
 temporary=$(mktemp -d)
 trap 'rm -rf -- "$temporary"' EXIT
 fixture=$temporary/repo
 git init -q "$fixture"
 git -C "$fixture" config user.name 'Changelog Test'
 git -C "$fixture" config user.email changelog@example.invalid
+printf '%s\n' 'version: 0.1.23' > "$fixture/Meta"
+git -C "$fixture" add Meta
 
 commit() {
   git -C "$fixture" commit -q --allow-empty -m "$1"
@@ -50,6 +53,31 @@ run-changelog() {
 }
 
 expected=$'  - Second changelog improvement\n  - Third changelog improvement'
+
+run-sanity-check() {
+  if output=$(
+    cd "$fixture" || exit
+    "$runtime" -S "$ROOT/util/release-yamlstar" \
+      sanity-check "$1" "$2" 2>&1
+  ); then
+    status=0
+  else
+    status=$?
+  fi
+}
+
+run-sanity-check 0.1.23 0.1.24
+ok "$status" 'YAMLScript reads the current version for release checks'
+like "$output" 'Old version matches current: 0.1.23' \
+  'The sanity check receives the version from Meta'
+
+run-sanity-check 0.1.22 0.1.24
+is "$status" 1 'YAMLScript rejects the wrong old version'
+like "$output" 'Current version: 0.1.23' \
+  'A version mismatch reports the actual current version'
+
+run-sanity-check 0.1.23 0.1.23
+is "$status" 1 'YAMLScript rejects an existing release tag'
 
 for implementation in yamlscript bash; do
   reset-changes
@@ -123,5 +151,46 @@ run-changelog yamlscript 0.1.23
 ok "$status" 'YAMLScript accepts a reviewed cached changelog'
 is "$(< "$fixture/release-changes.txt.0.1.24")" \
   '  - Keep the reviewed changelog' 'Reviewed changelog text is preserved'
+
+mkdir -p "$fixture/util" "$temporary/home"
+cat > "$temporary/home/.yamlstar-secrets.yaml" <<'EOF'
+github:
+  token: fixture-token
+EOF
+cat > "$fixture/util/version-bump" <<'EOF'
+!ys-0
+write 'release-env':
+  str: ENV.ROOT "\n" ENV.GH_TOKEN "\n"
+say: 'Fixture version bump'
+EOF
+
+run-version-bump() {
+  if output=$(
+    cd "$fixture" || exit
+    env -u GH_TOKEN -u GITHUB_TOKEN HOME="$temporary/home" ROOT=unexpected \
+      YS="$runtime" "$runtime" -S "$release_script" \
+      version-bump <<< '' 2>&1
+  ); then
+    status=0
+  else
+    status=$?
+  fi
+}
+
+run-version-bump
+ok "$status" 'The release helper runs child commands with YAMLScript'
+is "$(< "$fixture/release-env")" "$fixture"$'\nfixture-token' \
+  'Child commands receive ROOT and the token from the secrets file'
+like "$output" 'Fixture version bump' \
+  'The release helper displays child command output'
+
+cat > "$fixture/util/version-bump" <<'EOF'
+!ys-0
+die: 'Fixture command failure'
+EOF
+run-version-bump
+is "$status" 1 'The release helper stops when a child command fails'
+like "$output" 'Fixture command failure' \
+  'The release helper displays the child command error'
 
 done-testing
