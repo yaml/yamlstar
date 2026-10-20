@@ -333,12 +333,7 @@ defn do-changelog(old new):
 
     say: "Opening editor to review changelog entry..."
     editor =: ENV.EDITOR || 'vi'
-    run: |
-      if (: </dev/tty) 2>/dev/null; then
-        $editor $changes-file </dev/tty >/dev/tty 2>&1
-      else
-        $editor $changes-file
-      fi
+    run: "$editor $changes-file"
 
     say: 'Validating YAML syntax...'
     validate-yaml: read(changes-file)
@@ -435,7 +430,7 @@ defn do-build-github(new):
           # 3. Watch build workflow
           say: "\nWatching release workflow (run $run-id)..."
           watch-result =:
-            shell {:env ENV.put('GH_TOKEN' token)}:
+            run _ {"GH_TOKEN" token}:
               str: +"gh run watch $run-id --repo yaml/yamlstar "
                 "--exit-status --interval=10"
 
@@ -604,15 +599,28 @@ defn validate-yaml(yaml):
       catch Exception e:
         die: "Invalid YAML: $e"
 
-defn run(cmd):
+defn run(cmd extra-env=nil):
   say: "+ $cmd"
 
   when-not dryrun:
-    result =: shell({:env merge(ENV run-env())} cmd)
+    # YAMLScript 0.3.6 captures child I/O; attach local commands to the tty.
+    command =:
+      if ENV.YS_RELEASE_CI == '1':
+        then: cmd
+        else: |
+          if (: </dev/tty) 2>/dev/null; then
+            (
+              $cmd
+            ) </dev/tty >/dev/tty 2>&1
+          else
+            $cmd
+          fi
+    result =: sh({:env merge(ENV run-env() extra-env)} 'bash' '-c' command)
     out: result.out
     err: result.err
     when-not result:ok:
       throw: ex-info("Command failed ($(result.exit)) - $cmd" {})
+    =>: result
 
 defn run-env():
   github-env().assoc('ROOT' ENV.PWD)

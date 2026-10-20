@@ -3,6 +3,8 @@
 # shellcheck source=test/init
 source test/init
 
+export YS_RELEASE_CI=1
+
 runtime=${YS:?Test requires the project YAMLScript runtime}
 release_script=$ROOT/util/release-yamlstar
 temporary=$(mktemp -d)
@@ -192,5 +194,43 @@ run-version-bump
 is "$status" 1 'The release helper stops when a child command fails'
 like "$output" 'Fixture command failure' \
   'The release helper displays the child command error'
+
+cat > "$temporary/bin/gh" <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+[[ ${GH_TOKEN-} == fixture-token ]] || exit 27
+case "$1 $2" in
+  'workflow run') echo 'Fixture workflow triggered' ;;
+  'run list') echo 12345 ;;
+  'run watch')
+    echo 'Fixture workflow progress'
+    exit "${WORKFLOW_WATCH_STATUS:-0}"
+    ;;
+  *) exit 28 ;;
+esac
+EOF
+chmod +x "$temporary/bin/gh"
+
+run-build-github() {
+  if output=$(
+    cd "$fixture" || exit
+    PATH=$temporary/bin:$PATH GH_TOKEN=fixture-token \
+      "$runtime" -S "$release_script" build-github 0.1.26 2>&1
+  ); then
+    status=0
+  else
+    status=$?
+  fi
+}
+
+run-build-github
+ok "$status" 'The workflow helper runs with a local fake gh'
+like "$output" 'Fixture workflow progress' \
+  'Workflow watch output reaches the caller'
+
+WORKFLOW_WATCH_STATUS=42 run-build-github
+is "$status" 1 'The workflow helper propagates a failed watch command'
+unlike "$output" 'Release workflow completed' \
+  'A failed watch is not reported as a completed release'
 
 done-testing
