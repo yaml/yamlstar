@@ -664,15 +664,19 @@ do-release-java() (
 do-release-lua() (
   echo 'Publishing Lua rock to LuaRocks...'
   LUAROCKS_API_KEY=${LUAROCKS_API_KEY:-}
-  if [[ -z $LUAROCKS_API_KEY && -f ~/.yamlstar-secrets.yaml ]]; then
-    LUAROCKS_API_KEY=$(ys -e '(.lua.token || .luarocks.token):say' ~/.yamlstar-secrets.yaml)
+  local secrets_file=${YS_SECRETS_FILE:-$HOME/.yamlstar-secrets.yaml}
+  if [[ -z $LUAROCKS_API_KEY && -r $secrets_file ]]; then
+    LUAROCKS_API_KEY=$(
+      YS_SECRETS_FILE=$secrets_file "${YS:-ys}" -e \
+        'say: yaml/load(read(ENV.YS_SECRETS_FILE)).lua.token || ""'
+    )
   fi
   [[ $LUAROCKS_API_KEY ]] ||
-    die 'ERROR: LUAROCKS_API_KEY not set and ~/.yamlstar-secrets.yaml not found'
+    die "ERROR: LUAROCKS_API_KEY or .lua.token in $secrets_file must be set"
 
   make "yamlstar-$VERSION-1.rockspec"
   ../util/release-lua
-  luarocks upload --api-key "$LUAROCKS_API_KEY" "yamlstar-$VERSION-1.rockspec"
+  luarocks upload --temp-key "$LUAROCKS_API_KEY" "yamlstar-$VERSION-1.rockspec"
 )
 
 # Crystal - publish split repository
