@@ -3,7 +3,8 @@
 Julia binding for the YAMLStar shared library.
 
 ```julia
-import YAMLStar as YS
+import YAMLStar
+const YS = YAMLStar
 
 ys = YS.Runtime()
 data = YS.load(ys, "key: value")

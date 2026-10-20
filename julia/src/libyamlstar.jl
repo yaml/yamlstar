@@ -1,6 +1,6 @@
 module libyamlstar
 
-import Base.Libc: Libdl
+import Libdl
 
 const YAMLSTAR_VERSION = "0.1.26"
 const libhandle = Ref{Ptr{Cvoid}}()

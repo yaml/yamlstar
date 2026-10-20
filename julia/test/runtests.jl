@@ -1,7 +1,8 @@
 module TestYAMLStar
 
 using Test
-import YAMLStar as YS
+import YAMLStar
+const YS = YAMLStar
 
 @testset "YAMLStar" begin
     ys = YS.Runtime()
