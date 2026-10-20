@@ -17,7 +17,7 @@ ADA-LINK-FLAGS := \
 endif
 
 ADA-ORIGIN = \
-  https://github.com/yaml/yamlstar/archive/refs/tags/$(v).tar.gz
+  https://github.com/yaml/yamlstar/archive/refs/tags/v$(v).tar.gz
 ADA-MANIFEST := ada/alire.toml
 ADA-ALIRE-INDEX-REPO := alire-project/alire-index
 ADA-ALIRE-INDEX-BRANCH = release/yamlstar-$(v)

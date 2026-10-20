@@ -2,7 +2,6 @@ include ../common/init.mk
 ifneq (,$(wildcard /.dockerenv))
 HASKELL-DOCKER-INNER := true
 else
-CABAL-VERSION := 3.14.2.0
 include $M/cabal.mk
 endif
 include $M/yamlscript.mk
