@@ -333,7 +333,12 @@ defn do-changelog(old new):
 
     say: "Opening editor to review changelog entry..."
     editor =: ENV.EDITOR || 'vi'
-    run: "$editor $changes-file"
+    run: |
+      if (: </dev/tty) 2>/dev/null; then
+        $editor $changes-file </dev/tty >/dev/tty 2>&1
+      else
+        $editor $changes-file
+      fi
 
     say: 'Validating YAML syntax...'
     validate-yaml: read(changes-file)
