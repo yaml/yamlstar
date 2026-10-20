@@ -29,6 +29,8 @@ build:: build-doc
 
 build-doc:: ReadMe.md
 
+release: export HEX_API_KEY := $(HEX-API-KEY)
+
 # Run the tests in the prebaked container when docker is available
 # (locally and on CI Linux runners); erlang never compiles:
 ifneq (,$(and $(if $(ELIXIR-DOCKER-INNER),,x),$(shell command -v docker)))
@@ -52,7 +54,6 @@ docker-image-build:
 docker-image-push: docker-image-build
 	docker push $(ELIXIR-IMAGE)
 
-release: export HEX_API_KEY := $(HEX-API-KEY)
 release: docker-image
 ifeq (,$(HEX-API-KEY))
 	$(error Can't determine Hex API key)
@@ -78,7 +79,7 @@ ifeq (,$(HEX-API-KEY))
 endif
 	mix local.hex --force --if-missing
 	mix deps.get
-	HEX_API_KEY=$(HEX-API-KEY) mix hex.publish --yes
+	mix hex.publish --yes
 	$(RM) README.md
 endif
 

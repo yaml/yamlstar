@@ -7,18 +7,11 @@ root=$(cd "$(dirname "$0")/.." && pwd)
 dub_secret() {
   local secret=${DUB_UPDATE_SECRET:-}
   local secrets_file=${YS_SECRETS_FILE:-$HOME/.yamlscript-secrets.yaml}
-  if [[ -z $secret ]]; then
+  if [[ -z $secret && -r $secrets_file ]]; then
     secret=$(
-      awk '
-        $1 == "d:" { in_d = 1; next }
-        in_d && $0 ~ /^[^[:space:]]/ { in_d = 0 }
-        in_d && $1 == "token:" {
-          sub(/^[[:space:]]*token:[[:space:]]*/, "")
-          gsub(/^[\047"]|[\047"]$/, "")
-          print
-          exit
-        }
-      ' "$secrets_file" 2>/dev/null || true
+      YS_SECRETS_FILE=$secrets_file "${YS:-ys}" -e \
+        'say: yaml/load(read(ENV.YS_SECRETS_FILE)).dlang.token.yamlstar || ""' \
+        2>/dev/null || true
     )
   fi
   printf '%s' "$secret"
@@ -43,7 +36,7 @@ after_release() (
   fi
 
   [[ $secret ]] || {
-    echo 'Error: DUB_UPDATE_SECRET or .d.token must be set' >&2
+    echo 'Error: DUB_UPDATE_SECRET or .dlang.token.yamlstar must be set' >&2
     exit 1
   }
 
@@ -56,6 +49,8 @@ after_release() (
     echo 'Error: code.dlang.org rejected DUB_UPDATE_SECRET' >&2
     return 1
   fi
+  printf '%s\n' "$response"
 )
 
+# shellcheck source=util/release-repo.bash
 source "$(dirname "$0")/release-repo.bash"
