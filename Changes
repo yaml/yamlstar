@@ -1,3 +1,10 @@
+- version: 0.1.26
+  date:    Mon Oct 19 11:08:48 PM EDT 2026
+  changes:
+  - Expose shared runtime speed comparisons
+  - Update go-yaml parser and emitter sources
+  - Update YAMLStar to released runtime stack
+  - Fix release helpers for YAMLScript 0.3.6
 - version: 0.1.25
   date:    Fri Oct 16 12:00:27 PM EDT 2026
   changes:

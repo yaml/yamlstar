@@ -15,7 +15,7 @@ import com.yaml.YAMLStar
 
 object YS {
     // This value is automatically updated by 'make bump'.
-    const val YAMLSTAR_VERSION = "0.1.25"
+    const val YAMLSTAR_VERSION = "0.1.26"
 
     /** Load a YAML string and return the result. */
     fun load(input: String): Any? {
