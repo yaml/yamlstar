@@ -9,6 +9,13 @@ include $(COMMON)/common.mk
 
 MAKES-CLEAN += alire
 
+ifeq ($(OS-NAME),macos)
+# Bypass GNAT's ld-classic wrapper and use the matching active SDK.
+ADA-LINK-FLAGS := \
+  -B"$(dir $(shell xcrun --find ld))" \
+  --sysroot="$(shell xcrun --sdk macosx --show-sdk-path)"
+endif
+
 ADA-ORIGIN = \
   https://github.com/yaml/yamlstar/archive/refs/tags/$(v).tar.gz
 ADA-MANIFEST := ada/alire.toml
@@ -31,7 +38,7 @@ obj/yamlstar.o: src/yamlstar.adb src/yamlstar.ads | obj
 test:: $(LIBYAMLSTAR-SO-VERSION) $(GNATMAKE) | obj
 	gnatmake -Dobj -Isrc test/test_yamlstar.adb \
 	    -o test/test_yamlstar \
-	    -largs -L$(ROOT)/libyamlstar/lib -lyamlstar
+	    -largs $(ADA-LINK-FLAGS) -L$(ROOT)/libyamlstar/lib -lyamlstar
 	test/test_yamlstar
 
 release:: $(ALR) $(GH) test build-doc
