@@ -560,7 +560,7 @@ do-release-nodejs() (
   echo 'Publishing Node.js package to npm...'
   NPM_TOKEN=${NODE_AUTH_TOKEN:-${NPM_TOKEN:-}}
   if [[ -z $NPM_TOKEN && -f ~/.yamlstar-secrets.yaml ]]; then
-    NPM_TOKEN=$(ys -e '.npm.token:say' ~/.yamlstar-secrets.yaml)
+    NPM_TOKEN=$(ys -e '.nodejs.token:say' ~/.yamlstar-secrets.yaml)
   fi
   [[ $NPM_TOKEN ]] ||
     die 'ERROR: NPM_TOKEN not set and ~/.yamlstar-secrets.yaml not found'
