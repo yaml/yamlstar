@@ -3,7 +3,6 @@ include $M/perl.mk
 include $(COMMON)/common.mk
 
 CPAN-DEPS := \
-  CPAN::Uploader \
   Cpanel::JSON::XS \
   FFI::CheckLib \
   FFI::Platypus \
@@ -13,6 +12,7 @@ CPAN-DEPS := \
 YAMLSTAR-PERL-LOCAL := $(ROOT)/perl/local
 YAMLSTAR-PERL-LOCAL-LIB := $(YAMLSTAR-PERL-LOCAL)/lib/perl5
 YAMLSTAR-PERL-LOCAL-BIN := $(YAMLSTAR-PERL-LOCAL)/bin
+CPAN-UPLOAD := $(YAMLSTAR-PERL-LOCAL-BIN)/cpan-upload
 
 MAKES-CLEAN := \
   cpan/LICENSE \
@@ -54,7 +54,11 @@ $(YAMLSTAR-PERL-LOCAL): $(PERL)
 	makes-cache '$@' \
 	  cpanm -L '$@' -n $(CPAN-DEPS)
 
-release-cpan: cpan-test cpan-dist
+# Upload support is needed only when publishing to CPAN.
+$(CPAN-UPLOAD): $(YAMLSTAR-PERL-LOCAL)
+	cpanm -L '$(YAMLSTAR-PERL-LOCAL)' -n CPAN::Uploader
+
+release-cpan: cpan-test cpan-dist $(CPAN-UPLOAD)
 	$(ROOT)/util/release release-perl
 
 release: release-cpan
