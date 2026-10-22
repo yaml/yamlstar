@@ -37,5 +37,4 @@
   []
   (require-glojure-runtime)
   (let [loader (shared/make-loader manifest transform)]
-    (plugin/set-json-comments-loader! loader)
     (plugin/set-parser-loader! loader)))

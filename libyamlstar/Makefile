@@ -1,4 +1,5 @@
 include ../common/init.mk
+include ../common/parser-plugins.mk
 
 YAMLSTAR_ENGINE ?= glojure
 
@@ -79,7 +80,7 @@ CORE-SRCS := \
 
 # Gloat compiles Clojure sources directly, so use the sources shipped in the
 # exact yaml-parser artifact consumed by the JVM build.
-YAML-PARSER-VERSION := 0.2.5
+YAML-PARSER-VERSION := 0.2.6
 YAML-PARSER-JAR := cache/yaml-parser-$(YAML-PARSER-VERSION).jar
 YAML-PARSER-URL := https://repo.clojars.org/org/yamlstar/yaml-parser/$(YAML-PARSER-VERSION)/yaml-parser-$(YAML-PARSER-VERSION).jar
 GO-YAML-REF ?= 14f6a7261be3104f473c4ca93e3abf304c29a740
@@ -181,6 +182,11 @@ $(GLOAT-LINK-DIR)/plugin/parser/reference.clj: \
 	@mkdir -p $(dir $@)
 	ln -sf $(abspath $<) $@
 
+$(GLOAT-LINK-DIR)/plugin/parser/json_comments.clj: \
+  $(CORE-YAMLSTAR)/plugin/parser/json_comments.cljc
+	@mkdir -p $(dir $@)
+	ln -sf $(abspath $<) $@
+
 $(GLOAT-LINK-DIR)/plugin/yaml_emitter/go_yaml.clj: \
   $(CORE-YAMLSTAR)/plugin/yaml_emitter/go_yaml.cljc
 	@mkdir -p $(dir $@)
@@ -233,6 +239,7 @@ GLOAT-LINKS := \
   $(GLOAT-LINK-DIR)/plugin/alias_data.clj \
   $(GLOAT-LINK-DIR)/plugin/parser/go_yaml.clj \
   $(GLOAT-LINK-DIR)/plugin/parser/reference.clj \
+  $(GLOAT-LINK-DIR)/plugin/parser/json_comments.clj \
   $(GLOAT-LINK-DIR)/plugin/yaml_emitter/go_yaml.clj \
   $(GLOAT-LINK-DIR)/plugin/shared.clj \
   $(GLOAT-LINK-DIR)/plugin/shared_host.clj \
@@ -245,6 +252,7 @@ GLOAT-SRCS := \
   $(CORE-YAMLSTAR)/plugin/parser.clj \
   $(CORE-YAMLSTAR)/plugin/yaml_emitter.clj \
   $(GLOAT-LINK-DIR)/plugin/parser/reference.clj \
+  $(GLOAT-LINK-DIR)/plugin/parser/json_comments.clj \
   $(GLOAT-LINK-DIR)/plugin/parser/go_yaml.clj \
   $(GLOAT-LINK-DIR)/plugin/yaml_emitter/go_yaml.clj \
   $(GLOAT-LINK-DIR)/plugin/shared.clj \
@@ -274,7 +282,7 @@ endif
 generate-go: prepare-gloat $(GLOAT)
 	rm -rf $(GO-GENERATED-WORK)
 	mkdir -p $(GO-GENERATED-WORK)
-	env -u GOROOT \
+	env -u GOROOT $(GLOAT-PARSER-ENV) \
 	  GLOAT_GLJDEPS=$(abspath ../gljdeps.edn) \
 	  $(GLOAT) --force \
 	  --module $(GO-GENERATED-MODULE) \
@@ -372,7 +380,7 @@ $(LIB-SO-GLOAT): $(GLOAT-SRCS) $(GLOAT-LINKS) $(GO-YAML-GENERATED-STAMP) \
   $(LIBYAMLSTAR-GLOAT-ABI-STAMP) | $(GLOAT-DIR)
 	@echo "Building gloat shared library..."
 	mkdir -p $(LIB-DIR)
-	</dev/null env -u GOROOT $(GLOAT-GO-ENV) \
+	</dev/null env -u GOROOT $(GLOAT-GO-ENV) $(GLOAT-PARSER-ENV) \
 	  GLOAT_MODULE=github.com/yaml/yamlstar \
 	  GLOAT_GLJDEPS=$(abspath ../gljdeps.edn) \
 	  GLOAT_EXTRA_GO_DIR=$(abspath $(GO-YAML-GENERATED-DIR)) \

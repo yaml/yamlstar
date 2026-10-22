@@ -199,7 +199,7 @@ func LoadNS() {
 			_ = v3
 			var tmp4 any
 			{ // let
-				// let binding "vec__40"
+				// let binding "vec__32"
 				var tmp5 any
 				{ // let
 					// let binding "or__0__auto__"
@@ -252,7 +252,7 @@ func LoadNS() {
 			_ = v3
 			var tmp4 any
 			{ // let
-				// let binding "vec__40"
+				// let binding "vec__32"
 				var tmp5 any
 				{ // let
 					// let binding "or__0__auto__"
@@ -288,7 +288,7 @@ func LoadNS() {
 			} // end let
 			return tmp4
 		})
-		var_yamlstar_DOT_plugin_DOT_parser_DOT_reference_plugin = ns.InternWithValue(tmp0, aotKeywordMapNew0("reference", "0.2.5", tmp1, lang.NewMap()), true)
+		var_yamlstar_DOT_plugin_DOT_parser_DOT_reference_plugin = ns.InternWithValue(tmp0, aotKeywordMapNew0("reference", "0.2.6", tmp1, lang.NewMap()), true)
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_reference_plugin.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yamlstar/plugin/parser/reference.clj", kw_line, int(18), kw_column, int(6), kw_end_DASH_line, int(18), kw_end_DASH_column, int(11), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_reference))
 		}, false)

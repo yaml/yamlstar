@@ -86,18 +86,15 @@ def _requested_plugin_names(options):
     return []
   names = []
   for api, config in plugins.items():
-    if api not in ('json-comments', 'parser'):
+    if api != 'parser' or not isinstance(config, dict):
       continue
-    if not isinstance(config, dict):
-      continue
-    name = config.get('name', api)
+    name = config.get('name')
     if not isinstance(name, str):
       continue
-    if api == 'parser' and name in ('reference', 'go-yaml', 'snakeyaml'):
+    if name in ('reference', 'json-comments', 'go-yaml', 'snakeyaml'):
       continue
-    artifact = ('parser-' + name if api == 'parser' else
-                'json-comments' if name == 'sanitizer' else name)
-    if isinstance(artifact, str) and artifact not in names:
+    artifact = 'parser-' + name
+    if artifact not in names:
       names.append(artifact)
   return names
 
@@ -224,11 +221,6 @@ def parser(name):
 def yaml_emitter(name):
   """Return a YAML emitter plugin option fragment."""
   return {'yaml-emitter': {'name': name}}
-
-
-def json_comments(name='sanitizer'):
-  """Return a JSON-comments sanitizer plugin option fragment."""
-  return {'json-comments': {'name': name}}
 
 
 def tab_indent(mode='auto', load=None, dump=None, auto='document'):

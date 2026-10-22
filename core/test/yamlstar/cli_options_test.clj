@@ -48,13 +48,13 @@
   (testing "generic plugin flag options"
     (is (= {:plugin {:parser {:name "reference"}}}
            (opts/plugin-options "parser=reference")))
-    (is (= {:plugin {:json-comments {}}}
-           (opts/plugin-options "json-comments")))
+    (is (= {:plugin {:parser {:name "json-comments"}}}
+           (opts/plugin-options "parser=json-comments")))
     (is (= {:plugin
-            {:parser {:name "reference" :version "v0.2.5"}
-             :json-comments {}}}
+            {:parser {:name "json-comments" :version "v0.1.0"}
+             :yaml-emitter {}}}
            (opts/plugin-options
-            "parser=reference@v0.2.5,json-comments"))))
+            "parser=json-comments@v0.1.0,yaml-emitter"))))
 
   (testing "malformed plugin option"
     (is (thrown-with-msg?

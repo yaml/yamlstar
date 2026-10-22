@@ -352,3 +352,26 @@ func BenchmarkDumpEmitter(b *testing.B) {
 		})
 	}
 }
+
+func TestJSONCommentsParser(t *testing.T) {
+	option := yamlstar.WithPlugin(yamlstar.YAMLParser("json-comments"))
+	for _, tc := range []struct {
+		input string
+		want  any
+	}{
+		{"a: true// comment", map[string]any{"a": true}},
+		{"foo /*comment*/ bar", "foo  bar"},
+		{"a: | /*first\nsecond*/\n  content\n", map[string]any{"a": "content\n"}},
+		{"http://example.com", "http://example.com"},
+		{"[\"\", null, false]", []any{"", nil, false}},
+		{"[null/*c*/,false//c\n]", []any{nil, false}},
+	} {
+		got, err := yamlstar.Load(tc.input, option)
+		if err != nil || !reflect.DeepEqual(got, tc.want) {
+			t.Fatalf("%q: got %#v, %v; want %#v", tc.input, got, err, tc.want)
+		}
+	}
+	if _, err := yamlstar.Load("true/*unterminated", option); err == nil {
+		t.Fatal("unterminated comment accepted")
+	}
+}

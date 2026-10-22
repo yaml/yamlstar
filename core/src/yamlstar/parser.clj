@@ -52,10 +52,7 @@
   ([yaml-str]
    (parse yaml-str nil))
   ([yaml-str opts]
-   (let [yaml-str (if-let [comments (plugin/json-comments-opts opts)]
-                    (plugin/sanitize-with comments yaml-str)
-                    yaml-str)
-         tabs (plugin/tab-indent-config opts)
+   (let [tabs (plugin/tab-indent-config opts)
          native-tabs (and tabs
                           (contains? #{"auto" "tabs"} (:load tabs)))
          [pname config]

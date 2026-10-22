@@ -176,8 +176,10 @@ test-rapidyaml: cli
 	YAMLSTAR_TEST_PLUGIN=$(ROOT)/repos/yamlstar-plugin-parser-rapidyaml/lib \
 	  $(MAKE) test-unit test=test/shared-parser.t
 
-go-test: $(GO)
-	go test ./...
+go-test: $(GO) $(PERL)
+	$(PERL) util/prepare-parser-workspace
+	GOWORK=$(CURDIR)/.cache/parser-plugins.work go test \
+	  . ./internal/... ./example/... ./go/...
 
 ifeq ($(OS-NAME),windows)
 shellcheck:

@@ -1,4 +1,5 @@
 include ../common/init.mk
+include ../common/parser-plugins.mk
 M := ../.cache/makes
 
 MAKE-BASH := bash ../util/make.bash
@@ -32,6 +33,7 @@ CLI-NAME ?= yaml-$(RT)-$(PARSER)
 CLI-DEFAULT-REQUIRE := $(strip \
   $(if $(filter graal,$(RT)), \
     [yamlstar.plugin.parser.reference] \
+    [yamlstar.plugin.parser.json-comments] \
     [yamlstar.plugin.parser.snakeyaml] \
     [yamlstar.plugin.yaml-emitter.reference] \
     [yamlstar.plugin.yaml-emitter.snakeyaml], \
@@ -130,11 +132,6 @@ GLOAT-GO-YAML-EMITTER-SRC := \
   $(GLOAT-CACHE)/plugin/yaml_emitter/go_yaml.clj
 GLOAT-REFERENCE-SRC := \
   $(GLOAT-CACHE)/plugin/parser/reference.clj
-REFERENCE-PARSER-DIR ?= $(if \
-  $(wildcard ../../yamlstar-plugin-parser-reference/go.mod), \
-  ../../yamlstar-plugin-parser-reference)
-GLOAT-REFERENCE-ENV := $(if $(REFERENCE-PARSER-DIR), \
-  GLOAT_GO_REPLACE='github.com/yamlstar/yamlstar-plugin-parser-reference => $(abspath $(REFERENCE-PARSER-DIR))')
 GLOAT-CLI-OPTIONS-SRC := $(GLOAT-CACHE)/cli_options.clj
 GLOAT-SHARED-PLUGIN-SRC := $(GLOAT-CACHE)/plugin/shared.clj
 GLOAT-SHARED-HOST-SRC := $(GLOAT-CACHE)/plugin/shared_host.clj
@@ -164,6 +161,7 @@ GLOAT-CLI-SRCS := \
   $(GLOAT-CORE)/plugin/parser.clj \
   $(GLOAT-CORE)/plugin/yaml_emitter.clj \
   $(GLOAT-REFERENCE-SRC) \
+  $(GLOAT-CACHE)/plugin/parser/json_comments.clj \
   $(if $(filter glj,$(RT)),$(GLOAT-GO-YAML-PARSER-SRC)) \
   $(if $(filter glj,$(RT)),$(GLOAT-GO-YAML-EMITTER-SRC)) \
   $(GLOAT-SHARED-PLUGIN-SRC) \
@@ -265,6 +263,7 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
   $(GLOAT-CORE)/plugin/parser.clj \
   $(GLOAT-CORE)/plugin/yaml_emitter.clj \
   $(GLOAT-REFERENCE-SRC) \
+  $(GLOAT-CACHE)/plugin/parser/json_comments.clj \
   $(if $(filter glj,$(RT)),$(GLOAT-GO-YAML-PARSER-SRC)) \
   $(if $(filter glj,$(RT)),$(GLOAT-GO-YAML-EMITTER-SRC)) \
   $(GLOAT-SHARED-PLUGIN-SRC) \
@@ -281,7 +280,7 @@ $(CLI-BIN-GLOAT): _prepare-gloat _prepare-gloat-bin \
 	  GLOAT_MODULE=github.com/yaml/yamlstar \
 	  GLOAT_GO=$(GO) \
 	  GLOAT_GLJDEPS=$(abspath ../gljdeps.edn) \
-	  $(GLOAT-REFERENCE-ENV) \
+	  $(GLOAT-PARSER-ENV) \
 	  GLOAT_EXTRA_GO_DIR=$(abspath ../internal/goyamlparser) \
 	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
 	  $(if $(LET_GO_SRC),LET_GO_SRC=$(abspath $(LET_GO_SRC))) \

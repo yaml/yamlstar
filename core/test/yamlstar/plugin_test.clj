@@ -72,9 +72,9 @@
             {:plugin {:parser {:name "x" :setting 1}}}))))
 
   (testing "parser short form accepts a release version"
-    (is (= ["reference" {:version "0.2.5"}]
+    (is (= ["reference" {:version "0.2.6"}]
            (plugin/parser-opts
-            {:plugin {:parser "reference@v0.2.5"}}))))
+            {:plugin {:parser "reference@v0.2.6"}}))))
 
   (testing "malformed opts are rejected"
     (is (thrown-with-msg? Exception #":plugin must be a map"
@@ -138,61 +138,13 @@
              (parser/parse yaml nil)
              (parser/parse yaml {}))))))
 
-(deftest json-comments-test
-  (let [sanitizer {:api "json-comments"
-                   :name "test-sanitizer"
-                   :version "1.2.3"
-                   :sanitize (fn [input _]
-                               (.replace input "// value" "42"))}]
-    (try
-      (plugin/register-json-comments! sanitizer)
-      (is (= 42
-             (yaml/load "// value"
-                        {:plugin
-                         {:json-comments
-                          "test-sanitizer@v1.2.3"}})))
-      (is (thrown-with-msg? Exception #"version mismatch"
-                            (yaml/load
-                             "// value"
-                             {:plugin
-                              {:json-comments
-                               "test-sanitizer@v1.2.4"}})))
-      (finally
-        (plugin/unregister-json-comments! "test-sanitizer")))))
-
-(deftest json-comments-loader-test
-  (try
-    (plugin/set-json-comments-loader!
-     (fn [api name _version _install?]
-       {:api api :name name :version "1.0.0"
-        :sanitize (fn [_ _] "loaded")}))
-    (is (= "loaded"
-           (yaml/load "ignored"
-                      {:plugin {:json-comments "external"}})))
-    (finally
-      (plugin/unregister-json-comments! "external")
-      (plugin/set-json-comments-loader! nil))))
-
-(deftest json-comments-install-option-test
-  (let [install-values (atom [])]
-    (try
-      (plugin/set-json-comments-loader!
-       (fn [api name _version install?]
-         (swap! install-values conj install?)
-         {:api api :name name
-          :sanitize (fn [_ _] "loaded")}))
-      (is (= "loaded"
-             (yaml/load "ignored"
-                        {:plugin
-                         {:json-comments "external-no-install"}})))
-      (plugin/unregister-json-comments! "external-no-install")
-      (is (= "loaded"
-             (yaml/load "ignored"
-                        {:plugin
-                         {:json-comments "external-install"}
-                         :plugin-install true})))
-      (is (= [false true] @install-values))
-      (finally
-        (plugin/unregister-json-comments! "external-no-install")
-        (plugin/unregister-json-comments! "external-install")
-        (plugin/set-json-comments-loader! nil)))))
+(deftest json-comments-parser-test
+  (let [opts {:plugin {:parser "json-comments@v0.1.0"}}]
+    (is (= {"a" true} (yaml/load "a: true// comment" opts)))
+    (is (= {"a" "foo  bar"}
+           (yaml/load "a: foo /*comment*/ bar" opts)))
+    (is (= "http://example.com" (yaml/load "http://example.com" opts)))
+    (is (thrown-with-msg? Exception #"version mismatch"
+          (yaml/load "true" {:plugin {:parser "json-comments@v0.0.1"}})))
+    (is (thrown-with-msg? Exception #"Unknown YAMLStar plugin API"
+          (yaml/load "true" {:plugin {:json-comments true}})))))

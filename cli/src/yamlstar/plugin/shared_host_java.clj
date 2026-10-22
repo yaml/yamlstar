@@ -18,7 +18,7 @@
   "Install the GraalVM shared-library loader in a native image."
   []
   (when (native-image?)
-    (plugin/set-json-comments-loader!
+    (plugin/set-parser-loader!
      (shared/make-loader
       (fn [api name install?]
         (yamlstar.plugin.SharedPluginHost/manifest api name install?))

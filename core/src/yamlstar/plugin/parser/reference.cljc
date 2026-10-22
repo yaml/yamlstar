@@ -17,7 +17,7 @@
 
 (def plugin
   {:name "reference"
-   :version "0.2.5"
+   :version "0.2.6"
    :parse parse
    :default-config {}})
 

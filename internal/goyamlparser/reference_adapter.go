@@ -12,11 +12,15 @@ func ParseReferenceEvents(input string) (any, error) {
 	if err != nil {
 		return nil, err
 	}
+	return referenceEvents(events), nil
+}
+
+func referenceEvents(events []reference.Event) any {
 	items := make([]any, 0, len(events))
 	for _, event := range events {
 		items = append(items, referenceEvent(event))
 	}
-	return lang.NewVector(items...), nil
+	return lang.NewVector(items...)
 }
 
 func referenceEvent(event reference.Event) any {
@@ -26,7 +30,9 @@ func referenceEvent(event reference.Event) any {
 			values = append(values, lang.NewKeyword(key), value)
 		}
 	}
-	add("value", event.Value)
+	if event.Type == "scalar" {
+		values = append(values, lang.NewKeyword("value"), event.Value)
+	}
 	add("anchor", event.Anchor)
 	add("tag", event.Tag)
 	add("style", event.Style)

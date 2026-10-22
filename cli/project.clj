@@ -8,7 +8,7 @@
                  [org.clojure/clojure "1.12.0"]
                  [org.clojure/tools.cli "1.1.230"]
                  [org.clojure/data.json "2.5.0"]
-                 [org.yamlstar/yamlstar-plugin-json-comments "0.1.9"]]
+                 [org.yamlstar/yamlstar-plugin-parser-json-comments "0.1.0"]]
 
   :main yamlstar.cli
   :aot [yamlstar.cli]

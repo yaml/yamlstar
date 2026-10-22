@@ -14,12 +14,11 @@ The current APIs and implementations are:
 | `yaml-emitter` | `go-yaml` | Native runtime |
 | `yaml-emitter` | `snakeyaml` | JVM runtime |
 | `tab-indent` | built in | Native runtime with go-yaml |
-| `json-comments` | `sanitizer` | JVM artifact or native shared library |
+| `parser` | `json-comments` | JVM and native |
 | `alias-data` | `alias-data` | JVM and native, built in |
 
-The JSON-comments sanitizer transforms source text before the selected parser
-runs.
-It can therefore be combined with any available parser.
+The JSON-comments parser extends the reference grammar with C-style comments.
+Select it as the parser implementation for that load.
 
 ## Configuration
 
@@ -27,9 +26,8 @@ Options use a `plugin` mapping keyed by plugin API:
 
 ```yaml
 plugin:
-  parser: reference@v0.2.5
+  parser: reference@v0.2.6
   yaml-emitter: reference
-  json-comments: sanitizer@v0.1.9
   alias-data:
     data:
       defaults: {color: blue}
@@ -42,12 +40,9 @@ An implementation can also use a mapping:
 plugin:
   parser:
     name: reference
-    version: v0.2.5
+    version: v0.2.6
   yaml-emitter:
     name: reference
-  json-comments:
-    name: sanitizer
-    version: v0.1.9
 ```
 
 `true` selects the API's default implementation.
@@ -74,10 +69,9 @@ API=IMPLEMENTATION@VERSION
 Several selectors can be comma-separated:
 
 ```bash
-yaml --plugin=parser=reference@v0.2.5,json-comments file.yaml
+yaml --plugin=parser=json-comments@v0.1.0,yaml-emitter=reference file.yaml
 ```
 
-The short `json-comments` selector chooses `sanitizer`.
 The short `parser` and `yaml-emitter` selectors choose the runtime
 defaults.
 Use `--config=FILE` for a YAML options file.
@@ -143,7 +137,7 @@ end stream.
 
 ## YAML parser and emitter implementations
 
-The `reference` implementation uses release `v0.2.5` of the YAML reference
+The `reference` implementation uses release `v0.2.6` of the YAML reference
 parser.
 The canonical Clojure source remains in `yaml/yaml-reference-parser-clj`.
 JVM builds use its Clojars artifact directly.
@@ -155,8 +149,7 @@ parsing and emitting.
 The `snakeyaml` implementations are available to JVM applications.
 
 All parser implementations return YAMLStar's standard event maps.
-Applications can select another parser without changing JSON-comments
-configuration.
+The `json-comments` implementation uses the same event interface.
 All emitter implementations consume that same event stream.
 
 ## Tab indentation
@@ -197,115 +190,60 @@ foo:
 - bar
 ```
 
-## JSON-comments implementation
+## JSON-comments parser
 
-The `sanitizer` implementation removes recognized `//` and `/* */` comments
-from UTF-8 input while preserving line endings and non-comment text.
-The selected parser receives the transformed source.
-Comment markers inside quoted scalars, block scalars, and URLs remain text.
-See the plugin's syntax documentation for the exact recognition rules.
-
-JVM users add the independent Clojars artifact:
-
-```clojure
-[org.yamlstar/yamlstar-plugin-json-comments "0.1.9"]
-```
-
-YAMLStar resolves it from the classpath only when `json-comments` is selected.
-It needs no native library.
-The standard JVM CLI includes this artifact.
-
-Native hosts load the implementation from
-`libyamlstar-plugin-json-comments.so` on Linux and FreeBSD or the matching
-`.dylib` on macOS.
-The implementation name remains `sanitizer`; the native distribution and
-library artifact retain the `json-comments` repository name.
-
-## Native plugin search and installation
-
-When `YAMLSTAR_LIBRARY_PATH` is set, YAMLStar searches only its
-colon-separated directories.
-Empty entries are ignored.
-Otherwise it searches:
-
-1. Beside the hosting `libyamlstar` library.
-2. `../lib` relative to the CLI executable.
-3. `$HOME/.local/lib`.
-4. `/usr/local/lib`.
-5. `/usr/lib`.
-
-Print the default path with:
+Select the grammar extension with:
 
 ```bash
-yaml --path
+yaml --plugin=parser=json-comments file.yaml
 ```
 
-Add a directory for one invocation with:
-
-```bash
-YAMLSTAR_LIBRARY_PATH=foo:$(yaml --path) \
-  yaml --plugin=json-comments file.yaml
+```yaml
+plugin:
+  parser: json-comments@v0.1.0
 ```
 
-The native CLI can install a missing official plugin automatically.
-Use `--no-install` to disable that behavior.
-The installer downloads the newest release of
-`yamlstar/yamlstar-plugin-json-comments`, verifies `SHA256SUMS`, and installs
-the library atomically in the first writable search directory.
-An existing library is not updated during loading.
+The implementation parses the original source using per-parse reference
+production replacements.
+It recognizes `//` line comments and non-nesting `/* */` block comments at
+separation positions, including JSON punctuation and adjacent JSON literals.
+Ordinary unquoted text still needs whitespace before a comment:
+`http://example.com`, `foo/*bar*/`, `True//text`, and `01//text` remain text.
+Quoted and block-scalar content retain comment markers.
+An inline block comment contributes no scalar text, so
+`foo /* comment */ bar` becomes `foo  bar`.
+Adjacent `#` comments are accepted after quoted scalars, commas, `]`, and `}`.
+Comments are discarded and are not round-tripped.
 
-The installer can also be run directly:
-
-```bash
-yamlstar-plugin install json-comments
-```
-
-Python users can install the native distribution through its wheel:
-
-```bash
-pip install yamlstar-plugin-json-comments
-```
+JVM builds use `org.yamlstar/yamlstar-plugin-parser-json-comments` version
+`0.1.0` with reference parser `0.2.6`.
+Native builds link the generated Go module
+`github.com/yamlstar/yamlstar-plugin-parser-json-comments`.
+No separate shared library or Python plugin wheel is needed.
 
 ```python
-opts = yamlstar.Options().plugin(yamlstar.json_comments())
-ys = yamlstar.YAMLStar(opts)
-data = ys.load('''{
-  "a": true // comment
-}''')
+opts = yamlstar.Options().plugin(yamlstar.parser('json-comments'))
+data = yamlstar.YAMLStar(opts).load('a: true// comment')
 ```
 
-The Python helper produces this common configuration:
+The old `json-comments` API and `sanitizer` implementation have been removed.
+Use `parser=json-comments` in selectors and `plugin.parser` in configuration.
+This selects one parser and cannot be combined with another parser.
 
-```json
-{"plugin": {"json-comments": {"name": "sanitizer"}}}
-```
+## Native shared plugins
 
-The binding maps the logical `sanitizer` implementation to the
-`json-comments` package entry point and native library artifact.
+Shared parser implementations such as TOML use ABI version 2.
+Their manifests declare `:api "parser"`, `:kind "event-source"`, and the
+implementation's name and version.
+The transform input is UTF-8 source and the output is an EDN event vector.
 
-## Shared text-transform ABI
-
-Native JSON-comments plugins use shared ABI version 2.
-The manifest is EDN and declares `:api "json-comments"`,
-`:name "sanitizer"`, `:kind "text-transform"`, and its release version.
-The transform input and successful output are raw UTF-8 bytes.
-Only the small manifest and options value use EDN.
-
-```c
-uint64_t yamlstar_plugin_v2_abi(void);
-int32_t yamlstar_plugin_v2_manifest(
-    uint8_t **output, size_t *output_length);
-int32_t yamlstar_plugin_v2_transform(
-    const uint8_t *input, size_t input_length,
-    const uint8_t *options_edn, size_t options_length,
-    uint8_t **output, size_t *output_length);
-void yamlstar_plugin_v2_free(uint8_t *output);
-```
-
-Status `0` is success.
-Status `1` returns a plugin error message.
-Status `2` reports an ABI or internal host failure.
-The host releases every returned buffer through the plugin's free function.
+`YAMLSTAR_LIBRARY_PATH` overrides the default library search directories.
+Print the defaults with `yaml --path`.
+The CLI can install missing official shared plugins unless `--no-install`
+is supplied; existing libraries are not updated automatically.
+For example, `yamlstar-plugin install parser=toml` installs the TOML parser.
+JSON-comments uses the linked parser implementation and does not use this
+shared-library installation path.
 
 ## Writing a YAML parser implementation
 

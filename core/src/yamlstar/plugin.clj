@@ -1,13 +1,11 @@
 (ns yamlstar.plugin
-  "YAMLStar parser, emitter, and JSON-comments plugin support."
+  "YAMLStar parser and emitter plugin support."
   (:require [clojure.string :as str]
             [yamlstar.plugin.alias-data :as alias-data]))
 
 (defonce ^:private parser-registry (atom {}))
 (defonce ^:private parser-loader (atom nil))
 (defonce ^:private yaml-emitter-registry (atom {}))
-(defonce ^:private json-comments-registry (atom {}))
-(defonce ^:private json-comments-loader (atom nil))
 (defonce ^:private alias-data-registry
   (atom {"alias-data"
          {:api "alias-data"
@@ -140,81 +138,6 @@
                       {:yaml-emitter name
                        :available (registered-yaml-emitters)}))))
 
-(defn register-json-comments!
-  "Register a JSON-comments sanitizer implementation."
-  [{:keys [api name sanitize version] :as plugin}]
-  (when-not (= api "json-comments")
-    (throw (ex-info "JSON-comments plugin :api must be json-comments"
-                    {:plugin plugin})))
-  (when-not (and (string? name) (not (str/blank? name)))
-    (throw (ex-info "JSON-comments plugin :name must be a string"
-                    {:plugin plugin})))
-  (when-not (fn? sanitize)
-    (throw (ex-info "JSON-comments plugin :sanitize must be a function"
-                    {:plugin plugin})))
-  (let [plugin (cond-> plugin
-                 version (assoc :version (normalize-version version)))]
-    (swap! json-comments-registry assoc name plugin)
-    plugin))
-
-(defn unregister-json-comments!
-  "Remove a JSON-comments implementation."
-  [name]
-  (swap! json-comments-registry dissoc name)
-  nil)
-
-(defn set-json-comments-loader!
-  "Install a lazy JSON-comments implementation loader."
-  [loader]
-  (when-not (or (nil? loader) (fn? loader))
-    (throw (ex-info "JSON-comments loader must be a function or nil"
-                    {:loader loader})))
-  (reset! json-comments-loader loader)
-  loader)
-
-(defn- classpath-json-comments
-  [name]
-  (when (= name "sanitizer")
-    (try
-      (let [sanitize (requiring-resolve
-                      'yamlstar-plugin.json-comments/sanitize-comments)
-            version (requiring-resolve
-                     'yamlstar-plugin.json-comments/version)]
-        (when sanitize
-          {:api "json-comments"
-           :name "sanitizer"
-           :version (when version (deref version))
-           :sanitize (fn [input _] (sanitize input))
-           :default-config {}}))
-      (catch Exception _ nil))))
-
-(defn resolve-json-comments
-  "Resolve a JSON-comments implementation, loading it when needed."
-  [name version install?]
-  (let [plugin
-        (or (get @json-comments-registry name)
-            (when-let [loaded (classpath-json-comments name)]
-              (register-json-comments! loaded))
-            (when-let [loader @json-comments-loader]
-              (when-let [loaded
-                         (loader "json-comments" name version install?)]
-                (register-json-comments! loaded)))
-            (throw
-             (ex-info
-              (str "Unknown YAMLStar json-comments implementation: " name)
-              {:api "json-comments" :name name})))]
-    (when version
-      (let [requested (normalize-version version)
-            linked (:version plugin)]
-        (when (not= requested linked)
-          (throw
-           (ex-info
-            (str "JSON-comments plugin version mismatch: linked "
-                 (or linked "unversioned") ", requested " requested)
-            {:api "json-comments" :name name
-             :linked linked :requested requested})))))
-    plugin))
-
 (defn register-alias-data!
   "Register an Alias-Data policy implementation."
   [{:keys [api name new-context version] :as plugin}]
@@ -258,6 +181,10 @@
     (when-not (map? config)
       (throw (ex-info "Option :plugin must be a map"
                       {:plugin config})))
+    (doseq [api (keys (dissoc config :parser :yaml-emitter
+                                  :tab-indent :alias-data))]
+      (throw (ex-info (str "Unknown YAMLStar plugin API: " (name api))
+                      {:api api})))
     (when (contains? config :yaml-parser)
       (throw (ex-info "Unknown YAMLStar plugin API: yaml-parser"
                       {:api :yaml-parser})))
@@ -372,28 +299,6 @@
                         {:auto auto})))
               {:mode mode :load load :dump dump :auto auto})))))))
 
-(defn json-comments-opts
-  "Resolve the configured JSON-comments sanitizer."
-  [opts]
-  (when-let [plugins (plugin-config opts)]
-    (doseq [api (keys (dissoc plugins
-                              :parser
-                              :yaml-emitter
-                              :tab-indent
-                              :alias-data
-                              :json-comments))]
-      (throw (ex-info (str "Unknown YAMLStar plugin API: " (name api))
-                      {:api api})))
-    (when (contains? plugins :json-comments)
-      (when-let [config
-                 (selection-config
-                  :json-comments (:json-comments plugins))]
-        (let [name (or (:name config) "sanitizer")
-              version (:version config)
-              plugin (resolve-json-comments
-                      name version (true? (:plugin-install opts)))]
-          [plugin (dissoc config :name :version)])))))
-
 (defn alias-data-context
   "Create the per-load Alias-Data context selected by opts."
   [opts services]
@@ -419,11 +324,6 @@
                    :linked linked :requested requested})))))
           ((:new-context plugin) config services))
         (alias-data/default-context)))))
-
-(defn sanitize-with
-  "Sanitize YAML input with a resolved JSON-comments plugin."
-  [[{:keys [sanitize default-config]} config] yaml-str]
-  (sanitize (or yaml-str "") (merge default-config config)))
 
 (defn parse-with
   "Resolve the named parser plugin and parse yaml-str with it."

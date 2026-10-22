@@ -185,7 +185,6 @@ func LoadNS() {
 	sym_current_DASH_default_DASH_parser := lang.NewSymbolUnchecked("current-default-parser")
 	sym_ex_DASH_info := lang.NewSymbolUnchecked("ex-info")
 	sym_fallback_DASH_default_DASH_parser := lang.NewSymbolUnchecked("fallback-default-parser")
-	sym_json_DASH_comments_DASH_opts := lang.NewSymbolUnchecked("json-comments-opts")
 	sym_mapv := lang.NewSymbolUnchecked("mapv")
 	sym_name := lang.NewSymbolUnchecked("name")
 	sym_names := lang.NewSymbolUnchecked("names")
@@ -200,7 +199,6 @@ func LoadNS() {
 	sym_register_DASH_reference_DASH_parser_BANG_ := lang.NewSymbolUnchecked("register-reference-parser!")
 	sym_reset_BANG_ := lang.NewSymbolUnchecked("reset!")
 	sym_resolve_DASH_parser := lang.NewSymbolUnchecked("resolve-parser")
-	sym_sanitize_DASH_with := lang.NewSymbolUnchecked("sanitize-with")
 	sym_set_DASH_default_DASH_parser_BANG_ := lang.NewSymbolUnchecked("set-default-parser!")
 	sym_tab_DASH_indent_DASH_config := lang.NewSymbolUnchecked("tab-indent-config")
 	sym_true_QMARK_ := lang.NewSymbolUnchecked("true?")
@@ -243,8 +241,6 @@ func LoadNS() {
 	var_yamlstar_DOT_parser_register_DASH_reference_DASH_parser_BANG_ := lang.InternVarName(sym_yamlstar_DOT_parser, sym_register_DASH_reference_DASH_parser_BANG_)
 	// var yamlstar.parser/set-default-parser!
 	var_yamlstar_DOT_parser_set_DASH_default_DASH_parser_BANG_ := lang.InternVarName(sym_yamlstar_DOT_parser, sym_set_DASH_default_DASH_parser_BANG_)
-	// var yamlstar.plugin/json-comments-opts
-	var_yamlstar_DOT_plugin_json_DASH_comments_DASH_opts := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_json_DASH_comments_DASH_opts)
 	// var yamlstar.plugin/parse-with
 	var_yamlstar_DOT_plugin_parse_DASH_with := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_parse_DASH_with)
 	// var yamlstar.plugin/parser-opts
@@ -253,23 +249,19 @@ func LoadNS() {
 	var_yamlstar_DOT_plugin_register_DASH_parser_BANG_ := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_register_DASH_parser_BANG_)
 	// var yamlstar.plugin/resolve-parser
 	var_yamlstar_DOT_plugin_resolve_DASH_parser := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_resolve_DASH_parser)
-	// var yamlstar.plugin/sanitize-with
-	var_yamlstar_DOT_plugin_sanitize_DASH_with := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_sanitize_DASH_with)
 	// var yamlstar.plugin/tab-indent-config
 	var_yamlstar_DOT_plugin_tab_DASH_indent_DASH_config := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_tab_DASH_indent_DASH_config)
-	aotExternalFn1 := aotLinkFn1(var_yamlstar_DOT_plugin_json_DASH_comments_DASH_opts)
-	aotExternalFn10 := aotLinkFn1(var_clojure_DOT_core_true_QMARK_)
-	aotExternalFn11 := aotLinkFn2(var_clojure_DOT_core_mapv)
-	aotExternalFn12 := aotLinkFn1(var_yamlstar_DOT_plugin_register_DASH_parser_BANG_)
-	aotExternalFn13 := aotLinkFn1(var_yamlstar_DOT_plugin_resolve_DASH_parser)
-	aotExternalFn15 := aotLinkFn2(var_clojure_DOT_core_reset_BANG_)
-	aotExternalFn2 := aotLinkFn2(var_yamlstar_DOT_plugin_sanitize_DASH_with)
-	aotExternalFn3 := aotLinkFn1(var_yamlstar_DOT_plugin_tab_DASH_indent_DASH_config)
-	aotExternalFn4 := aotLinkFn2(var_clojure_DOT_core_contains_QMARK_)
-	aotExternalFn5 := aotLinkFn1(var_yamlstar_DOT_plugin_parser_DASH_opts)
-	aotExternalFn7 := aotLinkFn2(var_clojure_DOT_core_not_EQ_)
-	aotExternalFn8 := aotLinkFn2(var_clojure_DOT_core_ex_DASH_info)
-	aotExternalFn9 := aotLinkFn4(var_yamlstar_DOT_plugin_parse_DASH_with)
+	aotExternalFn1 := aotLinkFn1(var_yamlstar_DOT_plugin_tab_DASH_indent_DASH_config)
+	aotExternalFn10 := aotLinkFn1(var_yamlstar_DOT_plugin_register_DASH_parser_BANG_)
+	aotExternalFn11 := aotLinkFn1(var_yamlstar_DOT_plugin_resolve_DASH_parser)
+	aotExternalFn13 := aotLinkFn2(var_clojure_DOT_core_reset_BANG_)
+	aotExternalFn2 := aotLinkFn2(var_clojure_DOT_core_contains_QMARK_)
+	aotExternalFn3 := aotLinkFn1(var_yamlstar_DOT_plugin_parser_DASH_opts)
+	aotExternalFn5 := aotLinkFn2(var_clojure_DOT_core_not_EQ_)
+	aotExternalFn6 := aotLinkFn2(var_clojure_DOT_core_ex_DASH_info)
+	aotExternalFn7 := aotLinkFn4(var_yamlstar_DOT_plugin_parse_DASH_with)
+	aotExternalFn8 := aotLinkFn1(var_clojure_DOT_core_true_QMARK_)
+	aotExternalFn9 := aotLinkFn2(var_clojure_DOT_core_mapv)
 	// reference fmt to avoid unused import error
 	_ = fmt.Printf
 	// reference reflect to avoid unused import error
@@ -387,121 +379,96 @@ func LoadNS() {
 			_ = v3
 			var tmp4 any
 			{ // let
-				// let binding "yaml-str"
-				var tmp5 any
-				{ // let
-					// let binding "temp__0__auto__"
-					tmp6 := aotExternalFn1(v3)
-					var v7 any = tmp6
-					_ = v7
-					var tmp8 any
-					if lang.IsTruthy(v7) {
-						var tmp9 any
-						{ // let
-							// let binding "comments"
-							var v10 any = v7
-							_ = v10
-							tmp11 := aotExternalFn2(v10, v2)
-							tmp9 = tmp11
-						} // end let
-						tmp8 = tmp9
-					} else {
-						tmp8 = v2
-					}
-					tmp5 = tmp8
-				} // end let
+				// let binding "tabs"
+				tmp5 := aotExternalFn1(v3)
 				var v6 any = tmp5
 				_ = v6
-				// let binding "tabs"
-				tmp7 := aotExternalFn3(v3)
-				var v8 any = tmp7
-				_ = v8
 				// let binding "native-tabs"
-				var tmp9 any
+				var tmp7 any
 				{ // let
 					// let binding "and__0__auto__"
-					var v10 any = v8
-					_ = v10
-					var tmp11 any
-					if lang.IsTruthy(v10) {
-						tmp12 := aotKeywordSite0.Get(kw_load, v8, nil)
-						tmp13 := aotExternalFn4(closed0, tmp12)
-						tmp11 = tmp13
+					var v8 any = v6
+					_ = v8
+					var tmp9 any
+					if lang.IsTruthy(v8) {
+						tmp10 := aotKeywordSite0.Get(kw_load, v6, nil)
+						tmp11 := aotExternalFn2(closed0, tmp10)
+						tmp9 = tmp11
 					} else {
-						tmp11 = v10
+						tmp9 = v8
 					}
-					tmp9 = tmp11
+					tmp7 = tmp9
+				} // end let
+				var v8 any = tmp7
+				_ = v8
+				// let binding "vec__32"
+				var tmp9 any
+				{ // let
+					// let binding "or__0__auto__"
+					tmp10 := aotExternalFn3(v3)
+					var v11 any = tmp10
+					_ = v11
+					var tmp12 any
+					if lang.IsTruthy(v11) {
+						tmp12 = v11
+					} else {
+						tmp13 := aotDirectFn0()
+						tmp14 := lang.NewVector(tmp13, closed1)
+						tmp12 = tmp14
+					}
+					tmp9 = tmp12
 				} // end let
 				var v10 any = tmp9
 				_ = v10
-				// let binding "vec__40"
-				var tmp11 any
-				{ // let
-					// let binding "or__0__auto__"
-					tmp12 := aotExternalFn5(v3)
-					var v13 any = tmp12
-					_ = v13
-					var tmp14 any
-					if lang.IsTruthy(v13) {
-						tmp14 = v13
-					} else {
-						tmp15 := aotDirectFn0()
-						tmp16 := lang.NewVector(tmp15, closed1)
-						tmp14 = tmp16
-					}
-					tmp11 = tmp14
-				} // end let
+				// let binding "pname"
+				tmp11 := runtime.RT.NthDefault(v10, lang.IntCast(int64(0)), nil)
 				var v12 any = tmp11
 				_ = v12
-				// let binding "pname"
-				tmp13 := runtime.RT.NthDefault(v12, lang.IntCast(int64(0)), nil)
+				// let binding "config"
+				tmp13 := runtime.RT.NthDefault(v10, lang.IntCast(int64(1)), nil)
 				var v14 any = tmp13
 				_ = v14
-				// let binding "config"
-				tmp15 := runtime.RT.NthDefault(v12, lang.IntCast(int64(1)), nil)
-				var v16 any = tmp15
-				_ = v16
-				var tmp17 any
-				var tmp18 any
+				var tmp15 any
+				var tmp16 any
 				{ // let
 					// let binding "and__0__auto__"
-					var v19 any = v10
-					_ = v19
-					var tmp20 any
-					if lang.IsTruthy(v19) {
-						tmp21 := aotExternalFn7(v14, "go-yaml")
-						tmp20 = tmp21
+					var v17 any = v8
+					_ = v17
+					var tmp18 any
+					if lang.IsTruthy(v17) {
+						tmp19 := aotExternalFn5(v12, "go-yaml")
+						tmp18 = tmp19
 					} else {
-						tmp20 = v19
+						tmp18 = v17
 					}
-					tmp18 = tmp20
+					tmp16 = tmp18
 				} // end let
-				if lang.IsTruthy(tmp18) {
-					tmp19 := aotKeywordMapNew0(v14)
-					tmp20 := aotExternalFn8("tab-indent loading requires the native go-yaml parser", tmp19)
-					panic(tmp20)
+				if lang.IsTruthy(tmp16) {
+					tmp17 := aotKeywordMapNew0(v12)
+					tmp18 := aotExternalFn6("tab-indent loading requires the native go-yaml parser", tmp17)
+					panic(tmp18)
 				} else {
 				}
-				_ = tmp17
-				var tmp21 any
+				_ = tmp15
+				var tmp19 any
 				{ // let
-					// let binding "G__43"
-					var v22 any = v16
-					_ = v22
-					var tmp23 any
-					if lang.IsTruthy(v8) {
-						var tmp24 any = v22
-						tmp24 = lang.Assoc(tmp24, kw_tab_DASH_indent, v8)
-						tmp23 = tmp24
+					// let binding "G__35"
+					var v20 any = v14
+					_ = v20
+					var tmp21 any
+					if lang.IsTruthy(v6) {
+						var tmp22 any = v20
+						tmp22 = lang.Assoc(tmp22, kw_tab_DASH_indent, v6)
+						tmp21 = tmp22
 					} else {
-						tmp23 = v22
+						tmp21 = v20
 					}
-					tmp21 = tmp23
+					tmp19 = tmp21
 				} // end let
-				tmp22 := aotKeywordSite1.Get(kw_plugin_DASH_install, v3, nil)
-				tmp23 := aotExternalFn10(tmp22)
-				tmp24 := aotExternalFn9(v14, tmp21, v6, tmp23)
-				tmp4 = tmp24
+				tmp20 := aotKeywordSite1.Get(kw_plugin_DASH_install, v3, nil)
+				tmp21 := aotExternalFn8(tmp20)
+				tmp22 := aotExternalFn7(v12, tmp19, v2, tmp21)
+				tmp4 = tmp22
 			} // end let
 			return tmp4
 		})
@@ -537,11 +504,11 @@ func LoadNS() {
 				tmp3 = lang.FnFunc1(func(p0 any) any {
 					v4 := p0
 					_ = v4
-					tmp5 := aotExternalFn13(v4)
-					tmp6 := aotExternalFn12(tmp5)
+					tmp5 := aotExternalFn11(v4)
+					tmp6 := aotExternalFn10(tmp5)
 					return tmp6
 				})
-				tmp4 := aotExternalFn11(tmp3, v2)
+				tmp4 := aotExternalFn9(tmp3, v2)
 				return tmp4
 			}),
 			0,
@@ -575,7 +542,7 @@ func LoadNS() {
 			v2 := p0
 			_ = v2
 			tmp3 := checkDerefVar(var_yamlstar_DOT_parser_fallback_DASH_default_DASH_parser)
-			tmp4 := aotExternalFn15(tmp3, v2)
+			tmp4 := aotExternalFn13(tmp3, v2)
 			_ = tmp4
 			return v2
 		})

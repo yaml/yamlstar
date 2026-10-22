@@ -10,6 +10,7 @@
             [yamlstar.emitter :as emitter]
             [yamlstar.parser :as parser]
             [yamlstar.plugin.shared-host :as shared-host]
+            [yamlstar.plugin.parser.json-comments]
             [yamlstar.resolver :as resolver]
             [ys.json :as json]))
 
@@ -343,7 +344,7 @@ Options:
 
 (defn -main [& argv]
   (parser/register-parsers!
-   "reference" cli-default/default-parser)
+   "reference" "json-comments" cli-default/default-parser)
   (emitter/register-yaml-emitters!
    "reference" cli-default/default-yaml-emitter)
   (parser/set-default-parser! cli-default/default-parser)

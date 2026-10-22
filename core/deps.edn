@@ -1,10 +1,19 @@
 {:paths ["src" "test"]
+ :mvn/local-repo "../.cache/local/home/.m2/repository"
  :deps {org.clojure/clojure {:mvn/version "1.12.0"}
-        org.yamlstar/yaml-parser {:mvn/version "0.2.5"}
+        org.yamlstar/yaml-parser {:mvn/version "0.2.6"}
+        org.yamlstar/yamlstar-plugin-parser-json-comments
+        {:mvn/version "0.1.0"}
         org.clojure/data.json {:mvn/version "2.5.0"}
         org.snakeyaml/snakeyaml-engine {:mvn/version "2.7"}}
  :aliases
- {:test {:extra-paths ["test"]
+ {:local-plugins
+  {:override-deps
+   {org.yamlstar/yaml-parser
+    {:local/root "../repos/yaml-reference-parser-clj"}
+    org.yamlstar/yamlstar-plugin-parser-json-comments
+    {:local/root "../repos/yamlstar-plugin-parser-json-comments"}}}
+  :test {:extra-paths ["test"]
          :extra-deps {org.clojure/test.check {:mvn/version "1.1.1"}}}
   :repl {:exec-fn clojure.main/main
          :exec-args ["-r"]}}}

@@ -1,0 +1,30 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use Cwd qw(abs_path);
+use File::Path qw(make_path);
+
+my $root = abs_path('.');
+open my $module, '<', "$root/go.mod" or die "go.mod: $!\n";
+local $/;
+my $source = <$module>;
+close $module or die "go.mod: $!\n";
+
+my @use = ($root);
+push @use, "$root/go" if -f "$root/go/go.mod";
+my @replace;
+for my $name (qw(reference json-comments)) {
+    my $module = "github.com/yamlstar/yamlstar-plugin-parser-$name";
+    my $directory = "$root/repos/yamlstar-plugin-parser-$name";
+    next unless -f "$directory/go.mod";
+    $source =~ /^\s*\Q$module\E\s+(v\S+)/m
+        or die "No version for $module in go.mod\n";
+    push @use, $directory;
+    push @replace, "replace $module $1 => \"$directory\"\n";
+}
+make_path("$root/.cache");
+open my $work, '>', "$root/.cache/parser-plugins.work" or die "$!\n";
+print {$work} "go 1.24.0\n\nuse (\n";
+print {$work} "  \"$_\"\n" for @use;
+print {$work} ")\n\n", @replace;
+close $work or die "$!\n";

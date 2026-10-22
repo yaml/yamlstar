@@ -78,3 +78,8 @@ install: $(LEIN)
 .PHONY: smoke-parser test-snakeyaml test-suite test-suite-fixture \
   test-suite-load test-suite-roundtrip test-suite-emit \
   test-suite-snakeyaml
+
+# Use the coordinated parser checkouts before their artifacts are released.
+test-local-plugins: $(CLOJURE)
+	CLJ_CONFIG=$(LOCAL-HOME)/.clojure $(CLOJURE) \
+	  -M:local-plugins:test -m yamlstar.parser-plugin-runner

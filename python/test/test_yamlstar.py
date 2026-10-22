@@ -283,14 +283,13 @@ def test_requested_plugin_names():
     """Extract plugin distribution names from native plugin options."""
     options = {
         'plugin': {
-            'parser': {'name': 'reference'},
-            'json-comments': {},
+            'parser': {'name': 'toml'},
             'tab-indent': {},
             'ignored': 'not-a-plugin',
         },
     }
     assert yamlstar._requested_plugin_names(options) == [
-        'json-comments',
+        'parser-toml',
     ]
 
 
@@ -299,7 +298,7 @@ def test_installed_plugin_discovery_loads_only_requested(
     """Do not import unrelated YAMLStar plugin distributions."""
     requested_dir = tmp_path / 'requested'
     requested_dir.mkdir()
-    requested = FakeEntryPoint('json-comments', str(requested_dir))
+    requested = FakeEntryPoint('parser-toml', str(requested_dir))
     unrelated = FakeEntryPoint('other-plugin', str(tmp_path / 'missing'))
     monkeypatch.setattr(
         yamlstar.importlib_metadata,
@@ -308,7 +307,7 @@ def test_installed_plugin_discovery_loads_only_requested(
     )
 
     options = {
-        'plugin': {'json-comments': {'name': 'sanitizer'}},
+        'plugin': {'parser': {'name': 'toml'}},
     }
     assert yamlstar._installed_plugin_dirs(options) == [
         str(requested_dir),
@@ -326,13 +325,13 @@ def test_installed_plugin_discovery_rejects_duplicate_names(
         yamlstar.importlib_metadata,
         'entry_points',
         lambda: [
-            FakeEntryPoint('json-comments', str(directory)),
-            FakeEntryPoint('json-comments', str(directory)),
+            FakeEntryPoint('parser-toml', str(directory)),
+            FakeEntryPoint('parser-toml', str(directory)),
         ],
     )
 
     options = {
-        'plugin': {'json-comments': {'name': 'sanitizer'}},
+        'plugin': {'parser': {'name': 'toml'}},
     }
     with pytest.raises(Exception, match='Multiple installed YAMLStar plugins'):
         yamlstar._installed_plugin_dirs(options)
@@ -345,11 +344,11 @@ def test_installed_plugin_discovery_rejects_missing_directory(
     monkeypatch.setattr(
         yamlstar.importlib_metadata,
         'entry_points',
-        lambda: [FakeEntryPoint('json-comments', str(missing))],
+        lambda: [FakeEntryPoint('parser-toml', str(missing))],
     )
 
     options = {
-        'plugin': {'json-comments': {'name': 'sanitizer'}},
+        'plugin': {'parser': {'name': 'toml'}},
     }
     with pytest.raises(Exception, match='returned a missing directory'):
         yamlstar._installed_plugin_dirs(options)
@@ -362,7 +361,7 @@ def test_explicit_plugin_search_path_disables_discovery(
     installed = tmp_path / 'installed'
     configured.mkdir()
     installed.mkdir()
-    entry_point = FakeEntryPoint('json-comments', str(installed))
+    entry_point = FakeEntryPoint('parser-toml', str(installed))
     monkeypatch.setattr(
         yamlstar.importlib_metadata,
         'entry_points',
@@ -374,7 +373,7 @@ def test_explicit_plugin_search_path_disables_discovery(
     )
 
     options = {
-        'plugin': {'json-comments': {'name': 'sanitizer'}},
+        'plugin': {'parser': {'name': 'toml'}},
     }
     library = tmp_path / 'native' / 'libyamlstar.so'
     assert yamlstar._binding_plugin_dirs(options) == []
@@ -390,13 +389,13 @@ def test_call_uses_and_restores_installed_plugin_path(
     monkeypatch.setattr(
         yamlstar.importlib_metadata,
         'entry_points',
-        lambda: [FakeEntryPoint('json-comments', str(installed))],
+        lambda: [FakeEntryPoint('parser-toml', str(installed))],
     )
     monkeypatch.delenv('YAMLSTAR_LIBRARY_PATH', raising=False)
 
     instance = object.__new__(yamlstar.YAMLStar)
     instance._options = {
-        'plugin': {'json-comments': {'name': 'sanitizer'}},
+        'plugin': {'parser': {'name': 'toml'}},
     }
     instance._libyamlstar_path = str(tmp_path / 'libyamlstar.so')
     instance._plugin_installer_path = str(tmp_path / 'missing-installer')
@@ -489,8 +488,8 @@ def test_load_with_options_dict(ys):
 
 def test_json_comments_options():
     """Test the JSON comments plugin option helper."""
-    assert yamlstar.json_comments() == {
-        'json-comments': {'name': 'sanitizer'}}
+    assert yamlstar.parser('json-comments') == {
+        'parser': {'name': 'json-comments'}}
 
 
 def test_yaml_plugin_options():

@@ -27,10 +27,11 @@ import (
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/parser"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/alias_data"
+	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/parser/go_yaml"
+	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/parser/json_comments"
+	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/parser/reference"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/yaml_emitter/go_yaml"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/yaml_emitter/reference"
-	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/parser/go_yaml"
-	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/plugin/parser/reference"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/representer"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/resolver"
 	_ "github.com/yaml/yamlstar/internal/glojure/pkg/yamlstar/serializer"
@@ -248,6 +249,7 @@ var namespaces = []string{
 	"yamlstar.plugin",
 	"yamlstar.plugin.alias-data",
 	"yamlstar.plugin.parser.reference",
+	"yamlstar.plugin.parser.json-comments",
 	"yamlstar.plugin.parser.go-yaml",
 	"yamlstar.plugin.yaml-emitter.reference",
 	"yamlstar.plugin.yaml-emitter.go-yaml",
@@ -272,7 +274,7 @@ func initialize() error {
 			require.Invoke(lang.NewSymbol(namespace))
 		}
 		glj.Var("yamlstar.parser", "register-parsers!").Invoke(
-			"reference", "go-yaml")
+			"reference", "go-yaml", "json-comments")
 		glj.Var("yamlstar.emitter", "register-yaml-emitters!").Invoke(
 			"reference", "go-yaml")
 		glj.Var("yamlstar.parser", "set-default-parser!").Invoke("go-yaml")

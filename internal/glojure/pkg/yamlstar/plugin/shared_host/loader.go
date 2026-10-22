@@ -139,7 +139,6 @@ func LoadNS() {
 	sym_options := lang.NewSymbolUnchecked("options")
 	sym_plugin := lang.NewSymbolUnchecked("plugin")
 	sym_require_DASH_glojure_DASH_runtime := lang.NewSymbolUnchecked("require-glojure-runtime")
-	sym_set_DASH_json_DASH_comments_DASH_loader_BANG_ := lang.NewSymbolUnchecked("set-json-comments-loader!")
 	sym_set_DASH_parser_DASH_loader_BANG_ := lang.NewSymbolUnchecked("set-parser-loader!")
 	sym_shared := lang.NewSymbolUnchecked("shared")
 	sym_transform := lang.NewSymbolUnchecked("transform")
@@ -165,13 +164,10 @@ func LoadNS() {
 	var_yamlstar_DOT_plugin_DOT_shared_DASH_host_transform := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_shared_DASH_host, sym_transform)
 	// var yamlstar.plugin.shared/make-loader
 	var_yamlstar_DOT_plugin_DOT_shared_make_DASH_loader := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_shared, sym_make_DASH_loader)
-	// var yamlstar.plugin/set-json-comments-loader!
-	var_yamlstar_DOT_plugin_set_DASH_json_DASH_comments_DASH_loader_BANG_ := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_set_DASH_json_DASH_comments_DASH_loader_BANG_)
 	// var yamlstar.plugin/set-parser-loader!
 	var_yamlstar_DOT_plugin_set_DASH_parser_DASH_loader_BANG_ := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_set_DASH_parser_DASH_loader_BANG_)
 	aotExternalFn0 := aotLinkFn2(var_yamlstar_DOT_plugin_DOT_shared_make_DASH_loader)
-	aotExternalFn1 := aotLinkFn1(var_yamlstar_DOT_plugin_set_DASH_json_DASH_comments_DASH_loader_BANG_)
-	aotExternalFn2 := aotLinkFn1(var_yamlstar_DOT_plugin_set_DASH_parser_DASH_loader_BANG_)
+	aotExternalFn1 := aotLinkFn1(var_yamlstar_DOT_plugin_set_DASH_parser_DASH_loader_BANG_)
 	// reference fmt to avoid unused import error
 	_ = fmt.Printf
 	// reference reflect to avoid unused import error
@@ -271,7 +267,7 @@ func LoadNS() {
 			_ = tmp5
 			var tmp6 any
 			{ // let
-				// let binding "vec__46"
+				// let binding "vec__38"
 				tmp7 := lang.Apply3(pluginloader4.Manifest, v2, v3, v4)
 				var v8 any = tmp7
 				_ = v8
@@ -330,7 +326,7 @@ func LoadNS() {
 			_ = tmp6
 			var tmp7 any
 			{ // let
-				// let binding "vec__49"
+				// let binding "vec__41"
 				tmp8 := lang.Apply4(pluginloader4.Transform, v2, v3, v4, v5)
 				var v9 any = tmp8
 				_ = v9
@@ -380,9 +376,7 @@ func LoadNS() {
 				var v7 any = tmp6
 				_ = v7
 				tmp8 := aotExternalFn1(v7)
-				_ = tmp8
-				tmp9 := aotExternalFn2(v7)
-				tmp3 = tmp9
+				tmp3 = tmp8
 			} // end let
 			return tmp3
 		})

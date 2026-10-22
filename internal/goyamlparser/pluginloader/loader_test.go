@@ -10,9 +10,9 @@ import (
 )
 
 func TestLibraryFilename(t *testing.T) {
-	name := libraryFilename("json-comments")
+	name := libraryFilename("parser-toml")
 	if !strings.HasPrefix(name,
-		"libyamlstar-plugin-json-comments.") {
+		"libyamlstar-plugin-parser-toml.") {
 		t.Fatalf("unexpected filename: %s", name)
 	}
 }

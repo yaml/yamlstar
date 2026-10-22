@@ -4,34 +4,34 @@
 
 (def manifest
   {:abi 2
-   :api "json-comments"
-   :name "sanitizer"
+   :api "parser"
+   :name "toml"
    :version "0.1.9"
-   :kind "text-transform"})
+   :kind "event-source"})
 
 (deftest shared-loader-test
   (let [loader (shared/make-loader
                 (fn [_ _ _] (pr-str manifest))
                 (fn [_ _ input _]
-                  [0 (.replace input "// comment" "")]))
-        plugin (loader "json-comments" "sanitizer" nil false)]
+                  [0 (pr-str [{:event "scalar" :value input}])]))
+        plugin (loader "parser" "toml" nil false)]
     (is (= manifest (:manifest plugin)))
     (is (= "0.1.9" (:version plugin)))
-    (is (= "a: true "
-           ((:sanitize plugin) "a: true // comment" {})))))
+    (is (= [{:event "scalar" :value "answer = 42"}]
+           ((:parse plugin) "answer = 42" {})))))
 
 (deftest manifest-validation-test
   (testing "ABI mismatch"
     (is (thrown-with-msg?
          Exception #"manifest abi"
          (shared/validate-manifest (assoc manifest :abi 1)
-                                   "json-comments" "sanitizer"
-                                   "text-transform"))))
+                                   "parser" "toml"
+                                   "event-source"))))
   (testing "API mismatch"
     (is (thrown-with-msg?
          Exception #"manifest api"
-         (shared/validate-manifest manifest "other" "sanitizer"
-                                   "text-transform")))))
+         (shared/validate-manifest manifest "other" "toml"
+                                   "event-source")))))
 
 (deftest shared-parser-loader-test
   (let [parser-manifest {:abi 2
@@ -91,6 +91,6 @@
   (let [loader (shared/make-loader
                 (fn [_ _ _] (pr-str manifest))
                 (fn [_ _ _ _] [1 "bad input"]))
-        plugin (loader "json-comments" "sanitizer" nil false)]
+        plugin (loader "parser" "toml" nil false)]
     (is (thrown-with-msg? Exception #"bad input"
-                          ((:sanitize plugin) "x" {})))))
+                          ((:parse plugin) "x" {})))))

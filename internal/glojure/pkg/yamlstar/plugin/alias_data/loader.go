@@ -778,7 +778,7 @@ func LoadNS() {
 				_ = v3
 				var tmp4 any
 				{ // let
-					// let binding "vec__4"
+					// let binding "vec__1"
 					tmp5 := aotExternalFn3(v3, closed1, int64(2))
 					var v6 any = tmp5
 					_ = v6
@@ -834,7 +834,7 @@ func LoadNS() {
 				_ = v11
 				var tmp12 any
 				{ // let
-					// let binding "vec__8"
+					// let binding "vec__5"
 					var v13 any = v11
 					_ = v13
 					// let binding "key"
@@ -946,7 +946,7 @@ func LoadNS() {
 									_ = v14
 									var tmp15 any
 									{ // let
-										// let binding "vec__12"
+										// let binding "vec__9"
 										var v16 any = v14
 										_ = v16
 										// let binding "name"
@@ -1371,10 +1371,10 @@ func LoadNS() {
 			_ = v3
 			var tmp4 any
 			{ // let
-				// let binding "map__16"
+				// let binding "map__13"
 				var v5 any = v3
 				_ = v5
-				// let binding "map__16"
+				// let binding "map__13"
 				var tmp6 any
 				tmp7 := aotExternalFn6(v5)
 				if lang.IsTruthy(tmp7) {

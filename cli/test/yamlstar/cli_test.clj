@@ -9,7 +9,7 @@
 (def sample "a: &x [1, \"two\"]\nb: *x\n")
 
 (deftest bundled-yaml-plugins
-  (is (= #{"reference" cli-default/default-parser}
+  (is (= #{"reference" "json-comments" cli-default/default-parser}
          (set (plugin/registered-parsers))))
   (is (= #{"reference" cli-default/default-yaml-emitter}
          (set (plugin/registered-yaml-emitters)))))
@@ -17,8 +17,7 @@
 (deftest bundled-json-comments-plugin
   (is (= {"a" true}
          (yaml/load "a: true // comment\n"
-                    {:plugin {:parser "reference@v0.2.5"
-                              :json-comments true}}))))
+                    {:plugin {:parser "json-comments@v0.1.0"}}))))
 
 (deftest combined-plugin-selector
   (let [output
@@ -26,8 +25,7 @@
           (is (zero?
                (cli/main-status
                 "--eval" "a: true // comment\n"
-                (str "--plugin=parser=reference@0.2.5,"
-                     "json-comments")))))]
+                "--plugin=parser=json-comments@v0.1.0,yaml-emitter=reference"))))]
     (is (= "{\"a\":true}\n" output))))
 
 (deftest version-output

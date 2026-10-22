@@ -7,11 +7,12 @@
             [yamlstar.parser :as parser]
             [yamlstar.plugin.shared-host :as shared-host]
             [yamlstar.plugin.parser.reference]
+            [yamlstar.plugin.parser.json-comments]
             [yamlstar.plugin.parser.go-yaml]
             [yamlstar.plugin.yaml-emitter.reference]
             [yamlstar.plugin.yaml-emitter.go-yaml]))
 
-(parser/register-parsers! "reference" "go-yaml")
+(parser/register-parsers! "reference" "go-yaml" "json-comments")
 (emitter/register-yaml-emitters! "reference" "go-yaml")
 (parser/set-default-parser! "go-yaml")
 (emitter/set-default-yaml-emitter! "go-yaml")
@@ -21,7 +22,7 @@
     (shared-host/install!)))
 
 (defn install-yaml-plugins! []
-  (parser/register-parsers! "reference" "go-yaml")
+  (parser/register-parsers! "reference" "go-yaml" "json-comments")
   (emitter/register-yaml-emitters! "reference" "go-yaml")
   (parser/set-default-parser! "go-yaml")
   (emitter/set-default-yaml-emitter! "go-yaml"))

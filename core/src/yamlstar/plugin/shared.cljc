@@ -4,12 +4,7 @@
 (def abi-version 2)
 
 (def ^:private artifacts
-  {["json-comments" "sanitizer"]
-   {:artifact "json-comments"
-    :kind "text-transform"
-    :operation :sanitize}
-
-   ["parser" "rapidyaml"]
+  {["parser" "rapidyaml"]
    {:artifact "parser-rapidyaml"
     :kind "event-source"
     :operation :parse}
@@ -76,11 +71,6 @@
                   :manifest manifest
                   :default-config {}}]
         (case operation
-          :sanitize
-          (assoc base :sanitize
-                 (fn [input options]
-                   (invoke transform-fn api artifact name input options)))
-
           :parse
           (assoc base :parse
                  (fn [input options]
