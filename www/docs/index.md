@@ -21,38 +21,14 @@ hide:
     <span class="ystr">Supports Linux, macOS and Windows</span>
     <span class="ystr">for almost all language bindings</span>
   <span class="ykey">32 Languages (and counting!)</span><span class="ysep">:</span>
-  - <a href="https://alire.ada.dev/crates/yamlstar"><span class="ystr">Ada</span></a>
-  - <a href="https://clojars.org/org.yamlstar/yamlstar"><span class="ystr">Clojure</span></a>
-  - <a href="https://shardbox.org/shards/yamlstar"><span class="ystr">Crystal</span></a>
-  - <a href="https://www.nuget.org/packages/YAMLStar/"><span class="ystr">C#</span></a>
-  - <a href="https://code.dlang.org/packages/yamlstar"><span class="ystr">D</span></a>
-  - <a href="https://pub.dev/packages/yamlstar"><span class="ystr">Dart</span></a>
-  - <a href="https://github.com/yaml/yamlstar-delphi"><span class="ystr">Delphi</span></a>
-  - <a href="https://tatin.dev/v1/packages/versions/yaml-yamlstar-0"><span class="ystr">Dyalog APL</span></a>
-  - <a href="https://hex.pm/packages/yamlstar"><span class="ystr">Elixir</span></a>
-  - <a href="https://hex.pm/packages/yamlstar_erlang"><span class="ystr">Erlang</span></a>
-  - <a href="https://www.nuget.org/packages/YAMLStar.FSharp/"><span class="ystr">F#</span></a>
-  - <a href="https://github.com/yaml/yamlstar-fortran"><span class="ystr">Fortran</span></a>
-  - <a href="https://github.com/yaml/yamlstar-go"><span class="ystr">Go</span></a>
-  - <a href="https://hackage.haskell.org/package/yamlstar"><span class="ystr">Haskell</span></a>
-  - <a href="https://central.sonatype.com/artifact/com.yaml/yamlstar"><span class="ystr">Java</span></a>
-  - <a href="https://juliahub.com/ui/Packages/General/YAMLStar"><span class="ystr">Julia</span></a>
-  - <a href="https://central.sonatype.com/artifact/com.yaml/kotlin-yamlstar"><span class="ystr">Kotlin</span></a>
-  - <a href="https://luarocks.org/modules/ingy/yamlstar"><span class="ystr">Lua</span></a>
-  - <a href="https://mooncakes.io/docs/ingydotnet/yamlstar"><span class="ystr">MoonBit</span></a>
-  - <a href="https://nimble.directory/pkg/yamlstar"><span class="ystr">Nim</span></a>
-  - <a href="https://www.npmjs.com/package/yamlstar"><span class="ystr">Node.js</span></a>
-  - <a href="https://metacpan.org/pod/YAMLStar"><span class="ystr">Perl</span></a>
-  - <a href="https://packagist.org/packages/yaml/yamlstar-php"><span class="ystr">PHP</span></a>
-  - <a href="https://www.powershellgallery.com/packages/YAMLStar"><span class="ystr">PowerShell</span></a>
-  - <a href="https://pypi.org/project/yamlstar/"><span class="ystr">Python</span></a>
-  - <a href="https://cran.r-project.org/package=yamlstar"><span class="ystr">R</span></a>
-  - <a href="https://raku.land/zef:ingy/YAMLStar"><span class="ystr">Raku</span></a>
-  - <a href="https://rubygems.org/gems/yamlstar"><span class="ystr">Ruby</span></a>
-  - <a href="https://crates.io/crates/yamlstar"><span class="ystr">Rust</span></a>
-  - <a href="https://central.sonatype.com/artifact/com.yaml/scala-yamlstar"><span class="ystr">Scala</span></a>
-  - <a href="https://github.com/yaml/yamlstar/tree/main/swift"><span class="ystr">Swift</span></a>
-  - <a href="https://github.com/yaml/yamlstar/tree/main/zig"><span class="ystr">Zig</span></a>
+    [<a href="https://alire.ada.dev/crates/yamlstar"><span class="ystr">Ada</span></a>,     <a href="https://clojars.org/org.yamlstar/yamlstar"><span class="ystr">Clojure</span></a>, <a href="https://shardbox.org/shards/yamlstar"><span class="ystr">Crystal</span></a>, <a href="https://www.nuget.org/packages/YAMLStar/"><span class="ystr">C#</span></a>,
+     <a href="https://code.dlang.org/packages/yamlstar"><span class="ystr">D</span></a>,       <a href="https://pub.dev/packages/yamlstar"><span class="ystr">Dart</span></a>,    <a href="https://github.com/yaml/yamlstar-delphi"><span class="ystr">Delphi</span></a>,  <a href="https://tatin.dev/v1/packages/versions/yaml-yamlstar-0"><span class="ystr">Dyalog APL</span></a>,
+     <a href="https://hex.pm/packages/yamlstar"><span class="ystr">Elixir</span></a>,  <a href="https://hex.pm/packages/yamlstar_erlang"><span class="ystr">Erlang</span></a>,  <a href="https://www.nuget.org/packages/YAMLStar.FSharp/"><span class="ystr">F#</span></a>,      <a href="https://github.com/yaml/yamlstar-fortran"><span class="ystr">Fortran</span></a>,
+     <a href="https://github.com/yaml/yamlstar-go"><span class="ystr">Go</span></a>,      <a href="https://hackage.haskell.org/package/yamlstar"><span class="ystr">Haskell</span></a>, <a href="https://central.sonatype.com/artifact/com.yaml/yamlstar"><span class="ystr">Java</span></a>,    <a href="https://juliahub.com/ui/Packages/General/YAMLStar"><span class="ystr">Julia</span></a>,
+     <a href="https://central.sonatype.com/artifact/com.yaml/kotlin-yamlstar"><span class="ystr">Kotlin</span></a>,  <a href="https://luarocks.org/modules/ingy/yamlstar"><span class="ystr">Lua</span></a>,     <a href="https://mooncakes.io/docs/ingydotnet/yamlstar"><span class="ystr">MoonBit</span></a>, <a href="https://nimble.directory/pkg/yamlstar"><span class="ystr">Nim</span></a>,
+     <a href="https://www.npmjs.com/package/yamlstar"><span class="ystr">Node.js</span></a>, <a href="https://metacpan.org/pod/YAMLStar"><span class="ystr">Perl</span></a>,    <a href="https://packagist.org/packages/yaml/yamlstar-php"><span class="ystr">PHP</span></a>,     <a href="https://www.powershellgallery.com/packages/YAMLStar"><span class="ystr">PowerShell</span></a>,
+     <a href="https://pypi.org/project/yamlstar/"><span class="ystr">Python</span></a>,  <a href="https://cran.r-project.org/package=yamlstar"><span class="ystr">R</span></a>,       <a href="https://raku.land/zef:ingy/YAMLStar"><span class="ystr">Raku</span></a>,    <a href="https://rubygems.org/gems/yamlstar"><span class="ystr">Ruby</span></a>,
+     <a href="https://crates.io/crates/yamlstar"><span class="ystr">Rust</span></a>,    <a href="https://central.sonatype.com/artifact/com.yaml/scala-yamlstar"><span class="ystr">Scala</span></a>,   <a href="https://github.com/yaml/yamlstar/tree/main/swift"><span class="ystr">Swift</span></a>,   <a href="https://github.com/yaml/yamlstar/tree/main/zig"><span class="ystr">Zig</span></a>]
   <span class="ykey">Features</span><span class="ysep">:</span>
     <span class="ykey">Spec Compliant</span><span class="ysep">:</span> <span class="ybool">true</span>   <span class="ycom"># 100% YAML 1.2 specification</span>
     <span class="ykey">Load Stack</span><span class="ysep">:</span> <span class="ybool">true</span>       <span class="ycom"># YAML to native values</span>
