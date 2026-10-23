@@ -300,3 +300,18 @@ Use `--no-install` to disable automatic installation.
 The plugin has documented tab-separation limitations and does not fall back
 to another parser.
 The earlier ABI v1 release 0.1.0 is incompatible with this host.
+
+For a local plugin checkout, build its library once and select its directory:
+
+```bash
+make -C repos/yamlstar-plugin-parser-rapidyaml build
+export YAMLSTAR_LIBRARY_PATH=$PWD/repos/yamlstar-plugin-parser-rapidyaml/lib
+yaml --plugin=parser=rapidyaml --no-install -j < input.yaml
+go-yaml --plugin=yaml-parser=rapidyaml -j < input.yaml
+```
+
+The go-yaml executable must already include the RapidYAML Go adapter through
+`PLUGIN-PACKAGE`.
+Both commands load the same shared library.
+The built-in go-yaml parser remains compiled into both native CLIs and requires
+no parser shared library.

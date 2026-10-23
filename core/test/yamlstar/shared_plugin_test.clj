@@ -64,7 +64,7 @@
   (let [parser-manifest {:abi 2
                          :api "parser"
                          :name "rapidyaml"
-                         :version "0.1.0"
+                         :version "0.1.2"
                          :kind "event-source"
                          :event-format "yamlstar-events-edn-v1"}
         events [{:event "stream_start"}
