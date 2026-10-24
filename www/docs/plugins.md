@@ -315,3 +315,32 @@ The go-yaml executable must already include the RapidYAML Go adapter through
 Both commands load the same shared library.
 The built-in go-yaml parser remains compiled into both native CLIs and requires
 no parser shared library.
+
+## Plugin demos
+
+Run `./util/demo-plugins` from a fresh clone to demonstrate YAMLStar plugins.
+The script builds the native CLI once and downloads missing shared plugins.
+Build output appears as it is produced.
+No `repos/*` checkouts are needed.
+
+```bash
+./util/demo-plugins --list
+./util/demo-plugins 3 5-7 9
+./util/demo-plugins -i 10-
+```
+
+The sister `util/demo-plugins.yaml` catalog contains the descriptions, commands,
+and build arguments.
+Commands invoke `yaml` directly, using the executable selected by the script.
+YAMLScript reads the catalog.
+If `ys` is missing from `PATH`, the script installs it using in-1:
+
+```bash
+source <(curl -s https://in-1.cc) ys
+```
+
+Non-interactive output uses `less -FRX`.
+Interactive mode lets you edit commands with readline.
+Clear the line and press Enter to recall the previous command, or enter a demo
+number to load that command without consuming the pending demo.
+Set `YAMLSTAR_BIN` to use an existing executable without building it.
