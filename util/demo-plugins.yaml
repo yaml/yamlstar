@@ -6,31 +6,31 @@
 - make: &native cli
   desc: Parse YAML with the native go-yaml parser
   cmnd: >-
-    <<<$'answer: 42\nitems: [one, two]\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=parser=go-yaml -J
+    <<<$'answer: 42\nitems: [one, two]\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=yaml-parser=go-yaml -J
   impl: go-yaml
 
 - make: *native
   desc: Parse YAML with the reference parser
   cmnd: >-
-    <<<$'answer: 42\nitems: [one, two]\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=parser=reference -J
+    <<<$'answer: 42\nitems: [one, two]\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=yaml-parser=reference -J
   impl: reference
 
 - make: *native
   desc: Parse JSON-style comments with the JSON-comments parser
   cmnd: >-
-    <<<$'{answer: true/* JSON block comment */} // line comment\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=parser=json-comments -J
+    <<<$'{answer: true/* JSON block comment */} // line comment\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=yaml-parser=json-comments -J
   impl: json-comments
 
 - make: *native
   desc: Parse YAML with the RapidYAML shared library
   cmnd: >-
-    <<<$'answer: 42\nitems: [one, two]\n' env YAMLSTAR_CONFIG= yaml --plugin=parser=rapidyaml -J
+    <<<$'answer: 42\nitems: [one, two]\n' env YAMLSTAR_CONFIG= yaml --plugin=yaml-parser=rapidyaml -J
   impl: rapidyaml
 
 - make: *native
   desc: Parse TOML with the TOML shared library
   cmnd: >-
-    <<<$'answer = 42\n[server]\nhost = "localhost"\n' env YAMLSTAR_CONFIG= yaml --plugin=parser=toml -J
+    <<<$'answer = 42\n[server]\nhost = "localhost"\n' env YAMLSTAR_CONFIG= yaml --plugin=yaml-parser=toml -J
   impl: toml
 
 - make: *native
@@ -48,13 +48,13 @@
 - make: *native
   desc: Load tab-indented YAML with tab-indent
   cmnd: >-
-    <<<$'root:\n\tanswer: 42\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=parser=go-yaml\,tab-indent -J
+    <<<$'root:\n\tanswer: 42\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=yaml-parser=go-yaml\,tab-indent -J
   impl: go-yaml
 
 - make: *native
   desc: Dump YAML using tabs with tab-indent
   cmnd: >-
-    <<<$'root:\n  answer: 42\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=parser=go-yaml\,yaml-emitter=go-yaml\,tab-indent -y
+    <<<$'root:\n  answer: 42\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=yaml-parser=go-yaml\,yaml-emitter=go-yaml\,tab-indent -y
   impl: go-yaml
 
 - make: *native

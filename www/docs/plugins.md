@@ -6,15 +6,16 @@ The current APIs and implementations are:
 
 | API | Implementation | Availability |
 |---|---|---|
-| `parser` | `reference` | JVM and native |
-| `parser` | `go-yaml` | Native runtime |
-| `parser` | `snakeyaml` | JVM runtime |
-| `parser` | `toml` | Native shared library |
+| `yaml-parser` | `reference` | JVM and native |
+| `yaml-parser` | `go-yaml` | Native runtime |
+| `yaml-parser` | `snakeyaml` | JVM runtime |
+| `yaml-parser` | `toml` | Native shared library |
+| `yaml-parser` | `rapidyaml` | Native shared library |
 | `yaml-emitter` | `reference` | JVM and native |
 | `yaml-emitter` | `go-yaml` | Native runtime |
 | `yaml-emitter` | `snakeyaml` | JVM runtime |
 | `tab-indent` | built in | Native runtime with go-yaml |
-| `parser` | `json-comments` | JVM and native |
+| `yaml-parser` | `json-comments` | JVM and native |
 | `alias-data` | `alias-data` | JVM and native, built in |
 
 The JSON-comments parser extends the reference grammar with C-style comments.
@@ -26,7 +27,7 @@ Options use a `plugin` mapping keyed by plugin API:
 
 ```yaml
 plugin:
-  parser: reference@v0.2.6
+  yaml-parser: reference@v0.2.6
   yaml-emitter: reference
   alias-data:
     data:
@@ -38,7 +39,7 @@ An implementation can also use a mapping:
 
 ```yaml
 plugin:
-  parser:
+  yaml-parser:
     name: reference
     version: v0.2.6
   yaml-emitter:
@@ -69,13 +70,14 @@ API=IMPLEMENTATION@VERSION
 Several selectors can be comma-separated:
 
 ```bash
-yaml --plugin=parser=json-comments@v0.1.0,yaml-emitter=reference file.yaml
+yaml --plugin=yaml-parser=json-comments@v0.1.0,yaml-emitter=reference file.yaml
 ```
 
-The short `parser` and `yaml-emitter` selectors choose the runtime
+The short `yaml-parser` and `yaml-emitter` selectors choose the runtime
 defaults.
 Use `--config=FILE` for a YAML options file.
 The former `--parser` flag has been removed.
+The old `parser` plugin API is rejected; use `yaml-parser` instead.
 
 The old `yaml-parser` API name is rejected.
 
@@ -83,7 +85,7 @@ The TOML implementation parses TOML into the same YAML event stream used by
 the built-in YAML parsers:
 
 ```bash
-yaml --plugin=parser=toml settings.toml
+yaml --plugin=yaml-parser=toml settings.toml
 ```
 
 ## Alias data
@@ -195,12 +197,12 @@ foo:
 Select the grammar extension with:
 
 ```bash
-yaml --plugin=parser=json-comments file.yaml
+yaml --plugin=yaml-parser=json-comments file.yaml
 ```
 
 ```yaml
 plugin:
-  parser: json-comments@v0.1.0
+  yaml-parser: json-comments@v0.1.0
 ```
 
 The implementation parses the original source using per-parse reference
@@ -227,21 +229,24 @@ data = yamlstar.YAMLStar(opts).load('a: true// comment')
 ```
 
 The old `json-comments` API and `sanitizer` implementation have been removed.
-Use `parser=json-comments` in selectors and `plugin.parser` in configuration.
+Use `yaml-parser=json-comments` in selectors and `plugin.yaml-parser` in
+configuration.
 This selects one parser and cannot be combined with another parser.
 
 ## Native shared plugins
 
 Shared parser implementations such as TOML use ABI version 2.
-Their manifests declare `:api "parser"`, `:kind "event-source"`, and the
+Their manifests declare `:api "yaml-parser"`, `:kind "event-source"`, and the
 implementation's name and version.
+Older manifests declaring `:api "parser"` are rejected.
+Rebuild or replace existing libraries when upgrading to this API name.
 The transform input is UTF-8 source and the output is an EDN event vector.
 
 `YAMLSTAR_LIBRARY_PATH` overrides the default library search directories.
 Print the defaults with `yaml --path`.
 The CLI can install missing official shared plugins unless `--no-install`
 is supplied; existing libraries are not updated automatically.
-For example, `yamlstar-plugin install parser=toml` installs the TOML parser.
+For example, `yamlstar-plugin install yaml-parser=toml` installs the TOML parser.
 JSON-comments uses the linked parser implementation and does not use this
 shared-library installation path.
 
@@ -295,7 +300,7 @@ It returns the emitted YAML string.
 
 The optional `yamlstar-plugin-parser-rapidyaml` implements the ABI v2
 parser API, using rapidyaml v0.16.0.
-Select it with `yaml --plugin=parser=rapidyaml`.
+Select it with `yaml --plugin=yaml-parser=rapidyaml`.
 Use `--no-install` to disable automatic installation.
 The plugin has documented tab-separation limitations and does not fall back
 to another parser.
@@ -306,7 +311,7 @@ For a local plugin checkout, build its library once and select its directory:
 ```bash
 make -C repos/yamlstar-plugin-parser-rapidyaml build
 export YAMLSTAR_LIBRARY_PATH=$PWD/repos/yamlstar-plugin-parser-rapidyaml/lib
-yaml --plugin=parser=rapidyaml --no-install -j < input.yaml
+yaml --plugin=yaml-parser=rapidyaml --no-install -j < input.yaml
 go-yaml --plugin=yaml-parser=rapidyaml -j < input.yaml
 ```
 

@@ -457,7 +457,7 @@ func LoadNS() {
 	// artifacts
 	{
 		tmp0 := sym_artifacts
-		var_yamlstar_DOT_plugin_DOT_shared_artifacts = ns.InternWithValue(tmp0, lang.NewMap(lang.NewVector("parser", "rapidyaml"), aotKeywordMapNew0("parser-rapidyaml", "event-source", kw_parse), lang.NewVector("parser", "toml"), aotKeywordMapNew0("parser-toml", "event-source", kw_parse)), true)
+		var_yamlstar_DOT_plugin_DOT_shared_artifacts = ns.InternWithValue(tmp0, lang.NewMap(lang.NewVector("yaml-parser", "rapidyaml"), aotKeywordMapNew0("parser-rapidyaml", "event-source", kw_parse), lang.NewVector("yaml-parser", "toml"), aotKeywordMapNew0("parser-toml", "event-source", kw_parse)), true)
 		var_yamlstar_DOT_plugin_DOT_shared_artifacts.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yamlstar/plugin/shared.clj", kw_line, int(6), kw_column, int(6), kw_end_DASH_line, int(6), kw_end_DASH_column, int(24), kw_private, true, kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_shared))
 		}, false)

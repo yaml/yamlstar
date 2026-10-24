@@ -11,7 +11,7 @@
     (is (thrown-with-msg?
           clojure.lang.ExceptionInfo
           #"requires the Glojure YAMLStar runtime"
-          (yaml/load "a: 1" {:plugin {:parser {:name "go-yaml"}}})))))
+          (yaml/load "a: 1" {:plugin {:yaml-parser {:name "go-yaml"}}})))))
 
 (deftest default-parser-test
   (testing "runtime default parser can be selected without opts"

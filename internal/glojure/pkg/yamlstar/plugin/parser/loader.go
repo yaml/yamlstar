@@ -31,7 +31,7 @@ func aotKeywordMapNew0(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape1 = lang.NewKeywordMapShape("parser")
+var aotKeywordMapShape1 = lang.NewKeywordMapShape("yaml-parser")
 
 type aotKeywordMapStorage1 struct {
 	lang.Map

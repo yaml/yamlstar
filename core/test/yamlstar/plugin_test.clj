@@ -63,30 +63,47 @@
     (is (nil? (plugin/parser-opts {})))
     (is (nil? (plugin/parser-opts {:plugin {}}))))
 
+  (testing "boolean selections keep the runtime default"
+    (is (= [nil {}] (plugin/parser-opts {:plugin {:yaml-parser true}})))
+    (is (nil? (plugin/parser-opts {:plugin {:yaml-parser false}})))
+    (is (nil? (plugin/parser-opts
+               {:plugin {:yaml-parser {:disable true}}}))))
+
+  (testing "the old API name is rejected"
+    (doseq [value [true false "reference" {:name "reference"}]]
+      (is (thrown-with-msg?
+           Exception #"parser was renamed to yaml-parser"
+           (plugin/parser-opts {:plugin {:parser value}})))))
+
   (testing "parser selection is extracted with config"
     (is (= ["snakeyaml" {}]
            (plugin/parser-opts
-            {:plugin {:parser {:name "snakeyaml"}}})))
+            {:plugin {:yaml-parser {:name "snakeyaml"}}})))
     (is (= ["x" {:setting 1}]
            (plugin/parser-opts
-            {:plugin {:parser {:name "x" :setting 1}}}))))
+            {:plugin {:yaml-parser {:name "x" :setting 1}}}))))
 
   (testing "parser short form accepts a release version"
     (is (= ["reference" {:version "0.2.6"}]
            (plugin/parser-opts
-            {:plugin {:parser "reference@v0.2.6"}}))))
+            {:plugin {:yaml-parser "reference@v0.2.6"}}))))
 
   (testing "malformed opts are rejected"
     (is (thrown-with-msg? Exception #":plugin must be a map"
                           (plugin/parser-opts {:plugin "nope"})))
     (is (thrown-with-msg? Exception #":name must be a string"
                           (plugin/parser-opts
-                           {:plugin {:parser {:name 5}}})))))
+                           {:plugin {:yaml-parser {:name 5}}})))))
 
 (deftest load-with-opts-test
+  (testing "unnamed selections preserve the runtime default parser"
+    (doseq [selection [true false {} {:disable true}]]
+      (is (= (yaml/load "a: 1")
+             (yaml/load "a: 1" {:plugin {:yaml-parser selection}})))))
+
   (testing "reference via opts equals the 1-arity result"
     (let [yaml "a: 1\nb:\n- 2\n- x\n"
-          opts {:plugin {:parser {:name "reference"}}}]
+          opts {:plugin {:yaml-parser {:name "reference"}}}]
       (is (= (yaml/load yaml) (yaml/load yaml opts)))
       (is (= (yaml/load-all "---\na\n---\nb\n")
              (yaml/load-all "---\na\n---\nb\n" opts)))))
@@ -101,9 +118,9 @@
                  {:event "document_end"}
                  {:event "stream_end"}])})
     (is (= "fixed" (yaml/load "ignored"
-                              {:plugin {:parser {:name "fixed"}}})))
+                              {:plugin {:yaml-parser {:name "fixed"}}})))
     (is (= "custom" (yaml/load "ignored"
-                               {:plugin {:parser {:name "fixed"
+                               {:plugin {:yaml-parser {:name "fixed"
                                                        :value "custom"}}})))
     (plugin/unregister-parser! "fixed"))
 
@@ -118,18 +135,18 @@
                  {:event "document_end"}
                  {:event "stream_end"}])})
     (is (= "AB"
-           (yaml/load "x" {:plugin {:parser {:name "cfg"}}})))
+           (yaml/load "x" {:plugin {:yaml-parser {:name "cfg"}}})))
     (is (= "Ab"
            (yaml/load "x"
                       {:plugin
-                       {:parser {:name "cfg" :b "b"}}})))
+                       {:yaml-parser {:name "cfg" :b "b"}}})))
     (plugin/unregister-parser! "cfg"))
 
   (testing "unknown parser in load opts throws"
     (is (thrown-with-msg? Exception #"Unknown YAML parser plugin"
                           (yaml/load "a: 1"
                                      {:plugin
-                                      {:parser {:name "nope"}}})))))
+                                      {:yaml-parser {:name "nope"}}})))))
 
 (deftest parse-arity-test
   (testing "parse 1-arity and 2-arity nil opts agree"
@@ -139,12 +156,12 @@
              (parser/parse yaml {}))))))
 
 (deftest json-comments-parser-test
-  (let [opts {:plugin {:parser "json-comments@v0.1.0"}}]
+  (let [opts {:plugin {:yaml-parser "json-comments@v0.1.0"}}]
     (is (= {"a" true} (yaml/load "a: true// comment" opts)))
     (is (= {"a" "foo  bar"}
            (yaml/load "a: foo /*comment*/ bar" opts)))
     (is (= "http://example.com" (yaml/load "http://example.com" opts)))
     (is (thrown-with-msg? Exception #"version mismatch"
-          (yaml/load "true" {:plugin {:parser "json-comments@v0.0.1"}})))
+          (yaml/load "true" {:plugin {:yaml-parser "json-comments@v0.0.1"}})))
     (is (thrown-with-msg? Exception #"Unknown YAMLStar plugin API"
           (yaml/load "true" {:plugin {:json-comments true}})))))

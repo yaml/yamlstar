@@ -4,7 +4,7 @@
 
 (def manifest
   {:abi 2
-   :api "parser"
+   :api "yaml-parser"
    :name "toml"
    :version "0.1.9"
    :kind "event-source"})
@@ -14,18 +14,28 @@
                 (fn [_ _ _] (pr-str manifest))
                 (fn [_ _ input _]
                   [0 (pr-str [{:event "scalar" :value input}])]))
-        plugin (loader "parser" "toml" nil false)]
+        plugin (loader "yaml-parser" "toml" nil false)]
     (is (= manifest (:manifest plugin)))
     (is (= "0.1.9" (:version plugin)))
     (is (= [{:event "scalar" :value "answer = 42"}]
            ((:parse plugin) "answer = 42" {})))))
 
 (deftest manifest-validation-test
+  (testing "old parser manifests are rejected by the loader"
+    (doseq [name ["toml" "rapidyaml"]]
+      (let [loader (shared/make-loader
+                    (fn [_ _ _]
+                      (pr-str (assoc manifest :api "parser" :name name)))
+                    (fn [& _] (throw (Exception. "must not parse"))))]
+        (is (thrown-with-msg?
+             Exception #"manifest api must be.*yaml-parser"
+             (loader "yaml-parser" name nil false))))))
+
   (testing "ABI mismatch"
     (is (thrown-with-msg?
          Exception #"manifest abi"
          (shared/validate-manifest (assoc manifest :abi 1)
-                                   "parser" "toml"
+                                   "yaml-parser" "toml"
                                    "event-source"))))
   (testing "API mismatch"
     (is (thrown-with-msg?
@@ -35,7 +45,7 @@
 
 (deftest shared-parser-loader-test
   (let [parser-manifest {:abi 2
-                         :api "parser"
+                         :api "yaml-parser"
                          :name "toml"
                          :version "0.1.0"
                          :kind "event-source"
@@ -47,7 +57,7 @@
                 {:event "stream_end"}]
         loader (shared/make-loader
                 (fn [api artifact _]
-                  (is (= "parser" api))
+                  (is (= "yaml-parser" api))
                   (is (= "parser-toml" artifact))
                   (pr-str parser-manifest))
                 (fn [_ artifact input options]
@@ -55,14 +65,14 @@
                   (is (= "answer = 42\n" input))
                   (is (= "{}" options))
                   [0 (pr-str events)]))
-        plugin (loader "parser" "toml" nil false)]
+        plugin (loader "yaml-parser" "toml" nil false)]
     (is (= parser-manifest (:manifest plugin)))
     (is (= events ((:parse plugin) "answer = 42\n" {})))
-    (is (nil? (loader "parser" "unknown" nil false)))))
+    (is (nil? (loader "yaml-parser" "unknown" nil false)))))
 
 (deftest shared-rapidyaml-loader-test
   (let [parser-manifest {:abi 2
-                         :api "parser"
+                         :api "yaml-parser"
                          :name "rapidyaml"
                          :version "0.1.2"
                          :kind "event-source"
@@ -74,7 +84,7 @@
                 {:event "stream_end"}]
         loader (shared/make-loader
                 (fn [api artifact _]
-                  (is (= "parser" api))
+                  (is (= "yaml-parser" api))
                   (is (= "parser-rapidyaml" artifact))
                   (pr-str parser-manifest))
                 (fn [_ artifact input options]
@@ -82,15 +92,15 @@
                   (is (= "answer: 42\n" input))
                   (is (= "{}" options))
                   [0 (pr-str events)]))
-        plugin (loader "parser" "rapidyaml" nil false)]
+        plugin (loader "yaml-parser" "rapidyaml" nil false)]
     (is (= parser-manifest (:manifest plugin)))
     (is (= events ((:parse plugin) "answer: 42\n" {})))
-    (is (nil? (loader "parser" "unknown" nil false)))))
+    (is (nil? (loader "yaml-parser" "unknown" nil false)))))
 
 (deftest shared-error-test
   (let [loader (shared/make-loader
                 (fn [_ _ _] (pr-str manifest))
                 (fn [_ _ _ _] [1 "bad input"]))
-        plugin (loader "parser" "toml" nil false)]
+        plugin (loader "yaml-parser" "toml" nil false)]
     (is (thrown-with-msg? Exception #"bad input"
                           ((:parse plugin) "x" {})))))

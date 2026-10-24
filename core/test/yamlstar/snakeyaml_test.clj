@@ -44,7 +44,7 @@
           (str "event streams differ for: " label)))))
 
 (deftest load-equivalence-test
-  (let [opts {:plugin {:parser {:name "snakeyaml"}}}]
+  (let [opts {:plugin {:yaml-parser {:name "snakeyaml"}}}]
     (doseq [[label yaml-str] corpus
             ;; skip inputs the reference loader itself rejects
             :when (try (yaml/load yaml-str) true
@@ -64,8 +64,8 @@
 (deftest snakeyaml-selection-test
   (testing "snakeyaml resolves when Engine 2.7 is available"
     (is (= {"a" 1}
-           (yaml/load "a: 1" {:plugin {:parser {:name "snakeyaml"}}}))))
+           (yaml/load "a: 1" {:plugin {:yaml-parser {:name "snakeyaml"}}}))))
   (testing "malformed YAML errors surface from load"
     (is (thrown? Exception
                  (yaml/load "a: [1, 2"
-                            {:plugin {:parser {:name "snakeyaml"}}})))))
+                            {:plugin {:yaml-parser {:name "snakeyaml"}}})))))

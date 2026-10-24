@@ -5,7 +5,7 @@
 (defn name
   "Select a YAML parser plugin by name."
   [parser-name]
-  {:parser {:name parser-name}})
+  {:yaml-parser {:name parser-name}})
 
 (defn reference [] (name "reference"))
 (defn snakeyaml [] (name "snakeyaml"))

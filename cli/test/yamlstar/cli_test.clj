@@ -17,7 +17,7 @@
 (deftest bundled-json-comments-plugin
   (is (= {"a" true}
          (yaml/load "a: true // comment\n"
-                    {:plugin {:parser "json-comments@v0.1.0"}}))))
+                    {:plugin {:yaml-parser "json-comments@v0.1.0"}}))))
 
 (deftest combined-plugin-selector
   (let [output
@@ -25,8 +25,17 @@
           (is (zero?
                (cli/main-status
                 "--eval" "a: true // comment\n"
-                "--plugin=parser=json-comments@v0.1.0,yaml-emitter=reference"))))]
+                "--plugin=yaml-parser=json-comments@v0.1.0,yaml-emitter=reference"))))]
     (is (= "{\"a\":true}\n" output))))
+
+(deftest retired-parser-api
+  (doseq [args [["--plugin=parser=reference"]
+                ["--config={plugin: {parser: reference}}"]]]
+    (let [errors (java.io.StringWriter.)
+          status (binding [*err* errors]
+                   (apply cli/main-status "--eval" "a: 1" args))]
+      (is (= 1 status))
+      (is (re-find #"parser was renamed to yaml-parser" (str errors))))))
 
 (deftest version-output
   (is (= (str "yaml v"
@@ -43,7 +52,7 @@
           "--eval=x: 1"
           "--config={plugin: {alias-data: true}}"
           "--plugin=alias-data"
-          "--plugin=parser=go-yaml"
+          "--plugin=yaml-parser=go-yaml"
           "--no-install"
           "--debug-stage=parse"]
          cli/cli-options)]
@@ -56,7 +65,7 @@
     (is (= "input.yaml" (:file options)))
     (is (= "x: 1" (:eval options)))
     (is (= "{plugin: {alias-data: true}}" (:config options)))
-    (is (= ["alias-data" "parser=go-yaml"] (:plugin options)))
+    (is (= ["alias-data" "yaml-parser=go-yaml"] (:plugin options)))
     (is (= true (:no-install options)))
     (is (= "parse" (:debug-stage options)))))
 

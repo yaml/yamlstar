@@ -88,8 +88,8 @@ Examples:
   go-yaml -N file.yaml | yaml -Y # go-yaml nodes → YAML
   cat f.yaml | yaml -J       # stdin → pretty JSON
   yaml -D parse config.yaml  # Debug parser stage
-  yaml --plugin=parser=json-comments f.yaml
-  yaml --config '{plugin: {parser: {name: reference}}}' f.yaml
+  yaml --plugin=yaml-parser=json-comments f.yaml
+  yaml --config '{plugin: {yaml-parser: {name: reference}}}' f.yaml
 
 Options:")
 

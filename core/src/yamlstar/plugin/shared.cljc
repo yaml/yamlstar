@@ -4,12 +4,12 @@
 (def abi-version 2)
 
 (def ^:private artifacts
-  {["parser" "rapidyaml"]
+  {["yaml-parser" "rapidyaml"]
    {:artifact "parser-rapidyaml"
     :kind "event-source"
     :operation :parse}
 
-   ["parser" "toml"]
+   ["yaml-parser" "toml"]
    {:artifact "parser-toml"
     :kind "event-source"
     :operation :parse}})

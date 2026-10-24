@@ -45,7 +45,7 @@
 
   Args:
     yaml-str: A string containing YAML content
-    opts: (optional) Options map with an optional :parser plugin
+    opts: (optional) Options map with an optional :yaml-parser plugin
 
   Returns:
     A sequence of event maps representing the YAML structure"
@@ -55,14 +55,15 @@
    (let [tabs (plugin/tab-indent-config opts)
          native-tabs (and tabs
                           (contains? #{"auto" "tabs"} (:load tabs)))
-         [pname config]
+         [selected config]
          (or (plugin/parser-opts opts)
-             [(current-default-parser) {}])]
+             [nil {}])
+         pname (or selected (current-default-parser))]
      (when (and native-tabs (not= pname "go-yaml"))
        (throw
         (ex-info
          "tab-indent loading requires the native go-yaml parser"
-         {:parser pname})))
+         {:yaml-parser pname})))
      (plugin/parse-with
       pname (cond-> config tabs (assoc :tab-indent tabs)) yaml-str
       (true? (:plugin-install opts))))))

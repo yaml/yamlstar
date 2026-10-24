@@ -145,7 +145,11 @@ read_selector() {
   valid_name "$plugin_api" || die "invalid plugin API '$plugin_api'"
   valid_name "$plugin_name" || die "invalid plugin name '$plugin_name'"
 
-  if [[ $plugin_api == parser && $plugin_name =~ ^(toml|rapidyaml)$ ]]; then
+  if [[ $plugin_api == parser ]]; then
+    die 'plugin API parser was renamed to yaml-parser'
+  fi
+
+  if [[ $plugin_api == yaml-parser && $plugin_name =~ ^(toml|rapidyaml)$ ]]; then
     plugin_name=parser-$plugin_name
   fi
 }

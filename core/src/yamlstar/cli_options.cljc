@@ -4,7 +4,7 @@
             [yamlstar.api :as yaml]))
 
 (def reference-parser-options
-  {:plugin {:parser {:name "reference"}}})
+  {:plugin {:yaml-parser {:name "reference"}}})
 
 (defn normalize-key
   [k]
@@ -66,10 +66,15 @@
 (defn plugin-options
   [spec]
   (letfn [(selector-options [selector]
-            (let [[api implementation extra]
+            (let [[api-selector implementation extra]
                   (str/split selector #"=" 3)
                   [name version version-extra]
-                  (str/split (or implementation api) #"@" 3)]
+                  (str/split (or implementation api-selector) #"@" 3)
+                  api (if implementation api-selector name)]
+              (when (= "parser" api)
+                (throw (ex-info
+                         "Plugin API parser was renamed to yaml-parser"
+                         {:api :parser :replacement :yaml-parser})))
               (when (or (str/blank? api)
                         (and implementation (str/blank? name))
                         extra version-extra

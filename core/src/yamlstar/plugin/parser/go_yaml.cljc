@@ -16,7 +16,7 @@
      (throw
       (ex-info
        "go-yaml parser plugin requires the Glojure YAMLStar runtime"
-       {:parser "go-yaml"}))))
+       {:yaml-parser "go-yaml"}))))
 
 (def plugin
   {:name "go-yaml"

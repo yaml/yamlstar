@@ -86,7 +86,7 @@ def _requested_plugin_names(options):
     return []
   names = []
   for api, config in plugins.items():
-    if api != 'parser' or not isinstance(config, dict):
+    if api != 'yaml-parser' or not isinstance(config, dict):
       continue
     name = config.get('name')
     if not isinstance(name, str):
@@ -215,7 +215,7 @@ class Options:
 
 def parser(name):
   """Return a YAML parser plugin option fragment."""
-  return {'parser': {'name': name}}
+  return {'yaml-parser': {'name': name}}
 
 
 def yaml_emitter(name):

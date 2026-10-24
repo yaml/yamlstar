@@ -19,7 +19,7 @@ var aotDirectFn3 lang.FnFunc0
 var aotDirectFn4 lang.FnFunc1
 
 var aotKeywordSite0 lang.KeywordSite
-var aotKeywordMapShape0 = lang.NewKeywordMapShape("parser")
+var aotKeywordMapShape0 = lang.NewKeywordMapShape("yaml-parser")
 
 type aotKeywordMapStorage0 struct {
 	lang.Map
@@ -351,7 +351,7 @@ func LoadNS() {
 		closed0 = lang.NewSet("tabs", "auto")
 	}
 	{
-		closed1 = lang.NewMap()
+		closed1 = lang.NewVector(nil, lang.NewMap())
 	}
 	// fallback-default-parser
 	{
@@ -412,15 +412,13 @@ func LoadNS() {
 					if lang.IsTruthy(v11) {
 						tmp12 = v11
 					} else {
-						tmp13 := aotDirectFn0()
-						tmp14 := lang.NewVector(tmp13, closed1)
-						tmp12 = tmp14
+						tmp12 = closed1
 					}
 					tmp9 = tmp12
 				} // end let
 				var v10 any = tmp9
 				_ = v10
-				// let binding "pname"
+				// let binding "selected"
 				tmp11 := runtime.RT.NthDefault(v10, lang.IntCast(int64(0)), nil)
 				var v12 any = tmp11
 				_ = v12
@@ -428,47 +426,64 @@ func LoadNS() {
 				tmp13 := runtime.RT.NthDefault(v10, lang.IntCast(int64(1)), nil)
 				var v14 any = tmp13
 				_ = v14
+				// let binding "pname"
 				var tmp15 any
-				var tmp16 any
+				{ // let
+					// let binding "or__0__auto__"
+					var v16 any = v12
+					_ = v16
+					var tmp17 any
+					if lang.IsTruthy(v16) {
+						tmp17 = v16
+					} else {
+						tmp18 := aotDirectFn0()
+						tmp17 = tmp18
+					}
+					tmp15 = tmp17
+				} // end let
+				var v16 any = tmp15
+				_ = v16
+				var tmp17 any
+				var tmp18 any
 				{ // let
 					// let binding "and__0__auto__"
-					var v17 any = v8
-					_ = v17
-					var tmp18 any
-					if lang.IsTruthy(v17) {
-						tmp19 := aotExternalFn5(v12, "go-yaml")
-						tmp18 = tmp19
+					var v19 any = v8
+					_ = v19
+					var tmp20 any
+					if lang.IsTruthy(v19) {
+						tmp21 := aotExternalFn5(v16, "go-yaml")
+						tmp20 = tmp21
 					} else {
-						tmp18 = v17
+						tmp20 = v19
 					}
-					tmp16 = tmp18
+					tmp18 = tmp20
 				} // end let
-				if lang.IsTruthy(tmp16) {
-					tmp17 := aotKeywordMapNew0(v12)
-					tmp18 := aotExternalFn6("tab-indent loading requires the native go-yaml parser", tmp17)
-					panic(tmp18)
+				if lang.IsTruthy(tmp18) {
+					tmp19 := aotKeywordMapNew0(v16)
+					tmp20 := aotExternalFn6("tab-indent loading requires the native go-yaml parser", tmp19)
+					panic(tmp20)
 				} else {
 				}
-				_ = tmp15
-				var tmp19 any
+				_ = tmp17
+				var tmp21 any
 				{ // let
 					// let binding "G__35"
-					var v20 any = v14
-					_ = v20
-					var tmp21 any
+					var v22 any = v14
+					_ = v22
+					var tmp23 any
 					if lang.IsTruthy(v6) {
-						var tmp22 any = v20
-						tmp22 = lang.Assoc(tmp22, kw_tab_DASH_indent, v6)
-						tmp21 = tmp22
+						var tmp24 any = v22
+						tmp24 = lang.Assoc(tmp24, kw_tab_DASH_indent, v6)
+						tmp23 = tmp24
 					} else {
-						tmp21 = v20
+						tmp23 = v22
 					}
-					tmp19 = tmp21
+					tmp21 = tmp23
 				} // end let
-				tmp20 := aotKeywordSite1.Get(kw_plugin_DASH_install, v3, nil)
-				tmp21 := aotExternalFn8(tmp20)
-				tmp22 := aotExternalFn7(v12, tmp19, v2, tmp21)
-				tmp4 = tmp22
+				tmp22 := aotKeywordSite1.Get(kw_plugin_DASH_install, v3, nil)
+				tmp23 := aotExternalFn8(tmp22)
+				tmp24 := aotExternalFn7(v16, tmp21, v2, tmp23)
+				tmp4 = tmp24
 			} // end let
 			return tmp4
 		})
@@ -484,7 +499,7 @@ func LoadNS() {
 		aotDirectFn1 = tmp1
 		var_yamlstar_DOT_parser_parse = ns.InternWithValue(tmp0, tmp1, true)
 		var_yamlstar_DOT_parser_parse.SetMetaLazyMacro(func() lang.IPersistentMap {
-			return lang.NewMapUniqueKeys(kw_file, "yamlstar/parser.clj", kw_line, int(43), kw_column, int(7), kw_end_DASH_line, int(43), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str), lang.NewVector(sym_yaml_DASH_str, sym_opts)), kw_doc, "Parse a YAML string into an event stream.\n\n  Args:\n    yaml-str: A string containing YAML content\n    opts: (optional) Options map with an optional :parser plugin\n\n  Returns:\n    A sequence of event maps representing the YAML structure", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
+			return lang.NewMapUniqueKeys(kw_file, "yamlstar/parser.clj", kw_line, int(43), kw_column, int(7), kw_end_DASH_line, int(43), kw_end_DASH_column, int(11), kw_arglists, lang.NewList(lang.NewVector(sym_yaml_DASH_str), lang.NewVector(sym_yaml_DASH_str, sym_opts)), kw_doc, "Parse a YAML string into an event stream.\n\n  Args:\n    yaml-str: A string containing YAML content\n    opts: (optional) Options map with an optional :yaml-parser plugin\n\n  Returns:\n    A sequence of event maps representing the YAML structure", kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_parser))
 		}, false)
 	}
 	// register-parsers!

@@ -73,14 +73,14 @@
                        deref)
                (catch Exception _ nil))
              (when-let [loader @parser-loader]
-               (when-let [loaded (loader "parser" name version install?)]
+               (when-let [loaded (loader "yaml-parser" name version install?)]
                  (register-parser! loaded)))
              (throw (ex-info (str "Unknown YAML parser plugin: " name
                                   ". Available: "
                                   (if-let [names (seq (registered-parsers))]
                                     (str/join ", " names)
                                     "none"))
-                             {:parser name
+                             {:yaml-parser name
                               :available (registered-parsers)})))]
      (when version
        (let [requested (normalize-version version)
@@ -90,7 +90,7 @@
             (ex-info
              (str "Parser plugin version mismatch: linked "
                   (or linked "unversioned") ", requested " requested)
-             {:parser name
+             {:yaml-parser name
               :linked linked
               :requested requested})))))
      parser)))
@@ -181,13 +181,13 @@
     (when-not (map? config)
       (throw (ex-info "Option :plugin must be a map"
                       {:plugin config})))
-    (doseq [api (keys (dissoc config :parser :yaml-emitter
+    (when (contains? config :parser)
+      (throw (ex-info "Plugin API parser was renamed to yaml-parser"
+                      {:api :parser :replacement :yaml-parser})))
+    (doseq [api (keys (dissoc config :yaml-parser :yaml-emitter
                                   :tab-indent :alias-data))]
       (throw (ex-info (str "Unknown YAMLStar plugin API: " (name api))
                       {:api api})))
-    (when (contains? config :yaml-parser)
-      (throw (ex-info "Unknown YAMLStar plugin API: yaml-parser"
-                      {:api :yaml-parser})))
     config))
 
 (defn- short-config
@@ -223,10 +223,10 @@
   "Extract [parser-name config] from load options."
   [opts]
   (when-let [plugins (plugin-config opts)]
-    (when (contains? plugins :parser)
+    (when (contains? plugins :yaml-parser)
       (when-let [config
                  (selection-config
-                  :parser (:parser plugins))]
+                  :yaml-parser (:yaml-parser plugins))]
         (let [name (:name config)]
           (when (and name (not (string? name)))
             (throw (ex-info "Parser plugin :name must be a string"

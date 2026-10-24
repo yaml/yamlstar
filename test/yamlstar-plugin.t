@@ -74,6 +74,14 @@ installer=$temporary/prefix/bin/yamlstar-plugin
 mkdir -p "${installer%/*}"
 cp util/yamlstar-plugin "$installer"
 
+set +e
+output=$("$installer" install parser=toml 2>&1)
+status=$?
+set -e
+is "$status" 1 'Installer rejects the old parser API'
+like "$output" 'parser was renamed to yaml-parser' \
+  'Installer explains the API rename'
+
 export FIXTURE_VERSION=$version
 export FIXTURE_CHECKSUMS=$temporary/SHA256SUMS
 export FIXTURE_ARCHIVE=$archive
@@ -126,8 +134,8 @@ export FIXTURE_ARCHIVE=$parser_archive
 parser_dir=$temporary/parser-lib
 output=$(HOME="$test_home" PATH="$temporary/bin:$PATH" \
   YAMLSTAR_LIBRARY_PATH=$parser_dir \
-  "$installer" install parser toml 2>&1)
-like "$output" 'Installing YAMLStar plugin parser=parser-toml' \
+  "$installer" install yaml-parser toml 2>&1)
+like "$output" 'Installing YAMLStar plugin yaml-parser=parser-toml' \
   'Parser selector maps to the TOML artifact'
 is "$(< "$parser_dir/$parser_library")" 'TOML parser' \
   'Installer writes the TOML parser library'
@@ -153,8 +161,8 @@ export FIXTURE_ARCHIVE=$parser_archive
 parser_dir=$temporary/parser-lib
 output=$(HOME="$test_home" PATH="$temporary/bin:$PATH" \
   YAMLSTAR_LIBRARY_PATH=$parser_dir \
-  "$installer" install parser rapidyaml 2>&1)
-like "$output" 'Installing YAMLStar plugin parser=parser-rapidyaml' \
+  "$installer" install yaml-parser rapidyaml 2>&1)
+like "$output" 'Installing YAMLStar plugin yaml-parser=parser-rapidyaml' \
   'Parser selector maps to the RapidYAML artifact'
 is "$(< "$parser_dir/$parser_library")" 'RapidYAML parser' \
   'Installer writes the RapidYAML parser library'

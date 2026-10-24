@@ -186,7 +186,7 @@ func (o options) json() (string, error) {
 	cfg := map[string]any{}
 	plugins := map[string]any{}
 	if o.yamlParser != "" {
-		plugins["parser"] = map[string]any{"name": o.yamlParser}
+		plugins["yaml-parser"] = map[string]any{"name": o.yamlParser}
 	}
 	if o.yamlEmitter != "" {
 		plugins["yaml-emitter"] = map[string]any{"name": o.yamlEmitter}

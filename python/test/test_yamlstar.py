@@ -283,7 +283,7 @@ def test_requested_plugin_names():
     """Extract plugin distribution names from native plugin options."""
     options = {
         'plugin': {
-            'parser': {'name': 'toml'},
+            'yaml-parser': {'name': 'toml'},
             'tab-indent': {},
             'ignored': 'not-a-plugin',
         },
@@ -307,7 +307,7 @@ def test_installed_plugin_discovery_loads_only_requested(
     )
 
     options = {
-        'plugin': {'parser': {'name': 'toml'}},
+        'plugin': {'yaml-parser': {'name': 'toml'}},
     }
     assert yamlstar._installed_plugin_dirs(options) == [
         str(requested_dir),
@@ -331,7 +331,7 @@ def test_installed_plugin_discovery_rejects_duplicate_names(
     )
 
     options = {
-        'plugin': {'parser': {'name': 'toml'}},
+        'plugin': {'yaml-parser': {'name': 'toml'}},
     }
     with pytest.raises(Exception, match='Multiple installed YAMLStar plugins'):
         yamlstar._installed_plugin_dirs(options)
@@ -348,7 +348,7 @@ def test_installed_plugin_discovery_rejects_missing_directory(
     )
 
     options = {
-        'plugin': {'parser': {'name': 'toml'}},
+        'plugin': {'yaml-parser': {'name': 'toml'}},
     }
     with pytest.raises(Exception, match='returned a missing directory'):
         yamlstar._installed_plugin_dirs(options)
@@ -373,7 +373,7 @@ def test_explicit_plugin_search_path_disables_discovery(
     )
 
     options = {
-        'plugin': {'parser': {'name': 'toml'}},
+        'plugin': {'yaml-parser': {'name': 'toml'}},
     }
     library = tmp_path / 'native' / 'libyamlstar.so'
     assert yamlstar._binding_plugin_dirs(options) == []
@@ -395,7 +395,7 @@ def test_call_uses_and_restores_installed_plugin_path(
 
     instance = object.__new__(yamlstar.YAMLStar)
     instance._options = {
-        'plugin': {'parser': {'name': 'toml'}},
+        'plugin': {'yaml-parser': {'name': 'toml'}},
     }
     instance._libyamlstar_path = str(tmp_path / 'libyamlstar.so')
     instance._plugin_installer_path = str(tmp_path / 'missing-installer')
@@ -482,20 +482,27 @@ def test_parallel_calls_keep_plugin_paths_isolated(monkeypatch, tmp_path):
 
 def test_load_with_options_dict(ys):
     """Test loading with a full options dict."""
-    options = {'plugin': {'parser': {'name': 'reference'}}}
+    options = {'plugin': {'yaml-parser': {'name': 'reference'}}}
     assert yamlstar.YAMLStar(options).load("key: value") == {"key": "value"}
+
+
+@pytest.mark.parametrize('selection', [True, {}])
+def test_default_parser_options(selection):
+    """Unnamed parser selections use the native runtime default."""
+    options = {'plugin': {'yaml-parser': selection}}
+    assert yamlstar.YAMLStar(options).load('key: value') == {'key': 'value'}
 
 
 def test_json_comments_options():
     """Test the JSON comments plugin option helper."""
     assert yamlstar.parser('json-comments') == {
-        'parser': {'name': 'json-comments'}}
+        'yaml-parser': {'name': 'json-comments'}}
 
 
 def test_yaml_plugin_options():
     """Build YAML parser and emitter plugin option fragments."""
     assert yamlstar.parser('reference') == {
-        'parser': {'name': 'reference'}}
+        'yaml-parser': {'name': 'reference'}}
     assert yamlstar.yaml_emitter('reference') == {
         'yaml-emitter': {'name': 'reference'}}
 
@@ -598,7 +605,7 @@ def test_installed_parser_discovery(monkeypatch, tmp_path):
     requested = FakeEntryPoint('parser-rapidyaml', str(tmp_path))
     monkeypatch.setattr(yamlstar.importlib_metadata, 'entry_points',
                         lambda: [requested])
-    options = {'plugin': {'parser': {'name': 'rapidyaml'}}}
+    options = {'plugin': {'yaml-parser': {'name': 'rapidyaml'}}}
     assert yamlstar._requested_plugin_names(options) == ['parser-rapidyaml']
     assert yamlstar._installed_plugin_dirs(options) == [str(tmp_path)]
     assert requested.loaded is True

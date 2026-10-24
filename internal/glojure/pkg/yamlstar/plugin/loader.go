@@ -206,7 +206,7 @@ func aotKeywordMapNew8(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordMapShape9 = lang.NewKeywordMapShape("parser", "available")
+var aotKeywordMapShape9 = lang.NewKeywordMapShape("yaml-parser", "available")
 
 type aotKeywordMapStorage9 struct {
 	lang.Map
@@ -224,7 +224,7 @@ func aotKeywordMapNew9(v0 any, v1 any) lang.IPersistentMap {
 }
 
 var aotKeywordSite14 lang.KeywordSite
-var aotKeywordMapShape10 = lang.NewKeywordMapShape("parser", "linked", "requested")
+var aotKeywordMapShape10 = lang.NewKeywordMapShape("yaml-parser", "linked", "requested")
 
 type aotKeywordMapStorage10 struct {
 	lang.Map
@@ -452,6 +452,23 @@ func aotKeywordMapNew22(v0 any) lang.IPersistentMap {
 	return lang.InitStaticKeywordMap(
 		&storage.Map,
 		aotKeywordMapShape22,
+		storage.values[:],
+	)
+}
+
+var aotKeywordMapShape23 = lang.NewKeywordMapShape("api", "replacement")
+
+type aotKeywordMapStorage23 struct {
+	lang.Map
+	values [2]any
+}
+
+func aotKeywordMapNew23(v0 any, v1 any) lang.IPersistentMap {
+	storage := &aotKeywordMapStorage23{}
+	storage.values = [2]any{v0, v1}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape23,
 		storage.values[:],
 	)
 }
@@ -1032,7 +1049,7 @@ func LoadNS() {
 		closed2 = lang.NewVector(false, nil)
 	}
 	{
-		closed3 = aotKeywordMapNew7(kw_yaml_DASH_parser)
+		closed3 = aotKeywordMapNew23(kw_parser, kw_yaml_DASH_parser)
 	}
 	{
 		closed4 = regexp4.MustCompile("@")
@@ -1437,13 +1454,13 @@ func LoadNS() {
 						var v8 any = v5
 						_ = v8
 						var tmp9 any
-						tmp10 := aotExternalFn1(v8, kw_parser)
+						tmp10 := aotExternalFn1(v8, kw_yaml_DASH_parser)
 						if lang.IsTruthy(tmp10) {
 							var tmp11 any
 							{ // let
 								// let binding "temp__0__auto__"
-								tmp12 := aotKeywordSite11.Get(kw_parser, v8, nil)
-								tmp13 := aotDirectFn15(kw_parser, tmp12)
+								tmp12 := aotKeywordSite11.Get(kw_yaml_DASH_parser, v8, nil)
+								tmp13 := aotDirectFn15(kw_yaml_DASH_parser, tmp12)
 								var v14 any = tmp13
 								_ = v14
 								var tmp15 any
@@ -1550,134 +1567,134 @@ func LoadNS() {
 						}
 						_ = tmp9
 						var tmp13 any
+						tmp14 := aotExternalFn1(v8, kw_parser)
+						if lang.IsTruthy(tmp14) {
+							tmp15 := aotExternalFn6("Plugin API parser was renamed to yaml-parser", closed3)
+							panic(tmp15)
+						} else {
+						}
+						_ = tmp13
+						var tmp16 any
 						{ // let
 							// let binding "seq_25"
-							tmp14 := lang.DissocKeyword(lang.DissocKeyword(lang.DissocKeyword(lang.DissocKeyword(v8, kw_parser), kw_yaml_DASH_emitter), kw_tab_DASH_indent), kw_alias_DASH_data)
-							tmp15 := aotExternalFn28(tmp14)
-							tmp16 := lang.Seq(tmp15)
-							var v17 any = tmp16
-							_ = v17
-							// let binding "chunk_26"
-							var v18 any = nil
-							_ = v18
-							// let binding "count_27"
-							var v19 any = int64(0)
-							_ = v19
-							// let binding "i_28"
-							var v20 any = int64(0)
+							tmp17 := lang.DissocKeyword(lang.DissocKeyword(lang.DissocKeyword(lang.DissocKeyword(v8, kw_yaml_DASH_parser), kw_yaml_DASH_emitter), kw_tab_DASH_indent), kw_alias_DASH_data)
+							tmp18 := aotExternalFn28(tmp17)
+							tmp19 := lang.Seq(tmp18)
+							var v20 any = tmp19
 							_ = v20
+							// let binding "chunk_26"
+							var v21 any = nil
+							_ = v21
+							// let binding "count_27"
+							var v22 any = int64(0)
+							_ = v22
+							// let binding "i_28"
+							var v23 any = int64(0)
+							_ = v23
 							for {
-								var tmp21 any
-								tmp22 := lang.Numbers.Lt(v20, v19)
-								if lang.IsTruthy(tmp22) {
-									var tmp23 any
+								var tmp24 any
+								tmp25 := lang.Numbers.Lt(v23, v22)
+								if lang.IsTruthy(tmp25) {
+									var tmp26 any
 									{ // let
 										// let binding "api"
-										tmp24 := v18.(interface{ Nth(int) any }).Nth(lang.IntCast(v20))
-										var v25 any = tmp24
-										_ = v25
-										tmp26 := aotExternalFn31(v25)
-										tmp27 := aotExternalFn30("Unknown YAMLStar plugin API: ", tmp26)
-										tmp28 := aotKeywordMapNew7(v25)
-										tmp29 := aotExternalFn6(tmp27, tmp28)
-										panic(tmp29)
-										var tmp30 any = v17
-										var tmp31 any = v18
-										var tmp32 any = v19
-										tmp34 := lang.Numbers.Unchecked_inc(v20)
-										var tmp33 any = tmp34
-										v17 = tmp30
-										v18 = tmp31
-										v19 = tmp32
+										tmp27 := v21.(interface{ Nth(int) any }).Nth(lang.IntCast(v23))
+										var v28 any = tmp27
+										_ = v28
+										tmp29 := aotExternalFn31(v28)
+										tmp30 := aotExternalFn30("Unknown YAMLStar plugin API: ", tmp29)
+										tmp31 := aotKeywordMapNew7(v28)
+										tmp32 := aotExternalFn6(tmp30, tmp31)
+										panic(tmp32)
+										var tmp33 any = v20
+										var tmp34 any = v21
+										var tmp35 any = v22
+										tmp37 := lang.Numbers.Unchecked_inc(v23)
+										var tmp36 any = tmp37
 										v20 = tmp33
+										v21 = tmp34
+										v22 = tmp35
+										v23 = tmp36
 										continue
 									} // end let
-									tmp21 = tmp23
+									tmp24 = tmp26
 								} else {
-									var tmp24 any
+									var tmp27 any
 									{ // let
 										// let binding "temp__0__auto__"
-										tmp25 := lang.Seq(v17)
-										var v26 any = tmp25
-										_ = v26
-										var tmp27 any
-										if lang.IsTruthy(v26) {
-											var tmp28 any
+										tmp28 := lang.Seq(v20)
+										var v29 any = tmp28
+										_ = v29
+										var tmp30 any
+										if lang.IsTruthy(v29) {
+											var tmp31 any
 											{ // let
 												// let binding "seq_25"
-												var v29 any = v26
-												_ = v29
-												var tmp30 any
-												tmp31 := aotExternalFn32(v29)
-												if lang.IsTruthy(tmp31) {
-													var tmp32 any
+												var v32 any = v29
+												_ = v32
+												var tmp33 any
+												tmp34 := aotExternalFn32(v32)
+												if lang.IsTruthy(tmp34) {
+													var tmp35 any
 													{ // let
 														// let binding "c__0__auto__"
-														tmp33 := aotExternalFn33(v29)
-														var v34 any = tmp33
-														_ = v34
-														tmp36 := aotExternalFn34(v29)
-														var tmp35 any = tmp36
-														var tmp37 any = v34
-														tmp39 := lang.Count(v34)
-														tmp40 := runtime.RT.IntCast(tmp39)
-														var tmp38 any = tmp40
-														tmp42 := runtime.RT.IntCast(int64(0))
-														var tmp41 any = tmp42
-														v17 = tmp35
-														v18 = tmp37
-														v19 = tmp38
-														v20 = tmp41
+														tmp36 := aotExternalFn33(v32)
+														var v37 any = tmp36
+														_ = v37
+														tmp39 := aotExternalFn34(v32)
+														var tmp38 any = tmp39
+														var tmp40 any = v37
+														tmp42 := lang.Count(v37)
+														tmp43 := runtime.RT.IntCast(tmp42)
+														var tmp41 any = tmp43
+														tmp45 := runtime.RT.IntCast(int64(0))
+														var tmp44 any = tmp45
+														v20 = tmp38
+														v21 = tmp40
+														v22 = tmp41
+														v23 = tmp44
 														continue
 													} // end let
-													tmp30 = tmp32
+													tmp33 = tmp35
 												} else {
-													var tmp33 any
+													var tmp36 any
 													{ // let
 														// let binding "api"
-														tmp34 := lang.First(v29)
-														var v35 any = tmp34
-														_ = v35
-														tmp36 := aotExternalFn31(v35)
-														tmp37 := aotExternalFn30("Unknown YAMLStar plugin API: ", tmp36)
-														tmp38 := aotKeywordMapNew7(v35)
-														tmp39 := aotExternalFn6(tmp37, tmp38)
-														panic(tmp39)
-														tmp41 := lang.Next(v29)
-														var tmp40 any = tmp41
-														var tmp42 any = nil
-														var tmp43 any = int64(0)
-														var tmp44 any = int64(0)
-														v17 = tmp40
-														v18 = tmp42
-														v19 = tmp43
-														v20 = tmp44
+														tmp37 := lang.First(v32)
+														var v38 any = tmp37
+														_ = v38
+														tmp39 := aotExternalFn31(v38)
+														tmp40 := aotExternalFn30("Unknown YAMLStar plugin API: ", tmp39)
+														tmp41 := aotKeywordMapNew7(v38)
+														tmp42 := aotExternalFn6(tmp40, tmp41)
+														panic(tmp42)
+														tmp44 := lang.Next(v32)
+														var tmp43 any = tmp44
+														var tmp45 any = nil
+														var tmp46 any = int64(0)
+														var tmp47 any = int64(0)
+														v20 = tmp43
+														v21 = tmp45
+														v22 = tmp46
+														v23 = tmp47
 														continue
 													} // end let
-													tmp30 = tmp33
+													tmp33 = tmp36
 												}
-												tmp28 = tmp30
+												tmp31 = tmp33
 											} // end let
-											tmp27 = tmp28
+											tmp30 = tmp31
 										} else {
 										}
-										tmp24 = tmp27
+										tmp27 = tmp30
 									} // end let
-									tmp21 = tmp24
+									tmp24 = tmp27
 								}
-								tmp13 = tmp21
+								tmp16 = tmp24
 								break
 							}
 						} // end let
-						_ = tmp13
-						var tmp14 any
-						tmp15 := aotExternalFn1(v8, kw_yaml_DASH_parser)
-						if lang.IsTruthy(tmp15) {
-							tmp16 := aotExternalFn6("Unknown YAMLStar plugin API: yaml-parser", closed3)
-							panic(tmp16)
-						} else {
-						}
-						_ = tmp14
+						_ = tmp16
 						tmp7 = v8
 					} // end let
 					tmp6 = tmp7
@@ -1812,7 +1829,7 @@ func LoadNS() {
 												var tmp27 any
 												{ // let
 													// let binding "temp__0__auto__"
-													tmp28 := lang.Apply4(v26, "parser", v2, v3, v4)
+													tmp28 := lang.Apply4(v26, "yaml-parser", v2, v3, v4)
 													var v29 any = tmp28
 													_ = v29
 													var tmp30 any
