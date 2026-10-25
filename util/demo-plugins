@@ -30,16 +30,15 @@ Missing executables, implementations, or shared libraries are marked SKIP.
 Unexpected errors count as failures, and the remaining demos still run.
 
 Demo definitions come from the sister demo-plugins.yaml file, using ys.
-A demo with a make field builds its executable before its first use.
-Each distinct build runs once per invocation.
-Build output appears as it is produced.
-Build dependencies and shared libraries are downloaded automatically.
+The demos use the existing cli/bin/yaml executable.
+Run make cli once before using them.
+Missing shared libraries are downloaded automatically.
 No repos/* checkouts are needed.
-Use --list to inspect the commands without building the executables.
+Use --list to inspect the commands without running the executable.
 
 Executable override:
   YAMLSTAR_BIN      Default: cli/bin/yaml
-                    An override uses that executable without building it.
+                    An override selects a different existing executable.
 
 Examples:
   util/demo-plugins
@@ -104,9 +103,6 @@ skipped=0
 failed=0
 reruns=0
 demo_commands=()
-demo_builds=()
-demo_bodies=()
-built_commands=()
 demo_expected=()
 demo_implementations=()
 demo_descriptions=()
@@ -140,25 +136,11 @@ number_selected() {
 }
 
 load_demo() {
-  local number=$1 template work_word make_args make_word built
+  local number=$1 template work_word
 
   template=$(demo_value "$number" cmnd)
   printf -v work_word %q "$work"
   template=${template//\{work\}/$work_word}
-  demo_bodies[number]=$template
-  make_args=
-  [[ -n ${YAMLSTAR_BIN:-} ]] || make_args=$(demo_value "$number" make)
-  for built in "${built_commands[@]}"; do
-    if [[ $make_args == "$built" ]]; then
-      make_args=
-      break
-    fi
-  done
-  demo_builds[number]=$make_args
-  if [[ -n $make_args ]]; then
-    printf -v make_word 'make -C %q' "$root"
-    template="$make_word $make_args && $template"
-  fi
   demo_commands[number]=$template
   demo_expected[number]=$(demo_value "$number" fail)
   demo_implementations[number]=$(demo_value "$number" impl)
@@ -176,32 +158,18 @@ show_demo() {
 execute_command() {
   local number=$1 line=$2 expected=$3 implementation=$4
   local planned_command=${demo_commands[number]}
-  local output status make_word
-  if [[ $line == "$planned_command" && -z ${demo_builds[number]} ]] &&
+  local output status
+  if [[ $line == "$planned_command" ]] &&
     ! command -v "$yamlstar_bin" > /dev/null; then
     printf 'SKIP: executable unavailable: %s\n' "$yamlstar_bin"
+    if [[ -z ${YAMLSTAR_BIN:-} ]]; then
+      printf 'Build it first with: make cli\n'
+    fi
     skipped=$((skipped + 1))
     return 0
   fi
 
-  : > "$work/output"
-  status=0
-  if [[ $line == "$planned_command" && -n ${demo_builds[number]} ]]; then
-    printf -v make_word 'make -C %q' "$root"
-    if bash -o pipefail -c \
-      "$make_word ${demo_builds[number]}"; then
-      built_commands+=("${demo_builds[number]}")
-      line=${demo_bodies[number]}
-    else
-      status=$?
-    fi
-  fi
-  if (( status != 0 )); then
-    printf 'FAIL: build exited %d\n' "$status"
-    failed=$((failed + 1))
-    return 0
-  fi
-  if bash -o pipefail -c "$line" >> "$work/output" 2>&1; then
+  if bash -o pipefail -c "$line" > "$work/output" 2>&1; then
     status=0
   else
     status=$?
@@ -340,11 +308,7 @@ run_selected() {
     else
       show_demo "$number" "${demo_expected[number]}"
       printf '$ %s\n' "${demo_commands[number]}"
-      if $list_only; then
-        if [[ -n ${demo_builds[number]} ]]; then
-          built_commands+=("${demo_builds[number]}")
-        fi
-      else
+      if ! $list_only; then
         execute_command "$number" "${demo_commands[number]}" \
           "${demo_expected[number]}" "${demo_implementations[number]}"
       fi

@@ -1,86 +1,71 @@
 # Demo numbers follow list order.
 # {work} is a scratch directory.
-# make contains arguments to make from this repository's root.
-# Each distinct build runs once per invocation unless its executable is overridden.
 
-- make: &native cli
-  desc: Parse YAML with the native go-yaml parser
+- desc: Parse YAML with the native go-yaml parser
   cmnd: >-
     <<<$'answer: 42\nitems: [one, two]\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=yaml-parser=go-yaml -J
   impl: go-yaml
 
-- make: *native
-  desc: Parse YAML with the reference parser
+- desc: Parse YAML with the reference parser
   cmnd: >-
     <<<$'answer: 42\nitems: [one, two]\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=yaml-parser=reference -J
   impl: reference
 
-- make: *native
-  desc: Parse JSON-style comments with the JSON-comments parser
+- desc: Parse JSON-style comments with the JSON-comments parser
   cmnd: >-
     <<<$'{answer: true/* JSON block comment */} // line comment\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=yaml-parser=json-comments -J
   impl: json-comments
 
-- make: *native
-  desc: Parse YAML with the RapidYAML shared library
+- desc: Parse YAML with the RapidYAML shared library
   cmnd: >-
     <<<$'answer: 42\nitems: [one, two]\n' env YAMLSTAR_CONFIG= yaml --plugin=yaml-parser=rapidyaml -J
   impl: rapidyaml
 
-- make: *native
-  desc: Parse TOML with the TOML shared library
+- desc: Parse TOML with the TOML shared library
   cmnd: >-
     <<<$'answer = 42\n[server]\nhost = "localhost"\n' env YAMLSTAR_CONFIG= yaml --plugin=yaml-parser=toml -J
   impl: toml
 
-- make: *native
-  desc: Emit YAML with the native go-yaml emitter
+- desc: Emit YAML with the native go-yaml emitter
   cmnd: >-
     <<<$'answer: 42\nitems: [one, two]\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=yaml-emitter=go-yaml -y
   impl: go-yaml
 
-- make: *native
-  desc: Emit YAML with the reference emitter
+- desc: Emit YAML with the reference emitter
   cmnd: >-
     <<<$'answer: 42\nitems: [one, two]\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=yaml-emitter=reference -y
   impl: reference
 
-- make: *native
-  desc: Load tab-indented YAML with tab-indent
+- desc: Load tab-indented YAML with tab-indent
   cmnd: >-
     <<<$'root:\n\tanswer: 42\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=yaml-parser=go-yaml\,tab-indent -J
   impl: go-yaml
 
-- make: *native
-  desc: Dump YAML using tabs with tab-indent
+- desc: Dump YAML using tabs with tab-indent
   cmnd: >-
     <<<$'root:\n  answer: 42\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=yaml-parser=go-yaml\,yaml-emitter=go-yaml\,tab-indent -y
   impl: go-yaml
 
-- make: *native
-  desc: Supply an external anchor through inline Alias-Data
+- desc: Supply an external anchor through inline Alias-Data
   cmnd: >-
     <<<$'item: *defaults\n' env YAMLSTAR_CONFIG= yaml --no-install
     --config '{plugin: {alias-data: {data: {defaults: {color: blue, size: 3}}}}}'
     --plugin=alias-data -J
   impl: alias-data
 
-- make: *native
-  desc: Resolve an alias from a selected environment variable
+- desc: Resolve an alias from a selected environment variable
   cmnd: >-
     <<<$'color: *PLUGIN_DEMO_COLOR\n' env YAMLSTAR_CONFIG= PLUGIN_DEMO_COLOR=blue
     yaml --no-install --config '{plugin: {alias-data: {env: PLUGIN_DEMO_COLOR}}}'
     --plugin=alias-data -J
   impl: alias-data
 
-- make: *native
-  desc: Resolve an alias from an Alias-Data file
+- desc: Resolve an alias from an Alias-Data file
   cmnd: >-
-    printf %s $'defaults: {color: blue, size: 3}\n' > {work}/aliases.yaml && <<<$'item: *defaults\n' env YAMLSTAR_CONFIG= yaml --no-install --config \{plugin:\ \{alias-data:\ \{file:\ \'{work}/aliases.yaml\'\}\}\} --plugin=alias-data -J
+    printf %s $'defaults: {color: blue, size: 3}\n' > {work}/aliases.yaml && <<<$'item: *defaults\n' env YAMLSTAR_CONFIG= yaml --no-install --config "{plugin: {alias-data: {file: '{work}/aliases.yaml'}}}" --plugin=alias-data -J
   impl: alias-data
 
-- make: *native
-  desc: Reuse an anchor across documents with Alias-Data
+- desc: Reuse an anchor across documents with Alias-Data
   cmnd: >-
     <<<$'--- &defaults {color: blue}\n---\nitem: *defaults\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=alias-data -J
   impl: alias-data

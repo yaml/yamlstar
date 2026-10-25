@@ -324,8 +324,8 @@ no parser shared library.
 ## Plugin demos
 
 Run `./util/demo-plugins` from a fresh clone to demonstrate YAMLStar plugins.
-The script builds the native CLI once and downloads missing shared plugins.
-Build output appears as it is produced.
+Build the native CLI once with `make cli`.
+The script uses the existing `cli/bin/yaml` and downloads missing shared plugins.
 No `repos/*` checkouts are needed.
 
 ```bash
@@ -334,8 +334,8 @@ No `repos/*` checkouts are needed.
 ./util/demo-plugins -i 10-
 ```
 
-The sister `util/demo-plugins.yaml` catalog contains the descriptions, commands,
-and build arguments.
+The sister `util/demo-plugins.yaml` catalog contains the descriptions and
+commands.
 Commands invoke `yaml` directly, using the executable selected by the script.
 YAMLScript reads the catalog.
 If `ys` is missing from `PATH`, the script installs it using in-1:
@@ -348,4 +348,4 @@ Non-interactive output uses `less -FRX`.
 Interactive mode lets you edit commands with readline.
 Clear the line and press Enter to recall the previous command, or enter a demo
 number to load that command without consuming the pending demo.
-Set `YAMLSTAR_BIN` to use an existing executable without building it.
+Set `YAMLSTAR_BIN` to select a different existing executable.
