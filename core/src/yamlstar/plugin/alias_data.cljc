@@ -169,6 +169,15 @@
   []
   (new-context {} {:get-environment (constantly {})}))
 
+(defn disabled-context
+  "Reject alias references without reading configured sources."
+  []
+  (assoc (default-context)
+         :resolve-alias
+         (fn [name]
+           (throw (ex-info "Alias-Data aliases are disabled"
+                           {:alias name})))))
+
 (defn begin-stream [context] ((:begin-stream context)))
 (defn begin-document [context] ((:begin-document context)))
 (defn define-anchor [context name value]

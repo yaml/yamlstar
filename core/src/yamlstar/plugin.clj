@@ -299,14 +299,27 @@
                         {:auto auto})))
               {:mode mode :load load :dump dump :auto auto})))))))
 
+(defn alias-data-disabled?
+  "Whether an explicit Alias-Data selection rejects alias references."
+  [opts]
+  (let [raw (:alias-data (plugin-config opts))]
+    (or (false? raw) (= raw "disable")
+        (and (map? raw) (true? (:disable raw))))))
+
 (defn alias-data-context
   "Create the per-load Alias-Data context selected by opts."
   [opts services]
-  (let [plugins (plugin-config opts)]
-    (if-not (and plugins (contains? plugins :alias-data))
+  (let [plugins (plugin-config opts)
+        raw (:alias-data plugins)]
+    (cond
+      (not (and plugins (contains? plugins :alias-data)))
       (alias-data/default-context)
-      (if-let [selection
-               (selection-config :alias-data (:alias-data plugins))]
+
+      (alias-data-disabled? opts)
+      (alias-data/disabled-context)
+
+      :else
+      (if-let [selection (selection-config :alias-data raw)]
         (let [name (or (:name selection) "alias-data")
               requested (:version selection)
               plugin (resolve-alias-data name)

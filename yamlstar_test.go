@@ -109,6 +109,38 @@ func TestPureGoAliasDataStream(t *testing.T) {
 	if len(got) != 2 {
 		t.Fatalf("got %#v", got)
 	}
+	if _, err := yamlstar.LoadAll(input,
+		yamlstar.WithPlugin(yamlstar.AliasData(yamlstar.AliasDataConfig{
+			Stream: false,
+		}))); err == nil {
+		t.Fatal("explicit document scope allowed a cross-document alias")
+	}
+}
+
+func TestPureGoAliasDataDisabled(t *testing.T) {
+	option := yamlstar.WithPlugin(yamlstar.AliasData(yamlstar.AliasDataConfig{
+		Disable: true,
+		File:    "/not/a/real/file",
+		Env:     []string{"NOT_A_REAL_ALIAS_DATA_VARIABLE"},
+	}))
+	for _, parser := range []string{"go-yaml", "reference", "json-comments"} {
+		t.Run(parser, func(t *testing.T) {
+			parserOption := yamlstar.WithPlugin(yamlstar.YAMLParser(parser))
+			for _, input := range []string{
+				"value: &a 1\ncopy: *a\n",
+				"copy: *missing\n",
+				"base: &a {x: 1}\ncopy: {<<: *a}\n",
+			} {
+				if _, err := yamlstar.Load(input, option, parserOption); err == nil ||
+					!strings.Contains(err.Error(), "aliases are disabled") {
+					t.Fatalf("alias not rejected: %v", err)
+				}
+			}
+			if _, err := yamlstar.Load("value: &a 1\n", option, parserOption); err != nil {
+				t.Fatal(err)
+			}
+		})
+	}
 }
 
 func TestPureGoCompactSequenceIndent(t *testing.T) {

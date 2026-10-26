@@ -22,6 +22,36 @@
       (is (= [{"x" 1} {"copy" {"x" 1}}]
              (yaml/load-all input {:plugin {:alias-data true}}))))))
 
+(deftest explicit-document-scope-test
+  (doseq [parser ["reference" "snakeyaml"]]
+    (let [opts {:plugin {:yaml-parser parser
+                         :alias-data {:stream false}}}]
+      (is (= {"local" 1 "copy" 1}
+             (yaml/load "local: &a 1\ncopy: *a\n" opts)))
+      (is (thrown-with-msg?
+           Exception #"Unknown anchor: saved"
+           (yaml/load-all "--- &saved {x: 1}\n---\ncopy: *saved\n"
+                          opts))))))
+
+(deftest disabled-aliases-test
+  (doseq [selection [false "disable" {:disable true}
+                     {:disable true :file "/not/a/real/file"
+                      :env ["NOT_A_REAL_ALIAS_DATA_VARIABLE"]
+                      :data {"bad.name" 1} :name "missing"}]
+          parser ["reference" "snakeyaml"]]
+    (testing (pr-str selection)
+      (let [opts {:plugin {:yaml-parser parser :alias-data selection}}]
+        (is (= {"value" 1 "literal" "*a"}
+               (yaml/load "value: &a 1\nliteral: '*a'\n" opts)))
+        (doseq [input ["value: &a 1\ncopy: *a\n"
+                       "copy: *missing\n"
+                       "base: &a {x: 1}\ncopy: {<<: *a}\n"]]
+          (is (thrown-with-msg? Exception #"aliases are disabled"
+                                (yaml/load input opts))))
+        (is (thrown-with-msg?
+             Exception #"aliases are disabled"
+             (yaml/load-all "--- &a 1\n--- *a\n" opts)))))))
+
 (deftest source-precedence-test
   (with-redefs [alias-data/environment
                 (fn [] {"ALIAS_ENV" "environment"

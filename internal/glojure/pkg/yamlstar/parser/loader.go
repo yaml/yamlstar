@@ -37,7 +37,23 @@ func aotKeywordMapNew0(v0 any) lang.IPersistentMap {
 }
 
 var aotKeywordSite1 lang.KeywordSite
+var aotKeywordSite2 lang.KeywordSite
+var aotKeywordMapShape1 = lang.NewKeywordMapShape("api")
 
+type aotKeywordMapStorage1 struct {
+	lang.Map
+	values [1]any
+}
+
+func aotKeywordMapNew1(v0 any) lang.IPersistentMap {
+	storage := &aotKeywordMapStorage1{}
+	storage.values = [1]any{v0}
+	return lang.InitStaticKeywordMap(
+		&storage.Map,
+		aotKeywordMapShape1,
+		storage.values[:],
+	)
+}
 func aotLinkFn1(vr *lang.Var) lang.FnFunc1 {
 	if vr.IsBound() {
 		return aotLinkBoundFn1(vr)
@@ -180,6 +196,7 @@ func checkArityGTE(args []any, min int) {
 // LoadNS initializes the namespace "yamlstar.parser"
 func LoadNS() {
 	sym__AMP_ := lang.NewSymbolUnchecked("&")
+	sym_alias_DASH_data_DASH_disabled_QMARK_ := lang.NewSymbolUnchecked("alias-data-disabled?")
 	sym_clojure_DOT_core := lang.NewSymbolUnchecked("clojure.core")
 	sym_contains_QMARK_ := lang.NewSymbolUnchecked("contains?")
 	sym_current_DASH_default_DASH_parser := lang.NewSymbolUnchecked("current-default-parser")
@@ -200,6 +217,7 @@ func LoadNS() {
 	sym_reset_BANG_ := lang.NewSymbolUnchecked("reset!")
 	sym_resolve_DASH_parser := lang.NewSymbolUnchecked("resolve-parser")
 	sym_set_DASH_default_DASH_parser_BANG_ := lang.NewSymbolUnchecked("set-default-parser!")
+	sym_some := lang.NewSymbolUnchecked("some")
 	sym_tab_DASH_indent_DASH_config := lang.NewSymbolUnchecked("tab-indent-config")
 	sym_true_QMARK_ := lang.NewSymbolUnchecked("true?")
 	sym_yaml_DASH_str := lang.NewSymbolUnchecked("yaml-str")
@@ -210,6 +228,7 @@ func LoadNS() {
 	kw_doc := lang.NewKeyword("doc")
 	kw_end_DASH_column := lang.NewKeyword("end-column")
 	kw_end_DASH_line := lang.NewKeyword("end-line")
+	kw_event := lang.NewKeyword("event")
 	kw_file := lang.NewKeyword("file")
 	kw_line := lang.NewKeyword("line")
 	kw_load := lang.NewKeyword("load")
@@ -227,6 +246,8 @@ func LoadNS() {
 	var_clojure_DOT_core_not_EQ_ := lang.InternVarName(sym_clojure_DOT_core, sym_not_EQ_)
 	// var clojure.core/reset!
 	var_clojure_DOT_core_reset_BANG_ := lang.InternVarName(sym_clojure_DOT_core, sym_reset_BANG_)
+	// var clojure.core/some
+	var_clojure_DOT_core_some := lang.InternVarName(sym_clojure_DOT_core, sym_some)
 	// var clojure.core/true?
 	var_clojure_DOT_core_true_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_true_QMARK_)
 	// var yamlstar.parser/current-default-parser
@@ -241,6 +262,8 @@ func LoadNS() {
 	var_yamlstar_DOT_parser_register_DASH_reference_DASH_parser_BANG_ := lang.InternVarName(sym_yamlstar_DOT_parser, sym_register_DASH_reference_DASH_parser_BANG_)
 	// var yamlstar.parser/set-default-parser!
 	var_yamlstar_DOT_parser_set_DASH_default_DASH_parser_BANG_ := lang.InternVarName(sym_yamlstar_DOT_parser, sym_set_DASH_default_DASH_parser_BANG_)
+	// var yamlstar.plugin/alias-data-disabled?
+	var_yamlstar_DOT_plugin_alias_DASH_data_DASH_disabled_QMARK_ := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_alias_DASH_data_DASH_disabled_QMARK_)
 	// var yamlstar.plugin/parse-with
 	var_yamlstar_DOT_plugin_parse_DASH_with := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_parse_DASH_with)
 	// var yamlstar.plugin/parser-opts
@@ -252,16 +275,18 @@ func LoadNS() {
 	// var yamlstar.plugin/tab-indent-config
 	var_yamlstar_DOT_plugin_tab_DASH_indent_DASH_config := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_tab_DASH_indent_DASH_config)
 	aotExternalFn1 := aotLinkFn1(var_yamlstar_DOT_plugin_tab_DASH_indent_DASH_config)
-	aotExternalFn10 := aotLinkFn1(var_yamlstar_DOT_plugin_register_DASH_parser_BANG_)
-	aotExternalFn11 := aotLinkFn1(var_yamlstar_DOT_plugin_resolve_DASH_parser)
-	aotExternalFn13 := aotLinkFn2(var_clojure_DOT_core_reset_BANG_)
+	aotExternalFn10 := aotLinkFn2(var_clojure_DOT_core_some)
+	aotExternalFn12 := aotLinkFn2(var_clojure_DOT_core_mapv)
+	aotExternalFn13 := aotLinkFn1(var_yamlstar_DOT_plugin_register_DASH_parser_BANG_)
+	aotExternalFn14 := aotLinkFn1(var_yamlstar_DOT_plugin_resolve_DASH_parser)
+	aotExternalFn16 := aotLinkFn2(var_clojure_DOT_core_reset_BANG_)
 	aotExternalFn2 := aotLinkFn2(var_clojure_DOT_core_contains_QMARK_)
 	aotExternalFn3 := aotLinkFn1(var_yamlstar_DOT_plugin_parser_DASH_opts)
 	aotExternalFn5 := aotLinkFn2(var_clojure_DOT_core_not_EQ_)
 	aotExternalFn6 := aotLinkFn2(var_clojure_DOT_core_ex_DASH_info)
 	aotExternalFn7 := aotLinkFn4(var_yamlstar_DOT_plugin_parse_DASH_with)
 	aotExternalFn8 := aotLinkFn1(var_clojure_DOT_core_true_QMARK_)
-	aotExternalFn9 := aotLinkFn2(var_clojure_DOT_core_mapv)
+	aotExternalFn9 := aotLinkFn1(var_yamlstar_DOT_plugin_alias_DASH_data_DASH_disabled_QMARK_)
 	// reference fmt to avoid unused import error
 	_ = fmt.Printf
 	// reference reflect to avoid unused import error
@@ -347,11 +372,15 @@ func LoadNS() {
 	ns.AddAlias(sym_plugin, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin))
 	var closed0 any
 	var closed1 any
+	var closed2 any
 	{
 		closed0 = lang.NewSet("tabs", "auto")
 	}
 	{
 		closed1 = lang.NewVector(nil, lang.NewMap())
+	}
+	{
+		closed2 = aotKeywordMapNew1("alias-data")
 	}
 	// fallback-default-parser
 	{
@@ -467,23 +496,60 @@ func LoadNS() {
 				_ = tmp17
 				var tmp21 any
 				{ // let
-					// let binding "G__35"
-					var v22 any = v14
-					_ = v22
-					var tmp23 any
-					if lang.IsTruthy(v6) {
-						var tmp24 any = v22
-						tmp24 = lang.Assoc(tmp24, kw_tab_DASH_indent, v6)
-						tmp23 = tmp24
+					// let binding "events"
+					var tmp22 any
+					{ // let
+						// let binding "G__35"
+						var v23 any = v14
+						_ = v23
+						var tmp24 any
+						if lang.IsTruthy(v6) {
+							var tmp25 any = v23
+							tmp25 = lang.Assoc(tmp25, kw_tab_DASH_indent, v6)
+							tmp24 = tmp25
+						} else {
+							tmp24 = v23
+						}
+						tmp22 = tmp24
+					} // end let
+					tmp23 := aotKeywordSite1.Get(kw_plugin_DASH_install, v3, nil)
+					tmp24 := aotExternalFn8(tmp23)
+					tmp25 := aotExternalFn7(v16, tmp22, v2, tmp24)
+					var v26 any = tmp25
+					_ = v26
+					var tmp27 any
+					var tmp28 any
+					{ // let
+						// let binding "and__0__auto__"
+						tmp29 := aotExternalFn9(v3)
+						var v30 any = tmp29
+						_ = v30
+						var tmp31 any
+						if lang.IsTruthy(v30) {
+							var tmp32 lang.FnFunc1
+							tmp32 = lang.FnFunc1(func(p0 any) any {
+								v33 := p0
+								_ = v33
+								tmp34 := aotKeywordSite2.Get(kw_event, v33, nil)
+								tmp35 := lang.Equals("alias", tmp34)
+								return tmp35
+							})
+							tmp33 := aotExternalFn10(tmp32, v26)
+							tmp31 = tmp33
+						} else {
+							tmp31 = v30
+						}
+						tmp28 = tmp31
+					} // end let
+					if lang.IsTruthy(tmp28) {
+						tmp29 := aotExternalFn6("Alias-Data aliases are disabled", closed2)
+						panic(tmp29)
 					} else {
-						tmp23 = v22
 					}
-					tmp21 = tmp23
+					_ = tmp27
+					tmp21 = v26
 				} // end let
-				tmp22 := aotKeywordSite1.Get(kw_plugin_DASH_install, v3, nil)
-				tmp23 := aotExternalFn8(tmp22)
-				tmp24 := aotExternalFn7(v16, tmp21, v2, tmp23)
-				tmp4 = tmp24
+				tmp4 = tmp21
 			} // end let
 			return tmp4
 		})
@@ -519,11 +585,11 @@ func LoadNS() {
 				tmp3 = lang.FnFunc1(func(p0 any) any {
 					v4 := p0
 					_ = v4
-					tmp5 := aotExternalFn11(v4)
-					tmp6 := aotExternalFn10(tmp5)
+					tmp5 := aotExternalFn14(v4)
+					tmp6 := aotExternalFn13(tmp5)
 					return tmp6
 				})
-				tmp4 := aotExternalFn9(tmp3, v2)
+				tmp4 := aotExternalFn12(tmp3, v2)
 				return tmp4
 			}),
 			0,
@@ -557,7 +623,7 @@ func LoadNS() {
 			v2 := p0
 			_ = v2
 			tmp3 := checkDerefVar(var_yamlstar_DOT_parser_fallback_DASH_default_DASH_parser)
-			tmp4 := aotExternalFn13(tmp3, v2)
+			tmp4 := aotExternalFn16(tmp3, v2)
 			_ = tmp4
 			return v2
 		})

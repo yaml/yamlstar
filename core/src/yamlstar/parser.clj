@@ -64,6 +64,11 @@
         (ex-info
          "tab-indent loading requires the native go-yaml parser"
          {:yaml-parser pname})))
-     (plugin/parse-with
-      pname (cond-> config tabs (assoc :tab-indent tabs)) yaml-str
-      (true? (:plugin-install opts))))))
+     (let [events (plugin/parse-with
+                   pname (cond-> config tabs (assoc :tab-indent tabs)) yaml-str
+                   (true? (:plugin-install opts)))]
+       (when (and (plugin/alias-data-disabled? opts)
+                  (some #(= "alias" (:event %)) events))
+         (throw (ex-info "Alias-Data aliases are disabled"
+                         {:api "alias-data"})))
+       events))))

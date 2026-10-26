@@ -69,3 +69,21 @@
   cmnd: >-
     <<<$'--- &defaults {color: blue}\n---\nitem: *defaults\n' env YAMLSTAR_CONFIG= yaml --no-install --plugin=alias-data -J
   impl: alias-data
+
+- desc: Keep ordinary aliases while disabling cross-document reuse
+  cmnd: >-
+    <<<$'local: &value 42\ncopy: *value\n' env YAMLSTAR_CONFIG=
+    yaml --no-install --config '{plugin: {alias-data: {stream: false}}}' -J
+  impl: alias-data
+
+- desc: Reject cross-document aliases with document scope
+  cmnd: >-
+    <<<$'--- &saved {value: 42}\n---\ncopy: *saved\n' env YAMLSTAR_CONFIG=
+    yaml --no-install --config '{plugin: {alias-data: {stream: false}}}' -J
+  fail: Unknown anchor
+
+- desc: Reject aliases altogether with Alias-Data disable
+  cmnd: >-
+    <<<$'local: &value 42\ncopy: *value\n' env YAMLSTAR_CONFIG=
+    yaml --no-install --config '{plugin: {alias-data: disable}}' -J
+  fail: aliases are disabled

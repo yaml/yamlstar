@@ -45,6 +45,10 @@
          (opts/config-options "[1, 2]")))))
 
 (deftest plugin-options-test
+  (testing "Alias-Data disable selector selects the rejecting policy"
+    (is (= {:plugin {:alias-data {:disable true}}}
+           (opts/plugin-options "alias-data=disable"))))
+
   (testing "the old API selector is rejected"
     (doseq [selector ["parser" "parser@v0.2.6" "parser=reference"
                       "yaml-emitter,parser=reference@v0.2.6"]]

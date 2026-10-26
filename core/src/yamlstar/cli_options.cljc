@@ -87,9 +87,12 @@
                   {:plugin selector})))
               {:plugin
                {(normalize-key api)
-                (cond-> {}
-                  implementation (assoc :name name)
-                  version (assoc :version version))}}))]
+                (if (and (= api "alias-data")
+                         implementation (= name "disable") (nil? version))
+                  {:disable true}
+                  (cond-> {}
+                    implementation (assoc :name name)
+                    version (assoc :version version)))}}))]
     (apply deep-merge
            (map selector-options (str/split spec #"," -1)))))
 

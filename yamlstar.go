@@ -153,13 +153,16 @@ type AliasDataConfig struct {
 	File   string
 	Env    any
 	Stream bool
+	// Disable rejects alias references while allowing anchor declarations.
+	Disable bool
 }
 
 // AliasData enables the built-in Alias-Data policy.
 // With no configuration, it enables stream-scoped anchors.
+// A supplied configuration honors Stream even when false.
 func AliasData(config ...AliasDataConfig) Plugin {
 	return func(o *options) {
-		value := AliasDataConfig{}
+		value := AliasDataConfig{Stream: true}
 		if len(config) > 0 {
 			value = config[0]
 		}
@@ -217,6 +220,11 @@ func (o options) json() (string, error) {
 		}
 		if o.aliasData.Stream {
 			config["stream"] = true
+		} else {
+			config["stream"] = false
+		}
+		if o.aliasData.Disable {
+			config = map[string]any{"disable": true}
 		}
 		plugins["alias-data"] = config
 	}

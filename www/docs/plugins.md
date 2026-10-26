@@ -50,6 +50,8 @@ plugin:
 `false` disables that API.
 A mapping may use `disable: true` to retain settings without selecting the
 plugin.
+For Alias-Data specifically, `false`, `disable`, and `{disable: true}` reject
+alias references instead of falling back to ordinary YAML aliases.
 Null is invalid.
 Versions with and without the leading `v` are accepted.
 Documentation and Git tags use the `v` prefix.
@@ -125,12 +127,39 @@ data, environment data, and anchors retained from previous documents.
 Mappings supplied by any source work with the YAML merge key.
 
 `stream: true` retains anchors for later documents in the same input stream.
+Use `stream: false` to allow aliases only within each document.
 The short selector and an explicit empty configuration both enable stream
 mode:
 
 ```bash
 yaml --plugin=alias-data stream.yaml
 ```
+
+To reject all alias references, use either configuration:
+
+```yaml
+plugin:
+  alias-data: disable
+```
+
+```yaml
+plugin:
+  alias-data:
+    disable: true
+```
+
+`alias-data: false` has the same rejection behavior.
+Unused anchor declarations are still allowed.
+Disabled mappings ignore saved source settings without reading files or
+environment variables.
+`yaml --plugin=alias-data=disable` selects this policy directly.
+This changes the previous Alias-Data disabling behavior, which restored
+ordinary document-scoped aliases.
+Other plugin APIs retain their existing disabling behavior.
+
+The Go helper `AliasData()` enables stream scope.
+When supplying `AliasDataConfig`, `Stream: false` explicitly selects document
+scope, and `Disable: true` rejects aliases.
 
 Alias-Data is an in-process policy API, not a native shared-library plugin.
 Both the JVM and generated native runtime perform the same lifecycle actions:
