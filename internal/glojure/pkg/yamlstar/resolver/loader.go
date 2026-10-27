@@ -382,7 +382,7 @@ func LoadNS() {
 			} else {
 				var tmp5 any
 				{ // let
-					// let binding "G__62"
+					// let binding "G__74"
 					tmp6 := runtime.RT.Nth(v2, lang.IntCast(int64(0)))
 					var v7 any = tmp6
 					_ = v7
@@ -641,7 +641,7 @@ func LoadNS() {
 			if lang.IsTruthy(v2) {
 				var tmp4 any
 				{ // let
-					// let binding "G__63"
+					// let binding "G__75"
 					tmp5 := aotKeywordSite0.Get(kw_kind, v2, nil)
 					var v6 any = tmp5
 					_ = v6
@@ -745,7 +745,7 @@ func LoadNS() {
 									_ = v19
 									var tmp20 any
 									{ // let
-										// let binding "vec__65"
+										// let binding "vec__77"
 										var v21 any = v19
 										_ = v21
 										// let binding "k"

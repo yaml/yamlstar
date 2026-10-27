@@ -135,6 +135,74 @@ mode:
 yaml --plugin=alias-data stream.yaml
 ```
 
+### Dotted anchor paths
+
+Enable `path: true` to select values inside anchored mappings and sequences:
+
+```yaml
+plugin:
+  alias-data:
+    path: true
+```
+
+```yaml
+settings: &x1 {foo: {bar: 42}}
+items: &x2 [zero, one, two, {baz: found}]
+answer: *x1.foo.bar
+selected: *x2.3.baz
+numbers: &foo {'42': {bar: found}}
+numeric: *foo.'42'.bar
+```
+
+The results are `answer: 42` and `selected: found`.
+Split dotted aliases on `.` and validate every component, including the anchor
+name, against these patterns (with ASCII word characters):
+
+```text
+^[\w\-\+]+$
+^[0-9]+$
+^'[0-9]+'$
+```
+
+The first component names the anchor verbatim.
+Following components have these meanings, with digit-only components checked
+before ordinary names:
+
+| Component | Meaning |
+|---|---|
+| `foo-bar+baz_1` | String mapping key |
+| `42` | Zero-based sequence index |
+| `'42'` | String mapping key `"42"` |
+
+Indices must match `0` or `[1-9][0-9]*`; `00`, `01`, and `042` are errors.
+Numeric mapping keys require single quotes in the alias.
+Quoted digits remain strings: `'042'` selects `"042"`, distinct from `"42"`.
+They cannot select actual integer keys or index a sequence.
+Bare digits cannot select mapping keys or fall back to string-key lookup.
+Only non-negative decimal digits are allowed inside single quotes;
+`'word'`, `'-42'`, `'+42'`, `'4.2'`, and double-quoted components are invalid.
+Unquoted `-42` and `+42` match the ordinary-name pattern and select string keys.
+Intermediate aliases and merged mappings are traversed normally.
+Terminal null and false values are successful lookups.
+Empty or invalid segments, missing keys, scalar traversal, and out-of-range
+indices report the full alias and failing segment.
+
+The base anchor is selected using the source precedence above.
+A missing path inside that anchor never falls through to another source.
+When enabled, dots always separate path segments, even if a literal dotted
+anchor name exists.
+Aliases without dots and all aliases with `path: false`, the default, retain
+literal anchor lookup without path validation.
+Paths refer to named anchors; document and stream root paths are deferred.
+
+`path: true` also enables stream scope unless `stream: false` is explicit.
+Other nonempty configurations default to document scope.
+The native go-yaml, reference, and JSON-comments parsers accept dotted aliases.
+The bundled JVM SnakeYAML Engine 2.7 rejects dots while scanning aliases;
+select `yaml-parser: reference` on the JVM to use paths.
+
+### Disabling aliases
+
 To reject all alias references, use either configuration:
 
 ```yaml
@@ -158,8 +226,20 @@ ordinary document-scoped aliases.
 Other plugin APIs retain their existing disabling behavior.
 
 The Go helper `AliasData()` enables stream scope.
-When supplying `AliasDataConfig`, `Stream: false` explicitly selects document
-scope, and `Disable: true` rejects aliases.
+`AliasDataConfig{Path: true}` enables paths and their default stream scope.
+`Stream` is now a `*bool`: nil uses the default derived from `Path`, and a
+non-nil pointer explicitly sets the scope.
+Existing callers setting `Stream: false` must use a pointer:
+
+```go
+stream := false
+plugin := yamlstar.AliasData(yamlstar.AliasDataConfig{
+    Path: true,
+    Stream: &stream,
+})
+```
+
+`Disable: true` rejects aliases.
 
 Alias-Data is an in-process policy API, not a native shared-library plugin.
 Both the JVM and generated native runtime perform the same lifecycle actions:

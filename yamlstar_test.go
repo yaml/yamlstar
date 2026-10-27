@@ -109,9 +109,10 @@ func TestPureGoAliasDataStream(t *testing.T) {
 	if len(got) != 2 {
 		t.Fatalf("got %#v", got)
 	}
+	stream := false
 	if _, err := yamlstar.LoadAll(input,
 		yamlstar.WithPlugin(yamlstar.AliasData(yamlstar.AliasDataConfig{
-			Stream: false,
+			Stream: &stream,
 		}))); err == nil {
 		t.Fatal("explicit document scope allowed a cross-document alias")
 	}
@@ -140,6 +141,112 @@ func TestPureGoAliasDataDisabled(t *testing.T) {
 				t.Fatal(err)
 			}
 		})
+	}
+}
+
+func TestPureGoAliasDataPaths(t *testing.T) {
+	for _, parser := range []string{"go-yaml", "reference", "json-comments"} {
+		t.Run(parser, func(t *testing.T) {
+			for _, tc := range []struct {
+				input string
+				want  any
+			}{
+				{"*x.foo.bar", float64(42)},
+				{"*items.1.baz", "second"},
+				{"*items.0", nil},
+				{"*x.nothing", nil},
+				{"*x.off", false},
+				{"*numeric.'3'", "string key"},
+				{"*numeric.'003'", "leading zeros"},
+			} {
+				config := yamlstar.AliasDataConfig{Path: true, Data: map[string]any{
+					"x": map[string]any{
+						"foo": map[string]any{"bar": 42}, "nothing": nil, "off": false,
+					},
+					"items":   []any{nil, map[string]any{"baz": "second"}},
+					"numeric": map[string]any{"3": "string key", "003": "leading zeros"},
+				}}
+				got, err := yamlstar.Load("copy: "+tc.input+"\n",
+					yamlstar.WithPlugin(yamlstar.YAMLParser(parser)),
+					yamlstar.WithPlugin(yamlstar.AliasData(config)))
+				want := map[string]any{"copy": tc.want}
+				if err != nil || !reflect.DeepEqual(got, want) {
+					t.Fatalf("%s: %#v, %v; want %#v", tc.input, got, err, tc.want)
+				}
+			}
+		})
+	}
+}
+
+func TestPureGoAliasDataPathGrammar(t *testing.T) {
+	for _, parser := range []string{"go-yaml", "reference", "json-comments"} {
+		t.Run(parser, func(t *testing.T) {
+			for _, tc := range []struct {
+				name, failure string
+			}{
+				{"x.42", "numeric mapping keys must be single-quoted"},
+				{"x.items.'0'", "sequence index must contain decimal digits"},
+				{"x.items.00", "sequence index must not have leading zeros"},
+				{"x.items.01", "sequence index must not have leading zeros"},
+				{"x.items.042", "sequence index must not have leading zeros"},
+				{"missing.01", "sequence index must not have leading zeros"},
+				{"x.'word'", "invalid path segment"},
+				{"x.'-42'", "invalid path segment"},
+				{"x.'+42'", "invalid path segment"},
+				{"x.'4.2'", "invalid path segment"},
+				{"x.'4e2'", "invalid path segment"},
+				{"x.\"42\"", "invalid path segment"},
+				{"x.'42", "invalid path segment"},
+				{"x.42'", "invalid path segment"},
+				{"bad/name.foo", "invalid path segment"},
+				{"x.foo/bar", "invalid path segment"},
+				{"x.<<", "invalid path segment"},
+			} {
+				_, err := yamlstar.Load("copy: *"+tc.name+"\n",
+					yamlstar.WithPlugin(yamlstar.YAMLParser(parser)),
+					yamlstar.WithPlugin(yamlstar.AliasData(yamlstar.AliasDataConfig{
+						Path: true, Data: map[string]any{"x": map[string]any{
+							"42": "found", "items": []any{"one"},
+						}},
+					})))
+				if err == nil || !strings.Contains(err.Error(), tc.failure) {
+					t.Fatalf("%s: %v; want %s", tc.name, err, tc.failure)
+				}
+			}
+		})
+	}
+}
+
+func TestPureGoAliasDataPathScope(t *testing.T) {
+	input := "--- &saved {foo: 42}\n---\ncopy: *saved.foo\n"
+	stream := false
+	for _, config := range []yamlstar.AliasDataConfig{
+		{Path: true}, {Path: true, Stream: &stream},
+	} {
+		got, err := yamlstar.LoadAll(input,
+			yamlstar.WithPlugin(yamlstar.AliasData(config)))
+		if config.Stream == nil {
+			if err != nil || len(got) != 2 {
+				t.Fatalf("automatic stream: %#v, %v", got, err)
+			}
+		} else if err == nil || !strings.Contains(err.Error(), "unknown anchor") {
+			t.Fatalf("explicit document scope: %v", err)
+		}
+	}
+}
+
+func TestPureGoAliasDataPathErrors(t *testing.T) {
+	option := yamlstar.WithPlugin(yamlstar.AliasData(yamlstar.AliasDataConfig{
+		Path: true, Data: map[string]any{"x": map[string]any{"foo": 42}},
+	}))
+	input := "copy: *x.missing\n"
+	_, single := yamlstar.Load(input, option)
+	_, all := yamlstar.LoadAll(input, option)
+	for _, err := range []error{single, all} {
+		if err == nil || !strings.Contains(err.Error(),
+			`path "x.missing" segment "missing": missing mapping key`) {
+			t.Fatalf("path error details lost: %v", err)
+		}
 	}
 }
 

@@ -481,7 +481,7 @@ func LoadNS() {
 			_ = v7
 			var tmp8 any
 			{ // let
-				// let binding "vec__32"
+				// let binding "vec__44"
 				var tmp9 any
 				{ // let
 					// let binding "or__0__auto__"
@@ -509,7 +509,7 @@ func LoadNS() {
 				_ = v16
 				var tmp17 any
 				{ // let
-					// let binding "G__35"
+					// let binding "G__47"
 					tmp18 := lang.LongCastBoxed(v14)
 					var v19 any = tmp18
 					_ = v19
@@ -586,10 +586,10 @@ func LoadNS() {
 					if lang.IsTruthy(v13) {
 						var tmp15 any
 						{ // let
-							// let binding "map__36"
+							// let binding "map__48"
 							var v16 any = v13
 							_ = v16
-							// let binding "map__36"
+							// let binding "map__48"
 							var tmp17 any
 							tmp18 := aotExternalFn4(v16)
 							if lang.IsTruthy(tmp18) {
@@ -644,7 +644,7 @@ func LoadNS() {
 								_ = v41
 								var tmp42 any
 								{ // let
-									// let binding "G__37"
+									// let binding "G__49"
 									var v43 any = v33
 									_ = v43
 									// case

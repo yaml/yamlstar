@@ -446,7 +446,7 @@ func LoadNS() {
 			if lang.IsTruthy(v2) {
 				var tmp4 any
 				{ // let
-					// let binding "G__91"
+					// let binding "G__103"
 					tmp5 := aotKeywordSite0.Get(kw_kind, v2, nil)
 					var v6 any = tmp5
 					_ = v6
@@ -459,14 +459,14 @@ func LoadNS() {
 						if v6 == kw_mapping {
 							var tmp9 any
 							{ // let
-								// let binding "G__92"
+								// let binding "G__104"
 								var tmp10 lang.FnFunc1
 								tmp10 = lang.FnFunc1(func(p0 any) any {
 									v11 := p0
 									_ = v11
 									var tmp12 any
 									{ // let
-										// let binding "vec__94"
+										// let binding "vec__106"
 										var v13 any = v11
 										_ = v13
 										// let binding "k"
@@ -489,7 +489,7 @@ func LoadNS() {
 								tmp13 := aotKeywordMapNew0(kw_mapping, tmp12)
 								var v14 any = tmp13
 								_ = v14
-								// let binding "G__92"
+								// let binding "G__104"
 								var tmp15 any
 								tmp16 := aotKeywordSite2.Get(kw_anchor, v2, nil)
 								if lang.IsTruthy(tmp16) {
@@ -502,7 +502,7 @@ func LoadNS() {
 								}
 								var v19 any = tmp15
 								_ = v19
-								// let binding "G__92"
+								// let binding "G__104"
 								var tmp20 any
 								tmp21 := aotKeywordSite4.Get(kw_flow, v2, nil)
 								if lang.IsTruthy(tmp21) {
@@ -552,14 +552,14 @@ func LoadNS() {
 						if v6 == kw_sequence {
 							var tmp10 any
 							{ // let
-								// let binding "G__97"
+								// let binding "G__109"
 								tmp11 := checkDerefVar(var_yamlstar_DOT_desolver_desolve_DASH_node)
 								tmp12 := aotKeywordSite9.Get(kw_value, v2, nil)
 								tmp13 := aotExternalFn1(tmp11, tmp12)
 								tmp14 := aotKeywordMapNew0(kw_sequence, tmp13)
 								var v15 any = tmp14
 								_ = v15
-								// let binding "G__97"
+								// let binding "G__109"
 								var tmp16 any
 								tmp17 := aotKeywordSite10.Get(kw_anchor, v2, nil)
 								if lang.IsTruthy(tmp17) {
@@ -572,7 +572,7 @@ func LoadNS() {
 								}
 								var v20 any = tmp16
 								_ = v20
-								// let binding "G__97"
+								// let binding "G__109"
 								var tmp21 any
 								tmp22 := aotKeywordSite12.Get(kw_flow, v2, nil)
 								if lang.IsTruthy(tmp22) {
@@ -632,11 +632,11 @@ func LoadNS() {
 								_ = v15
 								var tmp16 any
 								{ // let
-									// let binding "G__98"
+									// let binding "G__110"
 									tmp17 := aotKeywordMapNew0(kw_scalar, v13)
 									var v18 any = tmp17
 									_ = v18
-									// let binding "G__98"
+									// let binding "G__110"
 									var tmp19 any
 									tmp20 := aotDirectFn6(v13, v15)
 									if lang.IsTruthy(tmp20) {

@@ -146,23 +146,27 @@ func TabIndent(config ...IndentConfig) Plugin {
 	}
 }
 
-// AliasDataConfig configures external alias values and stream anchor scope.
+// AliasDataConfig configures external values, dotted paths, and anchor scope.
 // Env accepts true, a string pattern, or a sequence of exact names.
 type AliasDataConfig struct {
-	Data   map[string]any
-	File   string
-	Env    any
-	Stream bool
+	Data map[string]any
+	File string
+	Env  any
+	// Stream overrides scope. Nil enables stream mode when Path is true.
+	Stream *bool
+	// Path interprets dotted aliases as mapping and sequence lookups.
+	Path bool
 	// Disable rejects alias references while allowing anchor declarations.
 	Disable bool
 }
 
 // AliasData enables the built-in Alias-Data policy.
 // With no configuration, it enables stream-scoped anchors.
-// A supplied configuration honors Stream even when false.
+// A supplied configuration uses Path as its default scope unless Stream is set.
 func AliasData(config ...AliasDataConfig) Plugin {
 	return func(o *options) {
-		value := AliasDataConfig{Stream: true}
+		stream := true
+		value := AliasDataConfig{Stream: &stream}
 		if len(config) > 0 {
 			value = config[0]
 		}
@@ -218,11 +222,12 @@ func (o options) json() (string, error) {
 		if o.aliasData.Env != nil {
 			config["env"] = o.aliasData.Env
 		}
-		if o.aliasData.Stream {
-			config["stream"] = true
-		} else {
-			config["stream"] = false
+		stream := o.aliasData.Path
+		if o.aliasData.Stream != nil {
+			stream = *o.aliasData.Stream
 		}
+		config["stream"] = stream
+		config["path"] = o.aliasData.Path
 		if o.aliasData.Disable {
 			config = map[string]any{"disable": true}
 		}

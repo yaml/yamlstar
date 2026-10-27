@@ -53,7 +53,7 @@ const (
 // IndentConfig configures the built-in tab-indent plugin.
 type IndentConfig = core.IndentConfig
 
-// AliasDataConfig configures external alias values and stream anchor scope.
+// AliasDataConfig configures external values, dotted paths, and anchor scope.
 type AliasDataConfig = core.AliasDataConfig
 
 // YAMLParser selects the YAML parser plugin used for loading.

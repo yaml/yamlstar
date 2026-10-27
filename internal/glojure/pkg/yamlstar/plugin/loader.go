@@ -68,6 +68,7 @@ var aotKeywordSite7 lang.KeywordSite
 var aotKeywordSite8 lang.KeywordSite
 var aotKeywordSite9 lang.KeywordSite
 var aotKeywordSite10 lang.KeywordSite
+var aotKeywordSite11 lang.KeywordSite
 var aotKeywordMapShape1 = lang.NewKeywordMapShape("begin-stream", "begin-document", "define-anchor", "resolve-alias", "end-document", "end-stream")
 
 type aotKeywordMapStorage1 struct {
@@ -102,7 +103,7 @@ func aotKeywordMapNew2(v0 any, v1 any, v2 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite11 lang.KeywordSite
+var aotKeywordSite12 lang.KeywordSite
 var aotKeywordMapShape3 = lang.NewKeywordMapShape("yaml-emitter", "linked", "requested")
 
 type aotKeywordMapStorage3 struct {
@@ -137,9 +138,9 @@ func aotKeywordMapNew4(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite12 lang.KeywordSite
 var aotKeywordSite13 lang.KeywordSite
 var aotKeywordSite14 lang.KeywordSite
+var aotKeywordSite15 lang.KeywordSite
 var aotKeywordMapShape5 = lang.NewKeywordMapShape("name")
 
 type aotKeywordMapStorage5 struct {
@@ -157,7 +158,7 @@ func aotKeywordMapNew5(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite15 lang.KeywordSite
+var aotKeywordSite16 lang.KeywordSite
 var aotKeywordMapShape6 = lang.NewKeywordMapShape("plugin")
 
 type aotKeywordMapStorage6 struct {
@@ -226,7 +227,7 @@ func aotKeywordMapNew9(v0 any, v1 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite16 lang.KeywordSite
+var aotKeywordSite17 lang.KeywordSite
 var aotKeywordMapShape10 = lang.NewKeywordMapShape("yaml-parser", "linked", "requested")
 
 type aotKeywordMapStorage10 struct {
@@ -261,7 +262,7 @@ func aotKeywordMapNew11(v0 any, v1 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite17 lang.KeywordSite
+var aotKeywordSite18 lang.KeywordSite
 var aotKeywordMapShape12 = lang.NewKeywordMapShape("api", "value")
 
 type aotKeywordMapStorage12 struct {
@@ -279,7 +280,7 @@ func aotKeywordMapNew12(v0 any, v1 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite18 lang.KeywordSite
+var aotKeywordSite19 lang.KeywordSite
 var aotKeywordMapShape13 = lang.NewKeywordMapShape("loader")
 
 type aotKeywordMapStorage13 struct {
@@ -297,7 +298,7 @@ func aotKeywordMapNew13(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite19 lang.KeywordSite
+var aotKeywordSite20 lang.KeywordSite
 var aotKeywordMapShape14 = lang.NewKeywordMapShape("tab-indent")
 
 type aotKeywordMapStorage14 struct {
@@ -315,8 +316,8 @@ func aotKeywordMapNew14(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite20 lang.KeywordSite
 var aotKeywordSite21 lang.KeywordSite
+var aotKeywordSite22 lang.KeywordSite
 var aotKeywordMapShape15 = lang.NewKeywordMapShape("disable")
 
 type aotKeywordMapStorage15 struct {
@@ -351,10 +352,10 @@ func aotKeywordMapNew16(v0 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite22 lang.KeywordSite
 var aotKeywordSite23 lang.KeywordSite
 var aotKeywordSite24 lang.KeywordSite
 var aotKeywordSite25 lang.KeywordSite
+var aotKeywordSite26 lang.KeywordSite
 var aotKeywordMapShape17 = lang.NewKeywordMapShape("mode")
 
 type aotKeywordMapStorage17 struct {
@@ -440,8 +441,8 @@ func aotKeywordMapNew21(v0 any, v1 any, v2 any, v3 any) lang.IPersistentMap {
 	)
 }
 
-var aotKeywordSite26 lang.KeywordSite
 var aotKeywordSite27 lang.KeywordSite
+var aotKeywordSite28 lang.KeywordSite
 var aotKeywordMapShape22 = lang.NewKeywordMapShape("stream")
 
 type aotKeywordMapStorage22 struct {
@@ -699,6 +700,7 @@ func LoadNS() {
 	sym_events := lang.NewSymbolUnchecked("events")
 	sym_ex_DASH_info := lang.NewSymbolUnchecked("ex-info")
 	sym_false_QMARK_ := lang.NewSymbolUnchecked("false?")
+	sym_includes_QMARK_ := lang.NewSymbolUnchecked("includes?")
 	sym_install_QMARK_ := lang.NewSymbolUnchecked("install?")
 	sym_join := lang.NewSymbolUnchecked("join")
 	sym_keys := lang.NewSymbolUnchecked("keys")
@@ -716,6 +718,7 @@ func LoadNS() {
 	sym_parser_DASH_loader := lang.NewSymbolUnchecked("parser-loader")
 	sym_parser_DASH_opts := lang.NewSymbolUnchecked("parser-opts")
 	sym_parser_DASH_registry := lang.NewSymbolUnchecked("parser-registry")
+	sym_path_DASH_error := lang.NewSymbolUnchecked("path-error")
 	sym_plugin := lang.NewSymbolUnchecked("plugin")
 	sym_plugin_DASH_config := lang.NewSymbolUnchecked("plugin-config")
 	sym_re_DASH_matches := lang.NewSymbolUnchecked("re-matches")
@@ -752,8 +755,10 @@ func LoadNS() {
 	sym_unregister_DASH_parser_BANG_ := lang.NewSymbolUnchecked("unregister-parser!")
 	sym_unregister_DASH_yaml_DASH_emitter_BANG_ := lang.NewSymbolUnchecked("unregister-yaml-emitter!")
 	sym_validate_DASH_config := lang.NewSymbolUnchecked("validate-config")
+	sym_validate_DASH_path := lang.NewSymbolUnchecked("validate-path")
 	sym_value := lang.NewSymbolUnchecked("value")
 	sym_version := lang.NewSymbolUnchecked("version")
+	sym_walk_DASH_path := lang.NewSymbolUnchecked("walk-path")
 	sym_yaml_DASH_emitter_DASH_opts := lang.NewSymbolUnchecked("yaml-emitter-opts")
 	sym_yaml_DASH_emitter_DASH_registry := lang.NewSymbolUnchecked("yaml-emitter-registry")
 	sym_yaml_DASH_str := lang.NewSymbolUnchecked("yaml-str")
@@ -786,6 +791,7 @@ func LoadNS() {
 	kw_ns := lang.NewKeyword("ns")
 	kw_parse := lang.NewKeyword("parse")
 	kw_parser := lang.NewKeyword("parser")
+	kw_path := lang.NewKeyword("path")
 	kw_plugin := lang.NewKeyword("plugin")
 	kw_private := lang.NewKeyword("private")
 	kw_stream := lang.NewKeyword("stream")
@@ -847,6 +853,8 @@ func LoadNS() {
 	var_clojure_DOT_core_true_QMARK_ := lang.InternVarName(sym_clojure_DOT_core, sym_true_QMARK_)
 	// var clojure.string/blank?
 	var_clojure_DOT_string_blank_QMARK_ := lang.InternVarName(sym_clojure_DOT_string, sym_blank_QMARK_)
+	// var clojure.string/includes?
+	var_clojure_DOT_string_includes_QMARK_ := lang.InternVarName(sym_clojure_DOT_string, sym_includes_QMARK_)
 	// var clojure.string/join
 	var_clojure_DOT_string_join := lang.InternVarName(sym_clojure_DOT_string, sym_join)
 	// var clojure.string/split
@@ -859,10 +867,16 @@ func LoadNS() {
 	var_yamlstar_DOT_plugin_DOT_alias_DASH_data_environment := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_alias_DASH_data, sym_environment)
 	// var yamlstar.plugin.alias-data/normalize-data
 	var_yamlstar_DOT_plugin_DOT_alias_DASH_data_normalize_DASH_data := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_alias_DASH_data, sym_normalize_DASH_data)
+	// var yamlstar.plugin.alias-data/path-error
+	var_yamlstar_DOT_plugin_DOT_alias_DASH_data_path_DASH_error := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_alias_DASH_data, sym_path_DASH_error)
 	// var yamlstar.plugin.alias-data/select-environment
 	var_yamlstar_DOT_plugin_DOT_alias_DASH_data_select_DASH_environment := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_alias_DASH_data, sym_select_DASH_environment)
 	// var yamlstar.plugin.alias-data/validate-config
 	var_yamlstar_DOT_plugin_DOT_alias_DASH_data_validate_DASH_config := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_alias_DASH_data, sym_validate_DASH_config)
+	// var yamlstar.plugin.alias-data/validate-path
+	var_yamlstar_DOT_plugin_DOT_alias_DASH_data_validate_DASH_path := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_alias_DASH_data, sym_validate_DASH_path)
+	// var yamlstar.plugin.alias-data/walk-path
+	var_yamlstar_DOT_plugin_DOT_alias_DASH_data_walk_DASH_path := lang.InternVarName(sym_yamlstar_DOT_plugin_DOT_alias_DASH_data, sym_walk_DASH_path)
 	// var yamlstar.plugin/alias-data-context
 	var_yamlstar_DOT_plugin_alias_DASH_data_DASH_context := lang.InternVarName(sym_yamlstar_DOT_plugin, sym_alias_DASH_data_DASH_context)
 	// var yamlstar.plugin/alias-data-disabled?
@@ -932,25 +946,29 @@ func LoadNS() {
 	aotExternalFn21 := aotLinkFn1(var_clojure_DOT_core_atom)
 	aotExternalFn22 := aotLinkFn2(var_clojure_DOT_core_reset_BANG_)
 	aotExternalFn23 := aotLinkFn4(var_clojure_DOT_core_swap_BANG_)
-	aotExternalFn25 := aotLinkFn3(var_clojure_DOT_core_swap_BANG_)
-	aotExternalFn26 := aotLinkFn2(var_clojure_DOT_core_merge)
-	aotExternalFn29 := aotLinkFn1(var_clojure_DOT_core_second)
+	aotExternalFn24 := aotLinkFn2(var_clojure_DOT_string_includes_QMARK_)
+	aotExternalFn25 := aotLinkFn3(var_clojure_DOT_string_split)
+	aotExternalFn26 := aotLinkFn2(var_yamlstar_DOT_plugin_DOT_alias_DASH_data_validate_DASH_path)
+	aotExternalFn28 := aotLinkFn3(var_yamlstar_DOT_plugin_DOT_alias_DASH_data_walk_DASH_path)
+	aotExternalFn29 := aotLinkFn3(var_yamlstar_DOT_plugin_DOT_alias_DASH_data_path_DASH_error)
 	aotExternalFn3 := aotLinkFn0(var_yamlstar_DOT_plugin_DOT_alias_DASH_data_disabled_DASH_context)
-	aotExternalFn30 := aotLinkFn2(var_clojure_DOT_core_re_DASH_matches)
-	aotExternalFn31 := aotLinkFn1(var_clojure_DOT_core_keys)
-	aotExternalFn33 := aotLinkFn2(var_clojure_DOT_core_str)
-	aotExternalFn34 := aotLinkFn1(var_clojure_DOT_core_name)
-	aotExternalFn35 := aotLinkFn1(var_clojure_DOT_core_chunked_DASH_seq_QMARK_)
-	aotExternalFn36 := aotLinkFn1(var_clojure_DOT_core_chunk_DASH_first)
-	aotExternalFn37 := aotLinkFn1(var_clojure_DOT_core_chunk_DASH_rest)
-	aotExternalFn39 := aotLinkFn1(var_clojure_DOT_string_blank_QMARK_)
-	aotExternalFn41 := aotLinkFn1(var_clojure_DOT_core_sort)
-	aotExternalFn42 := aotLinkFn1(var_clojure_DOT_core_requiring_DASH_resolve)
-	aotExternalFn43 := aotLinkFn2(var_clojure_DOT_core_symbol)
-	aotExternalFn44 := aotLinkFn2(var_clojure_DOT_string_join)
-	aotExternalFn45 := aotLinkFn1(var_clojure_DOT_core_boolean_QMARK_)
-	aotExternalFn46 := aotLinkFn3(var_clojure_DOT_string_split)
-	aotExternalFn47 := aotLinkFn2(var_clojure_DOT_core_remove)
+	aotExternalFn30 := aotLinkFn3(var_clojure_DOT_core_swap_BANG_)
+	aotExternalFn31 := aotLinkFn2(var_clojure_DOT_core_merge)
+	aotExternalFn34 := aotLinkFn1(var_clojure_DOT_core_second)
+	aotExternalFn35 := aotLinkFn2(var_clojure_DOT_core_re_DASH_matches)
+	aotExternalFn36 := aotLinkFn1(var_clojure_DOT_core_keys)
+	aotExternalFn38 := aotLinkFn2(var_clojure_DOT_core_str)
+	aotExternalFn39 := aotLinkFn1(var_clojure_DOT_core_name)
+	aotExternalFn40 := aotLinkFn1(var_clojure_DOT_core_chunked_DASH_seq_QMARK_)
+	aotExternalFn41 := aotLinkFn1(var_clojure_DOT_core_chunk_DASH_first)
+	aotExternalFn42 := aotLinkFn1(var_clojure_DOT_core_chunk_DASH_rest)
+	aotExternalFn44 := aotLinkFn1(var_clojure_DOT_string_blank_QMARK_)
+	aotExternalFn46 := aotLinkFn1(var_clojure_DOT_core_sort)
+	aotExternalFn47 := aotLinkFn1(var_clojure_DOT_core_requiring_DASH_resolve)
+	aotExternalFn48 := aotLinkFn2(var_clojure_DOT_core_symbol)
+	aotExternalFn49 := aotLinkFn2(var_clojure_DOT_string_join)
+	aotExternalFn50 := aotLinkFn1(var_clojure_DOT_core_boolean_QMARK_)
+	aotExternalFn51 := aotLinkFn2(var_clojure_DOT_core_remove)
 	aotExternalFn6 := aotLinkFn2(var_clojure_DOT_core_not_EQ_)
 	aotExternalFn7 := aotLinkFn2(var_clojure_DOT_core_ex_DASH_info)
 	aotExternalFn8 := aotLinkFn4(var_clojure_DOT_core_str)
@@ -1041,6 +1059,7 @@ func LoadNS() {
 	ns.AddAlias(sym_alias_DASH_data, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_alias_DASH_data))
 	var closed0 any
 	var closed1 any
+	var closed10 any
 	var closed2 any
 	var closed3 any
 	var closed4 any
@@ -1056,28 +1075,31 @@ func LoadNS() {
 		closed1 = lang.NewMap()
 	}
 	{
-		closed2 = lang.NewVector(false, nil)
+		closed10 = lang.NewSet("stream", "document")
 	}
 	{
-		closed3 = aotKeywordMapNew23(kw_parser, kw_yaml_DASH_parser)
+		closed2 = regexp4.MustCompile("\\.")
 	}
 	{
-		closed4 = regexp4.MustCompile("@")
+		closed3 = lang.NewVector(false, nil)
 	}
 	{
-		closed5 = lang.NewSet(kw_mode, kw_auto, kw_dump, kw_load)
+		closed4 = aotKeywordMapNew23(kw_parser, kw_yaml_DASH_parser)
 	}
 	{
-		closed6 = lang.NewSet("tabs", "auto")
+		closed5 = regexp4.MustCompile("@")
 	}
 	{
-		closed7 = lang.NewSet("tabs", "auto", "spaces")
+		closed6 = lang.NewSet(kw_mode, kw_auto, kw_dump, kw_load)
 	}
 	{
-		closed8 = lang.NewSet("tabs", "spaces")
+		closed7 = lang.NewSet("tabs", "auto")
 	}
 	{
-		closed9 = lang.NewSet("stream", "document")
+		closed8 = lang.NewSet("tabs", "auto", "spaces")
+	}
+	{
+		closed9 = lang.NewSet("tabs", "spaces")
 	}
 	// alias-data-context
 	{
@@ -1328,11 +1350,11 @@ func LoadNS() {
 			_ = v5
 			var tmp6 any
 			{ // let
-				// let binding "map__31"
+				// let binding "map__43"
 				tmp7 := aotDirectFn15(v2)
 				var v8 any = tmp7
 				_ = v8
-				// let binding "map__31"
+				// let binding "map__43"
 				var tmp9 any
 				tmp10 := aotExternalFn13(v8)
 				if lang.IsTruthy(tmp10) {
@@ -1373,7 +1395,7 @@ func LoadNS() {
 				var v25 any = tmp24
 				_ = v25
 				// let binding "requested"
-				tmp26 := aotKeywordSite11.Get(kw_version, v3, nil)
+				tmp26 := aotKeywordSite12.Get(kw_version, v3, nil)
 				var v27 any = tmp26
 				_ = v27
 				var tmp28 any
@@ -1413,7 +1435,7 @@ func LoadNS() {
 				}
 				_ = tmp28
 				tmp30 := lang.DissocKeyword(v3, kw_version)
-				tmp31 := aotExternalFn26(v23, tmp30)
+				tmp31 := aotExternalFn31(v23, tmp30)
 				tmp32 := lang.Apply3(v21, v4, v5, tmp31)
 				tmp6 = tmp32
 			} // end let
@@ -1450,12 +1472,12 @@ func LoadNS() {
 			_ = v5
 			var tmp6 any
 			{ // let
-				// let binding "map__30"
-				tmp7 := aotKeywordSite12.Get(kw_version, v3, nil)
+				// let binding "map__42"
+				tmp7 := aotKeywordSite13.Get(kw_version, v3, nil)
 				tmp8 := aotDirectFn14Arity3(v2, tmp7, v5)
 				var v9 any = tmp8
 				_ = v9
-				// let binding "map__30"
+				// let binding "map__42"
 				var tmp10 any
 				tmp11 := aotExternalFn13(v9)
 				if lang.IsTruthy(tmp11) {
@@ -1492,7 +1514,7 @@ func LoadNS() {
 				var v24 any = tmp23
 				_ = v24
 				tmp25 := lang.DissocKeyword(v3, kw_version)
-				tmp26 := aotExternalFn26(v24, tmp25)
+				tmp26 := aotExternalFn31(v24, tmp25)
 				tmp27 := lang.Apply2(v22, v4, tmp26)
 				tmp6 = tmp27
 			} // end let
@@ -1548,7 +1570,7 @@ func LoadNS() {
 							var tmp11 any
 							{ // let
 								// let binding "temp__0__auto__"
-								tmp12 := aotKeywordSite13.Get(kw_yaml_DASH_parser, v8, nil)
+								tmp12 := aotKeywordSite14.Get(kw_yaml_DASH_parser, v8, nil)
 								tmp13 := aotDirectFn16(kw_yaml_DASH_parser, tmp12)
 								var v14 any = tmp13
 								_ = v14
@@ -1562,7 +1584,7 @@ func LoadNS() {
 										var tmp18 any
 										{ // let
 											// let binding "name"
-											tmp19 := aotKeywordSite14.Get(kw_name, v17, nil)
+											tmp19 := aotKeywordSite15.Get(kw_name, v17, nil)
 											var v20 any = tmp19
 											_ = v20
 											var tmp21 any
@@ -1636,7 +1658,7 @@ func LoadNS() {
 			var tmp3 any
 			{ // let
 				// let binding "temp__0__auto__"
-				tmp4 := aotKeywordSite15.Get(kw_plugin, v2, nil)
+				tmp4 := aotKeywordSite16.Get(kw_plugin, v2, nil)
 				var v5 any = tmp4
 				_ = v5
 				var tmp6 any
@@ -1658,26 +1680,26 @@ func LoadNS() {
 						var tmp13 any
 						tmp14 := aotExternalFn1(v8, kw_parser)
 						if lang.IsTruthy(tmp14) {
-							tmp15 := aotExternalFn7("Plugin API parser was renamed to yaml-parser", closed3)
+							tmp15 := aotExternalFn7("Plugin API parser was renamed to yaml-parser", closed4)
 							panic(tmp15)
 						} else {
 						}
 						_ = tmp13
 						var tmp16 any
 						{ // let
-							// let binding "seq_25"
+							// let binding "seq_37"
 							tmp17 := lang.DissocKeyword(lang.DissocKeyword(lang.DissocKeyword(lang.DissocKeyword(v8, kw_yaml_DASH_parser), kw_yaml_DASH_emitter), kw_tab_DASH_indent), kw_alias_DASH_data)
-							tmp18 := aotExternalFn31(tmp17)
+							tmp18 := aotExternalFn36(tmp17)
 							tmp19 := lang.Seq(tmp18)
 							var v20 any = tmp19
 							_ = v20
-							// let binding "chunk_26"
+							// let binding "chunk_38"
 							var v21 any = nil
 							_ = v21
-							// let binding "count_27"
+							// let binding "count_39"
 							var v22 any = int64(0)
 							_ = v22
-							// let binding "i_28"
+							// let binding "i_40"
 							var v23 any = int64(0)
 							_ = v23
 							for {
@@ -1690,8 +1712,8 @@ func LoadNS() {
 										tmp27 := v21.(interface{ Nth(int) any }).Nth(lang.IntCast(v23))
 										var v28 any = tmp27
 										_ = v28
-										tmp29 := aotExternalFn34(v28)
-										tmp30 := aotExternalFn33("Unknown YAMLStar plugin API: ", tmp29)
+										tmp29 := aotExternalFn39(v28)
+										tmp30 := aotExternalFn38("Unknown YAMLStar plugin API: ", tmp29)
 										tmp31 := aotKeywordMapNew7(v28)
 										tmp32 := aotExternalFn7(tmp30, tmp31)
 										panic(tmp32)
@@ -1718,19 +1740,19 @@ func LoadNS() {
 										if lang.IsTruthy(v29) {
 											var tmp31 any
 											{ // let
-												// let binding "seq_25"
+												// let binding "seq_37"
 												var v32 any = v29
 												_ = v32
 												var tmp33 any
-												tmp34 := aotExternalFn35(v32)
+												tmp34 := aotExternalFn40(v32)
 												if lang.IsTruthy(tmp34) {
 													var tmp35 any
 													{ // let
 														// let binding "c__0__auto__"
-														tmp36 := aotExternalFn36(v32)
+														tmp36 := aotExternalFn41(v32)
 														var v37 any = tmp36
 														_ = v37
-														tmp39 := aotExternalFn37(v32)
+														tmp39 := aotExternalFn42(v32)
 														var tmp38 any = tmp39
 														var tmp40 any = v37
 														tmp42 := lang.Count(v37)
@@ -1752,8 +1774,8 @@ func LoadNS() {
 														tmp37 := lang.First(v32)
 														var v38 any = tmp37
 														_ = v38
-														tmp39 := aotExternalFn34(v38)
-														tmp40 := aotExternalFn33("Unknown YAMLStar plugin API: ", tmp39)
+														tmp39 := aotExternalFn39(v38)
+														tmp40 := aotExternalFn38("Unknown YAMLStar plugin API: ", tmp39)
 														tmp41 := aotKeywordMapNew7(v38)
 														tmp42 := aotExternalFn7(tmp40, tmp41)
 														panic(tmp42)
@@ -1806,8 +1828,8 @@ func LoadNS() {
 		tmp1 = lang.FnFunc0(func() any {
 			tmp2 := checkDerefVar(var_yamlstar_DOT_plugin_parser_DASH_registry)
 			tmp3 := lang.DerefValue(tmp2)
-			tmp4 := aotExternalFn31(tmp3)
-			tmp5 := aotExternalFn41(tmp4)
+			tmp4 := aotExternalFn36(tmp3)
+			tmp5 := aotExternalFn46(tmp4)
 			return tmp5
 		})
 		aotDirectFn11 = tmp1
@@ -1875,10 +1897,10 @@ func LoadNS() {
 								}()
 								var tmp16 any
 								{ // let
-									// let binding "G__17"
-									tmp17 := aotExternalFn33("yamlstar.plugin.parser.", v2)
-									tmp18 := aotExternalFn43(tmp17, "plugin")
-									tmp19 := aotExternalFn42(tmp18)
+									// let binding "G__29"
+									tmp17 := aotExternalFn38("yamlstar.plugin.parser.", v2)
+									tmp18 := aotExternalFn48(tmp17, "plugin")
+									tmp19 := aotExternalFn47(tmp18)
 									var v20 any = tmp19
 									_ = v20
 									var tmp21 any
@@ -1963,7 +1985,7 @@ func LoadNS() {
 													// let binding "names"
 													var v29 any = v26
 													_ = v29
-													tmp30 := aotExternalFn44(", ", v29)
+													tmp30 := aotExternalFn49(", ", v29)
 													tmp28 = tmp30
 												} // end let
 												tmp27 = tmp28
@@ -1999,7 +2021,7 @@ func LoadNS() {
 						var v11 any = tmp10
 						_ = v11
 						// let binding "linked"
-						tmp12 := aotKeywordSite16.Get(kw_version, v7, nil)
+						tmp12 := aotKeywordSite17.Get(kw_version, v7, nil)
 						var v13 any = tmp12
 						_ = v13
 						var tmp14 any
@@ -2085,8 +2107,8 @@ func LoadNS() {
 								_ = v16
 								var tmp17 any
 								if lang.IsTruthy(v16) {
-									tmp18 := aotKeywordSite17.Get(kw_disable, v3, nil)
-									tmp19 := aotExternalFn45(tmp18)
+									tmp18 := aotKeywordSite18.Get(kw_disable, v3, nil)
+									tmp19 := aotExternalFn50(tmp18)
 									tmp20 := !lang.IsTruthy(tmp19)
 									tmp17 = tmp20
 								} else {
@@ -2102,7 +2124,7 @@ func LoadNS() {
 							}
 							_ = tmp13
 							var tmp17 any
-							tmp18 := aotKeywordSite18.Get(kw_disable, v3, nil)
+							tmp18 := aotKeywordSite19.Get(kw_disable, v3, nil)
 							if lang.IsTruthy(tmp18) {
 							} else {
 								tmp19 := lang.DissocKeyword(v3, kw_disable)
@@ -2181,7 +2203,7 @@ func LoadNS() {
 			var tmp4 any
 			{ // let
 				// let binding "parts"
-				tmp5 := aotExternalFn46(v3, closed4, int64(-1))
+				tmp5 := aotExternalFn25(v3, closed5, int64(-1))
 				var v6 any = tmp5
 				_ = v6
 				var tmp7 any
@@ -2200,7 +2222,7 @@ func LoadNS() {
 						{ // let
 							// let binding "or__0__auto__"
 							tmp14 := lang.First(v6)
-							tmp15 := aotExternalFn39(tmp14)
+							tmp15 := aotExternalFn44(tmp14)
 							var v16 any = tmp15
 							_ = v16
 							var tmp17 any
@@ -2216,8 +2238,8 @@ func LoadNS() {
 									_ = v21
 									var tmp22 any
 									if lang.IsTruthy(v21) {
-										tmp23 := aotExternalFn29(v6)
-										tmp24 := aotExternalFn39(tmp23)
+										tmp23 := aotExternalFn34(v6)
+										tmp24 := aotExternalFn44(tmp23)
 										tmp22 = tmp24
 									} else {
 										tmp22 = v21
@@ -2241,7 +2263,7 @@ func LoadNS() {
 				_ = tmp7
 				var tmp11 any
 				{ // let
-					// let binding "G__29"
+					// let binding "G__41"
 					tmp12 := lang.First(v6)
 					tmp13 := aotKeywordMapNew5(tmp12)
 					var v14 any = tmp13
@@ -2250,7 +2272,7 @@ func LoadNS() {
 					tmp16 := lang.Count(v6)
 					tmp17 := lang.Equals(int64(2), tmp16)
 					if tmp17 {
-						tmp18 := aotExternalFn29(v6)
+						tmp18 := aotExternalFn34(v6)
 						tmp19 := aotDirectFn3(tmp18)
 						var tmp20 any = v14
 						tmp20 = lang.Assoc(tmp20, kw_version, tmp19)
@@ -2293,7 +2315,7 @@ func LoadNS() {
 						var tmp9 any
 						{ // let
 							// let binding "raw"
-							tmp10 := aotKeywordSite19.Get(kw_tab_DASH_indent, v8, nil)
+							tmp10 := aotKeywordSite20.Get(kw_tab_DASH_indent, v8, nil)
 							var v11 any = tmp10
 							_ = v11
 							var tmp12 any
@@ -2336,11 +2358,11 @@ func LoadNS() {
 									var v21 any = tmp15
 									_ = v21
 									// let binding "name"
-									tmp22 := aotKeywordSite20.Get(kw_name, v21, nil)
+									tmp22 := aotKeywordSite21.Get(kw_name, v21, nil)
 									var v23 any = tmp22
 									_ = v23
 									// let binding "disabled"
-									tmp24 := aotKeywordSite21.Get(kw_disable, v21, nil)
+									tmp24 := aotKeywordSite22.Get(kw_disable, v21, nil)
 									var v25 any = tmp24
 									_ = v25
 									// let binding "config"
@@ -2348,8 +2370,8 @@ func LoadNS() {
 									var v27 any = tmp26
 									_ = v27
 									// let binding "unknown"
-									tmp28 := aotExternalFn31(v27)
-									tmp29 := aotExternalFn47(closed5, tmp28)
+									tmp28 := aotExternalFn36(v27)
+									tmp29 := aotExternalFn51(closed6, tmp28)
 									tmp30 := lang.Seq(tmp29)
 									var v31 any = tmp30
 									_ = v31
@@ -2386,7 +2408,7 @@ func LoadNS() {
 										if lang.IsTruthy(v39) {
 											tmp40 = v39
 										} else {
-											tmp41 := aotExternalFn45(v25)
+											tmp41 := aotExternalFn50(v25)
 											tmp40 = tmp41
 										}
 										tmp37 = tmp40
@@ -2415,7 +2437,7 @@ func LoadNS() {
 											var tmp45 any
 											{ // let
 												// let binding "or__0__auto__"
-												tmp46 := aotKeywordSite22.Get(kw_mode, v27, nil)
+												tmp46 := aotKeywordSite23.Get(kw_mode, v27, nil)
 												var v47 any = tmp46
 												_ = v47
 												var tmp48 any
@@ -2432,7 +2454,7 @@ func LoadNS() {
 											var tmp47 any
 											{ // let
 												// let binding "or__0__auto__"
-												tmp48 := aotKeywordSite23.Get(kw_load, v27, nil)
+												tmp48 := aotKeywordSite24.Get(kw_load, v27, nil)
 												var v49 any = tmp48
 												_ = v49
 												var tmp50 any
@@ -2456,7 +2478,7 @@ func LoadNS() {
 											var tmp49 any
 											{ // let
 												// let binding "or__0__auto__"
-												tmp50 := aotKeywordSite24.Get(kw_dump, v27, nil)
+												tmp50 := aotKeywordSite25.Get(kw_dump, v27, nil)
 												var v51 any = tmp50
 												_ = v51
 												var tmp52 any
@@ -2473,7 +2495,7 @@ func LoadNS() {
 											var tmp51 any
 											{ // let
 												// let binding "or__0__auto__"
-												tmp52 := aotKeywordSite25.Get(kw_auto, v27, nil)
+												tmp52 := aotKeywordSite26.Get(kw_auto, v27, nil)
 												var v53 any = tmp52
 												_ = v53
 												var tmp54 any
@@ -2487,7 +2509,7 @@ func LoadNS() {
 											var v52 any = tmp51
 											_ = v52
 											var tmp53 any
-											tmp54 := aotExternalFn1(closed6, v46)
+											tmp54 := aotExternalFn1(closed7, v46)
 											if lang.IsTruthy(tmp54) {
 											} else {
 												tmp55 := aotKeywordMapNew17(v46)
@@ -2496,7 +2518,7 @@ func LoadNS() {
 											}
 											_ = tmp53
 											var tmp57 any
-											tmp58 := aotExternalFn1(closed7, v48)
+											tmp58 := aotExternalFn1(closed8, v48)
 											if lang.IsTruthy(tmp58) {
 											} else {
 												tmp59 := aotKeywordMapNew18(v48)
@@ -2505,7 +2527,7 @@ func LoadNS() {
 											}
 											_ = tmp57
 											var tmp61 any
-											tmp62 := aotExternalFn1(closed8, v50)
+											tmp62 := aotExternalFn1(closed9, v50)
 											if lang.IsTruthy(tmp62) {
 											} else {
 												tmp63 := aotKeywordMapNew19(v50)
@@ -2514,7 +2536,7 @@ func LoadNS() {
 											}
 											_ = tmp61
 											var tmp65 any
-											tmp66 := aotExternalFn1(closed9, v52)
+											tmp66 := aotExternalFn1(closed10, v52)
 											if lang.IsTruthy(tmp66) {
 											} else {
 												tmp67 := aotKeywordMapNew20(v52)
@@ -2574,7 +2596,7 @@ func LoadNS() {
 							var tmp11 any
 							{ // let
 								// let binding "temp__0__auto__"
-								tmp12 := aotKeywordSite26.Get(kw_yaml_DASH_emitter, v8, nil)
+								tmp12 := aotKeywordSite27.Get(kw_yaml_DASH_emitter, v8, nil)
 								tmp13 := aotDirectFn16(kw_yaml_DASH_emitter, tmp12)
 								var v14 any = tmp13
 								_ = v14
@@ -2588,7 +2610,7 @@ func LoadNS() {
 										var tmp18 any
 										{ // let
 											// let binding "name"
-											tmp19 := aotKeywordSite27.Get(kw_name, v17, nil)
+											tmp19 := aotKeywordSite28.Get(kw_name, v17, nil)
 											var v20 any = tmp19
 											_ = v20
 											var tmp21 any
@@ -2672,8 +2694,8 @@ func LoadNS() {
 			{ // let
 				// let binding "or__0__auto__"
 				tmp8 := checkDerefVar(var_yamlstar_DOT_plugin_release_DASH_version_DASH_pattern)
-				tmp9 := aotExternalFn30(tmp8, v2)
-				tmp10 := aotExternalFn29(tmp9)
+				tmp9 := aotExternalFn35(tmp8, v2)
+				tmp10 := aotExternalFn34(tmp9)
 				var v11 any = tmp10
 				_ = v11
 				var tmp12 any
@@ -2701,8 +2723,8 @@ func LoadNS() {
 		tmp1 = lang.FnFunc0(func() any {
 			tmp2 := checkDerefVar(var_yamlstar_DOT_plugin_yaml_DASH_emitter_DASH_registry)
 			tmp3 := lang.DerefValue(tmp2)
-			tmp4 := aotExternalFn31(tmp3)
-			tmp5 := aotExternalFn41(tmp4)
+			tmp4 := aotExternalFn36(tmp3)
+			tmp5 := aotExternalFn46(tmp4)
 			return tmp5
 		})
 		aotDirectFn12 = tmp1
@@ -2749,10 +2771,10 @@ func LoadNS() {
 							}()
 							var tmp13 any
 							{ // let
-								// let binding "G__21"
-								tmp14 := aotExternalFn33("yamlstar.plugin.yaml-emitter.", v2)
-								tmp15 := aotExternalFn43(tmp14, "plugin")
-								tmp16 := aotExternalFn42(tmp15)
+								// let binding "G__33"
+								tmp14 := aotExternalFn38("yamlstar.plugin.yaml-emitter.", v2)
+								tmp15 := aotExternalFn48(tmp14, "plugin")
+								tmp16 := aotExternalFn47(tmp15)
 								var v17 any = tmp16
 								_ = v17
 								var tmp18 any
@@ -2786,7 +2808,7 @@ func LoadNS() {
 										// let binding "names"
 										var v22 any = v19
 										_ = v22
-										tmp23 := aotExternalFn44(", ", v22)
+										tmp23 := aotExternalFn49(", ", v22)
 										tmp21 = tmp23
 									} // end let
 									tmp20 = tmp21
@@ -2826,10 +2848,10 @@ func LoadNS() {
 			_ = v4
 			var tmp5 any
 			{ // let
-				// let binding "map__13"
+				// let binding "map__25"
 				var v6 any = v4
 				_ = v6
-				// let binding "map__13"
+				// let binding "map__25"
 				var tmp7 any
 				tmp8 := aotExternalFn13(v6)
 				if lang.IsTruthy(tmp8) {
@@ -2950,105 +2972,179 @@ func LoadNS() {
 					tmp39 := aotExternalFn21(closed1)
 					var v40 any = tmp39
 					_ = v40
-					// let binding "stream?"
-					tmp41 := aotKeywordSite10.Get(kw_stream, v24, nil)
+					// let binding "path?"
+					tmp41 := aotKeywordSite10.Get(kw_path, v24, nil)
 					tmp42 := aotExternalFn12(tmp41)
 					var v43 any = tmp42
 					_ = v43
-					var tmp44 lang.FnFunc0
-					tmp44 = lang.FnFunc0(func() any {
-						tmp45 := aotExternalFn22(v40, closed1)
-						_ = tmp45
-						return nil
-					})
-					var tmp45 lang.FnFunc0
-					tmp45 = lang.FnFunc0(func() any {
-						tmp46 := aotExternalFn22(v38, closed1)
-						_ = tmp46
-						return nil
-					})
-					var tmp46 lang.FnFunc2
-					tmp46 = lang.FnFunc2(func(p0, p1 any) any {
-						v47 := p0
-						_ = v47
-						v48 := p1
-						_ = v48
-						tmp49 := checkDerefVar(var_clojure_DOT_core_assoc)
-						tmp50 := aotExternalFn23(v38, tmp49, v47, v48)
+					// let binding "stream?"
+					var tmp44 any
+					tmp45 := aotExternalFn1(v24, kw_stream)
+					if lang.IsTruthy(tmp45) {
+						tmp46 := aotKeywordSite11.Get(kw_stream, v24, nil)
+						tmp47 := aotExternalFn12(tmp46)
+						tmp44 = tmp47
+					} else {
+						tmp44 = v43
+					}
+					var v48 any = tmp44
+					_ = v48
+					var tmp49 lang.FnFunc0
+					tmp49 = lang.FnFunc0(func() any {
+						tmp50 := aotExternalFn22(v40, closed1)
 						_ = tmp50
 						return nil
 					})
-					var tmp47 lang.FnFunc1
-					tmp47 = lang.FnFunc1(func(p0 any) any {
-						v48 := p0
-						_ = v48
-						var tmp49 any
-						{ // let
-							// let binding "sources"
-							tmp50 := lang.DerefValue(v38)
-							tmp51 := lang.DerefValue(v40)
-							tmp52 := lang.NewVector(tmp50, v27, v29, v36, tmp51)
-							var v53 any = tmp52
-							_ = v53
-							for {
-								var tmp54 any
-								{ // let
-									// let binding "temp__0__auto__"
-									tmp55 := lang.First(v53)
-									var v56 any = tmp55
-									_ = v56
-									var tmp57 any
-									if lang.IsTruthy(v56) {
-										var tmp58 any
-										{ // let
-											// let binding "source"
-											var v59 any = v56
-											_ = v59
-											var tmp60 any
-											tmp61 := aotExternalFn1(v59, v48)
-											if lang.IsTruthy(tmp61) {
-												tmp62 := runtime.RT.Get(v59, v48)
-												tmp63 := lang.NewVector(true, tmp62)
-												tmp60 = tmp63
-											} else {
-												tmp65 := lang.Next(v53)
-												var tmp64 any = tmp65
-												v53 = tmp64
-												continue
-											}
-											tmp58 = tmp60
-										} // end let
-										tmp57 = tmp58
-									} else {
-										tmp57 = closed2
-									}
-									tmp54 = tmp57
-								} // end let
-								tmp49 = tmp54
-								break
-							}
-						} // end let
-						return tmp49
+					var tmp50 lang.FnFunc0
+					tmp50 = lang.FnFunc0(func() any {
+						tmp51 := aotExternalFn22(v38, closed1)
+						_ = tmp51
+						return nil
 					})
-					var tmp48 lang.FnFunc0
-					tmp48 = lang.FnFunc0(func() any {
-						var tmp49 any
-						if lang.IsTruthy(v43) {
-							tmp50 := checkDerefVar(var_clojure_DOT_core_merge)
-							tmp51 := lang.DerefValue(v38)
-							tmp52 := aotExternalFn25(v40, tmp50, tmp51)
-							tmp49 = tmp52
+					var tmp51 lang.FnFunc2
+					tmp51 = lang.FnFunc2(func(p0, p1 any) any {
+						v52 := p0
+						_ = v52
+						v53 := p1
+						_ = v53
+						tmp54 := checkDerefVar(var_clojure_DOT_core_assoc)
+						tmp55 := aotExternalFn23(v38, tmp54, v52, v53)
+						_ = tmp55
+						return nil
+					})
+					var tmp52 lang.FnFunc1
+					tmp52 = lang.FnFunc1(func(p0 any) any {
+						v53 := p0
+						_ = v53
+						var tmp54 any
+						{ // let
+							// let binding "dotted?"
+							var tmp55 any
+							{ // let
+								// let binding "and__0__auto__"
+								var v56 any = v43
+								_ = v56
+								var tmp57 any
+								if lang.IsTruthy(v56) {
+									tmp58 := aotExternalFn24(v53, ".")
+									tmp57 = tmp58
+								} else {
+									tmp57 = v56
+								}
+								tmp55 = tmp57
+							} // end let
+							var v56 any = tmp55
+							_ = v56
+							// let binding "parts"
+							var tmp57 any
+							if lang.IsTruthy(v56) {
+								tmp58 := aotExternalFn25(v53, closed2, int64(-1))
+								tmp57 = tmp58
+							} else {
+								tmp59 := lang.NewVector(v53)
+								tmp57 = tmp59
+							}
+							var v60 any = tmp57
+							_ = v60
+							// let binding "base"
+							tmp61 := lang.First(v60)
+							var v62 any = tmp61
+							_ = v62
+							// let binding "segments"
+							tmp63 := lang.Next(v60)
+							var v64 any = tmp63
+							_ = v64
+							var tmp65 any
+							if lang.IsTruthy(v56) {
+								tmp66 := aotExternalFn26(v53, v60)
+								tmp65 = tmp66
+							} else {
+							}
+							_ = tmp65
+							var tmp67 any
+							{ // let
+								// let binding "sources"
+								tmp68 := lang.DerefValue(v38)
+								tmp69 := lang.DerefValue(v40)
+								tmp70 := lang.NewVector(tmp68, v27, v29, v36, tmp69)
+								var v71 any = tmp70
+								_ = v71
+								for {
+									var tmp72 any
+									{ // let
+										// let binding "temp__0__auto__"
+										tmp73 := lang.First(v71)
+										var v74 any = tmp73
+										_ = v74
+										var tmp75 any
+										if lang.IsTruthy(v74) {
+											var tmp76 any
+											{ // let
+												// let binding "source"
+												var v77 any = v74
+												_ = v77
+												var tmp78 any
+												tmp79 := aotExternalFn1(v77, v62)
+												if lang.IsTruthy(tmp79) {
+													var tmp80 any
+													if lang.IsTruthy(v64) {
+														tmp81 := runtime.RT.Get(v77, v62)
+														tmp82 := aotExternalFn28(v53, tmp81, v64)
+														tmp80 = tmp82
+													} else {
+														tmp83 := runtime.RT.Get(v77, v62)
+														tmp80 = tmp83
+													}
+													tmp84 := lang.NewVector(true, tmp80)
+													tmp78 = tmp84
+												} else {
+													tmp86 := lang.Next(v71)
+													var tmp85 any = tmp86
+													v71 = tmp85
+													continue
+												}
+												tmp76 = tmp78
+											} // end let
+											tmp75 = tmp76
+										} else {
+											var tmp77 any
+											if lang.IsTruthy(v64) {
+												tmp78 := aotExternalFn29(v53, v62, "unknown anchor")
+												tmp77 = tmp78
+											} else {
+												tmp77 = closed3
+											}
+											tmp75 = tmp77
+										}
+										tmp72 = tmp75
+									} // end let
+									tmp67 = tmp72
+									break
+								}
+							} // end let
+							tmp54 = tmp67
+						} // end let
+						return tmp54
+					})
+					var tmp53 lang.FnFunc0
+					tmp53 = lang.FnFunc0(func() any {
+						var tmp54 any
+						if lang.IsTruthy(v48) {
+							tmp55 := checkDerefVar(var_clojure_DOT_core_merge)
+							tmp56 := lang.DerefValue(v38)
+							tmp57 := aotExternalFn30(v40, tmp55, tmp56)
+							tmp54 = tmp57
 						} else {
 						}
-						_ = tmp49
+						_ = tmp54
 						return nil
 					})
-					var tmp49 lang.FnFunc0
-					tmp49 = lang.FnFunc0(func() any {
+					var tmp54 lang.FnFunc0
+					tmp54 = lang.FnFunc0(func() any {
 						return nil
 					})
-					tmp50 := aotKeywordMapNew1(tmp44, tmp45, tmp46, tmp47, tmp48, tmp49)
-					tmp22 = tmp50
+					tmp55 := aotKeywordMapNew1(tmp49, tmp50, tmp51, tmp52, tmp53, tmp54)
+					tmp22 = tmp55
 				} // end let
 				tmp5 = tmp22
 			} // end let
@@ -3067,8 +3163,8 @@ func LoadNS() {
 		tmp1 = lang.FnFunc0(func() any {
 			tmp2 := checkDerefVar(var_yamlstar_DOT_plugin_alias_DASH_data_DASH_registry)
 			tmp3 := lang.DerefValue(tmp2)
-			tmp4 := aotExternalFn31(tmp3)
-			tmp5 := aotExternalFn41(tmp4)
+			tmp4 := aotExternalFn36(tmp3)
+			tmp5 := aotExternalFn46(tmp4)
 			return tmp5
 		})
 		aotDirectFn10 = tmp1
@@ -3096,7 +3192,7 @@ func LoadNS() {
 				if lang.IsTruthy(v7) {
 					tmp8 = v7
 				} else {
-					tmp9 := aotExternalFn33("Unknown YAMLStar alias-data implementation: ", v2)
+					tmp9 := aotExternalFn38("Unknown YAMLStar alias-data implementation: ", v2)
 					tmp10 := aotDirectFn10()
 					tmp11 := aotKeywordMapNew8("alias-data", v2, tmp10)
 					tmp12 := aotExternalFn7(tmp9, tmp11)
@@ -3121,10 +3217,10 @@ func LoadNS() {
 			_ = v2
 			var tmp3 any
 			{ // let
-				// let binding "map__23"
+				// let binding "map__35"
 				var v4 any = v2
 				_ = v4
-				// let binding "map__23"
+				// let binding "map__35"
 				var tmp5 any
 				tmp6 := aotExternalFn13(v4)
 				if lang.IsTruthy(tmp6) {
@@ -3189,7 +3285,7 @@ func LoadNS() {
 					_ = v32
 					var tmp33 any
 					if lang.IsTruthy(v32) {
-						tmp34 := aotExternalFn39(v20)
+						tmp34 := aotExternalFn44(v20)
 						tmp35 := !lang.IsTruthy(tmp34)
 						tmp33 = tmp35
 					} else {
@@ -3218,7 +3314,7 @@ func LoadNS() {
 					// let binding "plugin"
 					var tmp38 any
 					{ // let
-						// let binding "G__24"
+						// let binding "G__36"
 						var v39 any = v16
 						_ = v39
 						var tmp40 any
@@ -3259,10 +3355,10 @@ func LoadNS() {
 			_ = v2
 			var tmp3 any
 			{ // let
-				// let binding "map__15"
+				// let binding "map__27"
 				var v4 any = v2
 				_ = v4
-				// let binding "map__15"
+				// let binding "map__27"
 				var tmp5 any
 				tmp6 := aotExternalFn13(v4)
 				if lang.IsTruthy(tmp6) {
@@ -3314,7 +3410,7 @@ func LoadNS() {
 					_ = v26
 					var tmp27 any
 					if lang.IsTruthy(v26) {
-						tmp28 := aotExternalFn39(v18)
+						tmp28 := aotExternalFn44(v18)
 						tmp29 := !lang.IsTruthy(tmp28)
 						tmp27 = tmp29
 					} else {
@@ -3343,7 +3439,7 @@ func LoadNS() {
 					// let binding "plugin"
 					var tmp32 any
 					{ // let
-						// let binding "G__16"
+						// let binding "G__28"
 						var v33 any = v16
 						_ = v33
 						var tmp34 any
@@ -3384,10 +3480,10 @@ func LoadNS() {
 			_ = v2
 			var tmp3 any
 			{ // let
-				// let binding "map__19"
+				// let binding "map__31"
 				var v4 any = v2
 				_ = v4
-				// let binding "map__19"
+				// let binding "map__31"
 				var tmp5 any
 				tmp6 := aotExternalFn13(v4)
 				if lang.IsTruthy(tmp6) {
@@ -3439,7 +3535,7 @@ func LoadNS() {
 					_ = v26
 					var tmp27 any
 					if lang.IsTruthy(v26) {
-						tmp28 := aotExternalFn39(v18)
+						tmp28 := aotExternalFn44(v18)
 						tmp29 := !lang.IsTruthy(tmp28)
 						tmp27 = tmp29
 					} else {
@@ -3468,7 +3564,7 @@ func LoadNS() {
 					// let binding "plugin"
 					var tmp32 any
 					{ // let
-						// let binding "G__20"
+						// let binding "G__32"
 						var v33 any = v16
 						_ = v33
 						var tmp34 any
@@ -3509,7 +3605,7 @@ func LoadNS() {
 			_ = v2
 			tmp3 := checkDerefVar(var_yamlstar_DOT_plugin_alias_DASH_data_DASH_registry)
 			tmp4 := checkDerefVar(var_clojure_DOT_core_dissoc)
-			tmp5 := aotExternalFn25(tmp3, tmp4, v2)
+			tmp5 := aotExternalFn30(tmp3, tmp4, v2)
 			_ = tmp5
 			return nil
 		})
@@ -3528,7 +3624,7 @@ func LoadNS() {
 			_ = v2
 			tmp3 := checkDerefVar(var_yamlstar_DOT_plugin_parser_DASH_registry)
 			tmp4 := checkDerefVar(var_clojure_DOT_core_dissoc)
-			tmp5 := aotExternalFn25(tmp3, tmp4, v2)
+			tmp5 := aotExternalFn30(tmp3, tmp4, v2)
 			_ = tmp5
 			return nil
 		})
@@ -3547,7 +3643,7 @@ func LoadNS() {
 			_ = v2
 			tmp3 := checkDerefVar(var_yamlstar_DOT_plugin_yaml_DASH_emitter_DASH_registry)
 			tmp4 := checkDerefVar(var_clojure_DOT_core_dissoc)
-			tmp5 := aotExternalFn25(tmp3, tmp4, v2)
+			tmp5 := aotExternalFn30(tmp3, tmp4, v2)
 			_ = tmp5
 			return nil
 		})

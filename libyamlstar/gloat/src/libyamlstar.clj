@@ -120,7 +120,7 @@
        {:error
         #?(:glj {:cause (fmt.Sprintf "%v" e)
                  :type (fmt.Sprintf "%T" e)}
-           :lg {:cause (str e)
+           :lg {:cause (or (ex-message e) (str e))
                 :type "Exception"})}))))
 
 (defn yamlstar-load-all
@@ -132,9 +132,10 @@
     (let [result (yaml/load-all yaml-str (parse-opts opts-json))]
       (json/write-str {:data (nil-keys->string result)}))
     (catch #?(:glj go/any :lg Exception) e
-      (json/write-str {:error {:cause (str e)
-                               :type "Exception"
-                               :message (str e)}}))))
+      (let [message (or (ex-message e) (str e))]
+        (json/write-str {:error {:cause message
+                                :type "Exception"
+                                :message message}})))))
 
 (defn yamlstar-dump
   "Dump one JSON-encoded value to YAML, return JSON string with {:data ...} or {:error ...}"

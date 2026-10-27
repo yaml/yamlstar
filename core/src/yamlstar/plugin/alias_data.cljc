@@ -110,7 +110,7 @@
 
 (defn- validate-config
   [config]
-  (let [unknown (seq (remove #{:data :file :env :stream} (keys config)))]
+  (let [unknown (seq (remove #{:data :file :env :stream :path} (keys config)))]
     (when unknown
       (throw (ex-info "Unknown Alias-Data configuration key"
                       {:keys unknown})))
@@ -119,11 +119,72 @@
                          (not (str/blank? (:file config))))))
       (throw (ex-info "Alias-Data file must be a non-empty string"
                       {:file (:file config)})))
-    (when (and (contains? config :stream)
-               (not (boolean? (:stream config))))
-      (throw (ex-info "Alias-Data stream must be a boolean"
-                      {:stream (:stream config)})))
+    (doseq [key [:stream :path]]
+      (when (and (contains? config key)
+                 (not (boolean? (get config key))))
+        (throw (ex-info (str "Alias-Data " (name key) " must be a boolean")
+                        {key (get config key)}))))
     config))
+
+(defn- path-error
+  [alias segment reason]
+  (throw (ex-info (str "Alias-Data path " (pr-str alias)
+                       " segment " (pr-str segment) ": " reason)
+                  {:alias alias :segment segment :reason reason})))
+
+(defn- validate-path
+  [alias parts]
+  (doseq [part parts]
+    (when (empty? part)
+      (path-error alias part "empty path segment"))
+    (when-not (or (re-matches #"[A-Za-z0-9_+\-]+" part)
+                  (re-matches #"'[0-9]+'" part))
+      (path-error alias part "invalid path segment")))
+  (doseq [segment (next parts)]
+    (when (and (re-matches #"[0-9]+" segment)
+               (> (count segment) 1)
+               (str/starts-with? segment "0"))
+      (path-error alias segment "sequence index must not have leading zeros"))))
+
+(defn- path-index
+  [alias segment size]
+  (when-not (re-matches #"[0-9]+" segment)
+    (path-error alias segment "sequence index must contain decimal digits"))
+  (when (zero? size)
+    (path-error alias segment "sequence index out of range"))
+  (let [limit (dec size)]
+    (loop [chars (seq segment) index 0]
+      (if-let [ch (first chars)]
+        (let [digit (- (int ch) (int \0))]
+          (when (or (> index (quot limit 10))
+                    (and (= index (quot limit 10))
+                         (> digit (mod limit 10))))
+            (path-error alias segment "sequence index out of range"))
+          (recur (next chars) (+ (* index 10) digit)))
+        index))))
+
+(defn- walk-path
+  [alias value segments]
+  (reduce (fn [value segment]
+            (cond
+              (map? value)
+              (do
+                (when (re-matches #"[0-9]+" segment)
+                  (path-error alias segment
+                              "numeric mapping keys must be single-quoted"))
+                (let [key (if (str/starts-with? segment "'")
+                            (subs segment 1 (dec (count segment)))
+                            segment)]
+                  (if (contains? value key)
+                    (get value key)
+                    (path-error alias segment "missing mapping key"))))
+
+              (sequential? value)
+              (nth value (path-index alias segment (count value)))
+
+              :else
+              (path-error alias segment "cannot traverse a scalar")))
+          value segments))
 
 (defn new-context
   "Create a context after snapshotting configured data sources."
@@ -140,7 +201,10 @@
               {})
         current (atom {})
         prior (atom {})
-        stream? (true? (:stream config))]
+        path? (true? (:path config))
+        stream? (if (contains? config :stream)
+                  (true? (:stream config))
+                  path?)]
     {:begin-stream
      (fn [] (reset! prior {}) nil)
      :begin-document
@@ -151,12 +215,22 @@
        nil)
      :resolve-alias
      (fn [name]
-       (loop [sources [@current inline file env @prior]]
-         (if-let [source (first sources)]
-           (if (contains? source name)
-             [true (get source name)]
-             (recur (next sources)))
-           [false nil])))
+       (let [dotted? (and path? (str/includes? name "."))
+             parts (if dotted? (str/split name #"\." -1) [name])
+             base (first parts)
+             segments (next parts)]
+         (when dotted?
+           (validate-path name parts))
+         (loop [sources [@current inline file env @prior]]
+           (if-let [source (first sources)]
+             (if (contains? source base)
+               [true (if segments
+                       (walk-path name (get source base) segments)
+                       (get source base))]
+               (recur (next sources)))
+             (if segments
+               (path-error name base "unknown anchor")
+               [false nil])))))
      :end-document
      (fn []
        (when stream?

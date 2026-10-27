@@ -13,6 +13,142 @@
             {:data
              {"defaults" {"color" "blue" "size" 3}}}}}))))
 
+(deftest dotted-path-test
+  (doseq [parser ["reference"]
+          [input want]
+          [["base: &x {foo: {bar: 42}}\ncopy: *x.foo.bar\n"
+            {"base" {"foo" {"bar" 42}} "copy" 42}]
+           ["base: &x [{baz: zero}, {baz: one}]\ncopy: *x.1.baz\n"
+            {"base" [{"baz" "zero"} {"baz" "one"}] "copy" "one"}]
+           ["base: &x {'3': three}\ncopy: *x.'3'\n"
+            {"base" {"3" "three"} "copy" "three"}]
+           ["base: &x {foo: nested}\nliteral: &x.foo literal\ncopy: *x.foo\n"
+            {"base" {"foo" "nested"} "literal" "literal" "copy" "nested"}]
+           ["base: &x 42\ncopy: *x\n" {"base" 42 "copy" 42}]
+           ["leaf: &leaf {answer: 42}\nbase: &x {nested: *leaf}\ncopy: *x.nested.answer\n"
+            {"leaf" {"answer" 42} "base" {"nested" {"answer" 42}} "copy" 42}]
+           ["base: &x {nothing: null, off: false}\nnothing: *x.nothing\noff: *x.off\n"
+            {"base" {"nothing" nil "off" false} "nothing" nil "off" false}]]]
+    (testing (str parser " " input)
+      (is (= want (yaml/load input {:plugin {:yaml-parser parser
+                                             :alias-data {:path true}}}))))))
+
+(deftest dotted-path-literal-test
+  (doseq [selection [nil {:path false}]]
+    (is (= {"base" "literal" "copy" "literal"}
+           (yaml/load "base: &x.foo literal\ncopy: *x.foo\n"
+                      (if selection
+                        {:plugin {:alias-data selection}}
+                        {}))))))
+
+(deftest dotted-path-snakeyaml-limitation-test
+  (is (thrown-with-msg?
+       Exception #"while scanning an alias"
+       (yaml/load "base: &x {foo: 42}\ncopy: *x.foo\n"
+                  {:plugin {:yaml-parser "snakeyaml"
+                            :alias-data {:path true}}}))))
+
+(deftest dotted-path-merge-test
+  (doseq [parser ["reference"]
+          [base expected]
+          [["{<<: *first}" "first"]
+           ["{<<: [*first, *second]}" "first"]
+           ["{<<: [*first, *second], foo: explicit}" "explicit"]]]
+    (let [input (str "first: &first {foo: first}\n"
+                     "second: &second {foo: second}\n"
+                     "base: &x " base "\ncopy: *x.foo\n")]
+      (is (= expected
+             (get (yaml/load input {:plugin {:yaml-parser parser
+                                            :alias-data {:path true}}})
+                  "copy"))))))
+
+(deftest dotted-path-stream-test
+  (let [input "--- &saved {foo: 42}\n---\ncopy: *saved.foo\n"]
+    (is (= [{"foo" 42} {"copy" 42}]
+           (yaml/load-all input {:plugin {:alias-data {:path true}}})))
+    (is (thrown-with-msg?
+         Exception #"unknown anchor"
+         (yaml/load-all input
+                        {:plugin {:alias-data {:path true :stream false}}}))))
+  (is (thrown-with-msg?
+       Exception #"missing mapping key"
+       (yaml/load "local: &x {}\ncopy: *x.foo\n"
+                  {:plugin {:alias-data
+                            {:path true :data {"x" {"foo" "external"}}}}}))))
+
+(deftest dotted-path-source-test
+  (let [file (java.io.File/createTempFile "alias-data-path" ".yaml")]
+    (try
+      (spit file "from_file: {nested: [file]}\n")
+      (is (= {"inline" "inline" "file" "file"}
+             (yaml/load "inline: *x.nested.0\nfile: *from_file.nested.0\n"
+                        {:plugin
+                         {:alias-data
+                          {:path true
+                           :data {"x" {"nested" ["inline"]}}
+                           :file (.getPath file)}}})))
+      (finally
+        (.delete file))))
+  (with-redefs [alias-data/environment (fn [] {"FOO" "001"})]
+    (is (thrown-with-msg?
+         Exception #"cannot traverse a scalar"
+         (yaml/load "copy: *FOO.bar\n"
+                    {:plugin {:alias-data {:path true :env ["FOO"]}}})))))
+
+(deftest dotted-path-errors-test
+  (doseq [name ["missing.foo" "x.missing" "x.nothing.foo" "x.off.foo"
+                ".foo" "x..foo" "x." "items.-1" "items.+0" "items.foo"
+                "items.1" "items.99999999999999999999999999999999999"
+                "integer_keys.'3'" "x.42" "items.00" "items.01"
+                "items.042" "items.'0'" "x.'abc'" "x.'-1'" "x.'+1'"
+                "x.'1.2'" "x.\"42\"" "x.'42" "x.42'" "x.<<"
+                "bad/name.foo" "x.foo/bar" "x.foo:bar"]]
+    (let [opts {:plugin {:alias-data
+                         {:path true
+                          :data {"x" {"nothing" nil "off" false}
+                                 "items" ["one"]
+                                 "integer_keys" {3 "three"}}}}}]
+      (try
+        (yaml/load (str "copy: *" name "\n") opts)
+        (is false (str "Expected path error for " name))
+        (catch Exception error
+          (is (= name (:alias (ex-data error))))
+          (is (contains? (ex-data error) :segment))))))
+  (doseq [value [nil "true" 1]]
+    (is (thrown-with-msg?
+         Exception #"path must be a boolean"
+         (yaml/load "value: 1\n"
+                    {:plugin {:alias-data {:path value}}})))))
+
+(deftest dotted-path-grammar-test
+  (let [long-key (apply str (repeat 40 "9"))
+        context (alias-data/new-context
+                 {:path true
+                  :data {"x" {"42" {"bar" 42} "042" "leading"
+                              "0" "zero" long-key "long"
+                              "-42" "negative" "+42" "plus"
+                              "foo-bar+baz_1" "name"
+                              "items" [{"42" {"bar" 42}}]}}}
+                 {})]
+    (doseq [[name want] [["x.'42'.bar" 42] ["x.'042'" "leading"]
+                        ["x.'0'" "zero"] [(str "x.'" long-key "'") "long"]
+                        ["x.-42" "negative"] ["x.+42" "plus"]
+                        ["x.foo-bar+baz_1" "name"]
+                        ["x.items.0.'42'.bar" 42]]]
+      (is (= [true want] (alias-data/resolve-alias context name))))
+    (doseq [base ["01" "'42'"]]
+      (alias-data/define-anchor context base {"bar" 42})
+      (is (= [true 42]
+             (alias-data/resolve-alias context (str base ".bar")))))
+    (doseq [name ["bad/name.foo" "x.foo/bar" "x.é" "x.<<" "x.'abc'"]]
+      (try
+        (alias-data/resolve-alias context name)
+        (is false (str "Expected grammar error for " name))
+        (catch Exception error
+          (is (= "invalid path segment" (:reason (ex-data error)))))))
+    (alias-data/define-anchor context "bad/name" 42)
+    (is (= [true 42] (alias-data/resolve-alias context "bad/name")))))
+
 (deftest document-scope-test
   (let [input "--- &saved {x: 1}\n---\ncopy: *saved\n"]
     (testing "standard YAML scope rejects cross-document aliases"

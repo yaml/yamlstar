@@ -267,7 +267,7 @@ func LoadNS() {
 			_ = tmp5
 			var tmp6 any
 			{ // let
-				// let binding "vec__38"
+				// let binding "vec__50"
 				tmp7 := lang.Apply3(pluginloader4.Manifest, v2, v3, v4)
 				var v8 any = tmp7
 				_ = v8
@@ -326,7 +326,7 @@ func LoadNS() {
 			_ = tmp6
 			var tmp7 any
 			{ // let
-				// let binding "vec__41"
+				// let binding "vec__53"
 				tmp8 := lang.Apply4(pluginloader4.Transform, v2, v3, v4, v5)
 				var v9 any = tmp8
 				_ = v9

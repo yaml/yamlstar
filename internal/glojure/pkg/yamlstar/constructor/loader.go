@@ -750,7 +750,7 @@ func LoadNS() {
 					} else {
 						var tmp18 any
 						{ // let
-							// let binding "vec__17"
+							// let binding "vec__29"
 							tmp19 := lang.Apply2(strconv6.ParseFloat, v7, int64(64))
 							var v20 any = tmp19
 							_ = v20
@@ -850,7 +850,7 @@ func LoadNS() {
 					} else {
 						var tmp25 any
 						{ // let
-							// let binding "vec__17"
+							// let binding "vec__29"
 							tmp26 := lang.Apply2(strconv6.ParseFloat, v14, int64(64))
 							var v27 any = tmp26
 							_ = v27
@@ -1021,7 +1021,7 @@ func LoadNS() {
 					// let binding "result"
 					var tmp6 any
 					{ // let
-						// let binding "G__29"
+						// let binding "G__41"
 						tmp7 := aotKeywordSite0.Get(kw_kind, v2, nil)
 						var v8 any = tmp7
 						_ = v8
@@ -1038,7 +1038,7 @@ func LoadNS() {
 									tmp12 := aotKeywordSite1.Get(kw_name, v2, nil)
 									var v13 any = tmp12
 									_ = v13
-									// let binding "vec__30"
+									// let binding "vec__42"
 									tmp14 := aotExternalFn21(v3, v13)
 									var v15 any = tmp14
 									_ = v15
@@ -1200,7 +1200,7 @@ func LoadNS() {
 			_ = v3
 			var tmp4 any
 			{ // let
-				// let binding "map__20"
+				// let binding "map__32"
 				var tmp5 lang.FnFunc2
 				tmp5 = lang.FnFunc2(func(p0, p1 any) any {
 					v6 := p0
@@ -1209,7 +1209,7 @@ func LoadNS() {
 					_ = v7
 					var tmp8 any
 					{ // let
-						// let binding "vec__22"
+						// let binding "vec__34"
 						var v9 any = v7
 						_ = v9
 						// let binding "key-node"
@@ -1242,7 +1242,7 @@ func LoadNS() {
 				tmp6 := aotExternalFn6(tmp5, closed0, v2)
 				var v7 any = tmp6
 				_ = v7
-				// let binding "map__20"
+				// let binding "map__32"
 				var tmp8 any
 				tmp9 := aotExternalFn9(v7)
 				if lang.IsTruthy(tmp9) {
@@ -1312,7 +1312,7 @@ func LoadNS() {
 						_ = v36
 						var tmp37 any
 						{ // let
-							// let binding "vec__26"
+							// let binding "vec__38"
 							var v38 any = v36
 							_ = v38
 							// let binding "key"
