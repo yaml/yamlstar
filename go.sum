@@ -8,8 +8,8 @@ github.com/gloathub/go-readline v0.1.2 h1:xpBQfW3BSoLCY5ck5CsLVYtvd3EOpp3xlZ9/yE
 github.com/gloathub/go-readline v0.1.2/go.mod h1:AuU225TTeDXCtn8hQaQZTfSYe65j/IpFdwvO/AfFHI4=
 github.com/gloathub/gojava v0.1.0 h1:lNxzOURH+dWzBxgIsiEwggMKpzo+s9U6/uyC7jMwaF8=
 github.com/gloathub/gojava v0.1.0/go.mod h1:5BolUlfQEVhISDwoCnchpGwFTE5upbi2965/m3WRQH8=
-github.com/gloathub/ys-v0-glj v0.1.7 h1:zG7xH4O+VR/icWZK0bh3IJjpJPQ7t6gZEGmHbc7i80U=
-github.com/gloathub/ys-v0-glj v0.1.7/go.mod h1:xeuT1gS51OzebWjXh55q9Nq7/mxzvpdMvtq/NylIyeU=
+github.com/gloathub/ys-v0-glj v0.1.8 h1:RWEPm+43VRoXEM9MPXr6FenvluktlFB64kaBO9gm4LU=
+github.com/gloathub/ys-v0-glj v0.1.8/go.mod h1:xeuT1gS51OzebWjXh55q9Nq7/mxzvpdMvtq/NylIyeU=
 github.com/glojurelang/glojure v0.7.24 h1:HNa4PRG6zTokEQFi0hBAZfrJgrAZkQhOXHJjDk954Qk=
 github.com/glojurelang/glojure v0.7.24/go.mod h1:ZYtJSMN1AB1hkDRS7zerNzDWVufuCGxKsHrQkn5l1Mc=
 github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=

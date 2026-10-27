@@ -1,5 +1,6 @@
 M := .cache/makes
 YAMLSCRIPT-VERSION := 0.3.6
+GLOAT-VERSION := 0.1.93
 include common/init.mk
 include $M/gh.mk
 include $M/gloat.mk

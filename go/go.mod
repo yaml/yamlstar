@@ -12,7 +12,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gloathub/go-readline v0.1.2 // indirect
 	github.com/gloathub/gojava v0.1.0 // indirect
-	github.com/gloathub/ys-v0-glj v0.1.7 // indirect
+	github.com/gloathub/ys-v0-glj v0.1.8 // indirect
 	github.com/glojurelang/glojure v0.7.24 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
