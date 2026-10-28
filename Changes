@@ -1,3 +1,20 @@
+- version: 0.1.27
+  date:    Tue Oct 27 10:46:46 PM EDT 2026
+  changes:
+  - Check publication for every binding
+  - Fix release publication URLs and tooling
+  - Fix shared credentials and Erlang publishing
+  - Fix Julia Libdl imports on older runtimes
+  - Fix Lua release credentials and invocation
+  - Fix Node.js release credential lookup
+  - Compact the homepage language list
+  - Replace JSON-comments sanitizer with parser
+  - Integrate RapidYAML parser loading
+  - Add interactive native plugin demos
+  - Rename parser plugin API to yaml-parser
+  - Use existing CLI for plugin demos
+  - Use linear JSON parsing in native builds
+  - Fix credential login exception handling
 - version: 0.1.26
   date:    Mon Oct 19 11:08:48 PM EDT 2026
   changes:

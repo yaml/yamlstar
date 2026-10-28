@@ -16,7 +16,7 @@ try:
 except ImportError:
   import importlib_metadata
 
-yamlstar_version = '0.1.26'
+yamlstar_version = '0.1.27'
 
 _plugin_environment_lock = threading.Lock()
 

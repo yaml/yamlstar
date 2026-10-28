@@ -2,7 +2,7 @@ unit class YAMLStar;
 
 use NativeCall;
 
-constant YAMLSTAR_VERSION = v0.1.26;
+constant YAMLSTAR_VERSION = v0.1.27;
 
 sub resolve-lib {
   state $lib = do {

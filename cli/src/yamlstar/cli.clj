@@ -15,7 +15,7 @@
             [yamlstar.resolver :as resolver])
   (:gen-class))
 
-(def version "0.1.26-SNAPSHOT")
+(def version "0.1.27-SNAPSHOT")
 
 (defn display-version
   []
