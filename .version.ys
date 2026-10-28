@@ -91,6 +91,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - scala/src/YAMLStar.scala
     - swift/Sources/YAMLStar/YAMLStar.swift
     - swift/doc/readme.md
+    - test/release-brew.t
     - util/yamlj
     - www/docs/bindings.md
     - www/docs/install

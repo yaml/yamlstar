@@ -31,7 +31,7 @@ run-brew() {
   mkdir -p "$directory/homebrew-yamlstar"
   for program in yamlstar libyamlstar; do
     for platform in linux-aarch64 linux-x64 macos-arm64 macos-x64; do
-      touch "$directory/$program-0.1.26-$platform.tar.xz"
+      touch "$directory/$program-0.1.27-$platform.tar.xz"
     done
   done
   if output=$(
@@ -40,7 +40,7 @@ run-brew() {
     if [[ $mode == failure ]]; then
       export BREW_CURL_FAIL=1
     fi
-    "$runtime" -S "$ROOT/util/brew-update" 0.1.26 2>&1
+    "$runtime" -S "$ROOT/util/brew-update" 0.1.27 2>&1
   ); then
     status=0
   else
@@ -51,7 +51,7 @@ run-brew() {
 run-brew success
 ok "$status" 'Homebrew update accepts an existing release'
 is "$(< "$temporary/success/curl.log")" \
-  '-fsSL -o /dev/null https://github.com/yaml/yamlstar/releases/tag/v0.1.26' \
+  '-fsSL -o /dev/null https://github.com/yaml/yamlstar/releases/tag/v0.1.27' \
   'The release check invokes curl with separate arguments'
 ok-f "$temporary/success/homebrew-yamlstar/yamlstar.rb" \
   'The CLI formula is generated'
