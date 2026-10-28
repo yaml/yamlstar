@@ -22,7 +22,8 @@
 
   :dependencies
   [[org.clojure/clojure "1.12.0"]
-   [org.yamlstar/yaml-parser "0.2.3"]]
+   [org.yamlstar/yaml-parser "0.2.6"]
+   [org.yamlstar/yamlstar-plugin-parser-json-comments "0.1.1"]]
 
   :source-paths ["src" "../core/src"]
   :test-paths ["test"]
