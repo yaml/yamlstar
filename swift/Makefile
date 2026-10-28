@@ -1,5 +1,5 @@
 include ../common/init.mk
-SWIFT-VERSION := 6.3.3
+SWIFT-VERSION := 6.4.1
 include $M/swift.mk
 include $(COMMON)/common.mk
 include $(COMMON)/binding.mk
