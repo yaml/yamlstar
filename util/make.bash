@@ -55,9 +55,12 @@ release-retry() (
 release-rerun() (
   set -e
   version=$1
-  tag=v$version
   run_id=$2
   branch=$(git branch --show-current)
+  if [[ -z $branch || -n $(git status --porcelain) ]]; then
+    echo "ERROR: release rerun requires a clean, committed branch" >&2
+    exit 1
+  fi
   if [[ -z $run_id ]]; then
     run_id=$(gh run list --workflow=release.yaml \
       --repo yaml/yamlstar --branch "$branch" --limit=1 \
@@ -67,9 +70,7 @@ release-rerun() (
   gh run view "$run_id" --repo yaml/yamlstar \
     --json databaseId --jq .databaseId > /dev/null || {
     echo "ERROR: run id '$run_id' not found"; exit 1; }
-  git push --force-with-lease origin HEAD:"$branch"
-  git tag -f "$tag" HEAD
-  git push -f origin "$tag"
+  git push origin HEAD:"$branch"
   echo "Starting release with artifacts from run $run_id"
   gh workflow run release.yaml \
     --repo yaml/yamlstar --ref "$branch" -f version="$version" \

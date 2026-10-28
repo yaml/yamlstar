@@ -1546,13 +1546,16 @@ jobs:
       PACKAGIST_TOKEN: ${{ secrets.PACKAGIST_TOKEN }}
       YAMLSTAR_BINDING_REPO_SSH_KEY: ${{ secrets.YAMLSTAR_BINDING_REPO_SSH_KEY }}
     steps:
-    - name: Checkout tag
+    - name: Checkout release sources
       uses: actions/checkout@v5
       with:
         ref: >-
           ${{
-            inputs.publish_bindings_only &&
-            github.ref ||
+            (
+              inputs.publish_bindings_only ||
+              inputs.test_artifacts_run_id != ''
+            ) &&
+            github.sha ||
             format('v{0}', inputs.version)
           }}
         fetch-depth: 0

@@ -484,9 +484,10 @@ endif
 
 # Start a new release workflow using artifacts from a prior run
 # (r=RUN_ID, default: the latest release workflow run on the current
-# branch). The tags are moved to HEAD first so the new workflow uses
-# the test and publish fixes. Use this when only a test or publish job
-# failed; use release-retry when the build itself must be redone.
+# branch). Publish the committed branch without moving the release tag.
+# Tests and binding publication use the workflow commit. Use this for
+# test or packaging fixes that leave the native artifacts unchanged;
+# publish a new version when the native artifacts must be rebuilt.
 # Example:
 #   make release-rerun v=0.1.25 r=12345678
 release-rerun: $(GH)
