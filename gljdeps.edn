@@ -1,6 +1,6 @@
 {:deps
  {github.com:yamlstar:yamlstar-plugin-parser-json-comments
-  {:mvn/version "v0.1.0"}
+  {:mvn/version "v0.1.1"}
   github.com:ebitengine:purego
   {:mvn/version "v0.10.2"}
   github.com:yamlstar:yamlstar-plugin-parser-reference

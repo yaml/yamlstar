@@ -6,7 +6,7 @@
 
   :dependencies [[org.clojure/clojure "1.12.0"]
                  [org.yamlstar/yaml-parser "0.2.6"]
-                 [org.yamlstar/yamlstar-plugin-parser-json-comments "0.1.0"]
+                 [org.yamlstar/yamlstar-plugin-parser-json-comments "0.1.1"]
                  [org.clojure/data.json "2.5.0"]
                  [org.snakeyaml/snakeyaml-engine "2.7"]]
 

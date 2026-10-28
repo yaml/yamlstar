@@ -64,10 +64,10 @@
     (is (= {:plugin {:yaml-parser {:name "json-comments"}}}
            (opts/plugin-options "yaml-parser=json-comments")))
     (is (= {:plugin
-            {:yaml-parser {:name "json-comments" :version "v0.1.0"}
+            {:yaml-parser {:name "json-comments" :version "v0.1.1"}
              :yaml-emitter {}}}
            (opts/plugin-options
-            "yaml-parser=json-comments@v0.1.0,yaml-emitter"))))
+            "yaml-parser=json-comments@v0.1.1,yaml-emitter"))))
 
   (testing "malformed plugin option"
     (is (thrown-with-msg?

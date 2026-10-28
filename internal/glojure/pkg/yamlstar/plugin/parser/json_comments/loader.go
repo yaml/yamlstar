@@ -288,7 +288,7 @@ func LoadNS() {
 			} // end let
 			return tmp4
 		})
-		var_yamlstar_DOT_plugin_DOT_parser_DOT_json_DASH_comments_plugin = ns.InternWithValue(tmp0, aotKeywordMapNew0("json-comments", "0.1.0", tmp1, lang.NewMap()), true)
+		var_yamlstar_DOT_plugin_DOT_parser_DOT_json_DASH_comments_plugin = ns.InternWithValue(tmp0, aotKeywordMapNew0("json-comments", "0.1.1", tmp1, lang.NewMap()), true)
 		var_yamlstar_DOT_plugin_DOT_parser_DOT_json_DASH_comments_plugin.SetMetaLazyMacro(func() lang.IPersistentMap {
 			return lang.NewMap(kw_file, "yamlstar/plugin/parser/json_comments.clj", kw_line, int(18), kw_column, int(6), kw_end_DASH_line, int(18), kw_end_DASH_column, int(11), kw_ns, lang.FindOrCreateNamespace(sym_yamlstar_DOT_plugin_DOT_parser_DOT_json_DASH_comments))
 		}, false)

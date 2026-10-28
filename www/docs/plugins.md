@@ -70,7 +70,7 @@ API=IMPLEMENTATION@VERSION
 Several selectors can be comma-separated:
 
 ```bash
-yaml --plugin=yaml-parser=json-comments@v0.1.0,yaml-emitter=reference file.yaml
+yaml --plugin=yaml-parser=json-comments@v0.1.1,yaml-emitter=reference file.yaml
 ```
 
 The short `yaml-parser` and `yaml-emitter` selectors choose the runtime
@@ -202,7 +202,7 @@ yaml --plugin=yaml-parser=json-comments file.yaml
 
 ```yaml
 plugin:
-  yaml-parser: json-comments@v0.1.0
+  yaml-parser: json-comments@v0.1.1
 ```
 
 The implementation parses the original source using per-parse reference
@@ -218,7 +218,7 @@ Adjacent `#` comments are accepted after quoted scalars, commas, `]`, and `}`.
 Comments are discarded and are not round-tripped.
 
 JVM builds use `org.yamlstar/yamlstar-plugin-parser-json-comments` version
-`0.1.0` with reference parser `0.2.6`.
+`0.1.1` with reference parser `0.2.6`.
 Native builds link the generated Go module
 `github.com/yamlstar/yamlstar-plugin-parser-json-comments`.
 No separate shared library or Python plugin wheel is needed.

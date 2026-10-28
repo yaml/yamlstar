@@ -17,7 +17,7 @@
 
 (def plugin
   {:name "json-comments"
-   :version "0.1.0"
+   :version "0.1.1"
    :parse parse
    :default-config {}})
 

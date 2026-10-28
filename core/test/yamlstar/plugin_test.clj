@@ -156,7 +156,7 @@
              (parser/parse yaml {}))))))
 
 (deftest json-comments-parser-test
-  (let [opts {:plugin {:yaml-parser "json-comments@v0.1.0"}}]
+  (let [opts {:plugin {:yaml-parser "json-comments@v0.1.1"}}]
     (is (= {"a" true} (yaml/load "a: true// comment" opts)))
     (is (= {"a" "foo  bar"}
            (yaml/load "a: foo /*comment*/ bar" opts)))

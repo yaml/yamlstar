@@ -3,7 +3,7 @@
  :deps {org.clojure/clojure {:mvn/version "1.12.0"}
         org.yamlstar/yaml-parser {:mvn/version "0.2.6"}
         org.yamlstar/yamlstar-plugin-parser-json-comments
-        {:mvn/version "0.1.0"}
+        {:mvn/version "0.1.1"}
         org.clojure/data.json {:mvn/version "2.5.0"}
         org.snakeyaml/snakeyaml-engine {:mvn/version "2.7"}}
  :aliases

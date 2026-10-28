@@ -6,7 +6,7 @@ require (
 	github.com/ebitengine/purego v0.10.2
 	github.com/gloathub/ys-v0-glj v0.1.8
 	github.com/glojurelang/glojure v0.7.24
-	github.com/yamlstar/yamlstar-plugin-parser-json-comments v0.1.0
+	github.com/yamlstar/yamlstar-plugin-parser-json-comments v0.1.1
 	github.com/yamlstar/yamlstar-plugin-parser-reference v0.2.6
 )
 
