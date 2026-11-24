@@ -59,8 +59,10 @@
   (testing "bare API selectors retain versions and runtime defaults"
     (is (= {:plugin {:yaml-parser {}}}
            (opts/plugin-options "yaml-parser")))
+    (is (= {:plugin {:yaml-parser {:version "0.2.6"}}}
+           (opts/plugin-options "yaml-parser@0.2.6")))
     (is (= {:plugin {:yaml-parser {:version "v0.2.6"}}}
-           (opts/plugin-options "yaml-parser@v0.2.6"))))
+           (opts/plugin-options " yaml-parser@v0.2.6 "))))
 
   (testing "generic plugin flag options"
     (is (= {:plugin {:yaml-parser {:name "reference"}}}
@@ -73,10 +75,17 @@
            (opts/plugin-options
             "yaml-parser=json-comments@v0.1.1,yaml-emitter"))))
 
-  (testing "malformed plugin option"
-    (is (thrown-with-msg?
-         Exception #"Plugin selector must be"
-         (opts/plugin-options "yaml-parser=")))))
+  (testing "malformed plugin options"
+    (doseq [spec ["" "," "yaml-parser=" "@v0.2.5"
+                  "yaml-parser=@v0.2.5" "yaml-parser=reference@"
+                  "yaml-parser=reference@latest"
+                  "yaml-parser==reference"
+                  "yaml-parser=reference@@v0.2.5"
+                  "yaml-parser@v0.2.5=reference"]]
+      (is (thrown-with-msg?
+           Exception #"Plugin selector must be"
+           (opts/plugin-options spec))
+          spec))))
 
 (deftest runtime-options-precedence-test
   (testing "CLI plugin beats CLI config and environment config"

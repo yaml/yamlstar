@@ -6,6 +6,9 @@
 (def reference-parser-options
   {:plugin {:yaml-parser {:name "reference"}}})
 
+(def ^:private release-version-pattern
+  #"^v?[0-9]+\.[0-9]+\.[0-9]+$")
+
 (defn normalize-key
   [k]
   (-> k name (str/replace "_" "-") keyword))
@@ -66,20 +69,32 @@
 (defn plugin-options
   [spec]
   (letfn [(selector-options [selector]
-            (let [[api-selector implementation extra]
-                  (str/split selector #"=" 3)
-                  [name version version-extra]
-                  (str/split (or implementation api-selector) #"@" 3)
-                  api (if implementation api-selector name)]
+            (let [selector (str/trim selector)
+                  equals (str/split selector #"=" -1)
+                  [api-part implementation] equals
+                  api-parts (str/split api-part #"@" -1)
+                  [api api-version] api-parts
+                  implementation-parts
+                  (when implementation
+                    (str/split implementation #"@" -1))
+                  [name implementation-version] implementation-parts
+                  version (or implementation-version api-version)]
               (when (= "parser" api)
                 (throw (ex-info
                          "Plugin API parser was renamed to yaml-parser"
                          {:api :parser :replacement :yaml-parser})))
-              (when (or (str/blank? api)
+              (when (or (str/blank? selector)
+                        (> (count equals) 2)
+                        (> (count api-parts) 2)
+                        (> (count implementation-parts) 2)
+                        (str/blank? api)
                         (and implementation (str/blank? name))
-                        extra version-extra
+                        (and implementation api-version)
                         (and (str/includes? selector "@")
-                             (str/blank? version)))
+                             (str/blank? version))
+                        (and version
+                             (not (re-matches
+                                   release-version-pattern version))))
                 (throw
                  (ex-info
                   (str "Plugin selector must be API, API@VERSION, "
